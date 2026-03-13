@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "deep-teal": "#006D77",
+                        "sand": "#EDF6F9",
+                        "ocean-blue": "#83C5BE",
+                        "warm-coral": "#E29578",
+                        "primary": "#006D77",
+                    },
+                    fontFamily: {
+                        "body": ["Montserrat", "sans-serif"],
+                        "sans": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.375rem",
+                        "lg": "0.75rem",
+                        "xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body { 
+                @apply bg-sand font-body text-slate-800;
+            }
+        }
+        .active-nav-item {
+            @apply bg-deep-teal text-white shadow-md;
+        }
+        .nav-item {
+            @apply flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-ocean-blue/20 transition-all duration-200;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+<div class="relative flex min-h-screen flex-col">
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-ocean-blue/20 px-4 md:px-12 lg:px-24 py-4">
+<div class="flex items-center justify-between max-w-7xl mx-auto">
+<div class="flex items-center gap-10">
+<div class="flex items-center gap-2 text-deep-teal">
+<span class="material-symbols-outlined text-3xl font-bold">explore</span>
+<h1 class="text-xl font-extrabold tracking-tight">Wanderlust Explorer Pro</h1>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-slate-500 hover:text-deep-teal text-sm font-semibold" href="#">Destinations</a>
+<a class="text-slate-500 hover:text-deep-teal text-sm font-semibold" href="#">Tours</a>
+<a class="text-slate-500 hover:text-deep-teal text-sm font-semibold" href="#">Blog</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-500 hover:text-deep-teal">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="flex items-center gap-3 border-l pl-6 border-slate-200">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-slate-900 leading-none">Alex Thompson</p>
+<p class="text-xs text-slate-500 mt-1">Pro Member</p>
+</div>
+<img alt="User profile" class="size-10 rounded-full object-cover border-2 border-ocean-blue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgzAdvjJjmM4bKST1DuKXWK_W9QpkBRvvNmMzQ1AFdZT6bCOBAVCr6RLGeJnkrTdX2AekF_fc17R0PKW97_mziyzVj7Fn-L-0FT7bdX25_ZkBe4llU_QUFPm7NuLp_ps6MDBYCHN_i181fQ5Rtvz4SjVBlNVg1Wzvsk0RGsEzO4uFXEogXItgrVClGOCoZVoI7YA5L_TDzcoDRGsZQHY7HNdhNExkT0tLXPLu6OA-nGs61NGOqwaDcZbcX1JgazF1LUUpzekjpCMzJ"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 max-w-7xl mx-auto w-full px-4 md:px-12 lg:px-24 py-8 md:py-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<aside class="lg:col-span-3">
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+<nav class="space-y-1">
+<a class="nav-item active-nav-item" href="#">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="font-semibold text-sm">Personal Info</span>
+</a>
+<a class="nav-item" href="#">
+<span class="material-symbols-outlined text-[22px]">security</span>
+<span class="font-semibold text-sm">Security</span>
+</a>
+<a class="nav-item" href="#">
+<span class="material-symbols-outlined text-[22px]">settings</span>
+<span class="font-semibold text-sm">Preferences</span>
+</a>
+<a class="nav-item" href="#">
+<span class="material-symbols-outlined text-[22px]">payments</span>
+<span class="font-semibold text-sm">Payment Methods</span>
+</a>
+<div class="my-4 border-t border-slate-100"></div>
+<a class="nav-item text-red-500 hover:bg-red-50" href="#">
+<span class="material-symbols-outlined text-[22px]">logout</span>
+<span class="font-semibold text-sm">Sign Out</span>
+</a>
+</nav>
+</div>
+</aside>
+<div class="lg:col-span-9 space-y-8">
+<section class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+<div class="p-6 md:p-8 border-b border-slate-50">
+<h2 class="text-xl font-bold text-slate-900">Personal Information</h2>
+<p class="text-sm text-slate-500 mt-1">Update your personal details and how others see you.</p>
+</div>
+<div class="p-6 md:p-8">
+<form class="space-y-8">
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="relative group">
+<img alt="Current profile picture" class="size-28 rounded-full object-cover border-4 border-sand shadow-inner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgzAdvjJjmM4bKST1DuKXWK_W9QpkBRvvNmMzQ1AFdZT6bCOBAVCr6RLGeJnkrTdX2AekF_fc17R0PKW97_mziyzVj7Fn-L-0FT7bdX25_ZkBe4llU_QUFPm7NuLp_ps6MDBYCHN_i181fQ5Rtvz4SjVBlNVg1Wzvsk0RGsEzO4uFXEogXItgrVClGOCoZVoI7YA5L_TDzcoDRGsZQHY7HNdhNExkT0tLXPLu6OA-nGs61NGOqwaDcZbcX1JgazF1LUUpzekjpCMzJ"/>
+<button class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" type="button">
+<span class="material-symbols-outlined text-white">photo_camera</span>
+</button>
+</div>
+<div class="flex-1 text-center md:text-left">
+<h4 class="font-bold text-slate-800">Profile Photo</h4>
+<p class="text-xs text-slate-500 mt-1 mb-4">JPG, GIF or PNG. Max size of 800K</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-3">
+<button class="bg-deep-teal text-white text-xs font-bold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity" type="button">Upload New</button>
+<button class="bg-slate-100 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg hover:bg-slate-200 transition-colors" type="button">Remove</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-bold text-slate-700">Full Name</label>
+<input class="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="e.g. John Doe" type="text" value="Alex Thompson"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold text-slate-700">Email Address</label>
+<input class="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="e.g. alex@wanderlust.com" type="email" value="alex.thompson@example.com"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold text-slate-700">Phone Number</label>
+<input class="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="+1 (555) 000-0000" type="tel" value="+1 (555) 000-0000"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold text-slate-700">Location</label>
+<select class="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal">
+<option>United States</option>
+<option>United Kingdom</option>
+<option>Canada</option>
+<option>Australia</option>
+</select>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="text-sm font-bold text-slate-700">Bio</label>
+<textarea class="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="Tell us about your travel style and experiences..." rows="4">Avid explorer and photographer. Love hiking through the Swiss Alps and discovering hidden cafés in Paris. Always looking for the next adventure!</textarea>
+</div>
+</div>
+</form>
+</div>
+</section>
+<section class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+<div class="p-6 md:p-8 border-b border-slate-50">
+<h2 class="text-xl font-bold text-slate-900">Travel Preferences</h2>
+<p class="text-sm text-slate-500 mt-1">We'll use these to recommend your perfect tours.</p>
+</div>
+<div class="p-6 md:p-8">
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input checked="" class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Adventure</span>
+</label>
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input checked="" class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Luxury</span>
+</label>
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Cultural</span>
+</label>
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input checked="" class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Wildlife</span>
+</label>
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Family</span>
+</label>
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Culinary</span>
+</label>
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Photography</span>
+</label>
+<label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-sand/30 hover:bg-ocean-blue/10 cursor-pointer transition-all">
+<input checked="" class="rounded text-deep-teal focus:ring-deep-teal size-5" type="checkbox"/>
+<span class="text-sm font-semibold">Eco-Tourism</span>
+</label>
+</div>
+</div>
+</section>
+<div class="flex items-center justify-end gap-4 pb-12">
+<button class="px-6 py-2.5 rounded-lg text-slate-500 font-bold text-sm hover:text-deep-teal transition-colors">Discard Changes</button>
+<button class="bg-deep-teal text-white px-8 py-2.5 rounded-lg font-bold text-sm shadow-lg shadow-deep-teal/20 hover:opacity-90 transition-opacity">Save All Changes</button>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-deep-teal text-white pt-16 pb-8 px-4 md:px-12 lg:px-24">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-12 mb-8">
+<div class="col-span-1">
+<div class="flex items-center gap-2 text-ocean-blue mb-6">
+<span class="material-symbols-outlined text-3xl font-bold">explore</span>
+<h2 class="text-white text-xl font-bold tracking-tight">Wanderlust Explorer</h2>
+</div>
+<p class="text-ocean-blue/70 text-sm leading-relaxed">Curated luxury travel experiences for the modern pioneer. Discover the world's most breathtaking destinations.</p>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-ocean-blue">Platform</h4>
+<ul class="space-y-3 text-sm text-ocean-blue/60">
+<li><a class="hover:text-white" href="#">Search Tours</a></li>
+<li><a class="hover:text-white" href="#">Destinations</a></li>
+<li><a class="hover:text-white" href="#">Travel Blog</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-ocean-blue">Account</h4>
+<ul class="space-y-3 text-sm text-ocean-blue/60">
+<li><a class="hover:text-white" href="#">My Bookings</a></li>
+<li><a class="hover:text-white" href="#">Wishlist</a></li>
+<li><a class="hover:text-white" href="#">Profile Settings</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-ocean-blue">Newsletter</h4>
+<div class="flex">
+<input class="bg-white/10 border-none rounded-l-lg text-sm w-full placeholder:text-ocean-blue/40" placeholder="Email" type="email"/>
+<button class="bg-ocean-blue text-deep-teal px-4 rounded-r-lg">
+<span class="material-symbols-outlined align-middle">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<p class="text-center text-ocean-blue/40 text-xs uppercase tracking-[0.2em]">© 2024 Wanderlust Explorer Pro. All rights reserved.</p>
+</footer>
+</div>
+
+</body></html>

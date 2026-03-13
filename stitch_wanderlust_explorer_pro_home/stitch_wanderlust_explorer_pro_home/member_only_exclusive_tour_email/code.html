@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Montserrat:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006c75",
+                        "sunset": "#FFDDD2",
+                        "sand": "#EDF6F9",
+                        "gold": "#D4AF37",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2223",
+                    },
+                    fontFamily: {
+                        "display": ["Montserrat", "sans-serif"],
+                        "sans": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #F1D592 50%, #D4AF37 100%);
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-sand text-slate-900 font-sans">
+<div class="max-w-[800px] mx-auto bg-white shadow-2xl my-10 overflow-hidden rounded-xl">
+<!-- Header / Logo Area -->
+<header class="flex items-center justify-between px-10 py-6 border-b border-primary/10">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-primary font-display text-xl font-bold tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<div class="text-xs font-bold uppercase tracking-widest text-primary/60">Elite Member Access</div>
+</header>
+<!-- Hero Section -->
+<div class="relative h-[400px] w-full bg-cover bg-center flex items-end" data-alt="Luxury private yacht sailing in turquoise Mediterranean waters" style="background-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwLjuzXanOeG_p3vCOBP7-ZXapWwgf8ITnexa636jOkukkDWgDvlKEvGLZc1WJvUFVS7n8JTfyxmjAJczekD5f4ScqjUDIy7L4gvW-4et_-Dg1c0AaHlaqcMmdrv7_P9aO4MRtoUqXeVjnkt03zyW0340NQfNOArEepvh823aHa7u-PbRmDsOpTg5DkojvnO2cRM4zH1N3RW4oP3PvhpBe9EpxNH8eupZfc4DflqKeUCTQRXiVtx2IytzXVND-Uod-Mfbh-s8EXMme');">
+<div class="p-10 w-full">
+<span class="inline-block px-4 py-1 rounded-full bg-sunset text-primary text-xs font-bold uppercase tracking-widest mb-4">Member-Only Exclusive</span>
+<h1 class="text-white font-display text-4xl font-extrabold leading-tight max-w-lg">An Exclusive Invitation Just for You</h1>
+</div>
+</div>
+<!-- Body Content -->
+<main class="p-10 space-y-8">
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-gold">
+<span class="material-symbols-outlined">star_rate</span>
+<p class="text-sm font-bold uppercase tracking-widest">Secret Tour Reveal</p>
+</div>
+<h2 class="text-3xl font-display font-bold text-slate-900">Secrets of the Amalfi Coast: Private Yacht Expedition</h2>
+<p class="text-slate-600 leading-relaxed text-lg">
+                    As a valued member of Wanderlust Explorer Pro, you've been selected for this unlisted private experience. Sail the coast in absolute privacy with amenities reserved only for our elite circle. This expedition is not available to the public and offers access to hidden grottoes and private coves.
+                </p>
+</div>
+<!-- Perks Grid -->
+<div class="grid grid-cols-2 gap-6 py-6 border-y border-primary/10">
+<div class="flex items-start gap-4">
+<div class="p-2 rounded-lg bg-sand text-primary">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">Private Chef</h4>
+<p class="text-sm text-slate-500">Gourmet Mediterranean dining on deck</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="p-2 rounded-lg bg-sand text-primary">
+<span class="material-symbols-outlined">event_available</span>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">Priority Booking</h4>
+<p class="text-sm text-slate-500">Guaranteed dates for Pro members</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="p-2 rounded-lg bg-sand text-primary">
+<span class="material-symbols-outlined">helicopter</span>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">Elite Transfers</h4>
+<p class="text-sm text-slate-500">Helicopter arrival to the Amalfi port</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="p-2 rounded-lg bg-sand text-primary">
+<span class="material-symbols-outlined">concierge</span>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">24/7 Concierge</h4>
+<p class="text-sm text-slate-500">Dedicated host for your entire journey</p>
+</div>
+</div>
+</div>
+<!-- Itinerary Summary -->
+<div class="bg-sand p-8 rounded-xl border border-primary/5">
+<h3 class="font-display font-bold text-xl mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">route</span>
+                    Expedition Highlights
+                </h3>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="size-3 rounded-full bg-primary mt-1.5"></div>
+<div class="w-px h-full bg-primary/20"></div>
+</div>
+<div>
+<p class="text-sm font-bold text-primary uppercase">Day 1: Positano Departure</p>
+<p class="text-slate-600">Private boarding and sunset champagne reception at a secluded cliffside bay.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="size-3 rounded-full bg-primary mt-1.5"></div>
+<div class="w-px h-full bg-primary/20"></div>
+</div>
+<div>
+<p class="text-sm font-bold text-primary uppercase">Day 2: The Hidden Grottos</p>
+<p class="text-slate-600">Exploration of Emerald Grotto and private swim sessions in uncharted waters.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="size-3 rounded-full bg-primary mt-1.5"></div>
+</div>
+<div>
+<p class="text-sm font-bold text-primary uppercase">Day 3: Capri After Hours</p>
+<p class="text-slate-600">Exclusive docking at Marina Piccola with private island tour and farewell dinner.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Pricing & Action -->
+<div class="text-center py-6">
+<div class="mb-8 inline-block">
+<p class="text-slate-500 text-sm line-through">Standard Value: $12,500</p>
+<p class="text-4xl font-display font-extrabold text-primary">
+                        $8,950 <span class="text-base font-normal text-slate-500">/ per person</span>
+</p>
+</div>
+<div class="flex flex-col items-center gap-4">
+<a class="block w-full max-w-md py-5 bg-primary text-white font-display font-bold text-lg rounded-xl shadow-lg hover:shadow-primary/20 transition-all text-center" href="#">
+                        Unlock This Adventure
+                    </a>
+<p class="text-xs text-slate-400">Available exclusively to Platinum &amp; Diamond Tier Members until March 15th.</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-background-dark text-white/80 p-10">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-gold">verified</span>
+<p class="text-sm font-bold">Explorer Club Status: <span class="text-gold">Platinum Elite</span></p>
+</div>
+<p class="text-xs opacity-60">You have 12,450 points until your next reward.</p>
+</div>
+<div class="flex gap-6">
+<a class="text-sm font-bold text-white hover:text-gold transition-colors" href="#">View More Exclusives</a>
+<a class="text-sm font-bold text-white hover:text-gold transition-colors" href="#">My Account</a>
+</div>
+</div>
+<div class="mt-10 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-[10px] uppercase tracking-widest opacity-40">
+<p>© 2024 Wanderlust Explorer Pro. All rights reserved.</p>
+<div class="flex gap-4">
+<a href="#">Privacy Policy</a>
+<a href="#">Unsubscribe</a>
+<a href="#">Contact Concierge</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

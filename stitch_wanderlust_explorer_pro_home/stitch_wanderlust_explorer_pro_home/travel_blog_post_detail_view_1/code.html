@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11c4d4",
+                        "deep-teal": "#102022",
+                        "sand": "#f6f8f8",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen flex-col">
+<!-- Header/TopNavBar Component -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-primary/10 px-4 md:px-20 lg:px-40 py-3">
+<div class="flex items-center justify-between gap-8">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-deep-teal dark:text-white text-xl font-bold tracking-tight font-display">Wanderlust Explorer Pro</h2>
+</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary text-sm font-semibold transition-colors" href="#">Destinations</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary text-sm font-semibold transition-colors" href="#">Tours</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary text-sm font-semibold transition-colors" href="#">Blog</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary text-sm font-semibold transition-colors" href="#">About Us</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-primary/10 rounded-lg px-3 py-1.5 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-32 lg:w-48 placeholder:text-slate-400" placeholder="Search guides..." type="text"/>
+</div>
+<button class="bg-primary text-deep-teal font-bold px-5 py-2 rounded-lg text-sm hover:opacity-90 transition-opacity">
+                    Join Today
+                </button>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<div class="relative w-full h-[60vh] min-h-[400px]">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Breathtaking view of snow-capped Swiss Alps mountains" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCE_s-KLx06sWODwLTDYHb6J5JfQCg9TcRHsg6wtDcapsGSFuaieLTlpzJfMRL-iC8xnOaW2ZVOkkWFvK7jWnJbytf7YPmspPJDCnKbhL_u-Q_Ctk1HemYAhRYW-fIpvr-oyk6d0uKlMtvohpjSdDTKFMEvN6G108hhdX-QwVy15Q_3mQ4O7UZ3Fqzv4EZITG1IhQy1aeG9MhY5LBO4o2cYgEwKK17y0fWHib3jOTYdaTOb1IxOVTjtczQ7MT2SkgAbpRRNjQOvfxHW');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-deep-teal via-deep-teal/40 to-transparent"></div>
+<div class="absolute inset-0 flex flex-col justify-end px-4 md:px-20 lg:px-40 pb-12">
+<div class="max-w-4xl">
+<div class="flex gap-2 mb-4">
+<span class="bg-primary/90 text-deep-teal text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Switzerland</span>
+<span class="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Adventure</span>
+</div>
+<h1 class="text-white text-4xl md:text-6xl font-bold leading-tight mb-6 font-display">The Ultimate Guide to Lauterbrunnen: Valley of 72 Waterfalls</h1>
+<div class="flex items-center gap-4 text-slate-200">
+<div class="size-10 rounded-full border-2 border-primary overflow-hidden">
+<img alt="Author Sarah Jenkins" class="w-full h-full object-cover" data-alt="Portrait of travel writer Sarah Jenkins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgzAdvjJjmM4bKST1DuKXWK_W9QpkBRvvNmMzQ1AFdZT6bCOBAVCr6RLGeJnkrTdX2AekF_fc17R0PKW97_mziyzVj7Fn-L-0FT7bdX25_ZkBe4llU_QUFPm7NuLp_ps6MDBYCHN_i181fQ5Rtvz4SjVBlNVg1Wzvsk0RGsEzO4uFXEogXItgrVClGOCoZVoI7YA5L_TDzcoDRGsZQHY7HNdhNExkT0tLXPLu6OA-nGs61NGOqwaDcZbcX1JgazF1LUUpzekjpCMzJ"/>
+</div>
+<div>
+<p class="font-semibold text-white">Sarah Jenkins</p>
+<p class="text-xs">October 24, 2023 • 12 min read</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Layout -->
+<main class="max-w-7xl mx-auto px-4 md:px-10 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Blog Content Area -->
+<article class="lg:col-span-8">
+<div class="prose prose-lg max-w-none text-slate-700 dark:text-slate-300 leading-relaxed font-body">
+<p class="text-xl font-medium text-slate-900 dark:text-slate-100 mb-8 first-letter:text-5xl first-letter:font-bold first-letter:text-primary first-letter:mr-3 first-letter:float-left">
+                    Nestled in one of the most impressive trough valleys in the Alps, between gigantic rock faces and mountain peaks, Lauterbrunnen is a postcard-perfect destination that feels almost too beautiful to be real. Known as the valley of 72 waterfalls, this Swiss gem offers a unique blend of adrenaline-pumping adventure and serene alpine tranquility.
+                </p>
+<h2 class="text-3xl font-bold text-deep-teal dark:text-white mt-12 mb-6 font-display">Getting There and Getting Around</h2>
+<p class="mb-6">The journey to Lauterbrunnen is as scenic as the destination itself. Most travelers arrive via Interlaken, taking the Berner Oberland Bahn. The train ride offers panoramic views of the Lütschine River and the rising peaks of the Eiger, Mönch, and Jungfrau.</p>
+<div class="my-10 rounded-xl overflow-hidden shadow-xl">
+<img alt="Scenic railway in Switzerland" class="w-full h-auto" data-alt="Yellow train traveling through lush green Swiss valleys" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB061bil7I4zseyJ2lptGpXC5Wep7umCvQWJ6QyhB8F_zELxNNDIZ8MHo0MKjWTv6e8sLpU-oVnmmHuV9osKYqQwi8DhXHbsMOma9sQ4zd3D2PV3aW8fQa1mKGqLKT20YrK10iPsQewGSNm6x85c_rol0B8w_haVSj6OIyG4-MSw_OlY8qLukwAlmIQXYKfPGc9aIc4aCfyV_jtLOz2MVMW1--5Y7iw6fluJLQ0ZBo6_wJBYA1u7RibHJarXk-kXwGJqA2KWLzMxz00"/>
+<p class="text-sm italic text-center p-4 bg-primary/5">The iconic yellow and blue train winding through the Bernese Oberland region.</p>
+</div>
+<h3 class="text-2xl font-bold text-deep-teal dark:text-white mt-10 mb-4 font-display">Must-See Waterfalls</h3>
+<ul class="space-y-4 mb-8 list-none pl-0">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1">water_drop</span>
+<span><strong>Staubbach Falls:</strong> Plunging almost 300 meters from a hanging valley, this is the most iconic landmark of the village.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1">water_drop</span>
+<span><strong>Trümmelbach Falls:</strong> A series of ten glacial waterfalls inside the mountain, accessible by a tunnel lift.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1">water_drop</span>
+<span><strong>Mürrenbach Falls:</strong> Often overlooked but equally stunning, located near the Stechelberg cable car station.</span>
+</li>
+</ul>
+<div class="bg-primary/10 border-l-4 border-primary p-6 my-10 rounded-r-lg">
+<p class="italic text-lg text-deep-teal dark:text-slate-200">
+                        "The atmosphere in Lauterbrunnen during the golden hour is something I will never forget. As the sun dips behind the cliffs, the waterfalls seem to glow against the darkening rock."
+                    </p>
+</div>
+<h2 class="text-3xl font-bold text-deep-teal dark:text-white mt-12 mb-6 font-display">Beyond the Valley Floor</h2>
+<p>While the valley floor is stunning, the true magic of the region lies in the car-free villages of Mürren and Wengen perched on the cliffs above. A quick cable car ride transports you to a world of traditional wooden chalets and world-class hiking trails.</p>
+</div>
+<!-- Tags -->
+<div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-wrap gap-2">
+<span class="text-sm font-semibold text-slate-500 uppercase">Tags:</span>
+<a class="text-xs bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded hover:bg-primary/20 transition-colors" href="#">#Switzerland</a>
+<a class="text-xs bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded hover:bg-primary/20 transition-colors" href="#">#Hiking</a>
+<a class="text-xs bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded hover:bg-primary/20 transition-colors" href="#">#Alps</a>
+<a class="text-xs bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded hover:bg-primary/20 transition-colors" href="#">#Photography</a>
+</div>
+</article>
+<!-- Sidebar -->
+<aside class="lg:col-span-4 space-y-10">
+<!-- Related Tours -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+<h3 class="text-xl font-bold text-deep-teal dark:text-white mb-6 font-display border-b border-primary/20 pb-2">Related Tours</h3>
+<div class="space-y-6">
+<div class="group cursor-pointer">
+<div class="relative h-32 w-full rounded-lg overflow-hidden mb-3">
+<img alt="Swiss Tour" class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="Hiking group in front of Swiss mountain range" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAza151Hs2S_pjBaHPyYufV-ym5TKeSFDPqm4FSv89AhGUDD8QGVv_smF8Aa8Dn8AUWi0960jQGBRZq8XVVum5-A3Gnls1jpFeLG4oE5le4LjeepHt4U5Bz5CjwF6JzocHP0lnMrE33oqev9G0ixsflO6jtbD-Ac77B55uvTGeWfm-lA1oM-_m2cKGOCgqlfg5U9t5v2HE1ZEgP-nC84IyppnJ21fph7w5j3uSMJe8QecrhBtlUGNu6U52SQaP3966RtmZtz_BgPP_"/>
+<span class="absolute top-2 right-2 bg-primary text-deep-teal text-[10px] font-bold px-2 py-1 rounded">BEST SELLER</span>
+</div>
+<h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-primary transition-colors">7-Day Swiss Alpine Adventure</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Interlaken, Lauterbrunnen, Grindelwald</p>
+<p class="text-primary font-bold text-sm mt-1">$2,499</p>
+</div>
+<div class="group cursor-pointer">
+<div class="relative h-32 w-full rounded-lg overflow-hidden mb-3">
+<img alt="Jungfrau Tour" class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="Aerial view of Top of Europe Jungfraujoch station" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfDsUdkqOs0d3F0PI_Vg_gQpRmzg9H3FpsAoDFFrZ3cch9jGd0p4u__AmQkGpKv6nChw80tKL0wLKHt3NPNFoiitrt4rQlPzG6XOEMMeVBsxHhIiYKlr5XYJlN0vte6F9eymWhrL-YEex2bvcTa9eKJIYIZUu6IUn43zL_wTc3kW_4zMLKVFVefDgeWvze41MIMQa6WRK2_dkrtuX8vEI3B1Yxk9mwvmoclWBysVny4oijk_91yGtv6GXGvbrgoj_ME9gj7iqocJJQ"/>
+</div>
+<h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-primary transition-colors">Jungfrau Region Photography Workshop</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">4 Days • Professional Guide</p>
+<p class="text-primary font-bold text-sm mt-1">$1,250</p>
+</div>
+</div>
+<button class="w-full mt-6 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-deep-teal font-bold rounded-lg transition-all text-sm uppercase tracking-wider">View All Swiss Tours</button>
+</div>
+<!-- Share Widget -->
+<div class="bg-deep-teal text-white rounded-xl p-6 shadow-xl">
+<h3 class="text-lg font-bold mb-4 font-display">Share this Post</h3>
+<div class="grid grid-cols-4 gap-4">
+<button class="aspect-square flex items-center justify-center bg-white/10 rounded-lg hover:bg-primary transition-colors">
+<svg class="size-6 fill-current" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</button>
+<button class="aspect-square flex items-center justify-center bg-white/10 rounded-lg hover:bg-primary transition-colors">
+<svg class="size-6 fill-current" viewbox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path></svg>
+</button>
+<button class="aspect-square flex items-center justify-center bg-white/10 rounded-lg hover:bg-primary transition-colors">
+<svg class="size-6 fill-current" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path></svg>
+</button>
+<button class="aspect-square flex items-center justify-center bg-white/10 rounded-lg hover:bg-primary transition-colors">
+<span class="material-symbols-outlined">link</span>
+</button>
+</div>
+</div>
+<!-- Newsletter Sidebar -->
+<div class="bg-primary/5 rounded-xl p-6 border-2 border-primary/20">
+<h3 class="text-xl font-bold text-deep-teal dark:text-white mb-2 font-display">Get Travel Tips</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Join 50,000+ explorers for weekly destination guides and exclusive tour discounts.</p>
+<div class="space-y-3">
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm py-2.5 focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Email Address" type="email"/>
+<button class="w-full bg-deep-teal text-white py-2.5 rounded-lg font-bold text-sm hover:opacity-90">Subscribe</button>
+</div>
+</div>
+</aside>
+</main>
+<!-- Related Articles Section -->
+<section class="bg-sand dark:bg-slate-900/50 py-16 px-4 md:px-20 lg:px-40">
+<div class="max-w-7xl mx-auto">
+<h2 class="text-3xl font-bold text-deep-teal dark:text-white mb-10 font-display flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+                You Might Also Like
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<img class="h-48 w-full object-cover" data-alt="Northern Lights over a lake in Norway" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFM7Rty8-gVEwX6J4epafcWVvGaagmOIWDuS7RsNQ03g4dVnapLHp8uLxVWcqp8q8YrTBTPS_px1fSdgj9V0FlAe_0q9DxJiey2H_CM4CH_xtF5Wf22gS9EexVLc1TyFEMIFIrs9mNa2hDqnBVTmgsUHE07XNweMUZrX3X1JANtyhimM1BL_fQzTpUKpj8HFeoRbDe3l8tSKU5A57fHm0tx1mgfYA7sO9DOt5lKMP95-Mtd6IABFuwDUvD2L1-J3bNyPzfJJK-H1cp"/>
+<div class="p-5">
+<span class="text-primary text-[10px] font-bold uppercase tracking-widest">Norway</span>
+<h4 class="font-bold text-slate-900 dark:text-white mt-1 mb-2 font-display leading-snug">Chasing the Aurora: A Guide to Tromsø</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">The best spots and times to catch the magical light show in the Arctic Circle.</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<img class="h-48 w-full object-cover" data-alt="Lake Louise in Banff National Park, Canada" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjyuNtluqWERErX74qNZ-9oZ1zkohtTa5oQxWcOGIAJDT_jK9GWJr8GF7k7KrxufTqJAnp_te4oE2cL8_FxXIkwFURKwRy0W3J7ZvZv3-ry-LG2qUMNeHZG_xg5JXqzbVM0j6Bx4C_6WqIpOuAuunWkDySMPPd3saTxV6uuXsmexs2Fkdy-pmWZY5gdaRhjY_jImePSmbuHi7W7aciiJkNCyxuLU5fZDKKxv07b3v6OZw5IB8nKlZOPiQKbQXZiO2gZTGDhTcVGiVq"/>
+<div class="p-5">
+<span class="text-primary text-[10px] font-bold uppercase tracking-widest">Canada</span>
+<h4 class="font-bold text-slate-900 dark:text-white mt-1 mb-2 font-display leading-snug">The Emerald Lakes of Banff National Park</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">Discover the pristine waters and rugged peaks of the Canadian Rockies.</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<img class="h-48 w-full object-cover" data-alt="Cinque Terre coastal village in Italy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe1zAlUYumcPw9jf4PcDnJaU1tS92-aU4rxK_7r9gXp39a81AR4pEvVVYskOt4KXScpdtWC3eQrSpmdgW0kkEVg7PQ6ecyTBfqPISL8pdt1CSYpwj2r7vCBFQCktPKsBBdwKJuUpd4Buj2CCBHNeeyWWOTLK58p98TDH02Fg67RAYI1eNhor8tIUtSK9Q8_8gAI3cVbpgdHfae3dCoI2vreF_un5uSuFsQn0LEp-NYfB5YXdgF29LiS9hOuOj9qEfokfMm90a0HU-v"/>
+<div class="p-5">
+<span class="text-primary text-[10px] font-bold uppercase tracking-widest">Italy</span>
+<h4 class="font-bold text-slate-900 dark:text-white mt-1 mb-2 font-display leading-snug">Cinque Terre: Hiking the Coastal Trails</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">A complete guide to visiting the five colorful fishing villages of Italy.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Comments Section -->
+<section class="py-16 px-4 md:px-20 lg:px-40 max-w-7xl mx-auto w-full">
+<div class="max-w-3xl">
+<h2 class="text-3xl font-bold text-deep-teal dark:text-white mb-8 font-display">Discussion (3)</h2>
+<div class="space-y-8 mb-12">
+<div class="flex gap-4">
+<div class="size-12 rounded-full bg-primary/20 flex-shrink-0 flex items-center justify-center font-bold text-primary">MR</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h5 class="font-bold text-slate-900 dark:text-white">Marco Rossi</h5>
+<span class="text-xs text-slate-400">2 days ago</span>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Great guide! I visited last summer and the train ride from Interlaken is truly breathtaking. Don't forget to mention the amazing cheese fondue at the local restaurants!</p>
+<button class="text-xs font-bold text-primary mt-2">REPLY</button>
+</div>
+</div>
+<div class="flex gap-4 ml-12 border-l-2 border-slate-100 dark:border-slate-800 pl-6">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 flex-shrink-0 flex items-center justify-center font-bold text-slate-500">AW</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h5 class="font-bold text-slate-900 dark:text-white">Alice Wong</h5>
+<span class="text-xs text-slate-400">1 day ago</span>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Totally agree Marco! The fondue is a must. Also, did you hike up to Mürren or take the cable car?</p>
+<button class="text-xs font-bold text-primary mt-2">REPLY</button>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-100 dark:border-slate-700">
+<h4 class="font-bold text-slate-900 dark:text-white mb-4">Leave a Reply</h4>
+<div class="space-y-4">
+<textarea class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Write your comment here..." rows="4"></textarea>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Full Name" type="text"/>
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Email Address" type="email"/>
+</div>
+<button class="bg-primary text-deep-teal font-bold px-8 py-3 rounded-lg hover:opacity-90 transition-opacity uppercase tracking-wider text-sm">Post Comment</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-deep-teal text-white pt-20 pb-10 px-4 md:px-20 lg:px-40">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-12 mb-10">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 text-primary mb-6">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-white text-xl font-bold tracking-tight font-display">Wanderlust Explorer</h2>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed mb-6">Your premier platform for discovering hidden gems and booking curated travel experiences across the globe.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">social_leaderboard</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">camera</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">alternate_email</span>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6 font-display">Destinations</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary" href="#">Europe</a></li>
+<li><a class="hover:text-primary" href="#">Asia</a></li>
+<li><a class="hover:text-primary" href="#">North America</a></li>
+<li><a class="hover:text-primary" href="#">Oceania</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 font-display">Company</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary" href="#">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Our Guides</a></li>
+<li><a class="hover:text-primary" href="#">Contact</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 font-display">Resources</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary" href="#">Travel Insurance</a></li>
+<li><a class="hover:text-primary" href="#">Visa Guide</a></li>
+<li><a class="hover:text-primary" href="#">FAQ</a></li>
+<li><a class="hover:text-primary" href="#">Sustainability</a></li>
+</ul>
+</div>
+</div>
+<p class="text-center text-slate-500 text-xs">© 2023 Wanderlust Explorer Pro. All rights reserved.</p>
+</footer>
+</div>
+</body></html>

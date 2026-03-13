@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WanderBot: Consultation Success</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5ecad4",
+                        "accent-orange": "#FFDDD2",
+                        "deep-teal": "#006D77",
+                        "sand": "#EDF6F9",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#131e1f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-sand font-body text-slate-900">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 bg-white px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl">travel_explore</span>
+</div>
+<h2 class="text-slate-900 text-lg font-bold leading-tight tracking-[-0.015em] font-display">WanderBot</h2>
+</div>
+<div class="hidden md:flex items-center gap-9">
+<a class="text-slate-700 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Discover</a>
+<a class="text-slate-700 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Tours</a>
+<a class="text-slate-700 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">About</a>
+<a class="text-slate-700 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<label class="hidden lg:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-slate-400 flex border-none bg-slate-100 items-center justify-center pl-4 rounded-l-lg" data-icon="search">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 focus:outline-0 focus:ring-0 border-none bg-slate-100 focus:border-none h-full placeholder:text-slate-400 px-4 rounded-l-none pl-2 text-base font-normal leading-normal" placeholder="Search destinations" value=""/>
+</div>
+</label>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile avatar portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAiA_fu1LNO5-69Zo91OFkpmiwgflZlS2JE0BE3AOQibNPJxs7YoVxr_N9Dy4NleJMEpz-417wtc6oXVHOwqO6naCHs8r3Bm0wv1Uqx23xPIn9lcZyNj1qtT13HpYYyzEFWfKUkz99u6fC7FFyXc5FyUHAYwsNDnAnB1ZwyS8aau0HTDBsPHXbdWyPSs6O6PuICC9eWL5jp8Jc9AO5L7jWwR94tG075OMAJ203f8LZDJuGbejd3Tm0eEc5bC6A-92KOmWk8x6ECS5zG");'></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex flex-1 justify-center py-10 px-4">
+<div class="layout-content-container flex flex-col max-w-[600px] flex-1">
+<!-- Success Card -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+<div class="p-8 flex flex-col items-center text-center">
+<!-- Celebratory Icon -->
+<div class="size-20 bg-accent-orange rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-5xl font-bold">check</span>
+</div>
+<h1 class="text-slate-900 tracking-light text-[32px] font-bold leading-tight pb-3 font-display">You're All Set!</h1>
+<p class="text-slate-600 text-base font-normal leading-relaxed pb-8 max-w-md">
+                            A travel expert will reach out to you shortly at your provided contact number to help you finalize your <span class="font-semibold text-deep-teal">Wanderlust Explorer Pro</span> experience.
+                        </p>
+<!-- Timeline Section -->
+<div class="w-full text-left bg-slate-50 rounded-xl p-6 mb-8">
+<h3 class="text-slate-900 text-lg font-bold leading-tight tracking-tight mb-6 font-display">What to Expect</h3>
+<div class="grid grid-cols-[40px_1fr] gap-x-4">
+<!-- Step 1 -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-xl">phone_in_talk</span>
+</div>
+<div class="w-0.5 bg-slate-200 h-10 my-1"></div>
+</div>
+<div class="flex flex-col pb-6">
+<p class="text-slate-900 text-base font-semibold">Consultation</p>
+<p class="text-slate-500 text-sm">A quick call to discuss your travel preferences and budget.</p>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-xl">edit_document</span>
+</div>
+<div class="w-0.5 bg-slate-200 h-10 my-1"></div>
+</div>
+<div class="flex flex-col pb-6">
+<p class="text-slate-900 text-base font-semibold">Itinerary Review</p>
+<p class="text-slate-500 text-sm">Customized day-by-day plan delivered to your inbox for feedback.</p>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-xl">confirmation_number</span>
+</div>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-900 text-base font-semibold">Booking</p>
+<p class="text-slate-500 text-sm">Secure your spot with a deposit and get ready for your adventure.</p>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 w-full">
+<button class="flex-1 bg-deep-teal hover:bg-opacity-90 text-white font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">explore</span>
+                                Browse More Tours
+                            </button>
+<button class="flex-1 bg-white border-2 border-slate-200 hover:border-primary text-slate-700 font-bold py-4 px-6 rounded-lg transition-all">
+                                View My Dashboard
+                            </button>
+</div>
+</div>
+<!-- Footer Help -->
+<div class="bg-slate-50 border-t border-slate-100 p-4 text-center">
+<p class="text-slate-500 text-xs">
+                            Need immediate assistance? Call us at <span class="text-primary font-semibold">+1 (800) WANDER-BOT</span>
+</p>
+</div>
+</div>
+<!-- Suggested Destination Preview -->
+<div class="mt-10">
+<h4 class="text-slate-900 font-bold mb-4 font-display">Recommended for your Pro plan</h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="relative group cursor-pointer overflow-hidden rounded-xl h-40">
+<div class="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/20 transition-all z-10"></div>
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Scenic view of Venice canals at sunset" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuByZ8wCrBYd30DzTPsX90Dh_8flz-UUT_MhaMlLDpoMRA2ELmXyzzNEm7CCnRLCnDQYHGnUaiIxAFlQbm70JC1Ehsx3ry4CAXUe73RV9HKaypgI_1n8NGJAFtkwY71oSykCQ1OUefTLF2FOvT1FKrfITRVCIDVTY8Dd59I8xlF1qE_0U8zRW7vQZfGxdK9UbYnR_59DjpEK5lZ2BY6zJrgeSl5Qts-_1uPvv9h4ADDthNDLvX1_tNbsV7QCMBPIibWYylD5DICXtWig');"></div>
+<div class="absolute bottom-4 left-4 z-20">
+<p class="text-white font-bold text-lg">Italian Riviera</p>
+<p class="text-white/80 text-sm">Explorer Exclusive</p>
+</div>
+</div>
+<div class="relative group cursor-pointer overflow-hidden rounded-xl h-40">
+<div class="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/20 transition-all z-10"></div>
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Lush green mountains and valleys in Switzerland" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBuHKd8s1NcZg9s6Pa6kkbfU3baSCus78lQOLkwo_7jTBZG2BzkyHWlFa1B-hXP0F8WT8E8VHe2FIUrKHHxU_CJa3VaP81pzp-cosVsdw7hrUq1KCksOv-1UnxyiU_ixCUf5hEKVa0zllxkdMWRaTh3uMhHumor09YJ3GpKwIQ7mRZ7XIcTLeS30kpU5IYzOfVxaGUcz-IoE3_8SGY0gq8byMI4l27f-e1jCP7m9KGor_TBmQrXn5fFo4B7Bf4POcU2MzaHp5YrLbPL');"></div>
+<div class="absolute bottom-4 left-4 z-20">
+<p class="text-white font-bold text-lg">Swiss Alp Treks</p>
+<p class="text-white/80 text-sm">Luxury Trekking</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto py-8 text-center text-slate-400 text-sm">
+            © 2024 WanderBot Travel Agency. All rights reserved.
+        </footer>
+</div>
+</div>
+</body></html>

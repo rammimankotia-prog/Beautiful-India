@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Bookings History - Wanderlust Explorer Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006c75",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2223",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-72 bg-white dark:bg-slate-900 border-r border-primary/10 flex flex-col fixed h-full">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="size-10 rounded-full bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<div>
+<h1 class="text-primary font-bold text-lg leading-tight">Wanderlust</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Explorer Pro</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-medium text-sm">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="font-medium text-sm">My Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 transition-colors" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-medium text-sm">Saved Trips</span>
+</a>
+<div class="h-px bg-primary/10 my-4"></div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Account Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium text-sm">Sign Out</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6 border-t border-primary/10">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 bg-cover bg-center" data-alt="User profile portrait in sidebar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCaoaY6M6nc_5B5k8UzYb-PjtjZefF_SbyfPrbXIw_qVHAM6L7PENTTxRj53PY3sCgcm_4wJPfCjHWm1VRc71KiWvxvoUwzJqzMVcmWSc6J04SDSkA-bAqxD79Bfg3QuxRQ887gkVeKVJfx19dzpM8O8IS86z3SzHdkSNRt1kAshe44QODYM1Y4zGpv6nV-YW2haS4vsPIRq1Tc8TqUborZ2emPDpZfwWqUUo7DUN9jBNfFGwLTiq6fs11DDkkJ-0OWKky0rspCUBBl')"></div>
+<div>
+<p class="text-sm font-bold truncate max-w-[120px]">Alex Rivers</p>
+<p class="text-xs text-slate-500">Premium Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-72 p-8">
+<header class="mb-8">
+<div class="flex items-end justify-between">
+<div>
+<h2 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">My Bookings</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Track your upcoming journeys and revisit past memories.</p>
+</div>
+<div class="flex bg-white dark:bg-slate-900 p-1 rounded-xl shadow-sm border border-primary/5">
+<button class="px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-sm">Active</button>
+<button class="px-6 py-2 rounded-lg text-slate-500 dark:text-slate-400 text-sm font-bold hover:bg-primary/5 transition-colors">Cancelled</button>
+</div>
+</div>
+</header>
+<!-- Tabs Section -->
+<div class="mb-8 border-b border-primary/10">
+<div class="flex gap-8">
+<button class="pb-4 border-b-2 border-primary text-primary font-bold text-sm">Upcoming Trips (2)</button>
+<button class="pb-4 border-b-2 border-transparent text-slate-500 dark:text-slate-400 font-bold text-sm hover:text-primary transition-colors">Past Adventures (14)</button>
+</div>
+</div>
+<!-- Upcoming Trips Section -->
+<section class="space-y-6 mb-12">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+                        Upcoming Trips
+                    </h3>
+</div>
+<div class="grid grid-cols-1 gap-6">
+<!-- Booking Card 1 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:shadow-md transition-shadow flex h-52">
+<div class="w-72 relative flex-shrink-0 overflow-hidden">
+<div class="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110" data-alt="Tropical villa in Bali with pool" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA8JTtzu6M0EaJn00YpWDl8YS5pBUhhsT5QAkEI7sP-y-UrAW3IdXJzQrOOIGYGprkYG8m816bbZmqxwWEnX0LGd86g_11UgwE_nyKaJUyxvuIy8rCBlV7FH7lD24NP11rhG4L9pJC4g_48oX97QUmW3x53yLfDJct520kgYtVxTVMJS3UJgu-UkL1TB3CPFACg9hBhCTYxyTjnaM0hhydYyazyQPXXfNHkAc7y5k741iqYayudTfW8ncIe8lW_hzdGg2qjjngPCBZE')"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Confirmed</span>
+</div>
+</div>
+<div class="flex-1 p-6 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-primary mb-1 uppercase tracking-widest">Adventure Tour</p>
+<h4 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">Magical Bali Retreat &amp; Wellness</h4>
+</div>
+<p class="text-xs font-medium text-slate-400">ID: #WL-88291</p>
+</div>
+<div class="flex gap-6 mt-1">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+<span class="material-symbols-outlined text-sm">event</span>
+                                    Oct 12 - Oct 20, 2023
+                                </div>
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    Ubud, Indonesia
+                                </div>
+</div>
+<div class="mt-auto flex items-center justify-between pt-4 border-t border-primary/5">
+<div class="flex -space-x-2">
+<div class="size-8 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 bg-cover bg-center" data-alt="Traveler avatar thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB--ijT2z24OQruu7FSBKFT7v9se9KF0nVM84iXX4rUoXd6SFDGrZZx2HeIN0kir7ZZIxlpiP7c8sPO6tiZTo2-44QlupP0QaTYQERUY9IL9VapcBSvADbaB0s5mk4boilsnxgLMPyWAb7QMe-WOPgjoC_UBtkBOon5GbQeMr_q6Z2cYhvTSEeJ1SiWAbheMR4AjsnAoExGr1CeKFsOE26hJFwjGuB9Zu0VVaLNieFDBbmiGvEPyH9w4QP_g968EXu1dVUqGEIl8FDw')"></div>
+<div class="size-8 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 bg-cover bg-center" data-alt="Traveler avatar thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuArjxSlSYTaZ2bgyYQBlScEqUCq_zUL6N-lnADEdpmGk-a-ovL-eqqCi3QUtCKX8A3CTBvSW0Vi2SmXNgRB2hCb9JgGKY76gKHeYINg4UGTOTbtIfspYZAkQfIazpvuhX0oWGTW0ODBspmPGXqd-PfyK-UkgBqJsTDmYQsIkUS3IYn3kiw2rR5RyMvIx4sTEjeBOIMFVUciKwdYHyhYUn2uHcF8LLS18VzdHonzaljZHOPNHnPZWF-fXmcPSs3Hw_RlNRgHnNFY8vyy')"></div>
+<div class="size-8 rounded-full border-2 border-white dark:border-slate-900 bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">
+                                        +1
+                                    </div>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 rounded-lg text-primary text-sm font-bold border border-primary hover:bg-primary/5 transition-colors">Manage</button>
+<button class="px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors flex items-center gap-2">
+                                        View Details
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Booking Card 2 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:shadow-md transition-shadow flex h-52">
+<div class="w-72 relative flex-shrink-0 overflow-hidden">
+<div class="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110" data-alt="Colorful houses on Amalfi Coast cliff" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAFtC0eMTm-ILoBrVRbm4SFtBbTa81yL8t6McFnjHXwtGvsD7xsjRWI2YPpkFrl-GN1hYSrShVnH3_uY337T6Q3uHGHjWmOuCckolz-iZACl8vQkFKe_NPwJ0ZTj1FWOwJwGH5AoFfjZ6w7nURtlgrSaDosajNasi6XCJ_Kv2IM5OP2DlG0HPpB-DdjQeCzHfk4yhmiL5TOnPuKwmkJaBTmSFJy_fQZH9lwDJynFSMts4tHLbuwFSChYiOkH991Qk3UVihrC1zYva9U')"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-amber-500 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Pending Payment</span>
+</div>
+</div>
+<div class="flex-1 p-6 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-primary mb-1 uppercase tracking-widest">Sightseeing</p>
+<h4 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">Amalfi Coast Luxury Escape</h4>
+</div>
+<p class="text-xs font-medium text-slate-400">ID: #WL-89442</p>
+</div>
+<div class="flex gap-6 mt-1">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+<span class="material-symbols-outlined text-sm">event</span>
+                                    Nov 05 - Nov 12, 2023
+                                </div>
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    Positano, Italy
+                                </div>
+</div>
+<div class="mt-auto flex items-center justify-between pt-4 border-t border-primary/5">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-amber-600">Action Required: Complete Payment</span>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors">Complete Booking</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Past Adventures Section -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+                        Past Adventures
+                    </h3>
+<button class="text-sm font-bold text-primary hover:underline">View All History</button>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Past Trip Card 1 -->
+<div class="bg-white/60 dark:bg-slate-900/60 rounded-xl p-4 border border-primary/5 flex items-center gap-4 hover:bg-white dark:hover:bg-slate-900 transition-colors">
+<div class="size-20 rounded-lg overflow-hidden flex-shrink-0">
+<div class="w-full h-full bg-center bg-cover" data-alt="Eiffel Tower in Paris at sunset" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBwwwWNrst8iDPVofDP29HlQHWLjJhKm_8Dm4o8xhOZfHmMzqsbxpjy5Co-nIsL1LoHA5Gi0_PsoMHUdWjkpsBuE3eX8G9TYZ7Zd6BXENyGWjJHPSY1Q1fuFfnj_u6XZPjKbvRvEmwxRkSdd1hcVlsBYsrxkZQfR7lkZy1Umg1zF11hUfA-ABvSAxRTh738sQrX36gbhP5hnMYp2XPPuvAMGvbhkEC0tL1E9WYz0mmJ5buXjEjkuyWFxbj3L7MSLkqITj0LgcjEp_pB')"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h5 class="font-bold text-slate-900 dark:text-slate-100">Parisian Lights &amp; Gastronomy</h5>
+<p class="text-xs text-slate-500 dark:text-slate-400">Completed on Aug 15, 2023 • 5 Nights</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Completed</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="size-10 flex items-center justify-center rounded-lg border border-primary/20 text-primary hover:bg-primary/5 transition-colors" title="Download Invoice">
+<span class="material-symbols-outlined">download_for_offline</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors">Review Trip</button>
+</div>
+</div>
+<!-- Past Trip Card 2 -->
+<div class="bg-white/60 dark:bg-slate-900/60 rounded-xl p-4 border border-primary/5 flex items-center gap-4 hover:bg-white dark:hover:bg-slate-900 transition-colors">
+<div class="size-20 rounded-lg overflow-hidden flex-shrink-0">
+<div class="w-full h-full bg-center bg-cover" data-alt="The Taj Mahal in Agra India" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD4FNsjOv_bQAhgKamN7HBC7xA3CNMYCflt_qKl7u3iTz4T6ASJzChf_LwdonzAlXmXkPkaTVYlI1tUqv_C-4tpZLCetlJeqbmA5OWtWwSaXn0u1iPAs6jBOLUwfufsS9XId4aMPP-ovx4KyvubPBXRsqfLXNc4zoQvWeI8MD85Bs1xoAq30cCUwg0fxKYMQA2Xb9iEuKHHiQRME0r76MGk5V2Q8EgKjGdzG1jgJQ1i0Fl5BilxcfrA8lSCKVdtsbZU2_6byVpBhxKs')"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h5 class="font-bold text-slate-900 dark:text-slate-100">Golden Triangle Cultural Tour</h5>
+<p class="text-xs text-slate-500 dark:text-slate-400">Completed on Jun 22, 2023 • 10 Nights</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Completed</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="size-10 flex items-center justify-center rounded-lg border border-primary/20 text-primary hover:bg-primary/5 transition-colors" title="Download Invoice">
+<span class="material-symbols-outlined">download_for_offline</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors">Review Trip</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

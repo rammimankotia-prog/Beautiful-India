@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin New Tour Upload Form</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006c75",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2223",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Select Arrow inspired by component list */
+        .custom-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen antialiased">
+<!-- Top Navigation / Header area -->
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">explore</span>
+<span class="text-xl font-bold tracking-tight">WanderAdmin</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
+                A
+            </div>
+</div>
+</header>
+<main class="layout-container flex h-full grow flex-col px-4 md:px-8 lg:px-12 py-8 max-w-5xl mx-auto">
+<!-- Page Heading component adapted -->
+<div class="flex flex-col gap-2 mb-8">
+<div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-2">
+<a class="hover:text-primary" href="#">Tours</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100 font-medium">Add New</span>
+</div>
+<h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight">Create New Tour</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal">Fill in the comprehensive details below to publish a new tour package.</p>
+</div>
+<!-- Form Container -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<form class="p-6 md:p-8 space-y-8">
+<!-- Section 1: Basic Info -->
+<div class="space-y-6">
+<h2 class="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Basic Information</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Title -->
+<div class="col-span-1 md:col-span-2">
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Title <span class="text-red-500">*</span></span>
+<input class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" placeholder="e.g. 7-Day Majestic Alps Adventure" required="" type="text"/>
+</label>
+</div>
+<!-- Description (Rich Text Mock) -->
+<div class="col-span-1 md:col-span-2">
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Description</span>
+<div class="border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors">
+<!-- Toolbar Mock -->
+<div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 px-3 py-2 flex gap-2 text-slate-500 dark:text-slate-400">
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">format_bold</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">format_italic</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">format_underlined</span></button>
+<div class="w-px h-5 bg-slate-300 dark:bg-slate-700 mx-1 self-center"></div>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">link</span></button>
+</div>
+<textarea class="w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 text-sm border-0 focus:ring-0 min-h-[160px] resize-y placeholder-slate-400" placeholder="Write a compelling description of the tour..."></textarea>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- Section 2: Categorization -->
+<div class="space-y-6">
+<h2 class="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Categorization &amp; Details</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Destinations -->
+<div>
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Primary Destination</span>
+<select class="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option disabled="" selected="" value="">Select destination region</option>
+<option value="europe">Europe</option>
+<option value="asia">Asia</option>
+<option value="americas">Americas</option>
+<option value="africa">Africa</option>
+<option value="oceania">Oceania</option>
+</select>
+</label>
+</div>
+<!-- Theme -->
+<div>
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Theme</span>
+<select class="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option disabled="" selected="" value="">Select main theme</option>
+<option value="cultural">Cultural Immersion</option>
+<option value="adventure">Adventure &amp; Sports</option>
+<option value="relaxation">Relaxation &amp; Wellness</option>
+<option value="wildlife">Wildlife &amp; Safari</option>
+<option value="culinary">Culinary Experience</option>
+</select>
+</label>
+</div>
+<!-- Nature -->
+<div>
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Nature</span>
+<select class="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option disabled="" selected="" value="">Select nature type</option>
+<option value="group">Guided Group</option>
+<option value="private">Private Guided</option>
+<option value="self-drive">Self-Drive</option>
+<option value="cruise">Cruise</option>
+</select>
+</label>
+</div>
+<!-- Style -->
+<div>
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Accommodation Style</span>
+<select class="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option disabled="" selected="" value="">Select style</option>
+<option value="budget">Budget / Hostels</option>
+<option value="standard">Standard (3-Star)</option>
+<option value="comfort">Comfort (4-Star)</option>
+<option value="luxury">Luxury (5-Star+)</option>
+</select>
+</label>
+</div>
+<!-- Price Range -->
+<div>
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Price Category</span>
+<select class="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option disabled="" selected="" value="">Select category</option>
+<option value="low">$ (Economy)</option>
+<option value="medium">$$ (Moderate)</option>
+<option value="high">$$$ (Premium)</option>
+<option value="ultra">$$$$ (Ultra Luxury)</option>
+</select>
+</label>
+</div>
+<!-- Budget Number Input -->
+<div>
+<label class="flex flex-col flex-1">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Exact Base Price / Budget</span>
+<div class="relative flex items-center">
+<span class="absolute left-4 text-slate-500 font-medium">$</span>
+<input class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400" min="0" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- Section 3: Media -->
+<div class="space-y-6">
+<h2 class="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Media Gallery</h2>
+<div class="col-span-1 md:col-span-2">
+<label class="block text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Images</label>
+<!-- Drag & Drop Area -->
+<div class="mt-2 flex justify-center rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 px-6 py-12 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-primary/50 transition-colors group">
+<div class="text-center">
+<span class="material-symbols-outlined text-5xl text-slate-400 group-hover:text-primary transition-colors">add_photo_alternate</span>
+<div class="mt-4 flex text-sm leading-6 text-slate-600 dark:text-slate-400 justify-center">
+<label class="relative cursor-pointer rounded-md font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary/80" for="file-upload">
+<span>Upload files</span>
+<input accept="image/*" class="sr-only" id="file-upload" multiple="" name="file-upload" type="file"/>
+</label>
+<p class="pl-1">or drag and drop</p>
+</div>
+<p class="text-xs leading-5 text-slate-500 mt-1">High-res PNG, JPG, WEBP up to 10MB each</p>
+</div>
+</div>
+<!-- Mock Uploaded Images Preview -->
+<div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="relative group rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 aspect-video bg-slate-100 dark:bg-slate-800">
+<div class="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800" data-alt="Mock image placeholder generic landscape"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="text-white hover:text-red-400 p-1" type="button"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<div class="absolute top-2 left-2 bg-slate-900/70 text-white text-[10px] px-2 py-1 rounded uppercase tracking-wider font-semibold">Cover</div>
+</div>
+<div class="relative group rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 aspect-video bg-slate-100 dark:bg-slate-800">
+<div class="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800" data-alt="Mock image placeholder city view"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="text-white hover:text-red-400 p-1" type="button"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</form>
+<!-- Form Actions Footer -->
+<div class="bg-slate-50 dark:bg-slate-800/50 px-6 md:px-8 py-5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3 rounded-b-xl">
+<button class="px-5 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent" type="button">
+                    Discard Draft
+                </button>
+<button class="px-5 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/10 transition-colors border border-primary/20" type="button">
+                    Save as Draft
+                </button>
+<button class="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all shadow-sm flex items-center gap-2" type="submit">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                    Publish Tour
+                </button>
+</div>
+</div>
+</main>
+</body></html>

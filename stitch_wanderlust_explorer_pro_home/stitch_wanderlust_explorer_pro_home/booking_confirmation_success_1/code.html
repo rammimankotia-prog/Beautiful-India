@@ -1,0 +1,122 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f45525",
+                        "deep-teal": "#006D77",
+                        "sunset-orange": "#FFDDD2",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#221410",
+                    },
+                    fontFamily: {
+                        "display": ["Montserrat", "sans-serif"],
+                        "sans": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            h1, h2, h3, button, .font-montserrat {
+                font-family: 'Montserrat', sans-serif;
+            }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col blur-sm pointer-events-none opacity-50">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">Wanderlust Explorer Pro</h2>
+</div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-10 px-4">
+<div class="layout-content-container flex flex-col max-w-[800px] flex-1">
+<div class="relative w-full rounded-xl overflow-hidden mb-8 shadow-xl">
+<div class="bg-cover bg-center flex flex-col justify-end min-h-[300px]" style='background-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqF8bWltZdDHQRRnJwtV4TOaFtNlNkcpFDsHi5p89cbqGhlqUdHoaB3Is8xUp2idQGITxOEKdfUPNQW7gEjcSVc6HUKrjHBYCGoljp3ys5JIyo0BGUKGn3B3QwnhUYsf8J3xhd2SL8XTMWMvNu9vNNueYKSPmQedbK1OgURGAEEaLt4bvz_f-AekHsiQXunGjEeTXJGXYEAZrB5gBiQ0mBdPb1wbO7tflFFakXzs6hd5yLnbCLEmshGSnGkkZhZJhhcBom2AQhfJ8h");'>
+<div class="p-8">
+<h1 class="text-white tracking-tight text-4xl font-extrabold leading-tight">Your Adventure Awaits!</h1>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/60 backdrop-blur-sm">
+<div class="relative flex flex-col md:flex-row w-full max-w-4xl bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-2xl">
+<button class="absolute top-4 right-4 z-50 p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white md:text-slate-400 md:bg-transparent md:hover:bg-slate-100 dark:md:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-2xl leading-none">close</span>
+</button>
+<div class="hidden md:block w-1/2 min-h-[500px] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBzjHTkw6BzXrt8gzcAgB4701JSbb2CV6E37v9UObJ0KGUvVuuLvLn9IZ-wL79DOyxUbCtm4O3tYCg_vUwbzamOAgHqWD79OpyRI_e37vCXDXFiPoNiWsaftS7rTtAfir33HK95O-2iYwSqQ5kh7TZh1RgWgPMtk8u7qb1MbNAharBPq310XcthQA__R5fCUarrnsb0hio0nqfCZAhQ_x930rq4G-snIGeDweSqPyhyWXS5SnwkqYn9-BYwYDCUsvtPW_Kic8fJ1rzg");'>
+<div class="w-full h-full bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-end p-10">
+<div class="flex items-center gap-2 text-white/90">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs font-semibold uppercase tracking-widest">Tropical Paradise, Maldives</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col justify-center p-8 md:p-12 lg:p-16 text-center md:text-left">
+<div class="mb-8">
+<div class="inline-block px-3 py-1 bg-deep-teal/10 text-deep-teal rounded-full text-xs font-bold uppercase tracking-widest mb-4">Limited Time Offer</div>
+<h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight mb-4">
+                            Get <span class="text-primary">$50 Off</span> Your First Adventure
+                        </h2>
+<p class="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed">
+                            Sign up for our newsletter and receive exclusive travel deals and inspiration straight to your inbox.
+                        </p>
+</div>
+<form class="space-y-4" onsubmit="return false;">
+<div class="flex flex-col">
+<label class="sr-only" for="email">Email Address</label>
+<input class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-deep-teal rounded-2xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-4 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all font-medium" id="email" placeholder="Enter your email address" type="email"/>
+</div>
+<button class="w-full py-4 bg-sunset-orange text-deep-teal font-bold text-lg rounded-2xl hover:brightness-95 active:scale-[0.98] transition-all shadow-lg shadow-sunset-orange/30">
+                            Subscribe &amp; Save
+                        </button>
+</form>
+<div class="mt-8">
+<button class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 text-sm font-medium transition-colors underline decoration-slate-300 underline-offset-4">
+                            No thanks, I prefer paying full price
+                        </button>
+</div>
+<div class="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center md:justify-start gap-6 opacity-60">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg text-deep-teal">verified_user</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Secure</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg text-deep-teal">mail</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Weekly Updates</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

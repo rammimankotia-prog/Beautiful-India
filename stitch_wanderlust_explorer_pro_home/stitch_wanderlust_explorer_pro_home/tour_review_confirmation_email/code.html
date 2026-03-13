@@ -1,0 +1,171 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffddd1",
+                        "accent-teal": "#006d77",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#23140f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"],
+                        "serif-alt": ["Montserrat"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5 px-4 md:px-10 lg:px-40">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1 bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden">
+<!-- Header/Brand Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/20 px-6 py-4 lg:px-10">
+<div class="flex items-center gap-3 text-accent-teal dark:text-primary">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight font-serif-alt uppercase">Wanderlust Explorer Pro</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-accent-teal" href="#">Tours</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-accent-teal" href="#">My Bookings</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-accent-teal" href="#">Support</a>
+</nav>
+<div class="bg-primary/30 rounded-full p-1">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User profile picture in a circle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB1xWtqM75TA2yYT_O_wxLhaBDIaW8u8YmtM00e17Xjk8XFZLlXIst2cCa7MYVDroyqO7UYJ-k1QbQZLj6H9q2NUQEaX9DN6P7VH9Aod6YaILRlSDXNlOPaKu5CjnGLcyEWmTdLbMDGRACWnfHvQtnoLfzu66UkwfaidgChMZN51yLQIVk0WOulV762St3eh8wPOeX-wsY1ZGMutt7nJSh1U80fJq5UJvol-CgCVXrbp7UQ9510nDN9oBQrITV59L8GioOdZ4UFIk0q");'></div>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<div class="@container">
+<div class="p-0 sm:p-4">
+<div class="bg-cover bg-center flex flex-col justify-end overflow-hidden sm:rounded-xl min-h-[280px] relative" data-alt="Scenic tropical beach at sunset with palms" style='background-image: linear-gradient(180deg, rgba(0, 61, 68, 0.2) 0%, rgba(0, 109, 119, 0.7) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBt9etQPCKXzrTzsGnGz_hU6UvImnYDIaW0M8ohQanBGlOBhwJJ8Odb2ofGoR1_k4sRaXJxpJeoHFXo5OaijSFOYA-qr9NkNlJDuMZfayatXgfYanbRIBwgJfIORXgZGzBPxxy3rTPAS-4sws6JScerutC8VCKSEW4A11LPltJt_7iAKvHXRoWLZXgJDJFZXTCNt2Es91ble4erFYIuixQ2vaF3OXjae5IS1_PYmfxB_MyTA70ano62ihmw9UipaGuh0XlUlT2KSXr1");'>
+<div class="flex p-6 lg:p-10 flex-col gap-2">
+<span class="text-primary font-bold tracking-widest text-xs uppercase">Feedback Confirmed</span>
+<p class="text-white tracking-tight text-3xl lg:text-4xl font-bold leading-tight font-serif-alt">Thank You for Sharing Your Journey</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Feedback Content -->
+<div class="flex flex-col gap-8 p-6 lg:p-10">
+<div class="flex flex-col gap-3 max-w-2xl">
+<h1 class="text-accent-teal dark:text-primary tracking-tight text-3xl font-bold leading-tight font-serif-alt">Your feedback matters</h1>
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-relaxed">
+                                Hi there! Thank you for sharing your experience with the Wanderlust community. Your review helps fellow travelers discover their next great adventure and ensures we keep providing world-class experiences.
+                            </p>
+</div>
+<!-- Reviewed Tour Card -->
+<div class="bg-background-light dark:bg-slate-800/50 p-6 rounded-xl border border-primary/10">
+<div class="flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex-1 flex flex-col gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex gap-1 text-primary mb-1">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1)">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+</div>
+<p class="text-accent-teal dark:text-primary text-xl font-bold leading-tight font-serif-alt">Ancient Ruins of Petra Tour</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal">You recently reviewed this tour. Thank you for your 5-star rating!</p>
+</div>
+<button class="flex items-center justify-center gap-2 rounded-full h-12 px-8 bg-primary text-slate-900 text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-all w-fit">
+<span>View Your Review on Site</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<div class="w-full md:w-64 aspect-video bg-center bg-no-repeat bg-cover rounded-lg shadow-md" data-alt="The Treasury building in Petra Jordan" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_jW-0EbXQ58M3XM6-BsVpG10EE5lzoDv-KNYXDsqZUezWdkhJHj9KKiZCnxMLS8qEx20Qt0c9ShCluTwkwLH3Kwu8pQZZhc7rTWi096kADuHrYlNSES6jmLj2c2jEub4d943SkHlwLoNe7XS4eiL0xtw-eg_5LG2_Tj_Y4RgAPxVa1PJoxS0tL1wL8YM-fcrxZqBW5pMzH5X33otACCNLRA-l50RhXRq-kjhwuT5cu1UiZxAoTt7zYCyqsWDf-8itJZ0qd33FSh-4");'></div>
+</div>
+</div>
+</div>
+<!-- Recommendations Section -->
+<div class="px-6 lg:px-10 pb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-accent-teal dark:text-primary text-2xl font-bold leading-tight font-serif-alt">Where to Next?</h2>
+<a class="text-sm font-bold text-slate-500 hover:text-accent-teal flex items-center gap-1" href="#">View all <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="aspect-[4/3] rounded-xl overflow-hidden relative">
+<div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all"></div>
+<div class="w-full h-full bg-center bg-cover" data-alt="Cinque Terre coastal village houses" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCjStgFwS0Edq6MBj7ipvh2SOOIzt5tBSpWe6-3iiJairSlgePw7oQAcYabxM-qRRf2_sxLy65QzxirUM068jBz-du-csil5UyqwNvYKDxc_X-3RsWD8C9VBMDvZdAsreXe8QO4UsBMaDzWOSTje9rUMfgeTcD1geKnnVfaoA5Q7x3AIDI9w4E9TOlhYR_9xAFIV-pUHkfkOkzQ1QWdRkfc33I7qyjoCsR2uRPaJi0B_FSEWtSuWUYT7vUhslubWDgUL3ggx089LxOD");'></div>
+<div class="absolute top-3 left-3 bg-white/90 px-2 py-1 rounded-md text-[10px] font-bold uppercase text-slate-900">Recommended</div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-base group-hover:text-accent-teal transition-colors">Italian Coastal Escape</h3>
+<p class="text-slate-500 text-xs mt-1">7 Days • Amalfi Coast</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="aspect-[4/3] rounded-xl overflow-hidden relative">
+<div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all"></div>
+<div class="w-full h-full bg-center bg-cover" data-alt="Yosemite national park valley view" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDesZ19_mhymGw5H-CbkGzDEXtgrWaig4dBOUF42pIY28JXkD1W4E1bxMRRq-rAg2NUNeAGuS-FnHdkZgDfoeOgUrGROAgICmVSDNSWVmepHMyu07QySwUPS3WddJ-3a9Wy9VHU5NGDdaaQKjjiZlvoNCSUHlmE39dby5iTz_x9vUqQEhrR1DQ5s1jo2V-UlmQpHtIQT8iIpMKShS1_YQOgFhfTScnFOMo_Ar1Dvxdq9ahztf5TZzWhKPJ57fHA2-FPJICUmuvanrSt");'></div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-base group-hover:text-accent-teal transition-colors">Yosemite Trails Expedition</h3>
+<p class="text-slate-500 text-xs mt-1">5 Days • California, USA</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="aspect-[4/3] rounded-xl overflow-hidden relative">
+<div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all"></div>
+<div class="w-full h-full bg-center bg-cover" data-alt="Traditional Kyoto temple with autumn leaves" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCV4eXJoPvJf0hjCtSSx_N4b9Nhe69rL_xsecRJuLMpeS8D0QNp2hjGFol2CcYztzdxx5_ycOzmJL1J_DeI_F8smn1ZO0oFZtQAa-Oe3SxG9ApM6OF2er-G1ffGzC2hbjfsDRgR9sjUUvjovZE0PWWvvc5jIZbLYugsHj-fxYeOfU4Hy4zxmKM5L6JgkEm6ZloEJ2wiRVpguNolBvk3aD3jK6AGzSPhcrhra2gBdociNI9Sv8md-XnEIX4RsmtbyeBkOJARFQyxmij9");'></div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-base group-hover:text-accent-teal transition-colors">Kyoto Heritage Walk</h3>
+<p class="text-slate-500 text-xs mt-1">4 Days • Kyoto, Japan</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-background-light dark:bg-slate-950 px-6 py-10 lg:px-10 border-t border-primary/20">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col gap-2 text-center md:text-left">
+<p class="text-accent-teal font-bold font-serif-alt uppercase text-sm tracking-widest">Share the Adventure</p>
+<p class="text-slate-500 text-sm">Tell your friends about your journey on social media.</p>
+<div class="flex gap-4 mt-4 justify-center md:justify-start">
+<a class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-accent-teal hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-accent-teal hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined">add_reaction</span>
+</a>
+<a class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-accent-teal hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined">camera_enhance</span>
+</a>
+</div>
+</div>
+<div class="text-center md:text-right flex flex-col gap-2">
+<p class="text-slate-400 text-xs">Wanderlust Explorer Pro, 123 Discovery Way, Adventure City</p>
+<div class="flex gap-4 justify-center md:justify-end text-xs text-slate-500 font-medium">
+<a class="hover:underline" href="#">Unsubscribe</a>
+<a class="hover:underline" href="#">Privacy Policy</a>
+<a class="hover:underline" href="#">Contact Us</a>
+</div>
+<p class="text-slate-400 text-[10px] mt-2">© 2024 Wanderlust Explorer Pro. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</div>
+</div>
+
+```</body></html>

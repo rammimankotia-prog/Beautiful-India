@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Packing List Generator | Wanderlust Explorer Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006c75",
+                        "accent-orange": "#FFDDD2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2223",
+                        "sand": "#EDF6F9"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "montserrat": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight font-montserrat">Wanderlust Explorer Pro</h2>
+</div>
+<div class="hidden lg:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Discover</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">My Trips</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Community</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Deals</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-cover bg-center border-2 border-primary/20" data-alt="User profile avatar portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBktMY5xdKQ_erEE05kytPmTA96-9KoHoCNMxz8dCSIODh4jFdh85L31AXL0ja8GlYUMaH650xAWZ3mqJxnkC9bwk0RoPDUkI9kJiJn1eat2sgcgfcKHLSqTYuvLRnQeIg8gc0obJS9uopJCqrrsIFyL9kYIeWLPr5RVvwUrd3FGYFCQnwe-fw0bLtrZL3VwAMsee6Ab5eU2jkwgJ1GIFHhJ2idaqyUvvztha6U1F0TCSdgDtvQkx9LQqx-RlR7F8Pt5jYYfkqKVfr_')"></div>
+</div>
+</header>
+<main class="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+<!-- Hero Title Section -->
+<div class="flex flex-wrap justify-between items-end gap-6 mb-10">
+<div class="flex-1 min-w-[300px]">
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl font-extrabold leading-tight tracking-tight font-montserrat mb-2">Smart Packing List Generator</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg">Tailor your gear based on your destination, weather, and activities.</p>
+</div>
+<button class="flex items-center justify-center gap-2 rounded-xl h-12 px-6 bg-accent-orange text-slate-900 font-bold font-montserrat shadow-sm hover:shadow-md transition-all active:scale-95">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+<span>Download as PDF</span>
+</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Main Content: Configuration & Checklist -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Trip Config Section -->
+<section class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-primary/5">
+<h2 class="text-xl font-bold font-montserrat mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">travel_explore</span>
+                            Trip Details
+                        </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Destination</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">location_on</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-primary/10 bg-sand/30 focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="e.g. Bali, Indonesia" type="text" value="Santorini, Greece"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Trip Duration</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">calendar_month</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-primary/10 bg-sand/30 focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="e.g. 7 Days" type="text" value="10 Days"/>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Planned Activities</label>
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white text-sm font-medium">
+<span class="material-symbols-outlined text-lg">hiking</span> Hiking
+                                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white text-sm font-medium">
+<span class="material-symbols-outlined text-lg">waves</span> Swimming
+                                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined text-lg">diamond</span> Formal Dinners
+                                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined text-lg">photo_camera</span> Photography
+                                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-sand text-slate-500 border border-dashed border-slate-300 text-sm font-medium">
+<span class="material-symbols-outlined text-lg">add</span> Add Activity
+                                </button>
+</div>
+</div>
+</section>
+<!-- Packing Checklist Section -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold font-montserrat">Your Packing List</h2>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-lg">playlist_add</span> Add Custom Item
+                            </button>
+</div>
+<!-- Category: Clothing -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-primary/5 overflow-hidden">
+<div class="bg-sand/50 dark:bg-slate-800/50 px-6 py-4 flex items-center gap-3 border-b border-primary/5">
+<span class="material-symbols-outlined text-primary">checkroom</span>
+<h3 class="font-bold font-montserrat">Clothing</h3>
+<span class="ml-auto text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded">2/6 Items</span>
+</div>
+<div class="p-4 space-y-1">
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input checked="" class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 line-through opacity-60">Light breathable shirts (5x)</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input checked="" class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 line-through opacity-60">Comfortable walking shoes</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300">Hiking boots &amp; wool socks</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300">Swimwear &amp; beach cover-up</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300">Lightweight jacket for evenings</span>
+</label>
+</div>
+</div>
+<!-- Category: Electronics -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-primary/5 overflow-hidden">
+<div class="bg-sand/50 dark:bg-slate-800/50 px-6 py-4 flex items-center gap-3 border-b border-primary/5">
+<span class="material-symbols-outlined text-primary">devices</span>
+<h3 class="font-bold font-montserrat">Electronics</h3>
+<span class="ml-auto text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded">1/4 Items</span>
+</div>
+<div class="p-4 space-y-1">
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input checked="" class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 line-through opacity-60">Universal travel adapter</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300">Portable power bank</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300">Camera &amp; extra memory cards</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300">Noise-canceling headphones</span>
+</label>
+</div>
+</div>
+<!-- Category: Documents -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-primary/5 overflow-hidden">
+<div class="bg-sand/50 dark:bg-slate-800/50 px-6 py-4 flex items-center gap-3 border-b border-primary/5">
+<span class="material-symbols-outlined text-primary">import_contacts</span>
+<h3 class="font-bold font-montserrat">Documents</h3>
+<span class="ml-auto text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded">3/3 Items</span>
+</div>
+<div class="p-4 space-y-1">
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input checked="" class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 line-through opacity-60">Passport &amp; Visas</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input checked="" class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 line-through opacity-60">Travel Insurance details</span>
+</label>
+<label class="flex items-center gap-4 p-3 hover:bg-sand/20 rounded-lg cursor-pointer transition-colors">
+<input checked="" class="w-5 h-5 rounded border-primary text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 line-through opacity-60">Flight &amp; Hotel confirmations</span>
+</label>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar: Weather Forecast & Map -->
+<div class="space-y-8">
+<!-- Weather Widget -->
+<aside class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-primary/5 overflow-hidden relative">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl">sunny</span>
+</div>
+<h3 class="text-lg font-bold font-montserrat mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">partly_cloudy_day</span>
+                            Weather Forecast
+                        </h3>
+<div class="text-center mb-8">
+<p class="text-slate-500 font-medium text-sm">Santorini, Greece</p>
+<div class="flex items-center justify-center gap-4 mt-2">
+<span class="text-5xl font-extrabold font-montserrat text-slate-800 dark:text-slate-100">26°C</span>
+<span class="material-symbols-outlined text-amber-400 text-5xl">wb_sunny</span>
+</div>
+<p class="text-primary font-bold mt-2">Clear Skies</p>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<div class="flex flex-col items-center p-2 rounded-lg bg-sand/30">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Mon</span>
+<span class="material-symbols-outlined text-amber-400 text-xl my-1">sunny</span>
+<span class="text-xs font-bold">27°</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-sand/30">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Tue</span>
+<span class="material-symbols-outlined text-amber-400 text-xl my-1">sunny</span>
+<span class="text-xs font-bold">28°</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-sand/30">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Wed</span>
+<span class="material-symbols-outlined text-slate-400 text-xl my-1">cloud</span>
+<span class="text-xs font-bold">24°</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-sand/30">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Thu</span>
+<span class="material-symbols-outlined text-blue-400 text-xl my-1">rainy</span>
+<span class="text-xs font-bold">22°</span>
+</div>
+</div>
+</aside>
+<!-- Destination Glance -->
+<aside class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-primary/5 overflow-hidden">
+<div class="h-40 bg-cover bg-center" data-alt="Panoramic view of Santorini white buildings with blue domes" data-location="Santorini" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXZGYXay8MUGpsFt6yUIOPHvVwORTsXi0lkVom2Nn-EVhB3NjdPBIFmhXvqOU_v0F4HPYUCbLplYcpPG6kb_XMpRL1lyMgno7zCgj3IgP76HtLy7Bzo1rn8hggaX9gc0GhhTBZIoY2NdWJOzoh4tm8qr7Dyi4PhZGEYAev7iH7GzbwXuJCudptjjkzbyULWUOr3w7OxerV6_WxZAbAEN_rRVCH4Fl61iA0T-951LUC2lbK4peGPLWc75a846LCYty1QwtW2GMFZVO0')"></div>
+<div class="p-6">
+<h3 class="font-bold font-montserrat text-lg mb-2">Traveler Pro-Tips</h3>
+<ul class="space-y-3">
+<li class="flex gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg shrink-0">info</span>
+<span>Pack reef-safe sunscreen to protect the marine ecosystem during your swim.</span>
+</li>
+<li class="flex gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg shrink-0">info</span>
+<span>Cobblestone paths are uneven; leave the high heels and opt for stylish flats.</span>
+</li>
+<li class="flex gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg shrink-0">info</span>
+<span>Tap water is not drinkable in Santorini. Bring a reusable bottle with a filter.</span>
+</li>
+</ul>
+</div>
+</aside>
+<!-- Quick Actions -->
+<div class="bg-primary/5 p-6 rounded-xl border border-primary/10">
+<p class="text-xs font-bold text-primary uppercase tracking-widest mb-4">Trip Management</p>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-between p-3 rounded-lg bg-white dark:bg-slate-800 text-sm font-semibold hover:bg-primary hover:text-white transition-all">
+<span>Share list with partners</span>
+<span class="material-symbols-outlined text-sm">share</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg bg-white dark:bg-slate-800 text-sm font-semibold hover:bg-primary hover:text-white transition-all">
+<span>Save to My Trips</span>
+<span class="material-symbols-outlined text-sm">bookmark</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-20 border-t border-primary/10 bg-white dark:bg-slate-950 py-10">
+<div class="max-w-7xl mx-auto px-6 text-center">
+<p class="text-slate-400 text-sm font-montserrat">© 2024 Wanderlust Explorer Pro. Your Ultimate Adventure Companion.</p>
+</div>
+</footer>
+</div>
+</body></html>

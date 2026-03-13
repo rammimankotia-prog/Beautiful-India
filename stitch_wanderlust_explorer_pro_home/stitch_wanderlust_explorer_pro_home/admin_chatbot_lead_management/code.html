@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin: Chatbot Lead Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#006c75",
+                "background-light": "#f5f8f8",
+                "background-dark": "#0f2223",
+                "sand": "#EDF6F9",
+              },
+              fontFamily: {
+                "display": ["Montserrat", "Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Montserrat', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
+</div>
+<h2 class="text-primary text-xl font-bold leading-tight tracking-tight">WanderBot Admin</h2>
+</div>
+<nav class="flex items-center gap-8 ml-4">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Leads</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Tours</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Agents</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-sand dark:bg-primary/10">
+<div class="text-primary/60 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 h-full placeholder:text-primary/40 px-4 text-sm font-medium" placeholder="Search leads..." value=""/>
+</div>
+</label>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg size-10 bg-sand dark:bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 bg-sand dark:bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+<div class="bg-primary/20 rounded-full size-10 border-2 border-primary/10 bg-cover bg-center" data-alt="Admin user profile headshot" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDLsmjDBzaXQ8Hh8-mnX8mXW33w8P9cHzV2zD-t6C4_0BiODHcxcByLnlEO2B47AgXMIpOmP9R3s-G_-5mL-5JcCE0Btslb-InvVBy-Qma6fcESdTyTGsa5W8nTylmDYw9ZUDHTZjpAxdh6PI8X2KQDHkSbT048B_9fxDOs4U5Ssj9kWNhDeF0senehqeTK6hIPR4mjZem5afroPcqJEkW6gomO1AU53Za8o6HlTTVKC5fpNs6h5AAMDlZ2LG5wK6BxOusntV59yuzM")'></div>
+</div>
+</header>
+<main class="px-10 py-8 flex flex-col max-w-[1400px] mx-auto w-full gap-8">
+<!-- Page Title & Actions -->
+<div class="flex flex-wrap justify-between items-end gap-4">
+<div class="flex flex-col gap-2">
+<h1 class="text-primary text-4xl font-extrabold tracking-tight">Chatbot Lead Management</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Real-time performance metrics and lead distribution for WanderBot conversions.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-sand dark:bg-primary/10 text-primary font-bold text-sm hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-lg">download</span>
+<span>Export CSV</span>
+</button>
+<button class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Manual Entry</span>
+</button>
+</div>
+</div>
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-3 rounded-xl p-8 bg-white dark:bg-slate-800 border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Total Leads</p>
+<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">+14.2%</span>
+</div>
+<p class="text-primary tracking-tight text-4xl font-black">2,482</p>
+<p class="text-slate-400 text-xs">Last 30 days vs previous period</p>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-8 bg-white dark:bg-slate-800 border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Conversion Rate</p>
+<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">+2.4%</span>
+</div>
+<p class="text-primary tracking-tight text-4xl font-black">18.5%</p>
+<p class="text-slate-400 text-xs">Session to Lead acquisition</p>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-8 bg-white dark:bg-slate-800 border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Top Theme</p>
+<span class="text-primary/60 text-xs font-bold px-2 py-1 rounded-full">Trending</span>
+</div>
+<p class="text-primary tracking-tight text-4xl font-black">Adventure</p>
+<p class="text-slate-400 text-xs">42% of total requested interests</p>
+</div>
+</div>
+<!-- Lead Pipeline Table Section -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h2 class="text-slate-800 dark:text-slate-100 text-2xl font-bold">Active Pipeline</h2>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-primary/10 text-sm font-bold text-primary hover:bg-sand transition-colors">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+<span>Filters</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-primary/10 text-sm font-bold text-primary hover:bg-sand transition-colors">
+<span class="material-symbols-outlined text-lg">sort</span>
+<span>Sort</span>
+</button>
+</div>
+</div>
+<!-- Lead Tabs -->
+<div class="flex gap-1 border-b border-primary/10 pb-px">
+<button class="px-6 py-3 text-sm font-bold text-primary border-b-2 border-primary bg-primary/5 rounded-t-lg transition-all">All Leads</button>
+<button class="px-6 py-3 text-sm font-bold text-slate-500 hover:text-primary transition-all">New (12)</button>
+<button class="px-6 py-3 text-sm font-bold text-slate-500 hover:text-primary transition-all">Contacted (45)</button>
+<button class="px-6 py-3 text-sm font-bold text-slate-500 hover:text-primary transition-all">Booked (108)</button>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl border border-primary/10 shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-sand/50 dark:bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider">
+<th class="px-6 py-4">Lead Name</th>
+<th class="px-6 py-4">Contact Info</th>
+<th class="px-6 py-4">Tour Interest</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-center">Chat</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5 text-sm font-medium">
+<!-- Row 1 -->
+<tr class="hover:bg-sand/20 transition-colors">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-bold">Marcus Holloway</span>
+<span class="text-slate-400 text-xs font-normal">Created 2h ago</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-600 dark:text-slate-300">m.holloway@example.com</span>
+<span class="text-slate-400 text-xs font-normal">+1 (555) 012-3456</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold">Adventure</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-2 text-blue-600">
+<span class="size-2 rounded-full bg-blue-600"></span>
+                                            New
+                                        </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">forum</span>
+</button>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-4 py-1.5 rounded-lg bg-primary text-white text-xs font-bold hover:brightness-110">Follow Up</button>
+<button class="px-4 py-1.5 rounded-lg border border-primary/20 text-primary text-xs font-bold hover:bg-sand">Assign</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-sand/20 transition-colors">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-bold">Sarah Jenkins</span>
+<span class="text-slate-400 text-xs font-normal">Created 5h ago</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-600 dark:text-slate-300">sarah.j@travel.me</span>
+<span class="text-slate-400 text-xs font-normal">+1 (555) 987-6543</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-bold">Luxury</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-2 text-orange-600">
+<span class="size-2 rounded-full bg-orange-600"></span>
+                                            Contacted
+                                        </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">forum</span>
+</button>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-4 py-1.5 rounded-lg bg-primary text-white text-xs font-bold hover:brightness-110">Follow Up</button>
+<button class="px-4 py-1.5 rounded-lg border border-primary/20 text-primary text-xs font-bold hover:bg-sand">Assign</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-sand/20 transition-colors">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-bold">Elena Rodriguez</span>
+<span class="text-slate-400 text-xs font-normal">Created 1d ago</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-600 dark:text-slate-300">elena.ro@mail.com</span>
+<span class="text-slate-400 text-xs font-normal">+34 600 000 000</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">Cultural</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-2 text-green-600">
+<span class="size-2 rounded-full bg-green-600"></span>
+                                            Booked
+                                        </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">forum</span>
+</button>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-4 py-1.5 rounded-lg bg-primary/20 text-primary text-xs font-bold cursor-default">Completed</button>
+<button class="px-4 py-1.5 rounded-lg border border-primary/20 text-primary text-xs font-bold hover:bg-sand">Details</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-sand/20 transition-colors">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-bold">David Chen</span>
+<span class="text-slate-400 text-xs font-normal">Created 2d ago</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-slate-600 dark:text-slate-300">d.chen@enterprise.com</span>
+<span class="text-slate-400 text-xs font-normal">+1 (555) 234-5678</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">Photography</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-2 text-blue-600">
+<span class="size-2 rounded-full bg-blue-600"></span>
+                                            New
+                                        </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">forum</span>
+</button>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-4 py-1.5 rounded-lg bg-primary text-white text-xs font-bold hover:brightness-110">Follow Up</button>
+<button class="px-4 py-1.5 rounded-lg border border-primary/20 text-primary text-xs font-bold hover:bg-sand">Assign</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between mt-4">
+<p class="text-slate-500 text-sm">Showing <span class="font-bold text-slate-800">1 to 10</span> of 248 leads</p>
+<div class="flex gap-2">
+<button class="size-10 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-600 hover:bg-sand disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="size-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold">1</button>
+<button class="size-10 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-600 hover:bg-sand">2</button>
+<button class="size-10 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-600 hover:bg-sand">3</button>
+<button class="size-10 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-600 hover:bg-sand">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Gradient Footer -->
+<footer class="mt-auto py-8 text-center text-slate-400 text-sm px-10 border-t border-primary/5">
+<div class="flex justify-between items-center max-w-[1400px] mx-auto">
+<p>© 2024 Wanderlust Travel Agency. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Support Center</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

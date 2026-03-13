@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #006D77;
+  --color-accent: #FFDDD2;
+  --color-background-light: #EDF6F9;
+  --color-background-dark: #0B1A1C;
+  --color-text-main: #2C3E50;
+  --color-text-muted: #7F8C8D;
+  
+  --font-display: "Montserrat", sans-serif;
+}
+
+:root {
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  @apply bg-background-light text-text-main;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}

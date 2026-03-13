@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006a75",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Montserrat", "Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        h1, h2, h3, .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<!-- Navigation -->
+<header class="sticky top-0 z-50 w-full bg-white dark:bg-background-dark border-b border-primary/10 px-4 md:px-10 lg:px-20 py-4">
+<div class="max-w-7xl mx-auto flex items-center justify-between gap-8">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">explore</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Tours</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Destinations</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Guides</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">About</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-primary/5 dark:bg-white/5 rounded-lg px-3 py-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-40 placeholder:text-slate-400" placeholder="Search guides..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg text-sm font-bold transition-all">
+                    Sign Up
+                </button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 py-8">
+<!-- Hero Section -->
+<section class="relative rounded-2xl overflow-hidden mb-12">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent z-10"></div>
+<img alt="Hero background" class="absolute inset-0 w-full h-full object-cover" data-alt="Scenic landscape of a mountain road winding through hills" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdTj8RcCB_Vs3lJNtw8q9b0Y3-qhQXRtZnH_kxT4FRlgiEBmIerLTLDUKBGxoznUxhbe5xpfvtUYZ9lxtg7fUz_ZRzuc0k9-m80kRPgfCLg89nIGlMnWehU8BJYmVNAQeTODwfccWR63xLPTlbrf2fn63YOTd1uzSWpC3_q8-OQmT0vCMqH4qKITMJUWCYWdovtJlqtau8N4JYmwDgYJQ2RlsaUSftthAf0U8BLKtiNG4LAFlnydVVdJxi86JNTdmHkMj4bYuR6a1a"/>
+<div class="relative z-20 px-8 py-20 md:px-16 md:py-32 flex flex-col items-start max-w-2xl">
+<h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                    Ultimate Travel Guides
+                </h1>
+<p class="text-lg text-white/90 mb-8 max-w-lg">
+                    Expert insights, local secrets, and professional inspiration for your next global adventure.
+                </p>
+<div class="w-full flex bg-white rounded-xl shadow-2xl p-2 max-w-lg">
+<div class="flex-1 flex items-center px-4 gap-2">
+<span class="material-symbols-outlined text-primary">search</span>
+<input class="w-full border-none focus:ring-0 text-slate-800 placeholder:text-slate-400 text-sm" placeholder="Search by country or activity..." type="text"/>
+</div>
+<button class="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors">
+                        Search
+                    </button>
+</div>
+</div>
+</section>
+<div class="flex flex-col lg:flex-row gap-12">
+<!-- Main Content Area -->
+<div class="flex-1">
+<!-- Popular Destinations Section -->
+<div class="mb-16">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold border-l-4 border-primary pl-4">Popular Destinations</h2>
+<a class="text-primary font-bold text-sm flex items-center gap-1 hover:underline" href="#">
+                            View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1 -->
+<div class="group bg-white dark:bg-background-dark/50 rounded-xl overflow-hidden border border-slate-100 dark:border-primary/10 shadow-sm hover:shadow-xl transition-all">
+<div class="relative h-64 overflow-hidden">
+<img alt="Swiss Alps" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Breathtaking view of the Swiss Alps snow peaks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0rutP3qEblSMZtTuU1Hajmpcyeylz_InKZwZF-s8zbTziV6Pe8GWAquqQMe3zlw4WZYztXxyOkOOJTnM1iF7TC_Z-vCYIzWbra7oWs58CeUUb7wKs7_eTVCexcf4b2wHBW_LZh-Jwd4CgXRoD_QjKcDasICf_prUpDuMDPFH5F4EVHbRkiRFHY7INaajduLQKNQAn1r7ZIqtSpzhfNu1KgfInCQRuWD_7Ch-SmL14fxf6FvFBkkyetalEmtTLTqO-2Xvrm_Kyr4yq"/>
+<div class="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">Destinations</div>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Exploring the Swiss Alps</h3>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs mb-4">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span> 10 min read
+                                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Oct 12, 2023
+                                    </span>
+</div>
+<p class="text-slate-600 dark:text-slate-300 text-sm mb-6 line-clamp-2">
+                                    Discover the hidden valleys and peak experiences that make Switzerland the crown jewel of Europe's mountains.
+                                </p>
+<button class="w-full py-3 bg-primary/10 text-primary font-bold rounded-lg group-hover:bg-primary group-hover:text-white transition-all">
+                                    View Guide
+                                </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-white dark:bg-background-dark/50 rounded-xl overflow-hidden border border-slate-100 dark:border-primary/10 shadow-sm hover:shadow-xl transition-all">
+<div class="relative h-64 overflow-hidden">
+<img alt="Tokyo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Tokyo city streets illuminated with neon signs at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJIFeF03XmCERJ6DlWGdEod0Wi6JbPw3X9WIgpcNY-ouD89Fm8mMFbD7qWvvxjKYlTKP0BqAXqCQOdzozTPn1E0_EN_T04IS0jbcoXg5J_Sev7hWuzkQv_QBlJtgBvjCHYgVIlnW3-oq9QSVvjU1HD1a2YKi_auTQwW3kzB2IfyEsJs1CfOAG7ZoEQlBB38et3k9pPJ3n1Re_A25T4cYXYPJwsN1gCJqqAfhl8xy3HLwFvVxF7Vz5m2gALfmFgw2Km8U7SAhNN7fEY"/>
+<div class="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">City Life</div>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Tokyo Nightlife Guide</h3>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs mb-4">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span> 15 min read
+                                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Oct 10, 2023
+                                    </span>
+</div>
+<p class="text-slate-600 dark:text-slate-300 text-sm mb-6 line-clamp-2">
+                                    From Shinjuku's neon alleys to Roppongi's high-end bars, explore the world's most vibrant city after dark.
+                                </p>
+<button class="w-full py-3 bg-primary/10 text-primary font-bold rounded-lg group-hover:bg-primary group-hover:text-white transition-all">
+                                    View Guide
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Travel Tips Section -->
+<div class="mb-16">
+<h2 class="text-2xl font-bold border-l-4 border-primary pl-4 mb-8">Travel Tips &amp; Hacks</h2>
+<div class="space-y-4">
+<!-- Horizontal Card 1 -->
+<div class="flex flex-col sm:flex-row gap-6 bg-white dark:bg-background-dark/50 p-4 rounded-xl border border-slate-100 dark:border-primary/10 items-center group">
+<div class="w-full sm:w-48 h-32 rounded-lg overflow-hidden shrink-0">
+<img alt="Packing tips" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Traveler packing a backpack efficiently for a trip" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPAFe0rL5h4DnTTiZ4UhpuTu847v5OoPMccB5aAe-h9NFyNBScfJbfoYFwE2o7-kK53EKEwvslbx9HsHxx_vtjtw5K0x05hIXMxRxHU8TNEV2CMNJ-ITymLFtKxq1KPyCq-urFQYINDeKIHZh0D7kPFLKBh9vRRmjskzbLEwmBM5avVVZYzn69a_FhtMD_lzg1OlOo2GGC1DcOdlwnLH_CaR4c09FlAigsqeXvukvtnbBHlkbsBP57WmpLoF4uvzM4qHQrtPWdS3po"/>
+</div>
+<div class="flex-1">
+<h3 class="font-bold text-lg mb-1 group-hover:text-primary transition-colors">Minimalist Packing: The Essential Checklist</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-3">Learn how to travel the world with just a carry-on and stay stylish.</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-400 flex items-center gap-1"><span class="material-symbols-outlined text-sm">timer</span> 5 min read</span>
+<span class="text-primary text-sm font-bold cursor-pointer">Read More</span>
+</div>
+</div>
+</div>
+<!-- Horizontal Card 2 -->
+<div class="flex flex-col sm:flex-row gap-6 bg-white dark:bg-background-dark/50 p-4 rounded-xl border border-slate-100 dark:border-primary/10 items-center group">
+<div class="w-full sm:w-48 h-32 rounded-lg overflow-hidden shrink-0">
+<img alt="Solo travel" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Close up of a camera and passport on a table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLXy4iHSFTtFgBh04VLtGW9XQfCh_WB4blyJLYVRb-O8oYeA20pXRt8Sf_M0dudPzxfa7KEII22cEo38Us2QkLnRDH_p5mo4fg7an76CbM6c8KWz4opJC5_L6JyGVu1IwlGFYnH17diKlHiqZWEG_d3cKLNK_b71H0hFShOYPqQwQy3bXSlOVTJLiyDnIrTGaRmgNIfkHM6jYfy6cmi9LiB9tXkK8SW0J3xYxg4Wiee9N2X2YFJ8Pd6Rz7EAYQuMYpr1O8KujPRkkH"/>
+</div>
+<div class="flex-1">
+<h3 class="font-bold text-lg mb-1 group-hover:text-primary transition-colors">10 Safest Destinations for Solo Female Travelers</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-3">Empowering insights for women exploring the globe independently.</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-400 flex items-center gap-1"><span class="material-symbols-outlined text-sm">timer</span> 8 min read</span>
+<span class="text-primary text-sm font-bold cursor-pointer">Read More</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar -->
+<aside class="w-full lg:w-80 flex flex-col gap-8">
+<!-- Recommendations Widget -->
+<div class="bg-primary/5 dark:bg-primary/10 rounded-2xl p-6 border border-primary/20">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h2 class="font-bold text-lg">Curated Tours for You</h2>
+</div>
+<div class="space-y-6">
+<div class="group cursor-pointer">
+<div class="aspect-video rounded-lg overflow-hidden mb-3 relative">
+<img alt="Tokyo tour" class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Panoramic view of Tokyo skyline from above" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGCFXThfsSoiPSdQX5-y98NOuiBEIH70C7PxkszGP8xEA6jtTg46KE2jIOqyEsodJiVJqFNbdNwqDd0T_oEtBuqMDJ3JFjUlVXpWGbsT4U_D_2BaVDwf3Rt3CySyF8eyvwo6iLaqXlICQq5T5F-1bhIiOgD7i1KZnKtxFwcCVEFG1P6Ou_lcK2sfiXbak6XEzw98y5aXKgBqMfpB0w3rrdapUkY7Cl463xw_fpXRxJw6S09wHlPn5IbdOCJbMjqW42VaKXA8Laakgm"/>
+<div class="absolute bottom-2 left-2 bg-primary text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Top Rated</div>
+</div>
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Tokyo Neon Nights Adventure</h4>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-500 dark:text-slate-400">7 Days • Tokyo, Japan</span>
+<span class="font-bold text-primary text-sm">$1,299</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-video rounded-lg overflow-hidden mb-3 relative">
+<img alt="Swiss Alps tour" class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Beautiful village nestled in the Swiss Alps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXyJ-GXJB9QBvVkb10N4fJSvc900W3zP5lh5Klg9DEz8QANmEaRIoL3Z2xzelgp-kepgotyfoQGuQ1XVRmqzgRDdoRD_amFh5_GFaYK5MyOVUMib4rZTaWqCRTgESYFLYO_xggUjrYQXaE9gmr_7bj0fe-8-iA7OKWLoT9195Z3oawk-ZdB4rb2TOog28NdrHyBj3vccbeL6vUuLsy4Fz6aibr9WCmM1JgfRlZC_UhXyOLSQQTI8c6kfi2WY47OEkWZKEFq1GH1IiL"/>
+</div>
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Swiss Alp Panorama Rail Tour</h4>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-500 dark:text-slate-400">5 Days • Interlaken, Swiss</span>
+<span class="font-bold text-primary text-sm">$849</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 shadow-md shadow-primary/20 transition-all text-sm">
+                        View More Tours
+                    </button>
+</div>
+<!-- Trending Tags -->
+<div class="bg-white dark:bg-background-dark/50 p-6 rounded-2xl border border-slate-100 dark:border-primary/10 shadow-sm">
+<h2 class="font-bold text-lg mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">sell</span> Trending Tags
+                    </h2>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-xs font-semibold hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">Adventure</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-xs font-semibold hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">Honeymoon</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-xs font-semibold hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">Budget Travel</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-xs font-semibold hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">Gastronomy</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-xs font-semibold hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">Europe</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-xs font-semibold hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">Photography</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-xs font-semibold hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">Backpacking</span>
+</div>
+</div>
+<!-- Newsletter -->
+<div class="bg-slate-900 rounded-2xl p-6 text-white overflow-hidden relative">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+<h2 class="font-bold text-lg mb-2">Get Inspired</h2>
+<p class="text-slate-400 text-sm mb-4">Subscribe to our weekly newsletter for travel hacks and destination guides.</p>
+<div class="space-y-3 relative z-10">
+<input class="w-full bg-white/10 border-none rounded-lg text-sm px-4 py-3 placeholder:text-slate-500 focus:ring-primary" placeholder="Email address" type="email"/>
+<button class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary/90 transition-colors text-sm">Join the Club</button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<footer class="bg-white dark:bg-background-dark border-t border-slate-100 dark:border-primary/10 mt-20 py-12 px-4">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">explore</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold tracking-tight">Wanderlust</h2>
+</div>
+<p class="text-slate-500 text-sm leading-relaxed">The premier destination for travelers looking for authenticity, luxury, and adventure in every corner of the world.</p>
+</div>
+<div>
+<h4 class="font-bold mb-6">Company</h4>
+<ul class="space-y-4 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Partners</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Newsroom</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Support</h4>
+<ul class="space-y-4 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Safety Information</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Cancellation Options</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">COVID-19 Updates</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Follow Us</h4>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">play_circle</span>
+</a>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-100 dark:border-primary/10 text-center text-slate-400 text-xs">
+            © 2023 Wanderlust Explorer Pro. All rights reserved. Designed for professional travel discovery.
+        </div>
+</footer>
+</body></html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wanderlust Explorer Pro - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006D77",
+                        "sand": "#EDF6F9",
+                        "sunset": "#FFDDD2",
+                        "background-light": "#ffffff",
+                        "surface-light": "#EDF6F9",
+                        "neutral-900": "#101818",
+                        "neutral-600": "#5e898d"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+        .hero-overlay {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.6) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light text-neutral-900 font-display min-h-screen">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-neutral-100 bg-white/90 backdrop-blur-md px-10 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h1 class="text-neutral-900 text-xl font-black leading-tight tracking-tight uppercase">Wanderlust</h1>
+</div>
+<nav class="flex items-center gap-9 hidden md:flex">
+<a class="text-primary text-sm font-bold leading-normal border-b-2 border-primary" href="#">Home</a>
+<a class="text-neutral-600 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Tours</a>
+<a class="text-neutral-600 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="text-neutral-600 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Stories</a>
+<a class="text-neutral-600 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">About</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center p-2 text-neutral-600 hover:text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="bg-primary text-white text-sm font-bold px-6 py-2 rounded-full hover:bg-opacity-90 transition-all">
+                Sign In
+            </button>
+</div>
+</header>
+<main>
+<section class="relative h-[600px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnMHLzNRcEdCeZewkenlrb-2PfktWUyNAIPzIyDe2oRLEPiIe84WiLN79_Ze-DOUkiEcs2Vp-BEd-El9JBtHosezFRMxi6ARCQAfcfl38JNsXyy7WnwvC42jV1kA5NHe_CPW2R_JdlndbBXAgu5z85WERgdAErB7HxOprdYPKNWL0Ead5fQwrmu_yfgqCJKIGhNPrjT7rbbVHaun18A-UVTNaWG_Vwo1--rnu1ncrSwR2p8s4337TWnMDT2PwxssX1uBcG_6bsV2SK');"></div>
+<div class="absolute inset-0 hero-overlay"></div>
+<div class="relative z-10 text-center px-4 max-w-4xl w-full">
+<h1 class="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-lg">Discover Your Next Adventure</h1>
+<p class="text-white/90 text-xl mb-10 max-w-2xl mx-auto">Explore the world's most breathtaking locations with our expert-led boutique tours.</p>
+<div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
+<div class="flex-1 flex items-center px-4 py-2 border-b md:border-b-0 md:border-r border-neutral-100">
+<span class="material-symbols-outlined text-neutral-600 mr-3">location_on</span>
+<input class="w-full border-none focus:ring-0 text-sm font-medium placeholder:text-neutral-400" placeholder="Where to?" type="text"/>
+</div>
+<div class="flex-1 flex items-center px-4 py-2 border-b md:border-b-0 md:border-r border-neutral-100">
+<span class="material-symbols-outlined text-neutral-600 mr-3">calendar_month</span>
+<input class="w-full border-none focus:ring-0 text-sm font-medium placeholder:text-neutral-400" placeholder="When?" type="text"/>
+</div>
+<button class="bg-primary text-white font-bold py-4 px-8 rounded-xl hover:bg-opacity-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">search</span>
+                        Search Tours
+                    </button>
+</div>
+</div>
+</section>
+<section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+<div class="flex items-end justify-between mb-12">
+<div>
+<span class="text-primary font-bold uppercase tracking-widest text-sm block mb-2">Curated Experiences</span>
+<h2 class="text-4xl font-black text-neutral-900">Featured Tours</h2>
+</div>
+<a class="text-primary font-bold flex items-center gap-2 hover:gap-3 transition-all border-b-2 border-primary/20 hover:border-primary pb-1" href="#">
+                    View All <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-neutral-100 group">
+<div class="h-64 relative overflow-hidden">
+<img alt="Turkey" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnMHLzNRcEdCeZewkenlrb-2PfktWUyNAIPzIyDe2oRLEPiIe84WiLN79_Ze-DOUkiEcs2Vp-BEd-El9JBtHosezFRMxi6ARCQAfcfl38JNsXyy7WnwvC42jV1kA5NHe_CPW2R_JdlndbBXAgu5z85WERgdAErB7HxOprdYPKNWL0Ead5fQwrmu_yfgqCJKIGhNPrjT7rbbVHaun18A-UVTNaWG_Vwo1--rnu1ncrSwR2p8s4337TWnMDT2PwxssX1uBcG_6bsV2SK"/>
+<div class="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Top Rated</div>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full text-white hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase mb-3">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Cappadocia, Turkey</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-neutral-900 group-hover:text-primary transition-colors">Magic Skies &amp; Ancient Caves</h3>
+<div class="flex items-center gap-6 text-sm text-neutral-600 mb-6">
+<div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px]">schedule</span> 5 Days</div>
+<div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px]">star</span> 4.9 (120)</div>
+</div>
+<div class="flex items-center justify-between border-t border-neutral-50 pt-6">
+<div>
+<span class="text-xs text-neutral-600 block">Starting from</span>
+<span class="text-2xl font-black text-primary">$1,299</span>
+</div>
+<button class="bg-sand text-primary font-bold py-2.5 px-5 rounded-lg hover:bg-primary hover:text-white transition-all">Details</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-neutral-100 group">
+<div class="h-64 relative overflow-hidden">
+<img alt="France" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuLPtDSCXKNAqZFgYgt6nxXLGxR2-9qpjjDOAN2g6h_DifaIPiCRkKEZREoz_5IxOOhvY3a0sIuOyW1yku1KvXbU7kZHfzR0qfUjvPFDHuJt5iyuThuR4YKQ7r7YRLAxpA066Aian3Ni8Fuo0ewOoUswj5yTGD3PBunGNoAJeifjVqgTN_JY2wx2TmfjE2a5qyfqWRFLUCXx4EuCs05qT_XTgUNfRU443cdWf8429H2BzOBJlkPNpo_FHFERGSyMBipB4qxa_C8NON"/>
+<div class="absolute top-4 left-4 bg-sunset text-primary text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Luxury</div>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full text-white hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase mb-3">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Paris, France</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-neutral-900 group-hover:text-primary transition-colors">European Highlights &amp; History</h3>
+<div class="flex items-center gap-6 text-sm text-neutral-600 mb-6">
+<div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px]">schedule</span> 10 Days</div>
+<div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px]">star</span> 4.8 (84)</div>
+</div>
+<div class="flex items-center justify-between border-t border-neutral-50 pt-6">
+<div>
+<span class="text-xs text-neutral-600 block">Starting from</span>
+<span class="text-2xl font-black text-primary">$2,850</span>
+</div>
+<button class="bg-sand text-primary font-bold py-2.5 px-5 rounded-lg hover:bg-primary hover:text-white transition-all">Details</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-neutral-100 group">
+<div class="h-64 relative overflow-hidden">
+<img alt="Bali" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIcovQFfOLPdlxNn6R-8pyzC0H6qe0Be-k0tuboj9ZRB7GXZREF1A4tTGLQ1uSD9lb2bifrtI6mEndWLQyPShLPkixteIMm0oCkqCe0ydqokg_EWwwjcWQv0teX74sGAEhNPRrVCfNZrO_Y6KLj0Ow6DdoiAvUQnU-lM4M3vPj1vrKtSxQP2aPPaWW3QiJ1fhziWciEBdvKi92GsYFWg_59GMYK_chyIhAMQKY1rRME0Mh4xQrf8Q3mhDag4pKGaaru3NvE_9OBOzM"/>
+<div class="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Relaxing</div>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full text-white hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase mb-3">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Bali, Indonesia</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-neutral-900 group-hover:text-primary transition-colors">Ultimate Island Escape Retreat</h3>
+<div class="flex items-center gap-6 text-sm text-neutral-600 mb-6">
+<div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px]">schedule</span> 7 Days</div>
+<div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px]">star</span> 5.0 (215)</div>
+</div>
+<div class="flex items-center justify-between border-t border-neutral-50 pt-6">
+<div>
+<span class="text-xs text-neutral-600 block">Starting from</span>
+<span class="text-2xl font-black text-primary">$950</span>
+</div>
+<button class="bg-sand text-primary font-bold py-2.5 px-5 rounded-lg hover:bg-primary hover:text-white transition-all">Details</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-sand py-24 px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<span class="text-primary font-bold uppercase tracking-widest text-sm block mb-2">Travel Stories</span>
+<h2 class="text-4xl font-black text-neutral-900">Latest from the Blog</h2>
+<div class="w-24 h-1 bg-sunset mx-auto mt-4 rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<article class="group">
+<div class="aspect-[16/10] rounded-2xl overflow-hidden mb-6 shadow-md border-4 border-white">
+<img alt="Hidden gems of Europe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuLPtDSCXKNAqZFgYgt6nxXLGxR2-9qpjjDOAN2g6h_DifaIPiCRkKEZREoz_5IxOOhvY3a0sIuOyW1yku1KvXbU7kZHfzR0qfUjvPFDHuJt5iyuThuR4YKQ7r7YRLAxpA066Aian3Ni8Fuo0ewOoUswj5yTGD3PBunGNoAJeifjVqgTN_JY2wx2TmfjE2a5qyfqWRFLUCXx4EuCs05qT_XTgUNfRU443cdWf8429H2BzOBJlkPNpo_FHFERGSyMBipB4qxa_C8NON"/>
+</div>
+<span class="text-primary font-bold text-xs uppercase mb-3 block">Destination Guides</span>
+<h3 class="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-primary transition-colors leading-tight">10 Hidden Gems in Central Europe You Can't Miss</h3>
+<p class="text-neutral-600 text-base mb-4 line-clamp-2">Escape the crowds and discover the charming cobblestone streets and secret gardens of these lesser-known European treasures...</p>
+<a class="inline-flex items-center gap-2 text-primary font-black text-sm group/btn" href="#">
+                            Read Article 
+                            <span class="material-symbols-outlined group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</article>
+<article class="group">
+<div class="aspect-[16/10] rounded-2xl overflow-hidden mb-6 shadow-md border-4 border-white">
+<img alt="Travel photography tips" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnMHLzNRcEdCeZewkenlrb-2PfktWUyNAIPzIyDe2oRLEPiIe84WiLN79_Ze-DOUkiEcs2Vp-BEd-El9JBtHosezFRMxi6ARCQAfcfl38JNsXyy7WnwvC42jV1kA5NHe_CPW2R_JdlndbBXAgu5z85WERgdAErB7HxOprdYPKNWL0Ead5fQwrmu_yfgqCJKIGhNPrjT7rbbVHaun18A-UVTNaWG_Vwo1--rnu1ncrSwR2p8s4337TWnMDT2PwxssX1uBcG_6bsV2SK"/>
+</div>
+<span class="text-primary font-bold text-xs uppercase mb-3 block">Travel Tips</span>
+<h3 class="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-primary transition-colors leading-tight">Mastering Adventure Photography on the Go</h3>
+<p class="text-neutral-600 text-base mb-4 line-clamp-2">Learn how to capture the perfect sunrise over the desert or the raw energy of a bustling market with these simple professional tips...</p>
+<a class="inline-flex items-center gap-2 text-primary font-black text-sm group/btn" href="#">
+                            Read Article 
+                            <span class="material-symbols-outlined group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</article>
+<article class="group">
+<div class="aspect-[16/10] rounded-2xl overflow-hidden mb-6 shadow-md border-4 border-white">
+<img alt="Sustainable travel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIcovQFfOLPdlxNn6R-8pyzC0H6qe0Be-k0tuboj9ZRB7GXZREF1A4tTGLQ1uSD9lb2bifrtI6mEndWLQyPShLPkixteIMm0oCkqCe0ydqokg_EWwwjcWQv0teX74sGAEhNPRrVCfNZrO_Y6KLj0Ow6DdoiAvUQnU-lM4M3vPj1vrKtSxQP2aPPaWW3QiJ1fhziWciEBdvKi92GsYFWg_59GMYK_chyIhAMQKY1rRME0Mh4xQrf8Q3mhDag4pKGaaru3NvE_9OBOzM"/>
+</div>
+<span class="text-primary font-bold text-xs uppercase mb-3 block">Sustainable Living</span>
+<h3 class="text-2xl font-bold text-neutral-900 mb-3 group-hover:text-primary transition-colors leading-tight">How to be a Conscious Traveler in 2024</h3>
+<p class="text-neutral-600 text-base mb-4 line-clamp-2">Traveling responsibly doesn't mean sacrificing luxury. We explore how to support local communities while enjoying premium experiences...</p>
+<a class="inline-flex items-center gap-2 text-primary font-black text-sm group/btn" href="#">
+                            Read Article 
+                            <span class="material-symbols-outlined group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</article>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-neutral-900 text-white py-16 px-4">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 text-primary mb-6">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-white text-xl font-black leading-tight tracking-tight uppercase">Wanderlust</h2>
+</div>
+<p class="text-neutral-400 text-sm mb-6">Redefining boutique travel with curated, authentic experiences across the globe since 2012.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6">Company</h4>
+<ul class="space-y-4 text-sm text-neutral-400">
+<li><a class="hover:text-white transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Our Team</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Partners</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Support</h4>
+<ul class="space-y-4 text-sm text-neutral-400">
+<li><a class="hover:text-white transition-colors" href="#">FAQ</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Booking Policy</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Safety Information</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Newsletter</h4>
+<p class="text-sm text-neutral-400 mb-4">Subscribe for travel inspiration and exclusive offers.</p>
+<div class="flex gap-2">
+<input class="bg-white/10 border-none rounded-lg px-4 py-2 text-sm w-full focus:ring-1 focus:ring-primary" placeholder="Email address" type="email"/>
+<button class="bg-primary px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto pt-12 mt-12 border-t border-white/10 text-center text-xs text-neutral-500 uppercase tracking-widest">
+            © 2024 Wanderlust Explorer Pro. All rights reserved.
+        </div>
+</footer>
+
+</body></html>

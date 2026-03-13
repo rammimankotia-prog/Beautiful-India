@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wanderlust Explorer Pro Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006D77",
+                        "accent": "#FFDDD2",
+                        "background-light": "#EDF6F9",
+                        "background-dark": "#0B1A1C",
+                        "text-main": "#2C3E50",
+                        "text-muted": "#7F8C8D"
+                    },
+                    fontFamily: {
+                        "display": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 dark:border-primary/30 px-4 md:px-10 py-4 mb-6">
+<div class="flex items-center gap-4 text-primary dark:text-accent">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-xl md:text-2xl font-bold leading-tight tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<nav class="flex items-center gap-8">
+<a class="text-text-main dark:text-slate-100 hover:text-primary dark:hover:text-accent transition-colors text-sm font-semibold leading-normal" href="#">All Tours</a>
+<a class="text-text-main dark:text-slate-100 hover:text-primary dark:hover:text-accent transition-colors text-sm font-semibold leading-normal" href="#">Destinations</a>
+<a class="text-text-main dark:text-slate-100 hover:text-primary dark:hover:text-accent transition-colors text-sm font-semibold leading-normal" href="#">About Us</a>
+</nav>
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary hover:bg-primary/90 transition-colors text-white text-sm font-bold leading-normal shadow-md">
+<span>Sign In</span>
+</button>
+</div>
+<div class="md:hidden flex items-center">
+<button class="text-primary dark:text-accent">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-1 w-full @container">
+<div class="@[480px]:p-0 mb-12">
+<div class="relative flex min-h-[500px] md:min-h-[600px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-6 shadow-xl overflow-hidden" data-alt="Majestic mountain range at sunrise" style='background-image: linear-gradient(rgba(0, 109, 119, 0.4) 0%, rgba(11, 26, 28, 0.7) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAD9E1QjbGIL2StAaXiB2WBf7omM96q0kCOjia-NO6abInWJuXgZWNKDPLfDNuuMiTjb7oNtHkTc1ZUZnHa1nrpfNxqxHmYC-uygGRtWB6SnvMPEkx010bxt6DI79Ggi9O7J-VmtkbXfbF9vC8LNDqOa3osGDTvaY6wxlLCwB0-lPm6vcNnXFxSsnPFiXJBkjgZKo1yBTgIkrwKhqSO6kvqzwpzz_qWHbkckH6SQOmEbVa00Af8da-xM_fVZgy1V6oh5od64H3qfcUc");'>
+<div class="relative z-10 flex flex-col gap-4 text-center max-w-3xl mx-auto mt-10">
+<h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight drop-shadow-lg">
+                                        Discover Your Next Adventure
+                                    </h1>
+<h2 class="text-background-light text-base md:text-xl font-medium leading-relaxed drop-shadow-md">
+                                        Explore the world's most breathtaking destinations curated for the modern traveler.
+                                    </h2>
+</div>
+<div class="relative z-10 w-full max-w-2xl mt-8">
+<div class="flex flex-col md:flex-row w-full bg-white dark:bg-slate-800 rounded-xl md:rounded-full p-2 shadow-2xl">
+<div class="flex items-center pl-4 pr-2 text-text-muted dark:text-slate-400 py-3 md:py-0">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-text-main dark:text-slate-100 focus:ring-0 placeholder:text-text-muted dark:placeholder:text-slate-500 py-3 md:py-4 px-2 text-base font-medium outline-none" placeholder="Where do you want to go?" type="text"/>
+<button class="mt-2 md:mt-0 w-full md:w-auto flex min-w-[120px] cursor-pointer items-center justify-center rounded-lg md:rounded-full h-12 px-8 bg-primary hover:bg-primary/90 transition-colors text-white text-base font-bold whitespace-nowrap">
+                                            Search Tours
+                                        </button>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-16 px-4 md:px-0">
+<div class="flex items-end justify-between mb-8">
+<div>
+<h2 class="text-primary dark:text-accent text-3xl md:text-4xl font-black leading-tight tracking-tight mb-2">Featured Tours</h2>
+<p class="text-text-muted dark:text-slate-400 font-medium">Handpicked experiences for your next getaway</p>
+</div>
+<a class="hidden md:flex items-center gap-1 text-primary dark:text-accent font-bold hover:underline" href="#">
+                                    View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+<!-- Tour Card 1 -->
+<div class="group flex flex-col bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary/5 dark:border-slate-700">
+<div class="relative w-full aspect-[4/3] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Scenic view of the Swiss Alps" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCcxfNUK5HXxQENbBWKuFDNyc6h7kd2ID9q748cK1sQ5GQCL1hodWbqV7_ZnIuU8MglZxYdct014xci79KbW1Vl4SHuBbhX6nS1zM-TbRDBjtojqNIz_gsF_CCuDw-7MchbwtqZnrJy6Awh3wl9_LsOhB3RPlQe6XUatoPsCx2lVFr4lpdQMvVIqK0ejXD88N9mgow45bGAXF6mVLo-cwTzON4x0FLKCPhCDUbUJAe8RewuM2wH2NdLbUxX61OAGtLBFNuVqkqdIF8i");'></div>
+<div class="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-yellow-500">star</span>
+<span class="text-sm font-bold text-text-main dark:text-slate-100">4.9</span>
+</div>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex items-center gap-1 text-text-muted dark:text-slate-400 text-xs font-semibold mb-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">schedule</span> 7 Days
+                                        </div>
+<h3 class="text-text-main dark:text-slate-100 text-lg font-bold leading-tight mb-1 group-hover:text-primary dark:group-hover:text-accent transition-colors">Swiss Alps Trek</h3>
+<p class="text-text-muted dark:text-slate-400 text-sm mb-4 line-clamp-2">Experience the breathtaking beauty of the Swiss Alps on this guided trekking adventure.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/10 dark:border-slate-700 pt-4">
+<div>
+<span class="text-xs text-text-muted dark:text-slate-400">From</span>
+<div class="text-primary dark:text-accent text-xl font-black">$1,299</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 text-primary dark:text-accent flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="group flex flex-col bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary/5 dark:border-slate-700">
+<div class="relative w-full aspect-[4/3] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Lush green rice terraces in Bali" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCVxDZliPmNsXMQvSE6tBOWGdEmLXgnAYcJEVwvrf7udmJasSIAVCTfzbvVIHmLxkji-72gN6ATcV2kvmWVzlBaeFQJ7COl_XfGa0ajHIPMskNOQKDfmovOqo28iPjglW-sbawg84eRX1FYPsfwAH2ZJjqa_2M-eoPenroq-9aEgRxdTfKYcyH9pF8YEVrOhx1G6fJIaY4M8LmP21eWyN3DX6Q30gly1HfiMPbgtTwVzMAbT6AkxqDp-NuWJUcabnh_rGW-HleA6b9V");'></div>
+<div class="absolute top-4 left-4 bg-accent text-primary text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                            Popular
+                                        </div>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex items-center gap-1 text-text-muted dark:text-slate-400 text-xs font-semibold mb-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">schedule</span> 5 Days
+                                        </div>
+<h3 class="text-text-main dark:text-slate-100 text-lg font-bold leading-tight mb-1 group-hover:text-primary dark:group-hover:text-accent transition-colors">Bali Wellness Retreat</h3>
+<p class="text-text-muted dark:text-slate-400 text-sm mb-4 line-clamp-2">Rejuvenate your mind, body, and soul in the lush jungles of Ubud.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/10 dark:border-slate-700 pt-4">
+<div>
+<span class="text-xs text-text-muted dark:text-slate-400">From</span>
+<div class="text-primary dark:text-accent text-xl font-black">$899</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 text-primary dark:text-accent flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tour Card 3 -->
+<div class="group flex flex-col bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary/5 dark:border-slate-700">
+<div class="relative w-full aspect-[4/3] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Stunning glaciers and mountains of Patagonia" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDoSXIXQ6VtB1zDmvQTV45l_92dTM2_9E_gYUTECK1sZXpysOO4loTMknzMNkjC53qT-Qr6rXgpPyRdoorm_k9-urtbccOP04-lnWBehAkoEROR0EcFbtgXcFe-Ag_LKAcVRQWunC9wHKpgJ-5hSffmz84a965T0RwKxvgQJFxYD3hxPjg4t-LSuGTzC0xINN4KHLyNIkEjwwD_4ulCJO8csMv98gocdXL43GY5hAhTvZNJohsBRVH1KIlmqgwfdTfFIa_omKn2Oaz5");'></div>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex items-center gap-1 text-text-muted dark:text-slate-400 text-xs font-semibold mb-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">schedule</span> 10 Days
+                                        </div>
+<h3 class="text-text-main dark:text-slate-100 text-lg font-bold leading-tight mb-1 group-hover:text-primary dark:group-hover:text-accent transition-colors">Patagonia Expedition</h3>
+<p class="text-text-muted dark:text-slate-400 text-sm mb-4 line-clamp-2">Journey to the end of the world and witness spectacular glaciers.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/10 dark:border-slate-700 pt-4">
+<div>
+<span class="text-xs text-text-muted dark:text-slate-400">From</span>
+<div class="text-primary dark:text-accent text-xl font-black">$2,499</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 text-primary dark:text-accent flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tour Card 4 -->
+<div class="group flex flex-col bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary/5 dark:border-slate-700">
+<div class="relative w-full aspect-[4/3] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="White architecture with blue domes in Santorini" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAoz8GFP3bgjCfQ0eNNOPHLRVUho8679Sp5iL4Kk8TRqw3fT1oAJNDfwjHZMsNk65o4riT33BsE6DP6QHDPJcib6XG-7YvjCNFe7VKFIVvkuW3vgeCyk3EzHduLwTgy_Vd38ncmrO9DVko_XZTihNz6n7gMiKrdn4BE7aV9s6A5VKMnCrAUc4b47QBSXQBbDF85hY7g1S3b6E4n-NdL5aT6I69R8u4C70hJd5keBE2jhN4WktMiLBF3K72oaxkA5rQha70A5ERzZ9Gn");'></div>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex items-center gap-1 text-text-muted dark:text-slate-400 text-xs font-semibold mb-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">schedule</span> 6 Days
+                                        </div>
+<h3 class="text-text-main dark:text-slate-100 text-lg font-bold leading-tight mb-1 group-hover:text-primary dark:group-hover:text-accent transition-colors">Santorini Getaway</h3>
+<p class="text-text-muted dark:text-slate-400 text-sm mb-4 line-clamp-2">Relax in iconic white-washed villas overlooking the Aegean Sea.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/10 dark:border-slate-700 pt-4">
+<div>
+<span class="text-xs text-text-muted dark:text-slate-400">From</span>
+<div class="text-primary dark:text-accent text-xl font-black">$1,499</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 text-primary dark:text-accent flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="flex flex-col gap-6 border-t border-primary/10 dark:border-slate-800 px-5 py-10 mt-auto text-center @container">
+<div class="flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-2 text-primary dark:text-accent opacity-80">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-bold tracking-tight">Wanderlust Pro</span>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+<a class="text-text-muted dark:text-slate-400 hover:text-primary dark:hover:text-accent transition-colors text-sm font-semibold" href="#">Privacy Policy</a>
+<a class="text-text-muted dark:text-slate-400 hover:text-primary dark:hover:text-accent transition-colors text-sm font-semibold" href="#">Terms of Service</a>
+<a class="text-text-muted dark:text-slate-400 hover:text-primary dark:hover:text-accent transition-colors text-sm font-semibold" href="#">Contact Us</a>
+</div>
+</div>
+<p class="text-text-muted/70 dark:text-slate-500 text-sm font-medium mt-4">© 2023 Wanderlust Explorer Pro. All rights reserved.</p>
+</footer>
+</div>
+</div>
+</div>
+</div>
+</body></html>

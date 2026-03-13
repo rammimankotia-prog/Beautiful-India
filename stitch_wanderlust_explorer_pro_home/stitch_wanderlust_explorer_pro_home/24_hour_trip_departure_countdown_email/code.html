@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffdcd1",
+                        "accent-teal": "#006D77",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#23140f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation -->
+<header class="flex items-center justify-between border-b border-primary/20 bg-background-light dark:bg-background-dark px-6 md:px-40 py-5">
+<div class="flex items-center gap-3">
+<div class="text-accent-teal">
+<span class="material-symbols-outlined text-3xl">explore</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-accent-teal transition-colors" href="#">My Trips</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-accent-teal transition-colors" href="#">Discovery</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-accent-teal transition-colors" href="#">Support</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/20 text-slate-900 dark:text-slate-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="User profile picture of a traveler" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCb0gUcxM_1BtdyqzaMdvEb3u0clIRQF1R9eE-8QijxhjIkKISbgx8QqmWe7bvC2dzcGISR96GMHUaVP6sTlOr0JmWG_TquSPHh9By5IvoxzNa1ymbKVmvSMeHHetKSxX3HRBDdttOqSEpbuKwiM3q3NaskGyQqBLSn6ogAA4O9WYXKWIxedFSuddpxzkKSBGlilNfST7xb4C1EmjjNH8IxfXf5t9V1YYl183ZpWNS8nq7SHYEvukkwfrmt_7wX_ChtJKwNYV6At20L");'></div>
+</div>
+</header>
+<main class="flex-1 max-w-[960px] mx-auto w-full px-4 py-8">
+<!-- Hero Countdown Section -->
+<div class="relative overflow-hidden rounded-xl bg-accent-teal mb-8">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" data-alt="Breathtaking mountain vista during golden hour sunrise" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBtu9sBVI6jfJimBFzc8PneVnsGfcdBjui0-6ct6OasS_Jn1ypN-mhOvkjm-7L_rkXvkD90cMkhz_-pt9rvUbEv_2UcQPODwfkcCK_riD-XXbKEKV4gJoGZrxaPZz7irQJsKpBjOQPiVMODgEy7yfR4pgHMdfwbPMg46jeLSLm5lj7xWb8lGlu3OZ-w619aLpYIfoUw5-afrlP7Q6ANPNbafE9S0zFLkK_dwkZ9Cdmos-OlAY_jfvbl2k5XrYkwwI6FpocvVNLi9Zng");'></div>
+<div class="relative z-10 flex flex-col items-center justify-center py-16 px-6 text-center">
+<span class="bg-primary text-slate-900 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">Tomorrow's Adventure</span>
+<h1 class="text-white text-4xl md:text-5xl font-extrabold mb-8 tracking-tight">Final Countdown: Your Adventure Starts Tomorrow!</h1>
+<!-- Animated-style Clock -->
+<div class="flex gap-4 md:gap-8">
+<div class="flex flex-col items-center">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl w-20 h-24 flex items-center justify-center mb-2 shadow-xl">
+<span class="text-white text-4xl font-bold">24</span>
+</div>
+<span class="text-white/80 text-xs font-medium uppercase tracking-widest">Hours</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl w-20 h-24 flex items-center justify-center mb-2 shadow-xl">
+<span class="text-white text-4xl font-bold">00</span>
+</div>
+<span class="text-white/80 text-xs font-medium uppercase tracking-widest">Minutes</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl w-20 h-24 flex items-center justify-center mb-2 shadow-xl">
+<span class="text-white text-4xl font-bold">00</span>
+</div>
+<span class="text-white/80 text-xs font-medium uppercase tracking-widest">Seconds</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+<!-- Quick Access Section -->
+<div class="lg:col-span-2 space-y-6">
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-primary/10 shadow-sm">
+<h3 class="text-accent-teal font-bold text-lg mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">bolt</span> Quick Access
+                            </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex flex-col gap-3 p-4 bg-background-light dark:bg-background-dark rounded-lg">
+<span class="material-symbols-outlined text-accent-teal">confirmation_number</span>
+<div>
+<p class="text-xs text-slate-500 font-semibold uppercase">Digital Ticket</p>
+<p class="text-sm font-bold">WE-7492-X</p>
+</div>
+<a class="text-xs text-accent-teal font-bold hover:underline" href="#">Download PDF</a>
+</div>
+<div class="flex flex-col gap-3 p-4 bg-background-light dark:bg-background-dark rounded-lg">
+<span class="material-symbols-outlined text-accent-teal">hotel</span>
+<div>
+<p class="text-xs text-slate-500 font-semibold uppercase">Stay Address</p>
+<p class="text-sm font-bold truncate">Avenue des Champs-Élysées 75008</p>
+</div>
+<a class="text-xs text-accent-teal font-bold hover:underline" data-location="Paris" href="#">View on Map</a>
+</div>
+<div class="flex flex-col gap-3 p-4 bg-background-light dark:bg-background-dark rounded-lg">
+<span class="material-symbols-outlined text-accent-teal">emergency_share</span>
+<div>
+<p class="text-xs text-slate-500 font-semibold uppercase">Emergency Contact</p>
+<p class="text-sm font-bold">+1 (555) 012-3456</p>
+</div>
+<a class="text-xs text-accent-teal font-bold hover:underline" href="#">Contact Support</a>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-8 rounded-xl border border-primary/10 text-center">
+<h2 class="text-2xl font-bold mb-4">You're just 24 hours away!</h2>
+<p class="text-slate-600 dark:text-slate-400 mb-8 max-w-lg mx-auto leading-relaxed">
+                                Everything is set for your departure. Your local guide is ready, the weather looks perfect, and your itinerary is synced.
+                            </p>
+<button class="bg-primary text-slate-900 px-10 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95">
+                                Open My Trip Hub
+                            </button>
+</div>
+</div>
+<!-- Side Info -->
+<div class="space-y-6">
+<div class="bg-accent-teal text-white p-6 rounded-xl shadow-lg">
+<h4 class="font-bold text-lg mb-4">Pack Your Bags!</h4>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm">Universal power adapter</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm">Printed backup of travel insurance</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm">Comfortable walking shoes</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm">Weather-appropriate layers</span>
+</li>
+</ul>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-primary/10">
+<h4 class="font-bold mb-4">Live Weather</h4>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-4xl text-yellow-500">sunny</span>
+<div>
+<p class="text-2xl font-bold">24°C</p>
+<p class="text-sm text-slate-500">Sunny, Clear Skies</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Sign-off -->
+<footer class="border-t border-primary/20 pt-12 pb-8 text-center">
+<div class="flex justify-center gap-6 mb-8">
+<a class="text-accent-teal hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">share</span>
+</a>
+<a class="text-accent-teal hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">public</span>
+</a>
+<a class="text-accent-teal hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">alternate_email</span>
+</a>
+</div>
+<p class="text-slate-900 dark:text-slate-100 font-bold text-xl mb-2 italic">Safe Travels,</p>
+<p class="text-accent-teal font-bold mb-8">The Wanderlust Explorer Pro Team</p>
+<div class="text-xs text-slate-500 space-y-2">
+<p>© 2024 Wanderlust Explorer Pro. All rights reserved.</p>
+<p>You received this email because you have an upcoming trip. <a class="underline" href="#">Manage notifications</a></p>
+</div>
+</footer>
+</main>
+</div>
+</div>
+</body></html>

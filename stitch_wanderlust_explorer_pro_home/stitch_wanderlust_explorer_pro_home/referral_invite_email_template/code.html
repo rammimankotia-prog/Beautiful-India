@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffddd1",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#23140f",
+                    },
+                    fontFamily: {
+                        "display": ["Montserrat", "Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between px-10 py-6 max-w-[960px] mx-auto w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">explore</span>
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Wanderlust Explorer Pro</span>
+</div>
+</header>
+<main class="px-4 md:px-10 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<div class="@container">
+<div class="@[480px]:py-3">
+<div class="bg-cover bg-center flex flex-col justify-end overflow-hidden bg-slate-200 dark:bg-slate-800 @[480px]:rounded-xl min-h-[400px] shadow-lg" data-alt="Person standing on a high mountain cliff edge overlooking a valley" style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAymTtf74MQXcS5Uo5xRpxoZNXfy7bJvjjDWhZOYoPAjNZ_6IaSEhgyeKsfXYEFuAKjdbDdzNbBCrbgrX4kjuI10bxj8YYCu39ClaOQVJ0-xr4BHV3ivHXWBZ7qLuvbI8hrlXCNyd00RDMVz-b4JNegMTRg2ahrTBChQ0Ta0qBFZGjB1m1PGTrRSGgd2vqJQWmnf36GYpDmrF_eiagDzyRE5BDCG2fHAubtcsCf4l2Lr8AM6TETl0E7767ZdosPKiXk5WFQqJnjnw4P");'>
+<div class="flex p-8">
+<h2 class="text-white tracking-tight text-[42px] font-bold leading-tight">Adventure is Better with Friends</h2>
+</div>
+</div>
+</div>
+</div>
+<div class="py-12 px-4 text-center">
+<h1 class="text-slate-900 dark:text-slate-100 tracking-tight text-[48px] font-bold leading-tight pb-4">Give $50, Get $50</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg font-normal leading-relaxed max-w-2xl mx-auto">
+                            Share the joy of travel with your inner circle. When your friends book their first adventure, you both get a $50 credit toward your next world exploration with Wanderlust Explorer Pro.
+                        </p>
+</div>
+<div class="p-4 @container">
+<div class="flex flex-1 flex-col items-center justify-between gap-6 rounded-xl border-2 border-primary/30 bg-white dark:bg-slate-900/50 p-8 @[480px]:flex-row shadow-sm">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined">format_quote</span>
+<p class="text-slate-900 dark:text-slate-100 text-lg font-bold">A message from your friend</p>
+</div>
+<p class="text-slate-700 dark:text-slate-300 text-xl italic font-medium leading-relaxed">
+                                    "I've been using Wanderlust Explorer Pro to manage all my tours and it's been incredible. You should join me on the next one!"
+                                </p>
+</div>
+</div>
+</div>
+<div class="flex px-4 py-10 justify-center">
+<button class="flex min-w-[280px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-primary text-slate-900 text-lg font-bold leading-normal tracking-wide shadow-lg hover:brightness-95 transition-all">
+<span class="truncate">Claim Your $50 Credit</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 py-12 border-t border-primary/20 mt-10">
+<div class="flex flex-col items-center text-center gap-2">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
+<span class="material-symbols-outlined">send</span>
+</div>
+<h3 class="font-bold">Invite</h3>
+<p class="text-sm text-slate-500">Share your unique referral link with friends.</p>
+</div>
+<div class="flex flex-col items-center text-center gap-2">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
+<span class="material-symbols-outlined">event_available</span>
+</div>
+<h3 class="font-bold">They Book</h3>
+<p class="text-sm text-slate-500">They get $50 off their first tour booking.</p>
+</div>
+<div class="flex flex-col items-center text-center gap-2">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
+<span class="material-symbols-outlined">savings</span>
+</div>
+<h3 class="font-bold">You Earn</h3>
+<p class="text-sm text-slate-500">You get $50 credit once they complete their trip.</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full bg-slate-100 dark:bg-slate-900/80 py-12 px-10">
+<div class="max-w-[960px] mx-auto flex flex-col items-center gap-8">
+<div class="flex items-center gap-2 opacity-60">
+<span class="material-symbols-outlined text-primary text-2xl">explore</span>
+<span class="text-lg font-bold tracking-tight">Wanderlust Explorer Pro</span>
+</div>
+<div class="flex gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">photo_camera</span>
+</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+</a>
+</div>
+<div class="text-center text-xs text-slate-400 leading-relaxed max-w-md">
+<p class="mb-2">This credit is valid for new users only. Referral credits are applied automatically to your next booking once the referred traveler completes their first tour.</p>
+<p>© 2024 Wanderlust Explorer Pro. All rights reserved. <br/> 123 Adventure Way, Global Explorer Suite 101.</p>
+<div class="mt-4 flex justify-center gap-4">
+<a class="underline" href="#">Privacy Policy</a>
+<a class="underline" href="#">Unsubscribe</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

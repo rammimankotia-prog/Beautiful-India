@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tour Review Submission | Wanderlust Explorer Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006c75",
+                        "accent": "#FFDDD2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2223",
+                        "teal-dark": "#006D77",
+                        "sand": "#EDF6F9"
+                    },
+                    fontFamily: {
+                        "display": ["Montserrat", "Plus Jakarta Sans", "sans-serif"],
+                        "sans": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-sand dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-teal-dark dark:text-primary">
+<div class="size-8">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-xl font-display font-bold leading-tight tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Tours</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">My Bookings</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-slate-700">
+<div class="text-slate-400 flex bg-slate-50 dark:bg-slate-800 items-center justify-center px-3">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-50 dark:bg-slate-800 focus:ring-0 text-sm" placeholder="Search tours..." value=""/>
+</div>
+</label>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile avatar close up portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1i9U18BXWpmghexk2a-QhR71U3gbB7vOEIg_GWmFSG74DTEXOgshwMfVBnzgwhAE9m17s8ZoJcgPtIRYu2X_Hqbdt95KkENz5P7pA0HIq7Ayqg85kOVkPhSIMvG6AW6rOwbZKuUkzjsp6IW80L5kJ9PdNHtXh9f-o_NNo7zOT0Ft97fv4g9JgyBa5HPUfl4fOsdOI3fFiKjL6tA3VKdqsmb8jHlalkFACYA-x4sMaQfAZNqcLutOHn-aCIyNFeUwTwPiIPZg_c3Zh");'></div>
+</div>
+</header>
+<main class="flex-1 flex justify-center py-10 px-4 md:px-10 lg:px-40">
+<div class="layout-content-container flex flex-col max-w-[860px] flex-1 gap-8">
+<!-- Breadcrumbs & Heading -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-primary text-sm font-medium mb-2">
+<a class="hover:underline" href="#">Home</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:underline" href="#">Tours</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-500">Write a Review</span>
+</div>
+<h1 class="text-teal-dark dark:text-slate-100 text-4xl font-black leading-tight tracking-tight">Tour Review Submission</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg">Your feedback helps fellow travelers find their next adventure.</p>
+</div>
+<!-- Current Tour Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row gap-6 items-center">
+<div class="w-full md:w-48 h-32 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 overflow-hidden" data-alt="Stunning sunset view of the Amalfi Coast cliffs" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBp7eZH4PGHJ1gS60tBnwWX6ENf9TadjOwyMeTqVhrzVexCBB4FxP7lAi58-4oUz5JOAQ9QtQC5vAwwWanR8Lu_1EUc_fzlVI6euQsFk1OivLAx4jEUe3X9iOR2oALaHT6S19dpKw6xQ4M4GAPUCOnssCypsN2uHsFWMEjXIGBGxFX9p2wsL2wkUl-Wi2Kt6p9Q46nu60k4guTOzp0p0K2waSE1_FPOVsV7psip2YcP9EkKLqqLuHtwYbPl3m3xbyTki3o9_tl0KkVZ");'>
+</div>
+<div class="flex-1 text-center md:text-left">
+<span class="text-primary text-xs font-bold uppercase tracking-widest">Currently Reviewing</span>
+<h3 class="text-teal-dark dark:text-slate-100 text-2xl font-bold mt-1">Amalfi Coast Sunset Trek</h3>
+<p class="text-slate-500 text-sm mt-1">Completed on Oct 14, 2023 • Guided Group Tour</p>
+</div>
+</div>
+<!-- Review Form -->
+<form class="space-y-10">
+<!-- Star Rating Section -->
+<section class="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm border border-slate-100 dark:border-slate-800">
+<h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">grade</span>
+                            Overall Experience
+                        </h2>
+<div class="flex flex-col items-center gap-4 py-4">
+<div class="flex gap-2">
+<!-- Sunset Orange Stars -->
+<button class="text-[#FFDDD2] hover:scale-110 transition-transform" type="button"><span class="material-symbols-outlined !text-5xl" style="font-variation-settings: 'FILL' 1">star</span></button>
+<button class="text-[#FFDDD2] hover:scale-110 transition-transform" type="button"><span class="material-symbols-outlined !text-5xl" style="font-variation-settings: 'FILL' 1">star</span></button>
+<button class="text-[#FFDDD2] hover:scale-110 transition-transform" type="button"><span class="material-symbols-outlined !text-5xl" style="font-variation-settings: 'FILL' 1">star</span></button>
+<button class="text-[#FFDDD2] hover:scale-110 transition-transform" type="button"><span class="material-symbols-outlined !text-5xl" style="font-variation-settings: 'FILL' 1">star</span></button>
+<button class="text-[#FFDDD2] hover:scale-110 transition-transform" type="button"><span class="material-symbols-outlined !text-5xl">star</span></button>
+</div>
+<p class="text-slate-500 font-medium">Click to rate your overall trip</p>
+</div>
+<!-- Categorical Ratings -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 pt-8 border-t border-slate-50 dark:border-slate-800">
+<div class="space-y-3">
+<p class="text-sm font-bold text-teal-dark dark:text-primary/80 uppercase">The Guide</p>
+<div class="flex gap-1 text-[#FFDDD2]">
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl">star</span>
+</div>
+</div>
+<div class="space-y-3">
+<p class="text-sm font-bold text-teal-dark dark:text-primary/80 uppercase">Accommodation</p>
+<div class="flex gap-1 text-[#FFDDD2]">
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl">star</span>
+<span class="material-symbols-outlined !text-xl">star</span>
+</div>
+</div>
+<div class="space-y-3">
+<p class="text-sm font-bold text-teal-dark dark:text-primary/80 uppercase">Value for Money</p>
+<div class="flex gap-1 text-[#FFDDD2]">
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Review Text Section -->
+<section class="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm border border-slate-100 dark:border-slate-800">
+<h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+                            Share your experience
+                        </h2>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 rounded-t-lg">
+<button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" type="button"><span class="material-symbols-outlined !text-xl">format_bold</span></button>
+<button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" type="button"><span class="material-symbols-outlined !text-xl">format_italic</span></button>
+<button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" type="button"><span class="material-symbols-outlined !text-xl">format_list_bulleted</span></button>
+<button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" type="button"><span class="material-symbols-outlined !text-xl">link</span></button>
+</div>
+<textarea class="w-full rounded-b-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary p-4 text-slate-700 dark:text-slate-300 placeholder:text-slate-400" placeholder="What were the highlights? Any tips for other travelers?" rows="8"></textarea>
+</div>
+</section>
+<!-- Photo Upload Section -->
+<section class="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm border border-slate-100 dark:border-slate-800">
+<h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">add_a_photo</span>
+                            Add trip photos
+                        </h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Upload Trigger -->
+<label class="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl aspect-square hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-primary !text-4xl">cloud_upload</span>
+<span class="text-xs mt-2 font-medium text-slate-500">Add Photos</span>
+<input accept="image/*" class="hidden" multiple="" type="file"/>
+</label>
+<!-- Placeholder Previews (representing already selected) -->
+<div class="relative group rounded-xl aspect-square overflow-hidden">
+<div class="w-full h-full bg-center bg-cover" data-alt="A photo of a colorful coastal Italian town" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCk5mmkoaV2sppJwrL-2rctT_OoTFmk1vWdwNl8W9bXR6XVSxzTB84l2qC9mSkCOt3HYhlhqtP2r9dCggCzqCiqEXBi5KfNrBi_weQPsbqU8I5Ba57OfRbL4bOL66m41NyKJxvVs6oU7LfHKUOLafBnetVfeSh0_Dt6h83S3wg0pklhcdOEVYSPDVk05el8U7uU92xpU5CHNCE7vg-pv_fQ7QNrsukW7LM0pJ14rmVqrxM_RigsGvDQ5oMgHEqK_z1YAUS1y7nOI5ec');"></div>
+<button class="absolute top-2 right-2 bg-white/80 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" type="button">
+<span class="material-symbols-outlined !text-sm text-red-500">close</span>
+</button>
+</div>
+<div class="relative group rounded-xl aspect-square overflow-hidden">
+<div class="w-full h-full bg-center bg-cover" data-alt="Hiking path along mountains overlooking the sea" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoDKqDqSpSVTKrFVy2AhjqCeSL5mG1dcddr6WBUsHKgqwH4ghEha5mFZ4UBML5f7daXd3ZQXClRWsn9n4u1YraUv8n8kzVM1_poG4M4r6XvN1cpmrmko4tI94aM28aT5krcY16LeH-XsBk8lfyo6S2k8AjdhLhPZjFKLilciQGOnsQVnf77tv_jOjPF_uYk0JlNpi82_Btdx6EhFyoqO3OYzskLWIDsCvHLagJVUVi9A-4fWj1k1ShI6NZ3V6Yt2LqZe2_XjaAEJYD');"></div>
+<button class="absolute top-2 right-2 bg-white/80 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" type="button">
+<span class="material-symbols-outlined !text-sm text-red-500">close</span>
+</button>
+</div>
+</div>
+<p class="text-xs text-slate-400 mt-4">Max 10 photos. JPEG or PNG format.</p>
+</section>
+<!-- Form Actions -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-6">
+<div class="flex items-center gap-3">
+<input class="rounded text-primary focus:ring-primary h-5 w-5" id="terms" type="checkbox"/>
+<label class="text-sm text-slate-600 dark:text-slate-400" for="terms">I confirm that this review is based on my own experience and is my honest opinion.</label>
+</div>
+<div class="flex items-center gap-4 w-full md:w-auto">
+<button class="flex-1 md:px-8 py-4 text-teal-dark font-bold hover:bg-primary/5 transition-colors rounded-xl" type="button">Save Draft</button>
+<button class="flex-1 md:px-12 py-4 bg-teal-dark dark:bg-primary text-white font-bold rounded-xl shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all" type="submit">Submit Review</button>
+</div>
+</div>
+</form>
+<!-- Footer Extra -->
+<div class="mt-12 text-center text-slate-400 text-sm pb-12">
+<p>© 2023 Wanderlust Explorer Pro. All reviews are subject to our moderation guidelines.</p>
+</div>
+</div>
+</main>
+</div>
+</body></html>

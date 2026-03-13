@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Referral Reward Milestone - Wanderlust Explorer Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006c75",
+                        "secondary": "#FFDDD2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2223",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "accent": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 34, 35, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<!-- Background Mockup to show Context -->
+<div class="relative min-h-screen w-full flex flex-col opacity-40 pointer-events-none select-none">
+<header class="flex items-center justify-between px-10 py-4 border-b border-primary/10">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-xl font-bold tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<div class="flex gap-6 text-sm font-medium">
+<span>Discover</span>
+<span>Tours</span>
+<span>My Bookings</span>
+<span>Referrals</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="h-10 w-64 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+<div class="size-10 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+</div>
+</header>
+<main class="p-10 grid grid-cols-3 gap-6">
+<div class="h-64 bg-slate-200 dark:bg-slate-800 rounded-xl col-span-2"></div>
+<div class="h-64 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+<div class="h-40 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+<div class="h-40 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+<div class="h-40 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+</main>
+</div>
+<!-- Celebration Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-primary/20 backdrop-blur-sm"></div>
+<!-- Modal Container -->
+<div class="relative w-full max-w-2xl overflow-hidden rounded-xl bg-white dark:bg-background-dark shadow-2xl flex flex-col md:flex-row border border-white/20">
+<!-- Festive Image Sidebar/Background -->
+<div class="relative w-full md:w-5/12 min-h-[300px] md:min-h-full overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Traveler celebrating on a sunlit mountain peak" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBQw_oJPn95PyLTH6eM5BBHBamDfnFYNCI2Odykm0m5G7EPloxSfaXKz1OFGgAoMg7r1-8sWutOUdqnA0w1iWMgHJSx_CkpyoLbfPrkt81Anqs8pshajMjjkWnYBxzUtFzNbyGl2R3PFRWvA2075V7GetvB1M8B4qPtz3b7KlTh1GMFAkTmxHdiU7ddXzNF1u52NQsBuFPpp7NamXGdqNFEDhp2AYsWtJnk-QAGNPiLdlDS5CBiialnWPwPn8kr17ZUFZD4g9UbbkIr');">
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
+</div>
+<div class="absolute bottom-6 left-6 right-6">
+<h3 class="font-accent text-2xl font-bold text-white leading-tight">Your journey just got better.</h3>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex-1 p-8 md:p-12 flex flex-col items-center text-center relative">
+<!-- Close Button -->
+<button class="absolute top-4 right-4 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+<!-- Icon/Badge -->
+<div class="mb-6 relative">
+<div class="absolute inset-0 bg-secondary/50 blur-2xl rounded-full"></div>
+<div class="relative bg-secondary text-primary size-24 rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-slate-800">
+<span class="material-symbols-outlined text-5xl fill-current">featured_seasonal_and_gifts</span>
+</div>
+</div>
+<!-- Headline -->
+<h2 class="font-accent text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
+                    Congratulations! <br/>
+<span class="text-primary">You’ve Unlocked a New Milestone</span>
+</h2>
+<!-- Description -->
+<p class="text-slate-600 dark:text-slate-300 text-lg mb-8 max-w-md font-display leading-relaxed">
+                    By referring <span class="font-bold text-primary">5 friends</span>, you've earned your choice of a <span class="font-semibold italic">Free Weekend Getaway</span> or a <span class="font-semibold italic">Premium Travel Kit</span>.
+                </p>
+<!-- Reward Choices Mockup -->
+<div class="grid grid-cols-2 gap-4 w-full mb-10">
+<div class="p-3 border-2 border-primary/10 rounded-lg bg-primary/5 flex flex-col items-center gap-2 group hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary text-3xl">flight_takeoff</span>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500">Weekend Trip</span>
+</div>
+<div class="p-3 border-2 border-primary/10 rounded-lg bg-primary/5 flex flex-col items-center gap-2 group hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary text-3xl">luggage</span>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500">Travel Kit</span>
+</div>
+</div>
+<!-- CTA Button -->
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-accent font-bold py-4 px-8 rounded-xl shadow-lg shadow-primary/30 transition-all transform hover:-translate-y-1 active:scale-95 text-lg">
+                    Claim Your Reward
+                </button>
+<!-- Footer Text -->
+<p class="mt-6 text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">
+                    Referral ID: WE-99420-PRO
+                </p>
+</div>
+</div>
+</div>
+</body></html>

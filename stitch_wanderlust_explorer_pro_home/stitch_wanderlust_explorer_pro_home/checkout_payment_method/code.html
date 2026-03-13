@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffddd1",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#23140f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="layout-container flex flex-col min-h-screen">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between border-b border-primary/20 bg-white dark:bg-slate-900 px-6 py-4 lg:px-20">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg">
+<span class="material-symbols-outlined text-background-dark">explore</span>
+</div>
+<h2 class="text-xl font-extrabold tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<div class="hidden md:flex relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary" placeholder="Search destinations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+<a class="hover:text-primary transition-colors" href="#">Discover</a>
+<a class="hover:text-primary transition-colors" href="#">My Bookings</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+<div class="h-10 w-10 rounded-full bg-primary/30 border-2 border-primary flex items-center justify-center overflow-hidden">
+<img alt="Profile" data-alt="User profile avatar of a smiling man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZz4aFXnnfg7_a9Oc-N08MYyPEPy3AidBmx29aWTvOfPsFkDQJsAtzK0Jm_myrXkXr3fBlHN-z8wILkjPI65rFLMktt5EIdvo5c64bqSzn8PJc1qJEn3CGvps5orAO3xpEgcS_1KyaG8C33BPx_xckNGnE5EUBQEp_gWlmlNkR15_sc_LNP1IS72PfT0Fr1MStE8RqUXofuxrfGOpHE-HLJ09NINsp1FBalVHWqtylasCOp2ZY36DgDISZ8NBqE5UVxouFyzEXavpp"/>
+</div>
+</div>
+</header>
+<!-- Main Content Section -->
+<main class="flex-1 max-w-7xl mx-auto w-full px-6 py-8 lg:px-20">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm mb-8 text-slate-500 dark:text-slate-400 font-medium">
+<span>Tours</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span>Booking Details</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100">Payment</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<!-- Left Column: Payment Process -->
+<div class="lg:col-span-2 space-y-8">
+<div>
+<h1 class="text-4xl font-black mb-2">Checkout</h1>
+<p class="text-slate-500 dark:text-slate-400">Securely complete your booking for your next adventure.</p>
+</div>
+<!-- Step Indicator -->
+<div class="flex border-b border-slate-200 dark:border-slate-800">
+<div class="flex-1 py-4 text-center border-b-2 border-transparent text-slate-400">
+<span class="font-bold text-sm tracking-wide uppercase">1. Details</span>
+</div>
+<div class="flex-1 py-4 text-center border-b-2 border-primary text-slate-900 dark:text-white">
+<span class="font-bold text-sm tracking-wide uppercase">2. Payment</span>
+</div>
+<div class="flex-1 py-4 text-center border-b-2 border-transparent text-slate-400">
+<span class="font-bold text-sm tracking-wide uppercase">3. Confirmation</span>
+</div>
+</div>
+<!-- Payment Options -->
+<div class="space-y-4">
+<h3 class="text-lg font-bold">Select Payment Method</h3>
+<!-- Card Option -->
+<div class="border-2 border-primary bg-primary/5 rounded-xl p-5">
+<label class="flex items-start gap-4 cursor-pointer">
+<input checked="" class="mt-1 w-5 h-5 text-primary focus:ring-primary border-slate-300" name="payment" type="radio"/>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-4">
+<div>
+<p class="font-bold text-slate-900 dark:text-white">Credit or Debit Card</p>
+<p class="text-xs text-slate-500">Secure encrypted transaction via Stripe</p>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-slate-400">credit_card</span>
+</div>
+</div>
+<!-- Card Details Form -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+<div class="md:col-span-2">
+<label class="block text-xs font-bold uppercase text-slate-500 mb-1">Card Number</label>
+<div class="relative">
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary" placeholder="0000 0000 0000 0000" type="text"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
+<span class="w-8 h-5 bg-slate-200 rounded-sm"></span>
+<span class="w-8 h-5 bg-slate-200 rounded-sm"></span>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase text-slate-500 mb-1">Expiry Date</label>
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary" placeholder="MM / YY" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase text-slate-500 mb-1">CVV</label>
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary" placeholder="123" type="text"/>
+</div>
+</div>
+</div>
+</label>
+</div>
+<!-- PayPal Option -->
+<div class="border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-primary/50 transition-colors">
+<label class="flex items-center gap-4 cursor-pointer">
+<input class="w-5 h-5 text-primary focus:ring-primary border-slate-300" name="payment" type="radio"/>
+<div class="flex-1 flex justify-between items-center">
+<div>
+<p class="font-bold text-slate-900 dark:text-white">PayPal</p>
+<p class="text-xs text-slate-500">Redirect to PayPal to complete purchase</p>
+</div>
+<span class="material-symbols-outlined text-slate-400">account_balance_wallet</span>
+</div>
+</label>
+</div>
+<!-- Apple Pay Option -->
+<div class="border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-primary/50 transition-colors">
+<label class="flex items-center gap-4 cursor-pointer">
+<input class="w-5 h-5 text-primary focus:ring-primary border-slate-300" name="payment" type="radio"/>
+<div class="flex-1 flex justify-between items-center">
+<div>
+<p class="font-bold text-slate-900 dark:text-white">Apple Pay</p>
+<p class="text-xs text-slate-500">Quick pay with Touch ID or Face ID</p>
+</div>
+<span class="material-symbols-outlined text-slate-400">ios</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Security Badge -->
+<div class="flex items-center gap-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 rounded-xl">
+<span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-3xl">verified_user</span>
+<div>
+<p class="font-bold text-emerald-800 dark:text-emerald-300 text-sm">Secure Checkout</p>
+<p class="text-emerald-700 dark:text-emerald-400/80 text-xs">Your personal and payment data is encrypted and protected. We do not store your full card details.</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Sidebar -->
+<div class="space-y-6">
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm sticky top-8">
+<h3 class="text-xl font-bold mb-6">Booking Summary</h3>
+<div class="flex gap-4 mb-6">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Tour Preview" class="w-full h-full object-cover" data-alt="Breathtaking mountain lake landscape at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs8XraiDDh4ypZnH-hQLhZn4BsKOJJIRTlwi6oNYJ0qeoSye3Fskq_9zrRncwgxh7E2Bk6SsHtkHt4wgPCl3kzajlLG86jOW3DaFCV4tk2g3mkTokyOVNa4uLQnHQV2Ny6nJhGZMw5L9H7AUZ_3TOnDsH50UhCFNJoRz3vS2K4im5rZR9m0_XBHJwxxqA1rr2BkQErPTDdxxcJru_U9p-KO6mksHE2k4as4MoERAldFx_rHSxMdVt_JwNEKT2SL_6ehks-FAOAOchR"/>
+</div>
+<div>
+<h4 class="font-bold text-sm leading-tight mb-1">Swiss Alps Grand Expedition: 7-Day Trek</h4>
+<div class="flex items-center gap-1 text-xs text-slate-500">
+<span class="material-symbols-outlined text-xs">calendar_today</span>
+<span>Oct 12 - Oct 19, 2024</span>
+</div>
+</div>
+</div>
+<div class="space-y-3 py-6 border-y border-slate-100 dark:border-slate-800">
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Base Price (2 Adults)</span>
+<span class="font-semibold">$2,400.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Service Fee</span>
+<span class="font-semibold">$45.00</span>
+</div>
+<div class="flex justify-between text-sm text-emerald-600 dark:text-emerald-400">
+<span class="">Early Bird Discount</span>
+<span class="font-semibold">-$120.00</span>
+</div>
+</div>
+<div class="pt-6">
+<div class="flex justify-between items-end mb-8">
+<span class="text-slate-900 dark:text-white font-bold text-lg">Total Amount</span>
+<div class="text-right">
+<span class="block text-2xl font-black text-slate-900 dark:text-white">$2,325.00</span>
+<span class="text-[10px] text-slate-400 uppercase tracking-widest">Inclusive of all taxes</span>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-background-dark font-black rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">lock</span>
+                                Complete Booking
+                            </button>
+<p class="text-center text-[10px] text-slate-400 mt-4 px-4">
+                                By clicking 'Complete Booking' you agree to our Terms of Service and Cancellation Policy.
+                            </p>
+</div>
+</div>
+<!-- Help Section -->
+<div class="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+<p class="text-sm font-bold mb-2">Need help with booking?</p>
+<p class="text-xs text-slate-500 mb-4">Our travel experts are available 24/7 to assist you with your payment.</p>
+<div class="flex items-center gap-2 text-primary text-sm font-bold cursor-pointer hover:underline">
+<span class="material-symbols-outlined text-sm">headset_mic</span>
+                            Contact Support
+                        </div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-10 px-6 lg:px-20 text-center">
+<div class="flex justify-center gap-6 mb-6">
+<span class="material-symbols-outlined text-slate-400">verified</span>
+<span class="material-symbols-outlined text-slate-400">shield</span>
+<span class="material-symbols-outlined text-slate-400">payments</span>
+</div>
+<p class="text-xs text-slate-400">© 2024 Wanderlust Explorer Pro. All rights reserved. PCI-DSS Compliant Gateway.</p>
+</footer>
+</div>
+</body></html>

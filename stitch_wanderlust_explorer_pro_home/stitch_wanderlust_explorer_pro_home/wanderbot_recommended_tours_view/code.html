@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#006c75",
+                "accent": "#FFDDD2",
+                "background-light": "#f5f8f8",
+                "background-dark": "#0f2223",
+              },
+              fontFamily: {
+                "display": ["Plus Jakarta Sans", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<title>WanderBot | Recommended Tours</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation Bar -->
+<header class="flex items-center justify-between border-b border-primary/10 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Discover</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">My Bookings</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Reviews</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex bg-primary/5 rounded-lg items-center px-3 py-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-primary text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm placeholder:text-slate-400" placeholder="Search destinations..."/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-lg px-4 py-2 text-sm font-bold transition-all">Profile</button>
+</div>
+</header>
+<!-- Main Content Area (Chat Style) -->
+<main class="flex-1 flex flex-col max-w-5xl mx-auto w-full px-4 py-8">
+<div class="flex flex-col gap-8">
+<!-- Chat Header -->
+<div class="text-center space-y-2">
+<h1 class="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-extrabold tracking-tight">WanderBot: Your Personalized Recommendations</h1>
+<p class="text-slate-500 dark:text-slate-400">Based on your recent travel survey and interests</p>
+</div>
+<!-- Bot Message -->
+<div class="flex items-start gap-4">
+<div class="bg-primary/10 rounded-full p-2 shrink-0">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+</div>
+<div class="flex flex-col gap-2 max-w-2xl">
+<div class="bg-white dark:bg-slate-800 border border-primary/10 shadow-sm rounded-xl rounded-tl-none p-5">
+<p class="text-slate-700 dark:text-slate-200 leading-relaxed">
+                                Great to meet you! Based on your preference for <strong>adventure</strong> and <strong>cultural immersion</strong>, I've curated these exclusive tour packages just for you. Which one sparks your wanderlust?
+                            </p>
+</div>
+<span class="text-xs text-slate-400 font-medium ml-1">WanderBot • Just now</span>
+</div>
+</div>
+<!-- Horizontal Carousel -->
+<div class="relative w-full overflow-hidden">
+<div class="flex overflow-x-auto gap-6 pb-6 scrollbar-hide snap-x px-2">
+<!-- Card 1 -->
+<div class="min-w-[320px] max-w-[320px] snap-center bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md border border-primary/5 hover:shadow-xl transition-shadow group">
+<div class="h-48 w-full bg-slate-200 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Majestic snow-capped Swiss Alps peaks under blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi5M09TS4bZc2aDvFejn7I92hqA77riLo7yCDLyaNFliwjuDbshnlyFW1nqZf9HVMNpacr5AZY6weupzma9fcFjcI7Z4S33pwlEmeTS2yDcxQelH__5I0v_dn3gsAjHvCeGVke6nREyh7unGmR0VYM_lFvm6BjkxPr6o1T774aaiLu4M6xckngf2kPk82ZWiWIqZnHKx_SXF94_NcL2OEJF9K21XqUKlsqZDq_azFMCIe_NowA2BkouycwGvhdpqiNHpZ9c4vCc1Qs"/>
+<div class="absolute top-3 left-3">
+<span class="bg-primary/90 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Bestseller</span>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-3">
+<div>
+<h3 class="font-bold text-lg text-slate-900 dark:text-slate-100">Swiss Alps Expedition</h3>
+<p class="text-primary font-bold text-xl">$1,200 <span class="text-xs font-normal text-slate-400">/ person</span></p>
+</div>
+<div class="flex items-center gap-2 bg-primary/5 dark:bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm">bolt</span>
+<p class="text-[12px] font-semibold text-primary">Matches your Adventure preference</p>
+</div>
+<button class="w-full border border-primary text-primary hover:bg-primary hover:text-white py-2 rounded-lg text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[320px] max-w-[320px] snap-center bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md border border-primary/5 hover:shadow-xl transition-shadow group">
+<div class="h-48 w-full bg-slate-200 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Colorful houses on Amalfi Coast cliff overlooking sea" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3pzVm4-cz_Hy6FnevKvrTD0GqF036a6xPoPJJFnj0OUTjpq_7_eUfcIGnCI8TT8R8mhx-4f3VEn5ByK5FlcCAYY8uiFmD8V9x0gaDRrbdz9uoJ6Nl_-0AcsVXuqhJu6JeFNViXD1b-QTL4KdhOMo8l3ffwpqmdv-REf253hSMKpXYF3O1d4koZmuH8kuUO-0VbqgBqt6uNsHo2cj7W35sMmoSy38hR4qVGCu3lVPbXX8z6Qggi-YtQMc-2H-8_1cbLSA_9z1YrPac"/>
+</div>
+<div class="p-5 flex flex-col gap-3">
+<div>
+<h3 class="font-bold text-lg text-slate-900 dark:text-slate-100">Amalfi Coast Escape</h3>
+<p class="text-primary font-bold text-xl">$1,500 <span class="text-xs font-normal text-slate-400">/ person</span></p>
+</div>
+<div class="flex items-center gap-2 bg-primary/5 dark:bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm">self_care</span>
+<p class="text-[12px] font-semibold text-primary">Matches your Relaxation preference</p>
+</div>
+<button class="w-full border border-primary text-primary hover:bg-primary hover:text-white py-2 rounded-lg text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[320px] max-w-[320px] snap-center bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md border border-primary/5 hover:shadow-xl transition-shadow group">
+<div class="h-48 w-full bg-slate-200 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Traditional Japanese temple in Kyoto during autumn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcxSEyvNnYY8LoDJoiIYx2ygK8LlRZK5xVv02a2SFUi7K6n-Tuu86FTG2qowPbxfdyPGVX8IPU_gxUtz-7C4gkkwE4PsQD1XeTDHtCOAna_dQyT740xQIIbb_uUeDqcvZ59MIaEYib6mYJhtM-jLOT2zZLOlwJ8_67867MuyJCJqaIUvHYPZConVdMI7Ivz_n1Q5JgFtjVM1pp9QGl_k9TTnqPyF3k_6PKYMBoIkmxZ3Z16Yo5MsR60jR6kEQDuWHp0SJp8-dzTh82"/>
+</div>
+<div class="p-5 flex flex-col gap-3">
+<div>
+<h3 class="font-bold text-lg text-slate-900 dark:text-slate-100">Kyoto Heritage Tour</h3>
+<p class="text-primary font-bold text-xl">$900 <span class="text-xs font-normal text-slate-400">/ person</span></p>
+</div>
+<div class="flex items-center gap-2 bg-primary/5 dark:bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm">history_edu</span>
+<p class="text-[12px] font-semibold text-primary">Matches your History preference</p>
+</div>
+<button class="w-full border border-primary text-primary hover:bg-primary hover:text-white py-2 rounded-lg text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="min-w-[320px] max-w-[320px] snap-center bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md border border-primary/5 hover:shadow-xl transition-shadow group">
+<div class="h-48 w-full bg-slate-200 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Person riding camel on sand dunes at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxJ4eO5p2mF2bltrtTXwbLnNWvueK4rygkBxUhVDyll59wnSLY3ITDybELviv8lZhcD1XOeelKhKAGslN0ZI8CUnngcKzFd8yefPDYuJ95jonctTru6V9QG9S3SnKIW_Vu6O_qi2zbU2v0063oNk4CQp2dIfUIEiarHaS8v5eVco2rZYs2lq77CuWMcYKtJ67oDUnHglpVPBkgiBNnnYEqfNgfmdRyytKj-hQ7JJyHurrxbja41dSuD01nr1bJp6HddBmCrnIgJg7y"/>
+</div>
+<div class="p-5 flex flex-col gap-3">
+<div>
+<h3 class="font-bold text-lg text-slate-900 dark:text-slate-100">Dubai Desert Safari</h3>
+<p class="text-primary font-bold text-xl">$850 <span class="text-xs font-normal text-slate-400">/ person</span></p>
+</div>
+<div class="flex items-center gap-2 bg-primary/5 dark:bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm">sports_motorsports</span>
+<p class="text-[12px] font-semibold text-primary">Matches your Thrill-seeking preference</p>
+</div>
+<button class="w-full border border-primary text-primary hover:bg-primary hover:text-white py-2 rounded-lg text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-4">
+<button class="w-full sm:w-auto min-w-[200px] h-14 px-8 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span>See All Matches</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<button class="w-full sm:w-auto min-w-[200px] h-14 px-8 bg-accent text-slate-900 font-bold rounded-xl shadow-lg hover:brightness-95 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">support_agent</span>
+<span>Talk to an Agent</span>
+</button>
+</div>
+<!-- Footer Chat Input Mockup -->
+<div class="mt-8 border-t border-primary/10 pt-8">
+<div class="relative max-w-2xl mx-auto">
+<input class="w-full bg-white dark:bg-slate-800 border border-primary/20 rounded-full py-4 px-6 pr-16 focus:ring-2 focus:ring-primary focus:border-transparent text-slate-800 dark:text-slate-200 shadow-sm" placeholder="Type your response..." type="text"/>
+<button class="absolute right-3 top-2.5 bg-primary text-white p-2 rounded-full hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+<div class="flex justify-center gap-3 mt-4 flex-wrap">
+<button class="px-3 py-1 bg-white dark:bg-slate-800 border border-primary/10 rounded-full text-xs font-medium text-slate-500 hover:bg-primary/5 transition-colors">Tell me more about Switzerland</button>
+<button class="px-3 py-1 bg-white dark:bg-slate-800 border border-primary/10 rounded-full text-xs font-medium text-slate-500 hover:bg-primary/5 transition-colors">Any cheaper options?</button>
+<button class="px-3 py-1 bg-white dark:bg-slate-800 border border-primary/10 rounded-full text-xs font-medium text-slate-500 hover:bg-primary/5 transition-colors">What's included in Amalfi?</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Site Footer -->
+<footer class="bg-white dark:bg-background-dark border-t border-primary/10 py-8 px-10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined">travel</span>
+<span class="text-sm font-medium">© 2024 Wanderlust Explorer Pro. All rights reserved.</span>
+</div>
+<div class="flex gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">mail</span></a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+<style>
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+</body></html>

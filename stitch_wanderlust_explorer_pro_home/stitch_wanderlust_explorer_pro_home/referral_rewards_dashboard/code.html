@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006c75",
+                        "accent": "#ffddd2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2223",
+                        "sand": "#edf6f9",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "montserrat": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+<title>Referral Rewards Dashboard</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 px-10 py-4 bg-white dark:bg-background-dark">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-primary text-xl font-extrabold leading-tight tracking-[-0.015em] font-montserrat">Wanderlust Pro</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">My Trips</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Referrals</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-primary/20">
+<div class="text-primary/60 flex bg-sand dark:bg-primary/10 items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-sand dark:bg-primary/10 text-slate-900 dark:text-slate-100 focus:ring-0 h-full placeholder:text-primary/40 px-4 text-sm font-medium" placeholder="Search experiences..." value=""/>
+</div>
+</label>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-sand dark:bg-primary/20 text-primary hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-10 w-10 border-2 border-primary" data-alt="User profile picture showing a smiling professional man" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDaJV64To-amQLsoSXLBS61UjpIgs8uvHxbQxHJwxRQ2XvrT11S1JbOVYeLi2nFZKcQ50JxUXsQfb3g460GRWvVRgYCyMB03K4yhv2zXx4nDmKLB2inshXD4Dm_Lecf9AmJBXaLc5CHMgkU4mpI3fBYQP5cftDRKaO_Wa5G5Q8S1uxiITJiZ5uRj3YUbwDGlJG53T0jgWsveTFfvDsnhYLrGmQkNGjKde6XXr3Otx0Ud2VYU1djcXJO7_lo8syW4BEyVV_qBSzf63WW");'></div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto w-full px-6 py-10">
+<!-- Hero Header Section -->
+<div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div class="max-w-2xl">
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl font-extrabold tracking-tight font-montserrat mb-3">Referral Rewards Dashboard</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg">Share your passion for discovery with friends and unlock exclusive travel perks and credits.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-primary text-white px-6 py-3 rounded-xl font-bold font-montserrat flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-xl">share</span>
+                        Share Link
+                    </button>
+</div>
+</div>
+<!-- Milestone Progress Card -->
+<div class="bg-white dark:bg-background-dark/50 border border-primary/10 rounded-2xl p-8 mb-8 shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+<div>
+<h3 class="text-xl font-bold font-montserrat text-slate-900 dark:text-slate-100">Next Milestone: <span class="text-primary">Free Day Trip to Tuscany</span></h3>
+<p class="text-slate-500 mt-1">You're getting closer! Invite more friends to reach the goal.</p>
+</div>
+<div class="text-right">
+<span class="text-3xl font-black text-primary font-montserrat">$300</span>
+<span class="text-slate-400 font-bold"> / $400</span>
+</div>
+</div>
+<div class="relative w-full h-4 bg-sand dark:bg-primary/10 rounded-full overflow-hidden mb-4">
+<div class="absolute top-0 left-0 h-full bg-accent rounded-full" style="width: 75%;"></div>
+</div>
+<div class="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium">
+<span class="material-symbols-outlined text-primary text-lg">info</span>
+                    Earn <span class="text-primary font-bold px-1">$100</span> more to claim your free day trip voucher.
+                </div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="bg-white dark:bg-background-dark/50 border border-primary/10 p-6 rounded-2xl shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary/10 rounded-xl text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="text-emerald-500 text-sm font-bold bg-emerald-50 px-2 py-1 rounded">+15% this month</span>
+</div>
+<p class="text-slate-500 font-semibold font-montserrat text-sm uppercase tracking-wider">Total Credits Earned</p>
+<p class="text-4xl font-black text-slate-900 dark:text-slate-100 mt-1">$1,250</p>
+</div>
+<div class="bg-white dark:bg-background-dark/50 border border-primary/10 p-6 rounded-2xl shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary/10 rounded-xl text-primary">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<span class="text-slate-400 text-sm font-bold bg-slate-50 px-2 py-1 rounded">Stable</span>
+</div>
+<p class="text-slate-500 font-semibold font-montserrat text-sm uppercase tracking-wider">Pending Referrals</p>
+<p class="text-4xl font-black text-slate-900 dark:text-slate-100 mt-1">8</p>
+</div>
+<div class="bg-white dark:bg-background-dark/50 border border-primary/10 p-6 rounded-2xl shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary/10 rounded-xl text-primary">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</div>
+<span class="text-emerald-500 text-sm font-bold bg-emerald-50 px-2 py-1 rounded">+2 new</span>
+</div>
+<p class="text-slate-500 font-semibold font-montserrat text-sm uppercase tracking-wider">Successful Trips</p>
+<p class="text-4xl font-black text-slate-900 dark:text-slate-100 mt-1">14</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Referral List -->
+<div class="lg:col-span-2 space-y-6">
+<h2 class="text-2xl font-bold font-montserrat text-slate-900 dark:text-slate-100">Referral History</h2>
+<div class="bg-white dark:bg-background-dark/50 border border-primary/10 rounded-2xl overflow-hidden shadow-sm">
+<table class="w-full text-left">
+<thead class="bg-sand dark:bg-primary/5">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Friend</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Date Joined</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Credit</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/10">
+<tr>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">EM</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Elena Martinez</p>
+<p class="text-xs text-slate-400">elena.m@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-slate-600 dark:text-slate-400 text-sm">Oct 12, 2023</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                            Booking Completed
+                                        </span>
+</td>
+<td class="px-6 py-5 font-bold text-primary">$50.00</td>
+</tr>
+<tr>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Julian David</p>
+<p class="text-xs text-slate-400">julian.d@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-slate-600 dark:text-slate-400 text-sm">Nov 02, 2023</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                                            Signed Up
+                                        </span>
+</td>
+<td class="px-6 py-5 font-bold text-slate-400">$0.00</td>
+</tr>
+<tr>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">SC</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Sarah Chen</p>
+<p class="text-xs text-slate-400">schen@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-slate-600 dark:text-slate-400 text-sm">Nov 14, 2023</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                                            Invited
+                                        </span>
+</td>
+<td class="px-6 py-5 font-bold text-slate-400">$0.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Invite Section -->
+<div class="space-y-6">
+<h2 class="text-2xl font-bold font-montserrat text-slate-900 dark:text-slate-100">Invite More Friends</h2>
+<div class="bg-primary text-white rounded-2xl p-8 shadow-xl relative overflow-hidden">
+<div class="absolute -right-10 -bottom-10 size-40 bg-white/10 rounded-full"></div>
+<div class="relative z-10">
+<h3 class="text-xl font-bold font-montserrat mb-4">Share the adventure</h3>
+<p class="text-white/80 text-sm mb-6 leading-relaxed">Give your friends 10% off their first trip and get $50 travel credit when they book.</p>
+<div class="space-y-4">
+<div class="bg-white/10 rounded-xl p-4 border border-white/20">
+<p class="text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Your Referral Link</p>
+<div class="flex items-center justify-between gap-2">
+<span class="truncate font-mono text-sm">wanderlust.pro/ref/explorer_99</span>
+<button class="text-white hover:text-accent transition-colors">
+<span class="material-symbols-outlined text-xl">content_copy</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<button class="h-12 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined">social_leaderboard</span>
+</button>
+<button class="h-12 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined">alternate_email</span>
+</button>
+<button class="h-12 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined">chat</span>
+</button>
+<button class="h-12 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<button class="w-full bg-accent text-primary font-black py-4 rounded-xl shadow-lg hover:brightness-105 active:scale-95 transition-all font-montserrat">
+                                    SEND EMAIL INVITES
+                                </button>
+</div>
+</div>
+</div>
+<div class="bg-sand dark:bg-primary/5 border border-primary/10 rounded-2xl p-6">
+<div class="flex items-start gap-4">
+<div class="text-primary mt-1">
+<span class="material-symbols-outlined text-3xl">emoji_events</span>
+</div>
+<div>
+<h4 class="font-bold font-montserrat text-slate-900 dark:text-slate-100">Top Referrer Status</h4>
+<p class="text-sm text-slate-500 mt-1">You are in the top 5% of explorers this month! Keep it up to win a trip to Bali.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-auto border-t border-primary/10 py-8 px-10 text-center text-slate-400 text-sm">
+<p>© 2024 Wanderlust Explorer Pro. All rights reserved. Let the journey continue.</p>
+</footer>
+</div>
+</body></html>

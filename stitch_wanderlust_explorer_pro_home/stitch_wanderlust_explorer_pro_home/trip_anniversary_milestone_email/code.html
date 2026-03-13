@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffddd1",
+                        "accent-teal": "#006D77",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#23140f",
+                        "sand": "#EDF6F9"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Montserrat"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: "Montserrat", sans-serif; }
+        .font-display { font-family: "Plus Jakarta Sans", sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-20 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[800px] flex-1 bg-white dark:bg-zinc-900 shadow-xl rounded-xl overflow-hidden">
+<!-- Header/Logo Area -->
+<header class="flex items-center justify-between border-b border-primary/20 px-6 py-6 bg-white dark:bg-zinc-900">
+<div class="flex items-center gap-3 text-accent-teal">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-xl font-bold font-display tracking-tight uppercase">Wanderlust Explorer Pro</h2>
+</div>
+<div class="flex items-center gap-4">
+<a class="text-slate-600 dark:text-slate-300 hover:text-accent-teal transition-colors" href="#"><span class="material-symbols-outlined">notifications</span></a>
+<div class="size-10 rounded-full bg-primary/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-accent-teal">person</span>
+</div>
+</div>
+</header>
+<!-- Hero Section: On This Day Collage -->
+<div class="@container">
+<div class="relative min-h-[400px] flex flex-col justify-end">
+<div class="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-2 p-4">
+<div class="col-span-2 row-span-2 bg-cover bg-center rounded-lg shadow-sm" data-alt="Panoramic view of the Eiffel Tower in Paris" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmLFy3Dfq3SpQIjrtHLXV4EHL75ksvKGt-vSDEfEyYaTgNPVuH45DquJGyyYwgRKgrnsKkWImht4m1iIBVsOJyt3s8SGsB42adAJJd1IVBVwXIKO1vdem4XsC8PAPwMOVpeZsJmE6kczilFqJoEQh9yAIf0Qym72BG082xp-mBbfprddyLfG1xQeZalLOMdRfoiwj1q5b63E0w6sJJrLQHo2hFdOEvj0HTuxcR9zvgM26yLV7FiQrDe-y1GLXV29lBRDYrDRiGw41E');"></div>
+<div class="bg-cover bg-center rounded-lg shadow-sm" data-alt="Narrow charming street in old town Paris" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCPjgNAFf0Di3eyuFbNeM_aUlfjd97HMIHJKZuNAaNQ9G3xtNP_IJ40j0lN31fKhAuAaEuxBvv3-YGvoaleLyr3U_-Tt6YchkkqVOoYMel9I80-bO5zibG5JLVJysSywlQRYUxkuMYr1ffU_QbBdwKK3uZ8Gro3jIkJS7jnVmhKnmZhwmJwfF2d6hz_FJ-DyfNXHpV1Q0Hb0Zor4aYyQe5JFZ-uqIGrWJhEqOd_mJ9BHiUrqJgpJDMDicG931DO93p5008txodez8JN');"></div>
+<div class="bg-cover bg-center rounded-lg shadow-sm" data-alt="Sun setting over a Parisian cafe terrace" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmo6y4ZaU_Pj7L1fpny4buytdc-K5lGC-QE0V61Jze574wk-IloNMKJqw5QTkANAQoe1jz0bNjH8YgWgN6-tLUWk0XhfB2pEljpkqGuWj5dbgmVYyc_WU0BqN-kFpkvspjbmPuEaMuqoj6MaxHj4jk6JAjSw0KX6R3Gih_LDp0boIIyngzv1CTlxav8Hho1THEvobfCx1vHARcrgglxe4tvY9ULwuCFL7gU6Xs1K6l-Qe5tQlsRLp8mVkRrjZrfl6SJIhTShb-NGey');"></div>
+</div>
+<div class="relative z-10 p-8 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+<span class="inline-block px-3 py-1 bg-primary text-slate-900 rounded-full text-xs font-bold uppercase tracking-widest mb-2">Milestone</span>
+<h1 class="text-white text-5xl font-extrabold font-display leading-tight">On This Day</h1>
+</div>
+</div>
+</div>
+<!-- Personalized Message -->
+<div class="px-8 py-10 text-center">
+<h2 class="text-3xl font-bold font-display text-slate-900 dark:text-white mb-4">
+                            One year ago today, you were exploring Paris!
+                        </h2>
+<p class="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+                            Relive the magic of your <span class="text-accent-teal font-semibold">European Highlights</span> adventure. It's been a whole year since your unforgettable journey through the City of Light. We hope these memories still bring a smile to your face.
+                        </p>
+</div>
+<!-- Return to Paradise Offer -->
+<div class="px-8 pb-10">
+<div class="bg-sand dark:bg-zinc-800 rounded-2xl p-8 border border-primary/30 flex flex-col md:flex-row items-center gap-8">
+<div class="flex-1">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Return to Paradise</h3>
+<p class="text-slate-600 dark:text-slate-400 mb-6">
+                                    We miss having you on the road! As an anniversary gift, enjoy a <span class="font-bold text-slate-900 dark:text-white">15% discount</span> for a return trip or your next grand adventure.
+                                </p>
+<div class="flex items-center gap-3 bg-white dark:bg-zinc-700 p-3 rounded-lg border border-dashed border-primary w-fit mb-6">
+<span class="text-xs uppercase font-bold text-slate-400">Promo Code:</span>
+<span class="text-lg font-bold text-accent-teal tracking-widest">ANNIVERSARY15</span>
+</div>
+<button class="w-full md:w-auto px-8 py-4 bg-primary text-slate-900 font-bold rounded-xl hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                                    Book Your Next Escape
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="w-full md:w-64 aspect-square bg-cover bg-center rounded-xl shadow-inner" data-alt="Tropical beach paradise with turquoise water" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfLYS6ettq0mFc5r2hlzP4yOjhKJf08jRQ2MRVNoOuzd0683Vuku7LQbHmylA65PERNPG-qlAAPunPCz4GPhaSQZymfAMXYtBNhDyxMPNWSDErT0s6Nwb7hnVy1Cqh_chROqGgm1zFyab0K95QSx73AkZ2znz0hgBgQB3e_CMYQ0Q1kJeC9rbXcxK0VvizQapTufp6lcBmY3k_dYuXs5knCtvBYb7cxlIkg4Sx8WZ4URkzurx_5A09Cyu-mBnQGV965sUCdqt9951V');"></div>
+</div>
+</div>
+<!-- Social Sharing Section -->
+<div class="px-8 py-12 bg-slate-50 dark:bg-zinc-800/50 text-center">
+<h4 class="text-xl font-bold font-display mb-6">Share Your Favorite Memory</h4>
+<div class="flex justify-center gap-4">
+<a class="size-12 rounded-full bg-white dark:bg-zinc-700 shadow-sm flex items-center justify-center text-accent-teal hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="size-12 rounded-full bg-white dark:bg-zinc-700 shadow-sm flex items-center justify-center text-accent-teal hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">photo_camera</span>
+</a>
+<a class="size-12 rounded-full bg-white dark:bg-zinc-700 shadow-sm flex items-center justify-center text-accent-teal hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+</a>
+</div>
+<p class="mt-6 text-sm text-slate-500">Tag us with <span class="font-bold">#WanderlustMemories</span> for a chance to be featured!</p>
+</div>
+<!-- Footer -->
+<footer class="bg-accent-teal text-white p-10">
+<div class="flex flex-col md:flex-row justify-between items-start gap-8">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-bold font-display text-lg uppercase tracking-tight">Wanderlust Explorer Pro</span>
+</div>
+<p class="text-white/70 text-sm max-w-xs">
+                                    Crafting unforgettable journeys since 2015. Your world, professionally explored.
+                                </p>
+</div>
+<div class="grid grid-cols-2 gap-8 text-sm">
+<div class="flex flex-col gap-2">
+<span class="font-bold opacity-50 uppercase text-xs">Explore</span>
+<a class="hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="hover:text-primary transition-colors" href="#">Tours</a>
+<a class="hover:text-primary transition-colors" href="#">Special Offers</a>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-bold opacity-50 uppercase text-xs">Account</span>
+<a class="hover:text-primary transition-colors" href="#">My Trips</a>
+<a class="hover:text-primary transition-colors" href="#">Preferences</a>
+<a class="hover:text-primary transition-colors" href="#">Unsubscribe</a>
+</div>
+</div>
+</div>
+<div class="mt-10 pt-6 border-t border-white/10 text-center text-xs text-white/50">
+                            © 2024 Wanderlust Explorer Pro. All rights reserved. 123 Adventure Way, Travel City.
+                        </div>
+</footer>
+</div>
+</div>
+</div>
+</div>
+</body></html>

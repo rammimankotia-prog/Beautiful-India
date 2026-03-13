@@ -1,0 +1,442 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+const destinations = [
+  {
+    id: 1,
+    name: 'Himachal Pradesh',
+    slug: 'himachal',
+    tagline: 'Land of Snow & Serenity',
+    image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80',
+    packages: 245,
+    startingFrom: 8999,
+    duration: '4–10 Days',
+    badge: '🏔️ Mountains',
+    highlights: ['Shimla', 'Manali', 'Dharamshala', 'Kasol', 'Spiti Valley'],
+    bestTime: 'Mar – Jun & Oct – Nov',
+    themes: ['Adventure', 'Honeymoon', 'Family', 'Solo'],
+  },
+  {
+    id: 2,
+    name: 'Kashmir',
+    slug: 'kashmir',
+    tagline: 'Paradise on Earth',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80',
+    packages: 312,
+    startingFrom: 12999,
+    duration: '5–8 Days',
+    badge: '❄️ Snow',
+    highlights: ['Dal Lake', 'Gulmarg', 'Pahalgam', 'Sonamarg', 'Yusmarg'],
+    bestTime: 'Mar – Nov',
+    themes: ['Honeymoon', 'Family', 'Photography'],
+  },
+  {
+    id: 3,
+    name: 'Rajasthan',
+    slug: 'rajasthan',
+    tagline: 'The Land of Kings',
+    image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=800&q=80',
+    packages: 189,
+    startingFrom: 7499,
+    duration: '5–12 Days',
+    badge: '🏯 Heritage',
+    highlights: ['Jaipur', 'Udaipur', 'Jaisalmer', 'Jodhpur', 'Pushkar'],
+    bestTime: 'Oct – Mar',
+    themes: ['Heritage', 'Cultural', 'Luxury', 'Family'],
+  },
+  {
+    id: 4,
+    name: 'Kerala',
+    slug: 'kerala',
+    tagline: 'God\'s Own Country',
+    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80',
+    packages: 276,
+    startingFrom: 9499,
+    duration: '5–9 Days',
+    badge: '🌿 Nature',
+    highlights: ['Munnar', 'Alleppey', 'Wayanad', 'Thekkady', 'Kovalam'],
+    bestTime: 'Sep – Mar',
+    themes: ['Honeymoon', 'Wellness', 'Backwaters', 'Nature'],
+  },
+  {
+    id: 5,
+    name: 'Ladakh',
+    slug: 'ladakh',
+    tagline: 'Where Heaven Meets Earth',
+    image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80',
+    packages: 143,
+    startingFrom: 15999,
+    duration: '7–12 Days',
+    badge: '🚵 Adventure',
+    highlights: ['Leh', 'Pangong Lake', 'Nubra Valley', 'Tso Moriri', 'Zanskar'],
+    bestTime: 'Jun – Sep',
+    themes: ['Adventure', 'Bike Trip', 'Photography', 'Solo'],
+  },
+  {
+    id: 6,
+    name: 'Goa',
+    slug: 'goa',
+    tagline: 'Sun, Sand & Serenity',
+    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80',
+    packages: 198,
+    startingFrom: 5999,
+    duration: '3–6 Days',
+    badge: '🏖️ Beach',
+    highlights: ['Calangute', 'Anjuna', 'Old Goa', 'Dudhsagar', 'Panaji'],
+    bestTime: 'Nov – Feb',
+    themes: ['Honeymoon', 'Friends', 'Family', 'Budget'],
+  },
+  {
+    id: 7,
+    name: 'Uttarakhand',
+    slug: 'uttarakhand',
+    tagline: 'Dev Bhoomi – Land of Gods',
+    image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=800&q=80',
+    packages: 211,
+    startingFrom: 7999,
+    duration: '4–8 Days',
+    badge: '🙏 Spiritual',
+    highlights: ['Rishikesh', 'Haridwar', 'Nainital', 'Mussoorie', 'Jim Corbett'],
+    bestTime: 'Mar – Jun & Sep – Nov',
+    themes: ['Pilgrimage', 'Adventure', 'Nature', 'Yoga'],
+  },
+  {
+    id: 8,
+    name: 'Andaman Islands',
+    slug: 'andaman',
+    tagline: 'Jewels of the Bay of Bengal',
+    image: 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?auto=format&fit=crop&w=800&q=80',
+    packages: 127,
+    startingFrom: 18999,
+    duration: '5–8 Days',
+    badge: '🤿 Underwater',
+    highlights: ['Port Blair', 'Havelock Island', 'Neil Island', 'Ross Island', 'Baratang'],
+    bestTime: 'Oct – May',
+    themes: ['Honeymoon', 'Scuba Diving', 'Family', 'Photography'],
+  },
+];
+
+const themes = [
+  { icon: '💍', label: 'Honeymoon', count: '1,200+ Packages' },
+  { icon: '👨‍👩‍👧‍👦', label: 'Family', count: '980+ Packages' },
+  { icon: '🎒', label: 'Solo', count: '650+ Packages' },
+  { icon: '🤝', label: 'Group', count: '430+ Packages' },
+  { icon: '🏔️', label: 'Adventure', count: '870+ Packages' },
+  { icon: '🙏', label: 'Pilgrimage', count: '540+ Packages' },
+  { icon: '📸', label: 'Photography', count: '360+ Packages' },
+  { icon: '💎', label: 'Luxury', count: '290+ Packages' },
+];
+
+const faqs = [
+  { q: 'What is Bharat Darshan?', a: 'Bharat Darshan is our curated collection of domestic India travel packages, inspired by the philosophy of exploring the incredible diversity of Bharat (India). From snowy peaks to tropical backwaters, desert sands to island shores – we cover all of India\'s wonders.' },
+  { q: 'How do I book a Bharat Darshan package?', a: 'Simply browse our destinations, click on your preferred package, and use the "Get a Quote" or "Book Now" button. You can also use our trip planner chatbot (bottom right) to get personalized recommendations.' },
+  { q: 'Can packages be customized?', a: 'Absolutely! Every package under Bharat Darshan is 100% customizable. Our travel experts will work with you to tailor the itinerary, accommodation, transport, and dates as per your preferences.' },
+  { q: 'What is the best time to travel in India?', a: 'October to March is generally pleasant for most Indian destinations. Hill stations like Himachal and Kashmir are best in summer (Apr–Jun). Goa and Rajasthan peak in winter (Nov–Feb). We recommend based on your desired destination.' },
+  { q: 'Do packages include flights?', a: 'Our base packages cover hotel stays, local transport, sightseeing, and meals (as mentioned). Flights or trains are optional and can be added on request. Our team will give you the best-price options.' },
+];
+
+const BharatDarshanPage = () => {
+  const navigate = useNavigate();
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [openFaq, setOpenFaq] = useState(null);
+  const [leadForm, setLeadForm] = useState({ name: '', phone: '', destination: '' });
+  const [submitted, setSubmitted] = useState(false);
+
+  const filters = ['All', 'Mountains', 'Heritage', 'Beach', 'Adventure', 'Spiritual', 'Nature'];
+
+  // Map filter pill label → destination names to use in URL
+  const filterDestinationMap = {
+    Mountains:  ['Himachal Pradesh', 'Kashmir', 'Ladakh', 'Uttarakhand'],
+    Heritage:   ['Rajasthan'],
+    Beach:      ['Goa', 'Andaman Islands'],
+    Adventure:  ['Ladakh', 'Uttarakhand', 'Himachal Pradesh'],
+    Spiritual:  ['Uttarakhand'],
+    Nature:     ['Kerala'],
+  };
+
+  const filteredDest = activeFilter === 'All'
+    ? destinations
+    : destinations.filter(d => d.badge.includes(activeFilter) || d.themes.some(t => t === activeFilter));
+
+  const handleLeadSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch('http://localhost:3001/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: leadForm.name,
+          phone: leadForm.phone,
+          to: leadForm.destination,
+          interest: 'Bharat Darshan',
+          status: 'New',
+          source: 'Bharat Darshan Page'
+        })
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Failed to submit lead:', err);
+    }
+  };
+
+  return (
+    <div className="font-sans bg-[#f8fafc]">
+      {/* ── Hero ── */}
+      <div
+        className="relative min-h-[520px] flex flex-col items-center justify-center text-center overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #0d9488 50%, #065f46 100%)' }}
+      >
+        {/* Decorative circles */}
+        <div className="absolute top-0 left-0 w-96 h-96 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(-30%, -30%)' }} />
+        <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(30%, 30%)' }} />
+
+        <div className="relative z-10 max-w-4xl px-6 py-20">
+          <span className="inline-block bg-white/20 text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">🇮🇳 Bharat Darshan</span>
+          <h1 className="text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-4" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
+            Discover the Soul of India
+          </h1>
+          <p className="text-lg text-white/85 font-medium max-w-2xl mx-auto mb-10">
+            From the mighty Himalayas to palm-fringed beaches, from royal palaces to serene backwaters – explore Bharat in all its glory with expertly curated packages.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="#destinations" className="px-8 py-3.5 bg-white text-[#0a6c75] font-black rounded-full hover:bg-teal-50 transition-all shadow-xl text-[15px]">
+              Explore Destinations
+            </a>
+            <a href="#get-quote" className="px-8 py-3.5 bg-white/20 text-white border-2 border-white/50 font-black rounded-full hover:bg-white/30 transition-all text-[15px] backdrop-blur-sm">
+              Get Free Quote
+            </a>
+          </div>
+          {/* Stats */}
+          <div className="flex justify-center gap-10 mt-14 text-white">
+            {[['2,500+', 'Packages'], ['50+', 'Destinations'], ['1 Lakh+', 'Happy Travelers'], ['100%', 'Customizable']].map(([num, lab]) => (
+              <div key={lab} className="text-center">
+                <div className="text-2xl font-black">{num}</div>
+                <div className="text-xs text-white/70 font-bold">{lab}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Travel by Theme ── */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-black text-slate-800">Travel by Theme</h2>
+          <p className="text-slate-500 mt-2">Find packages crafted for your unique travel style</p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+          {themes.map(t => (
+            <Link
+              key={t.label}
+              to={`/tours?theme=${t.label.toLowerCase()}`}
+              className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group"
+            >
+              <div className="text-3xl mb-2">{t.icon}</div>
+              <div className="text-[13px] font-bold text-slate-700 group-hover:text-[#0a6c75] transition-colors text-center">{t.label}</div>
+              <div className="text-[10px] text-slate-400 font-medium mt-0.5 text-center">{t.count}</div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Destinations ── */}
+      <div id="destinations" className="max-w-7xl mx-auto px-6 pb-20">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+          <div>
+            <h2 className="text-3xl font-black text-slate-800">Popular Destinations</h2>
+            <p className="text-slate-500 mt-1">Handpicked destinations across incredible India</p>
+          </div>
+          {/* Filter Pills */}
+          <div className="flex flex-wrap gap-2">
+            {filters.map(f => (
+              <button
+                key={f}
+                onClick={() => {
+                  setActiveFilter(f);
+                  if (f !== 'All') {
+                    const dests = filterDestinationMap[f];
+                    if (dests && dests.length === 1) {
+                      navigate(`/tours?destination=${encodeURIComponent(dests[0])}`);
+                    } else if (dests && dests.length > 1) {
+                      navigate(`/tours?destination=${encodeURIComponent(dests[0])}`);
+                    }
+                  }
+                }}
+                className={`px-4 py-1.5 rounded-full text-[13px] font-bold transition-all ${activeFilter === f ? 'bg-[#0a6c75] text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredDest.map(dest => (
+            <div key={dest.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer">
+              {/* Image */}
+              <div className="relative h-48 overflow-hidden">
+                <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <span className="absolute top-3 left-3 bg-white/90 text-slate-700 text-[11px] font-black px-2.5 py-1 rounded-full backdrop-blur-sm">
+                  {dest.badge}
+                </span>
+                <div className="absolute bottom-3 left-3">
+                  <h3 className="text-white font-extrabold text-lg leading-tight">{dest.name}</h3>
+                  <p className="text-white/80 text-[12px] font-medium">{dest.tagline}</p>
+                </div>
+              </div>
+              {/* Body */}
+              <div className="p-4">
+                {/* Highlights */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {dest.highlights.slice(0, 3).map(h => (
+                    <span key={h} className="text-[11px] font-bold text-[#0f766e] bg-[#f0fdfa] px-2 py-0.5 rounded-full">{h}</span>
+                  ))}
+                  {dest.highlights.length > 3 && (
+                    <span className="text-[11px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">+{dest.highlights.length - 3} more</span>
+                  )}
+                </div>
+                {/* Meta */}
+                <div className="flex justify-between items-center text-[12px] text-slate-500 font-bold mb-4">
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">schedule</span> {dest.duration}</span>
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">wb_sunny</span> Best: {dest.bestTime}</span>
+                </div>
+                {/* Price + CTA */}
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-[11px] text-slate-400 font-bold">Starting From</div>
+                    <div className="text-[20px] font-black text-[#0a6c75]">₹{dest.startingFrom.toLocaleString('en-IN')}</div>
+                  </div>
+                  <Link to={`/${dest.slug}`} className="px-4 py-2 bg-[#0a6c75] text-white text-[12px] font-black rounded-xl hover:bg-[#07565e] transition-colors shadow-sm">
+                    Explore
+                  </Link>
+                </div>
+                <div className="mt-3 pt-3 border-t border-slate-50 text-[11px] text-slate-400 font-bold text-center">
+                  {dest.packages} packages available
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Why Bharat Darshan ── */}
+      <div className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-black text-slate-800">Why Bharat Darshan?</h2>
+            <p className="text-slate-500 mt-2">We don't just plan trips. We create memories.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: 'tune', title: '100% Customizable', desc: 'Every package is tailored to your style, budget, and travel dates. No two trips are the same.' },
+              { icon: 'verified_user', title: 'Verified Partners', desc: 'Hotels, guides, and transport are all pre-verified by our team for quality and safety.' },
+              { icon: 'support_agent', title: '24/7 Support', desc: 'Our dedicated travel managers are available round-the-clock before, during & after your trip.' },
+              { icon: 'price_check', title: 'Best Price Guarantee', desc: 'We offer the most competitive prices in the market. We\'ll match any lower quote you find.' },
+              { icon: 'map', title: 'Expert Itineraries', desc: 'Curated by experienced travelers and locals who know these destinations inside out.' },
+              { icon: 'eco', title: 'Responsible Tourism', desc: 'We partner with eco-friendly and community-based operators to support sustainable travel.' },
+            ].map(item => (
+              <div key={item.title} className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#eefaf9] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[#0a6c75]">{item.icon}</span>
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-slate-800 mb-1">{item.title}</h3>
+                  <p className="text-slate-500 text-[14px] leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Lead Capture ── */}
+      <div id="get-quote" className="py-20" style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #065f46 100%)' }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-black text-white">Plan Your Bharat Darshan Trip</h2>
+            <p className="text-white/75 mt-2">Get a free, personalized quote in under 24 hours</p>
+          </div>
+          {!submitted ? (
+            <form onSubmit={handleLeadSubmit} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div>
+                  <label className="block text-white font-bold text-[13px] mb-2">Your Name</label>
+                  <input
+                    required
+                    type="text" placeholder="Rahul Kumar"
+                    value={leadForm.name}
+                    onChange={e => setLeadForm({ ...leadForm, name: e.target.value })}
+                    className="w-full bg-white/90 border-0 rounded-xl px-4 py-3 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-white text-[14px]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white font-bold text-[13px] mb-2">Phone Number</label>
+                  <input
+                    required
+                    type="tel" placeholder="+91 98765 43210"
+                    value={leadForm.phone}
+                    onChange={e => setLeadForm({ ...leadForm, phone: e.target.value })}
+                    className="w-full bg-white/90 border-0 rounded-xl px-4 py-3 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-white text-[14px]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white font-bold text-[13px] mb-2">Destination of Interest</label>
+                  <select
+                    value={leadForm.destination}
+                    onChange={e => setLeadForm({ ...leadForm, destination: e.target.value })}
+                    className="w-full bg-white/90 border-0 rounded-xl px-4 py-3 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-white text-[14px]"
+                  >
+                    <option value="">Select a destination</option>
+                    {destinations.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                    <option value="Not Sure">Not Sure Yet – Suggest Me!</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" className="w-full py-4 bg-white text-[#0a6c75] font-black text-[15px] rounded-xl hover:bg-teal-50 transition-colors shadow-xl">
+                Get Free Quote →
+              </button>
+              <p className="text-white/60 text-[11px] text-center mt-3">No spam. Our travel expert will call you within 24 hours.</p>
+            </form>
+          ) : (
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-12 text-center">
+              <span className="material-symbols-outlined text-6xl text-white mb-4 block">check_circle</span>
+              <h2 className="text-2xl font-black text-white mb-2">We got your request!</h2>
+              <p className="text-white/80">Our travel expert will contact you within 24 hours with a personalized Bharat Darshan itinerary.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── FAQ ── */}
+      <div className="max-w-3xl mx-auto px-6 py-20">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-black text-slate-800">Frequently Asked Questions</h2>
+          <p className="text-slate-500 mt-2">Everything you need to know about Bharat Darshan trips</p>
+        </div>
+        <div className="space-y-3">
+          {faqs.map((faq, idx) => (
+            <div key={idx} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              <button
+                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                className="w-full flex justify-between items-center px-6 py-4 text-left"
+              >
+                <span className="font-bold text-slate-800 text-[15px]">{faq.q}</span>
+                <span className="material-symbols-outlined text-[#0a6c75] ml-4 shrink-0">
+                  {openFaq === idx ? 'expand_less' : 'expand_more'}
+                </span>
+              </button>
+              {openFaq === idx && (
+                <div className="px-6 pb-5 text-slate-600 text-[14px] leading-relaxed border-t border-slate-50 pt-4">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BharatDarshanPage;

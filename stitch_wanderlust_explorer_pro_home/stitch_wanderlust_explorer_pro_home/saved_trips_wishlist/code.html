@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saved Trips Wishlist | Wanderlust Explorer Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffdcd1", // Sunset Orange base from prompt/config
+                        "accent-teal": "#006D77", // Deep Teal from prompt
+                        "background-light": "#f8f6f5", // Sand-ish base from config
+                        "background-dark": "#23140f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "montserrat": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/20 bg-white dark:bg-background-dark px-6 md:px-10 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-accent-teal dark:text-primary">
+<div class="size-8">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight font-montserrat">Wanderlust Explorer Pro</h2>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-accent-teal transition-colors" href="#">Discover</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-accent-teal transition-colors" href="#">My Trips</a>
+<a class="text-accent-teal dark:text-primary text-sm font-bold border-b-2 border-accent-teal dark:border-primary pb-1" href="#">Wishlist</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-accent-teal transition-colors" href="#">Support</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-2">
+<span class="material-symbols-outlined text-slate-500 text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 placeholder:text-slate-400" placeholder="Search destinations..." type="text"/>
+</div>
+<button class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center overflow-hidden border-2 border-primary/30">
+<img alt="User Profile" class="h-full w-full object-cover" data-alt="Close up portrait of a smiling traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2URY_Y63tU_M7VgXO8Na75Zo65Xj4Ql1-u7ZFixf8vGL9k_NBkQgxzT8_OZviLUPuL0jxV67uxP3WUxjLULc3wHmkEO1mgcRLdrtAZnLDWQKIHjEZnQMWW7dV-Y0Gb15CQnZKgWWK-hBYG6fjF17XD-LNQzeKRC_X6Q-vBrJ5EeI_jE2LVd_l-Hwpci5tBenOiQs0VDg_Z8x70T-NeNW8jxNSVbpLtiFcTwDWTVlDbcJh16mcViWphrs-ZQyMXrc48VpYkltG7URr"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-4 md:px-10 lg:px-20 py-8 max-w-[1440px] mx-auto w-full">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div class="space-y-2">
+<h1 class="text-accent-teal dark:text-primary text-4xl font-black font-montserrat tracking-tight">Saved Trips Wishlist</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg">Curate your dream adventures and share them with your travel partners.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 font-bold hover:shadow-md transition-all">
+<span class="material-symbols-outlined text-xl">share</span>
+<span>Share Wishlist</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-3 bg-accent-teal text-white rounded-xl font-bold hover:bg-accent-teal/90 transition-all shadow-lg shadow-accent-teal/20">
+<span class="material-symbols-outlined text-xl">explore</span>
+<span>Discover More</span>
+</button>
+</div>
+</div>
+<!-- Tabs/Filters -->
+<div class="flex border-b border-slate-200 dark:border-slate-800 mb-8 gap-8">
+<button class="border-b-4 border-accent-teal dark:border-primary text-accent-teal dark:text-primary px-2 py-4 font-bold text-sm uppercase tracking-wider">All Saved (6)</button>
+<button class="text-slate-400 dark:text-slate-500 px-2 py-4 font-bold text-sm uppercase tracking-wider hover:text-slate-600">Upcoming</button>
+<button class="text-slate-400 dark:text-slate-500 px-2 py-4 font-bold text-sm uppercase tracking-wider hover:text-slate-600">Archived</button>
+</div>
+<!-- Wishlist Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Tour Card 1 -->
+<div class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img alt="Amalfi Coast" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Sunny view of colorful buildings on Amalfi Coast cliffside" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj_C8KSIm3vUgA3J3sAwjRVER0oYvaQ7e5L_SSPrsC6pguxQJSx0xOoG7Wpjtknwaicf-4CT0r0xD2xPTg5adxVTP8ZygLoTJCMp1G1lhVGx5lspQq2qik55z298-aLlfYa7ALzW2GB2St91VUTgnOC3Y9DHzBX_HBMQMdiOtxxi3cQnLmsMGqN1yW7ivCkFgZG9NIydoBU3k_8gRDMvcvNq0TX7KljF-wz76NpCnEyXCuH27aXCLMD185u_ywhxTDEAUHacZ49x3I"/>
+<button class="absolute top-4 right-4 h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center text-primary shadow-lg backdrop-blur-sm">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="bg-accent-teal text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">7 Days</span>
+</div>
+</div>
+<div class="p-5 space-y-2">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg font-montserrat group-hover:text-accent-teal transition-colors">Amalfi Coast Escape</h3>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-sm font-bold">4.9</span>
+<span class="text-slate-400 font-normal text-xs ml-1">(124 reviews)</span>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-50 dark:border-slate-700">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Starting from</p>
+<p class="text-accent-teal dark:text-primary font-extrabold text-xl">$1,200</p>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img alt="Kyoto Zen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Serene Japanese temple and zen garden in Kyoto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFEg8IGyEoEXz-RRs2DqIAE6fRQgvINEu-jtq9E3jK8JsnvzfoJ4syLCubg5H_q8zPZgeLHETe1t7UwF76Qh11VCqB0O1kQeyQZVgD2-jr67SJb0QkPMMkIBUYjm9wlblqXMACTns7qP99x1R2hNPG3VpnPDi1f3Cr9c8ZB088m3hREaM837H0kajnaGvZ3zuTh42FAyL0DTwAzlF_1ahBTpmAHGHRWXmcl8PONlP3HO-EfkCBeSpGANyIZmIV0yotJn-ZJNM8YmsG"/>
+<button class="absolute top-4 right-4 h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center text-primary shadow-lg backdrop-blur-sm">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="bg-accent-teal text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">5 Days</span>
+</div>
+</div>
+<div class="p-5 space-y-2">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg font-montserrat group-hover:text-accent-teal transition-colors">Kyoto Zen Gardens</h3>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-sm font-bold">4.8</span>
+<span class="text-slate-400 font-normal text-xs ml-1">(89 reviews)</span>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-50 dark:border-slate-700">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Starting from</p>
+<p class="text-accent-teal dark:text-primary font-extrabold text-xl">$950</p>
+</div>
+</div>
+</div>
+<!-- Tour Card 3 -->
+<div class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img alt="Safari" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Majestic elephant walking through the African savanna at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrX_RxiBSESutQlpUEQpKJS52pGTdz9T7CfJGq1hX4-GOG9z07VJrJrxMWTIv5fOU21WuNn-sijI4vd_pMRCFIhGIMKUk_6Z6n_QGT6nsCun7Rz3ge0IaYytMgNro9ysEZyzzTLNCgIxx8jLdgYPFniSSehWe_2yfJD9xmx5_WB_SGWaghj1hJ29R3QPuhKs25txsY9OkzekWBZIPIQoyH8__pW7nbCNqdqZnG4f8HkQvZ0Z3ISPErRRPcGfdcgekq_SezLBUIZ_oM"/>
+<button class="absolute top-4 right-4 h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center text-primary shadow-lg backdrop-blur-sm">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="bg-accent-teal text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">10 Days</span>
+</div>
+</div>
+<div class="p-5 space-y-2">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg font-montserrat group-hover:text-accent-teal transition-colors">Safari Adventure</h3>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-sm font-bold">5.0</span>
+<span class="text-slate-400 font-normal text-xs ml-1">(210 reviews)</span>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-50 dark:border-slate-700">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Starting from</p>
+<p class="text-accent-teal dark:text-primary font-extrabold text-xl">$2,400</p>
+</div>
+</div>
+</div>
+<!-- Tour Card 4 -->
+<div class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img alt="Iceland" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Vibrant green northern lights over an Icelandic mountain range" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClWGcqiE_I117bh7GqeJjjzEkWf2sjrN40EYjrGIDTIJP796AKJ--QEcb65DejQ6zRiIvVhxbAXLATsVYWHNDtTBFFsHjb7Zo8insG26ZM5gQ_hS7Gdz6xdD01PXLgr86jnIc0xSw2Mt_9MUTkNIK-W_2HuZ7Fx-K_mn0BiQLdfEj68vn0qRunEl_VgBsVn8RgXyxWyN8a8HWlKl_0PZtRW4K0-6juYPWSdbUMY8PUGoS6AEi5Gm3Fy9L1p3W83ESDXxaKJkoK3Qy3"/>
+<button class="absolute top-4 right-4 h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center text-primary shadow-lg backdrop-blur-sm">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="bg-accent-teal text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">6 Days</span>
+</div>
+</div>
+<div class="p-5 space-y-2">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg font-montserrat group-hover:text-accent-teal transition-colors">Icelandic Wonders</h3>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-sm font-bold">4.7</span>
+<span class="text-slate-400 font-normal text-xs ml-1">(156 reviews)</span>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-50 dark:border-slate-700">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Starting from</p>
+<p class="text-accent-teal dark:text-primary font-extrabold text-xl">$1,800</p>
+</div>
+</div>
+</div>
+<!-- Tour Card 5 -->
+<div class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img alt="Swiss Alps" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Snow capped mountain peaks of the Swiss Alps under a blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADrXwXIvSd8BZOrWMvi-0QbtuJPD9wdVql5IABt2sbpXQ1yhTfvCtJcwnfG7r3H-1_fqHj5xapi4ogCZIIVsiKsrfrgP-UcyJoFHDpQFozFMUiXPb1c5G5-cRuIULqEpLqxJLTfzATPWtrtYRI5hbIA_20l9fen5u-3LbcLUH2a_ugzEnp2BVdU9jsM4WTCBf8tlaiCL_sKK9PenxrWUr7fdLmY5P21CBkxgn00nAK56994R6Hp4mFu6loK5sd4ktGAhpJiNq-yiXV"/>
+<button class="absolute top-4 right-4 h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center text-primary shadow-lg backdrop-blur-sm">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="bg-accent-teal text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">8 Days</span>
+</div>
+</div>
+<div class="p-5 space-y-2">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg font-montserrat group-hover:text-accent-teal transition-colors">Swiss Alps Trek</h3>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-sm font-bold">4.9</span>
+<span class="text-slate-400 font-normal text-xs ml-1">(92 reviews)</span>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-50 dark:border-slate-700">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Starting from</p>
+<p class="text-accent-teal dark:text-primary font-extrabold text-xl">$1,550</p>
+</div>
+</div>
+</div>
+<!-- Tour Card 6 -->
+<div class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img alt="Greek Island" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="White and blue buildings overlooking the turquoise Aegean sea in Greece" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1g3Yk4fWCo-vDmewVeH4W2vbI6BoblROWkX6RZ8v6feomRFlWjoTFW4OxDn3w3xXV1enAOA6IBv-WZcg2QN8uDsK5MyHduLHzKGIluZrMfwUnGcJtzqvNNXcu0q74MhUiZRULaXBc7mCJb0RPlfXig0mVvpYaLhN0VFVmZ0hspdclegslX7G_vXBC0t1smiCYtud-WRmRrI456BV0qInwsaXyCBzFlpKneGRlTo_5-aLHR7HEnpRwXJVMq-ZfL21w9KAwGqnVewro"/>
+<button class="absolute top-4 right-4 h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center text-primary shadow-lg backdrop-blur-sm">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="bg-accent-teal text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">7 Days</span>
+</div>
+</div>
+<div class="p-5 space-y-2">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg font-montserrat group-hover:text-accent-teal transition-colors">Greek Island Hopping</h3>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-sm font-bold">4.8</span>
+<span class="text-slate-400 font-normal text-xs ml-1">(187 reviews)</span>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-50 dark:border-slate-700">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Starting from</p>
+<p class="text-accent-teal dark:text-primary font-extrabold text-xl">$1,100</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State Illustration (Hidden when there are items) -->
+<div class="hidden flex-col items-center justify-center py-20 px-6 text-center max-w-md mx-auto">
+<div class="w-64 h-64 mb-8 bg-primary/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-accent-teal text-8xl">explore_off</span>
+</div>
+<h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 font-montserrat mb-3">Your wishlist is empty</h2>
+<p class="text-slate-500 dark:text-slate-400 mb-8">Start exploring our curated collections and save your favorite tours to see them here.</p>
+<button class="bg-accent-teal text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                    Browse Popular Tours
+                </button>
+</div>
+<!-- Suggestions Section -->
+<section class="mt-20 border-t border-slate-200 dark:border-slate-800 pt-16 pb-20">
+<div class="flex flex-col md:flex-row items-center justify-between mb-10 gap-4 text-center md:text-left">
+<div>
+<h2 class="text-2xl font-bold font-montserrat text-slate-900 dark:text-slate-100">Recommended for You</h2>
+<p class="text-slate-500 dark:text-slate-400">Based on your saved tours and browsing history.</p>
+</div>
+<a class="text-accent-teal font-bold flex items-center gap-1 hover:underline" href="#">
+                        View All Recommendations
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="flex flex-col sm:flex-row gap-6 bg-primary/10 dark:bg-primary/5 p-6 rounded-2xl border border-primary/20">
+<div class="w-full sm:w-48 h-32 rounded-xl overflow-hidden shrink-0">
+<img alt="Bali" class="w-full h-full object-cover" data-alt="Aerial view of lush green rice terraces in Bali" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGIz2jAazHSBisZEw1yGVPvQJUC401KSm2TuyMhIzd3l4CWJdnzRNfWDcMBiisr9FYnw30rJPAeuHddo0jy2L3ruMUOPK4MxDlon7ke1su5Z1OeHTsxUht6kRBVhGUkNNX_JC6HS6i8qBaebpUOX6xvqYrUFN_T2pNdJn3QIpwNY8RsiUW6M9Kaj0_-9cNxg7j-k5paa0KlF_b50bbhPTysXQixoZInnE9j-Ulo02doSAfg6-vZ5Laufyf3UmexZXKyPLNXPz04yrB"/>
+</div>
+<div class="flex flex-col justify-center">
+<h4 class="font-bold text-lg text-slate-900 dark:text-slate-100">Bali Spiritual Journey</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm mt-1">9 Days • Cultural &amp; Spiritual Experience</p>
+<div class="mt-4 flex items-center gap-4">
+<span class="text-accent-teal font-bold">$1,450</span>
+<button class="text-sm font-bold border-b-2 border-slate-900 dark:border-slate-100">Quick View</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-6 bg-primary/10 dark:bg-primary/5 p-6 rounded-2xl border border-primary/20">
+<div class="w-full sm:w-48 h-32 rounded-xl overflow-hidden shrink-0">
+<img alt="India" class="w-full h-full object-cover" data-alt="The Taj Mahal palace glowing in soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTXKGdN5Ywc0dxxBpn-AtAZRJ7w3XD_vUSOi4tbnmJma0ef9PmFo5uzQIt3BqhTFMk-v-f5gPIzLg18pyiRVE1i8mI2kV-FyeMTic76R3t4Cc3rNECLDpdShIoW27_4bYnN3n1WsOYzLs771d64Ozq59m9nSLhSu_hDnA9WRRVOP9LZyf4hMb1g9GS54xbF5zUMOITAZnUMwynCvFfaV2yKZaxXTMv70u8IQd3DYPosKhf5zaClOafmLpUsg0hx1RVZ_CsOwvjtzgC"/>
+</div>
+<div class="flex flex-col justify-center">
+<h4 class="font-bold text-lg text-slate-900 dark:text-slate-100">Golden Triangle Heritage</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm mt-1">6 Days • Historic Landmarks Tour</p>
+<div class="mt-4 flex items-center gap-4">
+<span class="text-accent-teal font-bold">$820</span>
+<button class="text-sm font-bold border-b-2 border-slate-900 dark:border-slate-100">Quick View</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-900 text-slate-400 py-12 px-6 md:px-20 mt-auto">
+<div class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 text-primary mb-6">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<span class="text-xl font-bold font-montserrat">Wanderlust Explorer</span>
+</div>
+<p class="text-sm leading-relaxed">Making your dream travels come true with expert guidance and seamless bookings since 2012.</p>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Company</h5>
+<ul class="space-y-4 text-sm">
+<li><a class="hover:text-primary" href="#">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Careers</a></li>
+<li><a class="hover:text-primary" href="#">Sustainability</a></li>
+<li><a class="hover:text-primary" href="#">Blog</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Destinations</h5>
+<ul class="space-y-4 text-sm">
+<li><a class="hover:text-primary" href="#">Europe</a></li>
+<li><a class="hover:text-primary" href="#">Asia</a></li>
+<li><a class="hover:text-primary" href="#">Africa</a></li>
+<li><a class="hover:text-primary" href="#">Americas</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Newsletter</h5>
+<p class="text-xs mb-4">Get travel tips and exclusive deals directly to your inbox.</p>
+<div class="flex gap-2">
+<input class="bg-slate-800 border-none rounded-lg text-sm w-full focus:ring-1 focus:ring-primary" placeholder="Email address" type="email"/>
+<button class="bg-primary text-slate-900 px-4 py-2 rounded-lg font-bold hover:bg-white transition-colors">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-[1440px] mx-auto mt-12 pt-8 border-t border-slate-800 text-center text-xs">
+                © 2024 Wanderlust Explorer Pro. All rights reserved.
+            </div>
+</footer>
+</div>
+</body></html>

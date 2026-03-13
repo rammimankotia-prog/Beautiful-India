@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure Password Reset Email</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#FFDDD2",
+                "brand-teal": "#006D77",
+                "background-light": "#EDF6F9",
+                "background-dark": "#1a2c32",
+                "sand-light": "#F8FBFC",
+              },
+              fontFamily: {
+                "display": ["Montserrat", "Plus Jakarta Sans", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4">
+<div class="max-w-[600px] w-full bg-white dark:bg-slate-900 shadow-xl rounded-xl overflow-hidden border border-brand-teal/10">
+<header class="flex flex-col items-center justify-center pt-10 pb-6 px-8 border-b border-background-light dark:border-slate-800">
+<div class="flex items-center gap-2 mb-4">
+<div class="text-brand-teal">
+<span class="material-symbols-outlined text-4xl">travel_explore</span>
+</div>
+<h2 class="text-brand-teal text-xl font-bold tracking-tight">Wanderlust Explorer Pro</h2>
+</div>
+<div class="w-12 h-1 bg-primary rounded-full"></div>
+</header>
+<main class="px-10 py-12 flex flex-col items-center text-center">
+<div class="mb-8 p-4 bg-background-light dark:bg-slate-800 rounded-full">
+<span class="material-symbols-outlined text-brand-teal text-4xl">lock_reset</span>
+</div>
+<h1 class="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight mb-4">
+                Reset Your Password
+            </h1>
+<p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-10 max-w-md">
+                We received a request to reset the password for your <span class="font-semibold text-brand-teal">Wanderlust Explorer Pro</span> account. Click the secure button below to choose a new password.
+            </p>
+<a class="inline-flex items-center justify-center px-10 py-4 bg-primary hover:bg-primary/90 text-brand-teal font-bold text-lg rounded-lg transition-colors shadow-sm tracking-wide" href="#">
+                Set New Password
+            </a>
+<div class="mt-12 pt-8 border-t border-background-light dark:border-slate-800 w-full">
+<p class="text-slate-500 dark:text-slate-500 text-sm italic mb-4">
+                    If you didn't request this, you can safely ignore this email. Your password will remain unchanged.
+                </p>
+<p class="text-slate-400 dark:text-slate-600 text-xs">
+                    This link will expire in 24 hours for your security.
+                </p>
+</div>
+</main>
+<footer class="bg-sand-light dark:bg-slate-950 px-10 py-8 flex flex-col items-center border-t border-background-light dark:border-slate-800">
+<div class="flex gap-4 mb-6">
+<span class="material-symbols-outlined text-brand-teal/60 cursor-pointer hover:text-brand-teal">public</span>
+<span class="material-symbols-outlined text-brand-teal/60 cursor-pointer hover:text-brand-teal">mail</span>
+<span class="material-symbols-outlined text-brand-teal/60 cursor-pointer hover:text-brand-teal">help_center</span>
+</div>
+<p class="text-slate-400 text-[10px] uppercase tracking-widest text-center">
+                © 2024 Wanderlust Explorer Pro. All rights reserved.<br/>
+                123 Discovery Way, Adventure City, World 90210
+            </p>
+<div class="mt-4 opacity-30 grayscale hover:grayscale-0 transition-all">
+<img alt="Brand Logo Monochrome" data-alt="Monochrome minimalist travel agency logo placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ5knudZ_VPNAlrEL1cQScxDIZ191VRy4_SJKQIZzEVBT1MD3Z88SibsV0fXObK25tYiCSM8ssna1TZF4M2w1CyFbpEPZz3BvVloZMxiWHRagUOrECONCK6BqlIaWxN2CFDWT8iadrcoAvTxSzIyXzDO2fzTdBb2iI_W-ucnBTgD_FMR7uUZQy_g57l-VjkuqIKCWszAFoyqhnyezikedsWmZ3UBssEVpwksH8D6noNqDn89B3O3MHI-MnNI-d7D5l54G6dxoeTH0B"/>
+</div>
+</footer>
+</div>
+</body></html>
