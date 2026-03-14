@@ -20,6 +20,7 @@ const Footer = () => {
 
     const international = ["Thailand", "Singapore", "Malaysia", "Nepal", "Sri Lanka", "Europe", "Mauritius", "Maldives", "Egypt", "Africa", "Australia"];
     const domestic = ["Kerala", "Ladakh", "Goa", "Rajasthan", "Kashmir", "Andaman", "Andhra Pradesh", "Bihar", "Gujarat", "Himachal", "Karnataka"];
+    const metroCities = ["Delhi", "Mumbai", "Kolkatta", "Chennai"];
     const domPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
     const intPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
     const blogs = Array.from({length: 20}, (_, i) => (i + 1).toString());
@@ -94,6 +95,17 @@ const Footer = () => {
                         ))}
                     </div>
 
+                    {/* Metro Cities */}
+                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#343a40] p-3 rounded-md shadow-sm">
+                        <span className="font-bold text-white min-w-[140px]">Top 4 Metro Cities</span>
+                        {metroCities.map((city, i) => (
+                            <React.Fragment key={i}>
+                                <Link to="#!" className="text-gray-300 hover:text-white whitespace-nowrap">{city}</Link>
+                                {i < metroCities.length - 1 && <span className="text-gray-600">|</span>}
+                            </React.Fragment>
+                        ))}
+                    </div>
+
                     {/* International Packages */}
                     <div className="flex flex-wrap items-center gap-3 text-xs bg-[#343a40] p-3 rounded-md shadow-sm">
                         <span className="font-bold text-white min-w-[140px]">International Packages</span>
@@ -121,7 +133,7 @@ const Footer = () => {
                 {/* Logo, Copyright & Sitemap */}
                 <div className="mt-12 pt-6 border-t border-[#3c4248] flex flex-col md:flex-row items-center justify-between gap-6">
                    <Link to="/" className="flex items-center gap-2 text-white">
-                        <img src="/beautiful_india_logo_1773142903437.png" alt="The Beautiful India" className="h-10 w-auto object-contain brightness-0 invert" />
+                        <img src="/beautiful_india_logo_1773142903437.png" alt="The Beautiful India" className="h-14 w-auto object-contain brightness-0 invert" />
                    </Link>
                    <div className="flex items-center gap-4">
                      <Link

@@ -127,6 +127,33 @@ const themes = [
   { icon: '💎', label: 'Luxury', count: '290+ Packages' },
 ];
 
+const metroCitiesIndia = [
+  {
+    name: 'Delhi',
+    description: 'The Heart of India, where history meets modernity.',
+    image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80',
+    slug: 'delhi'
+  },
+  {
+    name: 'Mumbai',
+    description: 'The City of Dreams and the financial capital of India.',
+    image: 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=600&q=80',
+    slug: 'mumbai'
+  },
+  {
+    name: 'Kolkatta',
+    description: 'The City of Joy, known for its rich culture and heritage.',
+    image: 'https://images.unsplash.com/photo-1558431382-bb74994135b3?auto=format&fit=crop&w=600&q=80',
+    slug: 'kolkatta'
+  },
+  {
+    name: 'Chennai',
+    description: 'The Gateway to South India, famous for its temples and beaches.',
+    image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80',
+    slug: 'chennai'
+  }
+];
+
 const faqs = [
   { q: 'What is Bharat Darshan?', a: 'Bharat Darshan is our curated collection of domestic India travel packages, inspired by the philosophy of exploring the incredible diversity of Bharat (India). From snowy peaks to tropical backwaters, desert sands to island shores – we cover all of India\'s wonders.' },
   { q: 'How do I book a Bharat Darshan package?', a: 'Simply browse our destinations, click on your preferred package, and use the "Get a Quote" or "Book Now" button. You can also use our trip planner chatbot (bottom right) to get personalized recommendations.' },
@@ -317,6 +344,37 @@ const BharatDarshanPage = () => {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Top 4 Metro Cities ── */}
+      <div className="bg-[#f1f5f9] py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-black text-slate-800">Top 4 Metro Cities of India</h2>
+            <p className="text-slate-500 mt-2">Explore the vibrant urban landscapes and cultural hubs of Bharat</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {metroCitiesIndia.map(city => (
+              <div key={city.name} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group">
+                <div className="relative h-44 overflow-hidden">
+                  <img src={city.image} alt={city.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-3 left-4">
+                    <h3 className="text-white font-extrabold text-xl">{city.name}</h3>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-slate-500 text-sm font-medium mb-4 leading-relaxed">
+                    {city.description}
+                  </p>
+                  <Link to={`/tours?destination=${city.name}`} className="inline-flex items-center text-[#0a6c75] font-black text-sm hover:translate-x-1 transition-transform">
+                    View Tours <span className="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
