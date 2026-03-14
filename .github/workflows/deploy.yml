@@ -38,10 +38,16 @@ jobs:
             exit 1
           fi
 
+      - name: Diagnostic Connection Check
+        run: |
+          echo "Testing DNS resolution for ${{ secrets.FTP_SERVER }}..."
+          nslookup ${{ secrets.FTP_SERVER }} || echo "DNS Lookup failed"
+          ping -c 3 ${{ secrets.FTP_SERVER }} || echo "Ping failed (expected on some servers)"
+
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ftp.cluster.hostinger.com
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
