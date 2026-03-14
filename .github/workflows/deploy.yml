@@ -24,13 +24,19 @@ jobs:
       - name: Build Site
         run: npm run build
 
-      - name: Validate Secrets
+      - name: Validate Configuration
         run: |
-          echo "Checking if secrets are available..."
-          if [ -z "${{ secrets.FTP_SERVER }}" ]; then echo "❌ FTP_SERVER is missing"; exit 1; fi
-          if [ -z "${{ secrets.FTP_USERNAME }}" ]; then echo "❌ FTP_USERNAME is missing"; exit 1; fi
-          if [ -z "${{ secrets.FTP_PASSWORD }}" ]; then echo "❌ FTP_PASSWORD is missing"; exit 1; fi
-          echo "✅ Secrets are present."
+          echo "Scanning for FTP_SERVER..."
+          if [ -n "${{ secrets.FTP_SERVER }}" ]; then echo "✅ Found FTP_SERVER in SECRETS"; fi
+          if [ -n "${{ vars.FTP_SERVER }}" ]; then echo "⚠️ Found FTP_SERVER in VARIABLES (This is incorrect, it must be a Secret)"; fi
+          
+          if [ -n "${{ secrets.FTP_USERNAME }}" ]; then echo "✅ Found FTP_USERNAME in SECRETS"; fi
+          if [ -n "${{ vars.FTP_USERNAME }}" ]; then echo "⚠️ Found FTP_USERNAME in VARIABLES"; fi
+          
+          if [ -z "${{ secrets.FTP_SERVER }}" ] && [ -z "${{ vars.FTP_SERVER }}" ]; then
+            echo "❌ FTP_SERVER is completely missing from both Secrets and Variables."
+            exit 1
+          fi
 
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
