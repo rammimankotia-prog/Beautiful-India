@@ -1,5 +1,6 @@
 {
   "name": "wanderlust-app",
+  "homepage": "https://rammimankotia-prog.github.io/Beautiful-India",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,6 +8,8 @@
     "server": "node --watch server.js",
     "client": "vite",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -28,6 +31,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
+    "gh-pages": "^6.3.0",
     "globals": "^16.5.0",
     "lucide-react": "^0.577.0",
     "postcss": "^8.5.8",
