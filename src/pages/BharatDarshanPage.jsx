@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const destinations = [
@@ -168,6 +168,31 @@ const BharatDarshanPage = () => {
   const [openFaq, setOpenFaq] = useState(null);
   const [leadForm, setLeadForm] = useState({ name: '', phone: '', destination: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [allTours, setAllTours] = useState([]);
+  const [loadingTours, setLoadingTours] = useState(true);
+
+  const resultsRef = useRef(null);
+
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        const response = await fetch('/data/tours.json');
+        const data = await response.json();
+        setAllTours(data);
+      } catch (err) {
+        console.error('Failed to fetch tours:', err);
+      } finally {
+        setLoadingTours(false);
+      }
+    };
+    fetchTours();
+  }, []);
+
+  const scrollToResults = () => {
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const filters = ['All', 'Mountains', 'Heritage', 'Beach', 'Adventure', 'Spiritual', 'Nature'];
 
@@ -183,7 +208,15 @@ const BharatDarshanPage = () => {
 
   const filteredDest = activeFilter === 'All'
     ? destinations
-    : destinations.filter(d => d.badge.includes(activeFilter) || d.themes.some(t => t === activeFilter));
+    : destinations.filter(d => d.badge.includes(activeFilter));
+
+  const filteredTourPackages = activeFilter === 'All'
+    ? allTours.slice(0, 8) // Show top 8 by default
+    : allTours.filter(t => 
+        t.theme?.toLowerCase().includes(activeFilter.toLowerCase()) || 
+        t.stateRegion?.toLowerCase().includes(activeFilter.toLowerCase()) ||
+        destinations.find(d => d.name === t.stateRegion && d.badge.includes(activeFilter))
+      );
 
   const handleLeadSubmit = async (e) => {
     e.preventDefault();
@@ -242,15 +275,18 @@ const BharatDarshanPage = () => {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
           {themes.map(t => (
-            <Link
+            <div
               key={t.label}
-              to={`/tours?theme=${t.label.toLowerCase()}`}
-              className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group"
+              onClick={() => {
+                setActiveFilter(t.label);
+                scrollToResults();
+              }}
+              className={`flex flex-col items-center p-4 rounded-2xl border transition-all cursor-pointer group ${activeFilter === t.label ? 'bg-teal-50 border-[#0a6c75] shadow-md ring-1 ring-[#0a6c75]' : 'bg-white border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1'}`}
             >
               <div className="text-3xl mb-2">{t.icon}</div>
-              <div className="text-[13px] font-bold text-slate-700 group-hover:text-[#0a6c75] transition-colors text-center">{t.label}</div>
+              <div className={`text-[13px] font-bold transition-colors text-center ${activeFilter === t.label ? 'text-[#0a6c75]' : 'text-slate-700 group-hover:text-[#0a6c75]'}`}>{t.label}</div>
               <div className="text-[10px] text-slate-400 font-medium mt-0.5 text-center">{t.count}</div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
@@ -267,17 +303,7 @@ const BharatDarshanPage = () => {
             {filters.map(f => (
               <button
                 key={f}
-                onClick={() => {
-                  setActiveFilter(f);
-                  if (f !== 'All') {
-                    const dests = filterDestinationMap[f];
-                    if (dests && dests.length === 1) {
-                      navigate(`/tours?destination=${encodeURIComponent(dests[0])}`);
-                    } else if (dests && dests.length > 1) {
-                      navigate(`/tours?destination=${encodeURIComponent(dests[0])}`);
-                    }
-                  }
-                }}
+                onClick={() => setActiveFilter(f)}
                 className={`px-4 py-1.5 rounded-full text-[13px] font-bold transition-all ${activeFilter === f ? 'bg-[#0a6c75] text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}
               >
                 {f}
@@ -286,11 +312,11 @@ const BharatDarshanPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div ref={resultsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredDest.map(dest => (
             <div key={dest.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer">
               {/* Image */}
-              <div className="relative h-48 overflow-hidden">
+              <Link to={`/tours?destination=${encodeURIComponent(dest.name)}`} className="block relative h-48 overflow-hidden">
                 <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <span className="absolute top-3 left-3 bg-white/90 text-slate-700 text-[11px] font-black px-2.5 py-1 rounded-full backdrop-blur-sm">
@@ -300,7 +326,7 @@ const BharatDarshanPage = () => {
                   <h3 className="text-white font-extrabold text-lg leading-tight">{dest.name}</h3>
                   <p className="text-white/80 text-[12px] font-medium">{dest.tagline}</p>
                 </div>
-              </div>
+              </Link>
               {/* Body */}
               <div className="p-4">
                 {/* Highlights */}
@@ -323,7 +349,7 @@ const BharatDarshanPage = () => {
                     <div className="text-[11px] text-slate-400 font-bold">Starting From</div>
                     <div className="text-[20px] font-black text-[#0a6c75]">₹{dest.startingFrom.toLocaleString('en-IN')}</div>
                   </div>
-                  <Link to={`/${dest.slug}`} className="px-4 py-2 bg-[#0a6c75] text-white text-[12px] font-black rounded-xl hover:bg-[#07565e] transition-colors shadow-sm">
+                  <Link to={`/tours?destination=${encodeURIComponent(dest.name)}`} className="px-4 py-2 bg-[#0a6c75] text-white text-[12px] font-black rounded-xl hover:bg-[#07565e] transition-colors shadow-sm">
                     Explore
                   </Link>
                 </div>
@@ -333,6 +359,66 @@ const BharatDarshanPage = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* ── Featured Tour Packages ── */}
+        <div className="mt-20">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+            <div>
+              <h2 className="text-3xl font-black text-slate-800">Recommended Tour Packages</h2>
+              <p className="text-slate-500 mt-1">Best-selling itineraries based on your {activeFilter === 'All' ? 'interests' : `interest in ${activeFilter}`}</p>
+            </div>
+            <Link to="/tours" className="text-[#0a6c75] font-black text-sm flex items-center gap-1 hover:gap-2 transition-all">
+              View All Tours <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </Link>
+          </div>
+
+          {loadingTours ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-pulse">
+              {[1, 2, 3, 4].map(n => (
+                <div key={n} className="bg-white h-80 rounded-2xl border border-slate-100 shadow-sm" />
+              ))}
+            </div>
+          ) : filteredTourPackages.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredTourPackages.map(tour => (
+                <Link to={`/tour/${tour.id}`} key={tour.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col">
+                  {/* Image */}
+                  <div className="relative h-44 overflow-hidden">
+                    <img src={tour.image} alt={tour.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-[#0a6c75] text-[10px] font-black px-2 py-0.5 rounded-full">
+                      {tour.duration}
+                    </div>
+                  </div>
+                  {/* Body */}
+                  <div className="p-4 flex-1 flex flex-col">
+                    <div className="text-[10px] font-black text-[#0a6c75] uppercase tracking-wider mb-1">{tour.stateRegion}</div>
+                    <h3 className="font-extrabold text-slate-800 text-[14px] leading-tight mb-2 line-clamp-2">{tour.title}</h3>
+                    <p className="text-slate-500 text-[12px] line-clamp-2 mb-4 flex-1">{tour.description}</p>
+                    <div className="flex justify-between items-center mt-auto pt-3 border-t border-slate-50">
+                      <div>
+                        <div className="text-[9px] text-slate-400 font-bold uppercase">Starting At</div>
+                        <div className="text-[16px] font-black text-[#0a6c75]">₹{parseInt(tour.price).toLocaleString('en-IN')}</div>
+                      </div>
+                      <span className="material-symbols-outlined text-slate-300 group-hover:text-[#0a6c75] transition-colors">arrow_circle_right</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-slate-200">
+              <span className="material-symbols-outlined text-5xl text-slate-200 mb-4">search_off</span>
+              <h3 className="text-lg font-black text-slate-800">No matching tours found</h3>
+              <p className="text-slate-500 text-sm mt-1 max-w-sm mx-auto">We couldn't find specific tours for "{activeFilter}" right now. Try selecting another category or view all tours.</p>
+              <button 
+                onClick={() => setActiveFilter('All')}
+                className="mt-6 px-6 py-2.5 bg-[#0a6c75] text-white font-black text-[13px] rounded-xl shadow-md hover:bg-[#07565e] transition-all"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
