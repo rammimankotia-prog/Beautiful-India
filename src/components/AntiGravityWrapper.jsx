@@ -94,13 +94,7 @@ const AntiGravityWrapper = ({ children }) => {
     }, [isEnabled]);
 
     return (
-        <div ref={boxRef} className="relative min-h-screen">
-            <button 
-                onClick={() => setIsEnabled(!isEnabled)}
-                className="fixed bottom-4 right-4 z-[9999] bg-accent text-primary px-6 py-3 rounded-full font-black shadow-2xl border-2 border-primary hover:scale-110 transition-transform"
-            >
-                {isEnabled ? 'STABILIZE' : 'ANTI-GRAVITY MODE'}
-            </button>
+        <div className="relative min-h-screen">
             {children}
         </div>
     );

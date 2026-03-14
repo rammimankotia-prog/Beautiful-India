@@ -120,7 +120,7 @@ const TripPlannerWidget = () => {
                     <div className="bg-[#0a6c75] text-white p-4 flex items-center justify-between shadow-sm z-10">
                         <div className="flex items-center gap-2">
                             <span className="material-symbols-outlined text-[20px]">explore</span>
-                            <span className="font-extrabold tracking-wide text-[16px]">Trip Planner</span>
+                            <span className="font-extrabold tracking-wide text-[16px]">Tour Expert ' Maayra</span>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="hover:text-slate-200 transition-colors">
                             <span className="material-symbols-outlined text-[20px]">close</span>
