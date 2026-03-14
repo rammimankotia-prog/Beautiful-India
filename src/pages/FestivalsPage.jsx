@@ -389,7 +389,7 @@ const FestivalsPage = () => {
       <section className="relative h-[60vh] min-h-[400px] flex items-end overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="/holi-colors.png"
+            src="holi-colors.png"
             alt="Festivals of India"
             className="w-full h-full object-cover"
           />

@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const BharatDarshanBanner = () => {
   return (
@@ -198,8 +198,8 @@ const BharatDarshanBanner = () => {
         </p>
 
         <div className="btn-group">
-          <a href="/tours" className="btn-primary">Explore Destinations</a>
-          <a href="/contact" className="btn-secondary">Get Free Quote</a>
+          <Link to="/tours" className="btn-primary">Explore Destinations</Link>
+          <Link to="/contact" className="btn-secondary">Get Free Quote</Link>
         </div>
 
         <div className="stats-row">
