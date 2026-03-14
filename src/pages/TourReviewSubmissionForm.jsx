@@ -33,15 +33,10 @@ const TourReviewSubmissionForm = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:3001/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reviewData)
-      });
-      if (res.ok) {
-        alert("Thank you for your review!");
-        navigate(-1); // Go back to tour page
-      }
+      // Mocked for static site
+      console.log("Review submitted (mocked):", reviewData);
+      alert("Thank you for your review!");
+      navigate(-1); // Go back to tour page
     } catch (err) {
       console.error("Review submit error:", err);
     } finally {

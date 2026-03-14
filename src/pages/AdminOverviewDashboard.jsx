@@ -19,10 +19,10 @@ const AdminOverviewDashboard = () => {
             setLoading(true);
             try {
                 const [bookingsRes, leadsRes, reviewsRes, toursRes] = await Promise.all([
-                    fetch('http://localhost:3001/api/bookings'),
-                    fetch('http://localhost:3001/api/leads'),
-                    fetch('http://localhost:3001/api/reviews'),
-                    fetch('http://localhost:3001/api/tours')
+                    fetch(`${import.meta.env.BASE_URL}data/bookings.json`),
+                    fetch(`${import.meta.env.BASE_URL}data/leads.json`),
+                    fetch(`${import.meta.env.BASE_URL}data/reviews.json`),
+                    fetch(`${import.meta.env.BASE_URL}data/tours.json`)
                 ]);
 
                 const bookings = await bookingsRes.json();

@@ -15,7 +15,7 @@ const WanderbotRecommendedToursView = () => {
     const { formatPrice } = useCurrency();
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/tours')
+        fetch(`${import.meta.env.BASE_URL}data/tours.json`)
             .then(res => res.json())
             .then(data => {
                 // Find tours that match the interest (case-insensitive) or just take first 3 if none match

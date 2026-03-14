@@ -29,14 +29,14 @@ const AdminChatbotLeadManagement = () => {
   }, []);
 
   const fetchLeads = () => {
-    fetch('http://localhost:3001/api/leads')
+    fetch(`${import.meta.env.BASE_URL}data/leads.json`)
       .then(res => res.json())
       .then(data => setLeads(data))
       .catch(err => console.error("Error fetching leads:", err));
   };
   
   const fetchAgents = () => {
-    fetch('http://localhost:3001/api/agents')
+    fetch(`${import.meta.env.BASE_URL}data/agents.json`)
       .then(res => res.json())
       .then(data => setAgents(data))
       .catch(err => console.error("Error fetching agents:", err));
@@ -47,33 +47,29 @@ const AdminChatbotLeadManagement = () => {
       let finalAgentId = selectedAgentId;
       
       if (selectedAgentId === 'new') {
-        const agRes = await fetch('http://localhost:3001/api/agents', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-             name: agentForm.name,
-             agencyName: agentForm.agencyName,
-             email: agentForm.email,
-             whatsapp: agentForm.whatsapp,
-             region: agentForm.region
-          })
-        });
-        const agData = await agRes.json();
+        const agData = {
+          id: Date.now(),
+          name: agentForm.name,
+          agencyName: agentForm.agencyName,
+          email: agentForm.email,
+          whatsapp: agentForm.whatsapp,
+          region: agentForm.region,
+          assignedDate: agentForm.assignedDate,
+          status: 'Assigned'
+        };
+        console.log("New agent created (mocked):", agData);
         finalAgentId = agData.id;
         setAgents([...agents, agData]);
       }
 
-      await fetch(`http://localhost:3001/api/leads/${assignModalLead.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-           status: agentForm.status,
-           agentId: finalAgentId,
-           assignedDate: agentForm.assignedDate
-        })
-      });
+      console.log("Lead assigned (mocked):", assignModalLead.id, "to agent:", finalAgentId);
+      setLeads(leads.map(l => l.id === assignModalLead.id ? { 
+        ...l, 
+        status: agentForm.status,
+        agentId: finalAgentId,
+        assignedDate: agentForm.assignedDate
+      } : l));
 
-      fetchLeads();
       setAssignModalLead(null);
       // Reset Form just in case
       setAgentForm({ ...agentForm, name: '', agencyName: '', email: '', whatsapp: '' });
@@ -84,16 +80,8 @@ const AdminChatbotLeadManagement = () => {
   };
 
   const handleStatusChange = (id, newStatus) => {
-    fetch(`http://localhost:3001/api/leads/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus })
-    })
-    .then(res => res.json())
-    .then(updatedLead => {
-      setLeads(leads.map(l => l.id === id ? { ...l, status: newStatus } : l));
-    })
-    .catch(err => console.error("Error updating lead:", err));
+    console.log("Lead status updated (mocked):", id, newStatus);
+    setLeads(leads.map(l => l.id === id ? { ...l, status: newStatus } : l));
   };
 
   const handleExportCSV = () => {
@@ -120,25 +108,22 @@ const AdminChatbotLeadManagement = () => {
   };
 
   const handleManualEntrySubmit = async () => {
-    try {
-      const res = await fetch('http://localhost:3001/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: manualEntryForm.name,
-          email: manualEntryForm.email,
-          phone: manualEntryForm.phone,
-          interest: manualEntryForm.interest,
-          message: manualEntryForm.message
-        })
-      });
-      const newLead = await res.json();
-      setLeads([newLead, ...leads]);
-      setShowManualEntryMenu(false);
-      setManualEntryForm({ name: '', email: '', phone: '', interest: 'Adventure', message: '' });
-    } catch (err) {
-      console.error("Failed to add manual lead", err);
-    }
+    const newLead = {
+      id: Date.now(),
+      name: manualEntryForm.name,
+      userName: manualEntryForm.name,
+      email: manualEntryForm.email,
+      phone: manualEntryForm.phone,
+      interest: manualEntryForm.interest,
+      userInterest: manualEntryForm.interest,
+      message: manualEntryForm.message,
+      status: 'New',
+      createdAt: new Date().toISOString()
+    };
+    console.log("Manual lead added (mocked):", newLead);
+    setLeads([newLead, ...leads]);
+    setShowManualEntryMenu(false);
+    setManualEntryForm({ name: '', email: '', phone: '', interest: 'Adventure', message: '' });
   };
 
   const newCount = leads.filter(l => l.status === 'New').length;

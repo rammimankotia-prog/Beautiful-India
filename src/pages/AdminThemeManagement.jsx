@@ -17,7 +17,7 @@ const AdminThemeManagement = () => {
   }, []);
 
   const fetchThemes = () => {
-    fetch('http://localhost:3001/api/themes')
+    fetch(`${import.meta.env.BASE_URL}data/themes.json`)
       .then(res => res.json())
       .then(data => {
          setThemes(data.sort((a,b) => (a.order || 0) - (b.order || 0)));
@@ -47,29 +47,29 @@ const AdminThemeManagement = () => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    const payload = { title, subtitle, image, order: parseInt(order) || 0 };
+    const payload = { 
+      id: editingTheme || Date.now(),
+      title, 
+      subtitle, 
+      image, 
+      order: parseInt(order) || 0 
+    };
 
-    const url = editingTheme ? `http://localhost:3001/api/themes/${editingTheme}` : 'http://localhost:3001/api/themes';
-    const method = editingTheme ? 'PUT' : 'POST';
-
-    fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(() => {
-       fetchThemes();
-       cancelEdit();
-    })
-    .catch(err => alert("Error saving theme: " + err.message));
+    console.log(`Theme ${editingTheme ? 'updated' : 'created'} (mocked):`, payload);
+    
+    if (editingTheme) {
+      setThemes(themes.map(t => t.id === editingTheme ? payload : t).sort((a,b) => (a.order || 0) - (b.order || 0)));
+    } else {
+      setThemes([...themes, payload].sort((a,b) => (a.order || 0) - (b.order || 0)));
+    }
+    
+    cancelEdit();
   };
 
   const handleDelete = (id) => {
     if(!window.confirm("Are you sure you want to delete this theme?")) return;
-    fetch(`http://localhost:3001/api/themes/${id}`, { method: 'DELETE' })
-      .then(() => fetchThemes())
-      .catch(err => alert("Error deleting theme: " + err.message));
+    console.log("Theme deleted (mocked):", id);
+    setThemes(themes.filter(t => t.id !== id));
   };
 
   const SidebarLink = ({ to, icon, label, active }) => (

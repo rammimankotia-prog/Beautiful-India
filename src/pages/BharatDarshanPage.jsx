@@ -188,19 +188,8 @@ const BharatDarshanPage = () => {
   const handleLeadSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch('http://localhost:3001/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: leadForm.name,
-          phone: leadForm.phone,
-          to: leadForm.destination,
-          interest: 'Bharat Darshan',
-          status: 'New',
-          source: 'Bharat Darshan Page'
-        })
-      });
       setSubmitted(true);
+      console.log('Lead submitted (mock for static site):', leadForm);
     } catch (err) {
       console.error('Failed to submit lead:', err);
     }

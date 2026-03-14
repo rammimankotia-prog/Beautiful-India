@@ -9,7 +9,7 @@ import './index.css'
 function App() {
   return (
     <AuthProvider>
-      <Router basename="/Beautiful-India">
+      <Router>
         <ScrollToAnchor />
         <Routes>
           <Route element={<Layout />}>

@@ -9,7 +9,7 @@ const WanderlustExplorerProHome = () => {
     const [themes, setThemes] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/tours')
+        fetch(`${import.meta.env.BASE_URL}data/tours.json`)
             .then(res => res.json())
             .then(data => setTours(data))
             .catch(() => setTours([
@@ -19,7 +19,7 @@ const WanderlustExplorerProHome = () => {
                 { id:'4', title:'Santorini Getaway',     duration:'6 Days',  rating:4.9, price:1499, image:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80', description:'Relax in iconic white-washed villas overlooking the Aegean Sea.' },
             ]));
 
-        fetch('http://localhost:3001/api/themes')
+        fetch(`${import.meta.env.BASE_URL}data/themes.json`)
             .then(res => res.json())
             .then(data => setThemes(data.sort((a,b) => (a.order || 0) - (b.order || 0))))
             .catch(() => setThemes([

@@ -29,18 +29,13 @@ const CheckoutPaymentMethod = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:3001/api/bookings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookingData)
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                navigate('/booking/success', { state: { booking: result, tour } });
-            } else {
-                alert("Failed to create booking. Please try again.");
-            }
+            // Mocked for static site
+            console.log("Booking submitted (mocked):", bookingData);
+            const result = {
+                ...bookingData,
+                id: `MOCK-${Date.now()}`
+            };
+            navigate('/booking/success', { state: { booking: result, tour } });
         } catch (error) {
             console.error("Error creating booking:", error);
             alert("Network error. Please try again.");

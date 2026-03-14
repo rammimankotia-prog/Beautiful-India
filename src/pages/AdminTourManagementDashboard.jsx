@@ -22,7 +22,7 @@ const AdminTourManagementDashboard = () => {
 
   const fetchTours = () => {
     setLoading(true);
-    fetch('http://localhost:3001/api/tours')
+    fetch(`${import.meta.env.BASE_URL}data/tours.json`)
       .then(res => res.json())
       .then(data => {
         setTours(data);
@@ -36,11 +36,8 @@ const AdminTourManagementDashboard = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this tour?")) {
-      fetch(`http://localhost:3001/api/tours/${id}`, { method: 'DELETE' })
-        .then(res => {
-          if (res.ok) fetchTours();
-          else alert("Failed to delete tour");
-        });
+      console.log("Tour deleted (mocked):", id);
+      setTours(tours.filter(t => t.id !== id));
     }
   };
 
@@ -224,11 +221,8 @@ const AdminTourManagementDashboard = () => {
       value={tour.order || 0} 
       onChange={(e) => {
         const newOrder = parseInt(e.target.value);
-        fetch(`http://localhost:3001/api/tours/${tour.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...tour, order: newOrder })
-        }).then(() => fetchTours());
+        console.log("Tour order updated (mocked):", tour.id, newOrder);
+        setTours(tours.map(t => t.id === tour.id ? { ...t, order: newOrder } : t));
       }}
       className="w-16 px-2 py-1 text-sm border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-primary"
     />
@@ -238,11 +232,8 @@ const AdminTourManagementDashboard = () => {
       value={tour.status || 'active'} 
       onChange={(e) => {
         const newStatus = e.target.value;
-        fetch(`http://localhost:3001/api/tours/${tour.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...tour, status: newStatus })
-        }).then(() => fetchTours());
+        console.log("Tour status updated (mocked):", tour.id, newStatus);
+        setTours(tours.map(t => t.id === tour.id ? { ...t, status: newStatus } : t));
       }}
       className={`text-xs font-medium px-2.5 py-1 rounded-full border-none cursor-pointer focus:ring-1 focus:ring-primary ${
         tour.status === 'active' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400'

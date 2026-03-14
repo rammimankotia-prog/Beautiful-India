@@ -11,7 +11,7 @@ const AdminQueryManagement = () => {
 
   const fetchQueries = () => {
     setLoading(true);
-    fetch('http://localhost:3001/api/leads')
+    fetch(`${import.meta.env.BASE_URL}data/leads.json`)
       .then(res => res.json())
       .then(data => {
         // Sort by timestamp descending (newest first)
@@ -30,23 +30,14 @@ const AdminQueryManagement = () => {
   }, []);
 
   const handleStatusUpdate = (id, newStatus) => {
-    fetch(`http://localhost:3001/api/leads/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus })
-    })
-    .then(res => res.json())
-    .then(() => {
-      setQueries(prev => prev.map(q => q.id === id ? { ...q, status: newStatus } : q));
-    })
-    .catch(err => alert("Error updating status: " + err.message));
+    console.log("Query status update (mocked):", id, newStatus);
+    setQueries(prev => prev.map(q => q.id === id ? { ...q, status: newStatus } : q));
   };
 
   const handleDelete = (id) => {
     if (!window.confirm("Are you sure you want to delete this query?")) return;
-    fetch(`http://localhost:3001/api/leads/${id}`, { method: 'DELETE' })
-      .then(() => fetchQueries())
-      .catch(err => alert("Error deleting: " + err.message));
+    console.log("Query deleted (mocked):", id);
+    setQueries(prev => prev.filter(q => q.id !== id));
   };
 
   const filteredQueries = queries.filter(q => {

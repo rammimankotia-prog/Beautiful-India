@@ -151,9 +151,12 @@ const AdminNewTourUploadForm = () => {
 
   React.useEffect(() => {
     if (isEdit) {
-      fetch(`http://localhost:3001/api/tours/${id}`)
+      fetch(`${import.meta.env.BASE_URL}data/tours.json`)
         .then(res => res.json())
-        .then(data => setFormData(data))
+        .then(data => {
+          const matched = data.find(t => String(t.id) === String(id));
+          if (matched) setFormData(matched);
+        })
         .catch(err => console.error("Fetch tour error:", err));
     }
   }, [id, isEdit]);
@@ -217,22 +220,9 @@ const AdminNewTourUploadForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = isEdit ? `http://localhost:3001/api/tours/${id}` : 'http://localhost:3001/api/tours';
-    const method = isEdit ? 'PUT' : 'POST';
-
-    fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-    .then(res => {
-      if (res.ok) navigate('/admin');
-      else alert(isEdit ? "Failed to update tour" : "Failed to publish tour");
-    })
-    .catch(err => {
-      console.error("Submit error:", err);
-      alert("Network error. Please ensure the server is running on port 3001.");
-    });
+    console.log(`Tour ${isEdit ? 'updated' : 'created'} (mocked):`, formData);
+    alert(`Tour ${isEdit ? 'Updated' : 'Created'} Successfully (Mocked for static site)`);
+    navigate('/admin');
   };
 
   // ── Image helpers — images are stored as { url, caption } objects ──

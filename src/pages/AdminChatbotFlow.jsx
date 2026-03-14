@@ -13,8 +13,8 @@ const AdminChatbotFlow = () => {
 
   const fetchFlow = () => {
     setLoading(true);
-    const flowPromise = fetch('http://localhost:3001/api/chatflow').then(res => res.json());
-    const manualPromise = fetch('http://localhost:3001/api/chatbot-manual-qa').then(res => res.json()).catch(() => []);
+    const flowPromise = fetch(`${import.meta.env.BASE_URL}data/chatflow.json`).then(res => res.json());
+    const manualPromise = fetch(`${import.meta.env.BASE_URL}data/manual-qa.json`).then(res => res.json()).catch(() => []);
     
     Promise.all([flowPromise, manualPromise])
       .then(([flowData, manualData]) => {
@@ -29,17 +29,9 @@ const AdminChatbotFlow = () => {
   };
 
   const saveFlow = () => {
-    const endpoint = activeAdminTab === 'flow' ? 'chatflow' : 'chatbot-manual-qa';
-    const dataToSend = activeAdminTab === 'flow' ? flowSteps : manualQs;
-
-    fetch(`http://localhost:3001/api/${endpoint}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dataToSend)
-    })
-    .then(res => res.json())
-    .then(() => alert(`${activeAdminTab === 'flow' ? 'Chatflow' : 'Manual Q&A'} updated successfully!`))
-    .catch(err => alert("Error saving: " + err.message));
+    // Mocked for static site
+    console.log(`Changes saved (mocked) for ${activeAdminTab === 'flow' ? 'Chatflow' : 'Manual Q&A'}`);
+    alert(`${activeAdminTab === 'flow' ? 'Chatflow' : 'Manual Q&A'} updated successfully!`);
   };
 
   const handleManualQChange = (index, field, value) => {

@@ -11,7 +11,7 @@ const AdminArticleManagementDashboard = () => {
 
   const fetchGuides = () => {
     setLoading(true);
-    fetch('http://localhost:3001/api/guides')
+    fetch(`${import.meta.env.BASE_URL}data/guides.json`)
       .then(res => res.json())
       .then(data => {
         setGuides(data);
@@ -25,11 +25,8 @@ const AdminArticleManagementDashboard = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this article?")) {
-      fetch(`http://localhost:3001/api/guides/${id}`, { method: 'DELETE' })
-        .then(res => {
-          if (res.ok) fetchGuides();
-          else alert("Failed to delete article");
-        });
+      console.log("Article deleted (mocked):", id);
+      setGuides(guides.filter(g => g.id !== id));
     }
   };
 

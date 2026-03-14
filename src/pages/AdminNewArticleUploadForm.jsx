@@ -34,19 +34,14 @@ const AdminNewArticleUploadForm = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:3001/api/guides/${id}`)
-        .then(res => {
-          if (!res.ok) throw new Error("Guide not found");
-          return res.json();
-        })
+      fetch(`${import.meta.env.BASE_URL}data/guides.json`)
+        .then(res => res.json())
         .then(data => {
-          if (data) {
-            setFormData(prev => ({ ...prev, ...data }));
-          }
+          const matched = data.find(g => String(g.id) === String(id));
+          if (matched) setFormData(prev => ({ ...prev, ...matched }));
         })
         .catch(err => {
           console.error("Failed to load guide:", err);
-          alert("Could to load this guide's data.");
         });
     }
   }, [id]);
@@ -64,32 +59,9 @@ const AdminNewArticleUploadForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    const endpoint = id 
-      ? `http://localhost:3001/api/guides/${id}` 
-      : 'http://localhost:3001/api/guides';
-      
-    const method = id ? 'PUT' : 'POST';
-
-    fetch(endpoint, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to save");
-        return res.json();
-      })
-      .then(() => {
-        setLoading(false);
-        navigate('/admin/guides');
-      })
-      .catch(err => {
-        console.error("Save error:", err);
-        alert('Failed to save article.');
-        setLoading(false);
-      });
+    console.log(`Article ${id ? 'updated' : 'created'} (mocked):`, formData);
+    alert(`Article ${id ? 'Updated' : 'Created'} Successfully (Mocked for static site)`);
+    navigate('/admin/guides');
   };
 
   return (

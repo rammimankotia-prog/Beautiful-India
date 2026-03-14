@@ -38,7 +38,7 @@ const TourDetailView = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3001/api/tours`)
+    fetch(`${import.meta.env.BASE_URL}data/tours.json`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch tours');
         return res.json();
@@ -65,7 +65,7 @@ const TourDetailView = () => {
         setLoading(false);
       });
     // Fetch reviews
-    fetch(`http://localhost:3001/api/reviews`)
+    fetch(`${import.meta.env.BASE_URL}data/reviews.json`)
       .then(res => res.json())
       .then(data => setReviews(data))
       .catch(err => console.error("Reviews fetch error:", err));
@@ -90,29 +90,20 @@ const TourDetailView = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(leadData)
-      });
-      if (response.ok) {
-        // Log admin notification for demonstration
-        console.log(`[ADMIN NOTIFICATION] New Query from ${leadName} for ${leadData.to}. Email sent to admin@wanderlust.com`);
-        
-        setIsQuoteModalOpen(false);
-        setModalStep(1);
-        setShowSuccessOverlay(true);
-        
-        // Reset form
-        setLeadName('');
-        setLeadEmail('');
-        setLeadPhone('');
-        
-        // Auto-close after 4 seconds
-        setTimeout(() => setShowSuccessOverlay(false), 4000);
-      } else {
-        throw new Error('Failed to submit');
-      }
+    // Mocked for static site
+    console.log(`[ADMIN NOTIFICATION] New Query from ${leadData.name} for ${leadData.to}. Email sent to admin@wanderlust.com (MOCKED)`);
+    
+    setIsQuoteModalOpen(false);
+    setModalStep(1);
+    setShowSuccessOverlay(true);
+    
+    // Reset form
+    setLeadName('');
+    setLeadEmail('');
+    setLeadPhone('');
+    
+    // Auto-close after 4 seconds
+    setTimeout(() => setShowSuccessOverlay(false), 4000);
     } catch (err) {
       console.error("Lead submission error:", err);
       alert('Error submitting request. Please try again.');

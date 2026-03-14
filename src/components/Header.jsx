@@ -25,7 +25,7 @@ const Header = () => {
             {/* Logo */}
             <div className="flex items-center gap-2">
                 <Link to="/" className="flex items-center gap-2 text-gray-900">
-                    <img src="beautiful_india_logo_1773142903437.png" alt="The Beautiful India" className="h-16 w-auto object-contain drop-shadow-sm hover:opacity-90 transition-opacity" />
+                    <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="The Beautiful India" className="h-16 w-auto object-contain drop-shadow-sm hover:opacity-90 transition-opacity" />
                 </Link>
             </div>
 

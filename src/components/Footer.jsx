@@ -133,7 +133,7 @@ const Footer = () => {
                 {/* Logo, Copyright & Sitemap */}
                 <div className="mt-12 pt-6 border-t border-[#3c4248] flex flex-col md:flex-row items-center justify-between gap-6">
                    <Link to="/" className="flex items-center gap-2 text-white">
-                        <img src="beautiful_india_logo_1773142903437.png" alt="The Beautiful India" className="h-14 w-auto object-contain brightness-0 invert" />
+                        <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="The Beautiful India" className="h-14 w-auto object-contain brightness-0 invert" />
                    </Link>
                    <div className="flex items-center gap-4">
                      <Link

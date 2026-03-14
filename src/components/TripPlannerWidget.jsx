@@ -78,24 +78,17 @@ const TripPlannerWidget = () => {
             setStep(6);
             
             // Post to backend
-            try {
-                await fetch('http://localhost:3001/api/leads', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: updatedData.name,
-                        to: updatedData.destination,
-                        departureDate: updatedData.date,
-                        duration: updatedData.duration,
-                        email: updatedData.email,
-                        phone: updatedData.phone,
-                        status: 'New',
-                        chatLog: [...newMessages, { sender: 'bot', text: 'Thank you! We have received your query and will contact you shortly.' }]
-                    })
-                });
-            } catch (err) {
-                console.error("Failed to post query: ", err);
-            }
+            // Mock submission for static site
+            console.log("Trip Planner Lead submitted (mocked):", {
+                name: updatedData.name,
+                to: updatedData.destination,
+                departureDate: updatedData.date,
+                duration: updatedData.duration,
+                email: updatedData.email,
+                phone: updatedData.phone,
+                status: 'New',
+                chatLog: [...newMessages, { sender: 'bot', text: 'Thank you! We have received your query and will contact you shortly.' }]
+            });
         }
         
         setFormData(updatedData);

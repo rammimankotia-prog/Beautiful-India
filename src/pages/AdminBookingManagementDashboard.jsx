@@ -21,7 +21,7 @@ const AdminBookingManagementDashboard = () => {
 
   const fetchBookings = () => {
     setLoading(true);
-    fetch('http://localhost:3001/api/bookings')
+    fetch(`${import.meta.env.BASE_URL}data/bookings.json`)
       .then(res => res.json())
       .then(data => {
         setBookings(data);
@@ -38,28 +38,14 @@ const AdminBookingManagementDashboard = () => {
   }, []);
 
   const handleStatusUpdate = (id, newStatus) => {
-    fetch(`http://localhost:3001/api/bookings/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus })
-    })
-    .then(res => res.json())
-    .then(() => {
-      setBookings(prev => prev.map(b => b.id === id ? { ...b, status: newStatus } : b));
-    })
-    .catch(err => alert("Error updating status: " + err.message));
+    console.log("Booking status updated (mocked):", id, newStatus);
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: newStatus } : b));
   };
 
   const handleDelete = (id) => {
     if (!window.confirm("Are you sure you want to delete this booking record?")) return;
-    
-    fetch(`http://localhost:3001/api/bookings/${id}`, {
-      method: 'DELETE'
-    })
-    .then(() => {
-      setBookings(prev => prev.filter(b => b.id !== id));
-    })
-    .catch(err => alert("Error deleting booking: " + err.message));
+    console.log("Booking deleted (mocked):", id);
+    setBookings(prev => prev.filter(b => b.id !== id));
   };
 
   const getFilteredAndSortedBookings = () => {

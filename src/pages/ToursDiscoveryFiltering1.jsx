@@ -41,7 +41,7 @@ const ToursDiscoveryFiltering1 = () => {
     }, []);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/tours')
+        fetch(`${import.meta.env.BASE_URL}data/tours.json`)
             .then(res => res.json())
             .then(data => {
                 setTours(data);

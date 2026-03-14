@@ -13,7 +13,7 @@ const TravelGuidesCategoryLanding = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/guides')
+    fetch(`${import.meta.env.BASE_URL}data/guides.json`)
       .then(res => res.json())
       .then(data => {
         setGuides(data);

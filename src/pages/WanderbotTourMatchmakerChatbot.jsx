@@ -13,7 +13,7 @@ const WanderbotTourMatchmakerChatbot = () => {
 
     useEffect(() => {
         // Fetch Flow
-        fetch('http://localhost:3001/api/chatflow')
+        fetch(`${import.meta.env.BASE_URL}data/chatflow.json`)
             .then(res => res.json())
             .then(data => {
                 setFlowSteps(data);
@@ -28,7 +28,7 @@ const WanderbotTourMatchmakerChatbot = () => {
             .catch(err => console.error("Error fetching chatflow:", err));
 
         // Fetch Manual Q&A
-        fetch('http://localhost:3001/api/chatbot-manual-qa')
+        fetch(`${import.meta.env.BASE_URL}data/manual-qa.json`)
             .then(res => res.json())
             .then(data => setManualQs(data))
             .catch(() => {});
@@ -103,14 +103,11 @@ const WanderbotTourMatchmakerChatbot = () => {
     const handleViewRecommendations = async () => {
         // Submit Lead to Backend
         try {
-            await fetch('http://localhost:3001/api/leads', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...capturedData,
-                    source: 'Wanderbot',
-                    timestamp: new Date().toISOString()
-                })
+            // Mocked for static site
+            console.log('Lead submitted (mock):', {
+                ...capturedData,
+                source: 'Wanderbot',
+                timestamp: new Date().toISOString()
             });
         } catch (error) {
             console.error("Error submitting lead:", error);

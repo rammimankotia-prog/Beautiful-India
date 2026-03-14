@@ -18,7 +18,7 @@ const TourComparisonPage = () => {
 
     const ids = idsParam.split(',');
     
-    fetch('http://localhost:3001/api/tours')
+    fetch(`${import.meta.env.BASE_URL}data/tours.json`)
       .then(res => res.json())
       .then(data => {
         const filtered = data.filter(t => ids.includes(t.id.toString()));
