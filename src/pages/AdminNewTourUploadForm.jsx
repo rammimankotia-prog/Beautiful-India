@@ -33,7 +33,7 @@ const AdminNewTourUploadForm = () => {
     exclusions: '',
     highlights: '',
     isFeatured: false,
-    itinerary: [{ day: 1, title: '', description: '' }],
+    itinerary: [{ day: 1, title: '', description: '', tags: [], services: [] }],
     faq: [{ question: '', answer: '' }],
     bookingStart: '',
     bookingEnd: '',
@@ -875,6 +875,64 @@ const AdminNewTourUploadForm = () => {
               placeholder="Describe the activities for this day..."
             ></textarea>
           </label>
+          {/* Highlight Tags */}
+          <label className="flex flex-col">
+            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-1 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px] text-primary">label</span>
+              Highlight Tags
+            </span>
+            <input 
+              value={Array.isArray(day.tags) ? day.tags.join(', ') : (day.tags || '')}
+              onChange={(e) => handleItineraryChange(index, 'tags', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" 
+              placeholder="e.g. Dal Lake, Gondola Ride, Gulmarg (comma-separated)" 
+              type="text"
+            />
+            <p className="text-xs text-slate-400 mt-1">These appear as pill-shaped tags on the tour detail page.</p>
+          </label>
+          {/* Services Checkboxes */}
+          <div className="flex flex-col">
+            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-2 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px] text-primary">room_service</span>
+              Services Included
+            </span>
+            <div className="flex flex-wrap gap-3">
+              {[
+                { id: 'breakfast', icon: 'free_breakfast', label: 'Breakfast', color: 'text-amber-600' },
+                { id: 'lunch',     icon: 'lunch_dining',   label: 'Lunch',     color: 'text-green-600' },
+                { id: 'dinner',    icon: 'dinner_dining',  label: 'Dinner',    color: 'text-orange-600' },
+                { id: 'stay',      icon: 'hotel',          label: 'Stay',      color: 'text-blue-600' },
+                { id: 'transfer',  icon: 'airport_shuttle',label: 'Transfer',  color: 'text-purple-600' },
+                { id: 'sightseeing',icon:'photo_camera', label:'Sightseeing', color:'text-teal-600' },
+                { id: 'flight',    icon: 'flight',         label: 'Flight',    color: 'text-sky-600' },
+                { id: 'train',     icon: 'train',          label: 'Train',     color: 'text-indigo-600' },
+              ].map(svc => {
+                const currentServices = Array.isArray(day.services) ? day.services : [];
+                const checked = currentServices.includes(svc.id);
+                return (
+                  <label key={svc.id} className={`flex items-center gap-1.5 cursor-pointer px-3 py-1.5 rounded-xl border transition-all ${
+                    checked
+                      ? 'bg-primary/10 border-primary/40 text-primary'
+                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'
+                  }`}>
+                    <input 
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => {
+                        const updated = e.target.checked 
+                          ? [...currentServices, svc.id]
+                          : currentServices.filter(s => s !== svc.id);
+                        handleItineraryChange(index, 'services', updated);
+                      }}
+                      className="sr-only"
+                    />
+                    <span className={`material-symbols-outlined text-[18px] ${svc.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{svc.icon}</span>
+                    <span className="text-xs font-semibold">{svc.label}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     ))}

@@ -114,9 +114,17 @@ const TourDetailView = () => {
     navigate('/checkout/traveler', { state: { tour } });
   };
 
-  const similarTours = allTours
-    .filter(t => t.id !== (tour ? tour.id : null) && (t.stateRegion === (tour ? tour.stateRegion : null) || t.destination === (tour ? tour.destination : null)))
-    .slice(0, 4);
+  const similarTours = (() => {
+    if (!tour) return [];
+    // First try same state/region
+    let result = allTours.filter(t => t.id !== tour.id && (t.stateRegion === tour.stateRegion || t.destination === tour.destination));
+    // If fewer than 3, pad with packages from other regions
+    if (result.length < 3) {
+      const extra = allTours.filter(t => t.id !== tour.id && !result.find(r => r.id === t.id)).slice(0, 4 - result.length);
+      result = [...result, ...extra];
+    }
+    return result.slice(0, 4);
+  })();
 
   if (loading) return <div className="p-20 text-center font-bold text-2xl animate-pulse text-primary">Loading your adventure...</div>;
   if (error) return <div className="p-20 text-center text-red-500 font-bold text-2xl">Error: {error}</div>;
@@ -405,83 +413,143 @@ const TourDetailView = () => {
                     </div>
                   )}
 
-                  {/* Itinerary */}
-                  <div className="flex flex-col gap-6 mt-4">
-                    <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Proposed Itinerary</h3>
-                    <div className="relative space-y-0">
-                      {visibleDays.map((item, idx) => {
-                        const isLast = idx === visibleDays.length - 1;
+                  {/* Itinerary — TravelTriangle Style */}
+                  <div className="flex flex-col gap-4 mt-4">
+                    <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Day-by-Day Itinerary</h3>
+                    {(() => {
+                      const SERVICE_ICONS = {
+                        breakfast:   { icon: 'free_breakfast',  label: 'Breakfast',   color: 'text-amber-600' },
+                        lunch:       { icon: 'lunch_dining',    label: 'Lunch',       color: 'text-green-600' },
+                        dinner:      { icon: 'dinner_dining',   label: 'Dinner',      color: 'text-orange-600' },
+                        stay:        { icon: 'hotel',           label: 'Stay',        color: 'text-blue-600' },
+                        transfer:    { icon: 'airport_shuttle', label: 'Transfer',    color: 'text-purple-600' },
+                        sightseeing: { icon: 'photo_camera',    label: 'Sightseeing', color: 'text-teal-600' },
+                        flight:      { icon: 'flight',          label: 'Flight',      color: 'text-sky-600' },
+                        train:       { icon: 'train',           label: 'Train',       color: 'text-indigo-600' },
+                      };
+                      const ItineraryDayCard = ({ item, defaultOpen }) => {
+                        const [open, setOpen] = React.useState(defaultOpen);
+                        const tags = Array.isArray(item.tags) ? item.tags : (item.tags ? String(item.tags).split(',').map(t => t.trim()).filter(Boolean) : []);
+                        const services = Array.isArray(item.services) ? item.services : [];
                         return (
-                          <div key={item.day} className="relative flex gap-5 pb-8">
-                            {/* Vertical connector — hidden for last item */}
-                            {!isLast && (
-                              <div className="absolute left-[9px] top-5 bottom-0 w-0.5 bg-primary/25" />
-                            )}
-                            {/* Circle dot */}
-                            <div className="relative z-10 flex-shrink-0 mt-1">
-                              <div className="w-5 h-5 bg-background-light dark:bg-background-dark border-2 border-primary rounded-full" />
+                          <div className="flex gap-0 pb-4">
+                            <div className="flex flex-col items-center shrink-0 w-[72px] pt-3 z-10">
+                              <span className="text-[11px] font-black text-[#f45d48] uppercase tracking-wide leading-none">Day {item.day}</span>
+                              <div className="w-3 h-3 bg-white dark:bg-background-dark border-2 border-[#f45d48] rounded-full mt-1.5 shrink-0" />
                             </div>
-                            {/* Text content */}
-                            <div className="flex-1 pt-0">
-                              <h4 className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mb-1">
-                                Day {item.day}: {item.title}
-                              </h4>
-                              <p className="text-text-secondary-light dark:text-text-secondary-dark leading-relaxed">{item.description}</p>
+                            <div className="flex-1 ml-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                              <button type="button" onClick={() => setOpen(o => !o)} className="w-full flex items-center justify-between px-5 py-4 text-left group">
+                                <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                                  <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-primary transition-colors pr-2">{item.title}</h4>
+                                  {tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1.5">
+                                      {tags.map((tag, tidx) => (
+                                        <span key={tidx} className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/80">{tag}</span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                                <span className={`material-symbols-outlined text-xl shrink-0 ml-3 transition-transform duration-300 ${open ? 'rotate-180 text-primary' : 'text-slate-400'}`}>expand_more</span>
+                              </button>
+                              {open && (
+                                <div className="px-5 pb-5 border-t border-slate-50 dark:border-slate-800 pt-3">
+                                  {services.length > 0 && (
+                                    <div className="flex flex-wrap gap-5 pb-3 mb-3 border-b border-dashed border-slate-100 dark:border-slate-700">
+                                      {services.map((svc, sidx) => {
+                                        const def = SERVICE_ICONS[svc] || { icon: 'check_circle', label: svc, color: 'text-slate-500' };
+                                        return (
+                                          <div key={sidx} className="flex flex-col items-center gap-0.5">
+                                            <span className={`material-symbols-outlined text-[26px] ${def.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{def.icon}</span>
+                                            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">{def.label}</span>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{item.description}</p>
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
-                      })}
-
-                      {itinerary.length > 2 && (
-                        <button
-                          onClick={() => setItineraryExpanded(!itineraryExpanded)}
-                          className="text-primary font-medium hover:underline flex items-center gap-1 mt-4 transition-all"
-                        >
-                          {itineraryExpanded
-                            ? <>Show Less <span className="material-symbols-outlined text-sm">expand_less</span></>
-                            : <>View Full Itinerary ({hiddenCount} more days) <span className="material-symbols-outlined text-sm">expand_more</span></>
-                          }
-                        </button>
-                      )}
-                    </div>
+                      };
+                      return (
+                        <div className="relative">
+                          <div className="absolute left-[36px] top-4 bottom-8 w-0.5 bg-slate-200 dark:bg-slate-700" />
+                          {visibleDays.map((item, idx) => (
+                            <ItineraryDayCard key={item.day} item={item} defaultOpen={idx === 0} />
+                          ))}
+                          {itinerary.length > 2 && (
+                            <button onClick={() => setItineraryExpanded(!itineraryExpanded)} className="ml-[76px] text-primary font-semibold hover:underline flex items-center gap-1 mt-1 transition-all text-sm">
+                              {itineraryExpanded
+                                ? <><span className="material-symbols-outlined text-sm">expand_less</span> Show Less</>
+                                : <><span className="material-symbols-outlined text-sm">expand_more</span> View Full Itinerary ({hiddenCount} more days)</>
+                              }
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
 
-                  {/* Inclusions & Exclusions */}
-                  {(tour.inclusions || tour.exclusions) && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                      {tour.inclusions && (
-                        <div className="flex flex-col gap-4 bg-green-50/50 dark:bg-green-900/10 p-6 rounded-2xl border border-green-100 dark:border-green-800/30 h-full">
-                          <h4 className="text-xl font-bold gap-2 flex items-center text-text-primary-light dark:text-text-primary-dark">
-                            <span className="material-symbols-outlined text-green-600 dark:text-green-500">check_circle</span>
-                            What's Included
-                          </h4>
-                          <ul className="flex flex-col gap-3">
-                            {tour.inclusions.split('\n').filter(Boolean).map((item, idx) => (
-                              <li key={idx} className="flex gap-3 text-text-secondary-light dark:text-text-secondary-dark">
-                                <span className="material-symbols-outlined text-green-500 text-[18px] shrink-0 mt-0.5">done</span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
 
-                      {tour.exclusions && (
-                        <div className="flex flex-col gap-4 bg-red-50/50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-800/30 h-full">
-                          <h4 className="text-xl font-bold gap-2 flex items-center text-text-primary-light dark:text-text-primary-dark">
-                            <span className="material-symbols-outlined text-red-500 dark:text-red-400">cancel</span>
-                            Not Included
-                          </h4>
-                          <ul className="flex flex-col gap-3">
-                            {tour.exclusions.split('\n').filter(Boolean).map((item, idx) => (
-                              <li key={idx} className="flex gap-3 text-text-secondary-light dark:text-text-secondary-dark">
-                                <span className="material-symbols-outlined text-red-400 text-[18px] shrink-0 mt-0.5">close</span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+                  {/* ── Inclusions & Exclusions ── */}
+                  {(tour.inclusions || tour.exclusions) && (
+                    <div className="mt-8">
+                      <div className="flex items-center gap-3 mb-5">
+                        <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
+                          <span className="material-symbols-outlined text-[14px]">checklist</span>
+                          Package Details
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {tour.inclusions && (
+                          <div className="relative overflow-hidden rounded-2xl border border-emerald-200 dark:border-emerald-800/40 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/30 dark:to-slate-900 shadow-sm">
+                            <div className="flex items-center gap-3 px-6 py-4 border-b border-emerald-100 dark:border-emerald-800/30 bg-emerald-500/5">
+                              <div className="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-200 dark:shadow-emerald-900/50">
+                                <span className="material-symbols-outlined text-white text-[20px]" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+                              </div>
+                              <div>
+                                <h4 className="text-base font-black text-emerald-700 dark:text-emerald-400">What's Included</h4>
+                                <p className="text-[11px] text-emerald-600/70 dark:text-emerald-500/60 font-semibold">{tour.inclusions.split('\n').filter(Boolean).length} items covered</p>
+                              </div>
+                            </div>
+                            <ul className="flex flex-col divide-y divide-emerald-50 dark:divide-emerald-900/30 px-5 py-2">
+                              {tour.inclusions.split('\n').filter(Boolean).map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-3 py-3">
+                                  <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center shrink-0 mt-0.5">
+                                    <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>done</span>
+                                  </span>
+                                  <span className="text-sm text-slate-700 dark:text-slate-300 leading-snug">{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {tour.exclusions && (
+                          <div className="relative overflow-hidden rounded-2xl border border-rose-200 dark:border-rose-800/40 bg-gradient-to-br from-rose-50 to-white dark:from-rose-950/20 dark:to-slate-900 shadow-sm">
+                            <div className="flex items-center gap-3 px-6 py-4 border-b border-rose-100 dark:border-rose-800/30 bg-rose-500/5">
+                              <div className="w-9 h-9 rounded-xl bg-rose-500 flex items-center justify-center shadow-md shadow-rose-200 dark:shadow-rose-900/50">
+                                <span className="material-symbols-outlined text-white text-[20px]" style={{fontVariationSettings:"'FILL' 1"}}>cancel</span>
+                              </div>
+                              <div>
+                                <h4 className="text-base font-black text-rose-700 dark:text-rose-400">Not Included</h4>
+                                <p className="text-[11px] text-rose-600/70 dark:text-rose-500/60 font-semibold">{tour.exclusions.split('\n').filter(Boolean).length} items excluded</p>
+                              </div>
+                            </div>
+                            <ul className="flex flex-col divide-y divide-rose-50 dark:divide-rose-900/30 px-5 py-2">
+                              {tour.exclusions.split('\n').filter(Boolean).map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-3 py-3">
+                                  <span className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-800/50 flex items-center justify-center shrink-0 mt-0.5">
+                                    <span className="material-symbols-outlined text-rose-500 dark:text-rose-400 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>close</span>
+                                  </span>
+                                  <span className="text-sm text-slate-700 dark:text-slate-300 leading-snug">{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
 
@@ -588,6 +656,85 @@ const TourDetailView = () => {
                 </div>
               </div>
 
+              {/* ── Similar Tours ── */}
+              {similarTours.length > 0 && (
+                <div className="mt-14 mb-10">
+                  <div className="flex justify-between items-end mb-7">
+                    <div>
+                      <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-3">
+                        <span className="material-symbols-outlined text-[14px]">explore</span>
+                        You Might Also Like
+                      </span>
+                      <h3 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight">Similar Tour Packages</h3>
+                    </div>
+                    <Link to="/tours" className="hidden md:flex items-center gap-1.5 text-primary font-black text-sm uppercase tracking-wider hover:gap-3 transition-all border border-primary/20 px-4 py-2 rounded-xl hover:bg-primary/5">
+                      View All <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    {similarTours.map((t, idx) => {
+                      const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
+                      const tPath = `/tours/${encodeURIComponent((t.destination || 'global').toLowerCase())}/${encodeURIComponent((t.stateRegion || 'region').toLowerCase())}/${encodeURIComponent((t.subRegion || 'sub-region').toLowerCase())}/${tSlug}`;
+                      const imgSrc = (() => {
+                        if (!t.image) return 'https://images.unsplash.com/photo-1596760407110-2f759c2b7188?auto=format&fit=crop&w=400&q=80';
+                        if (typeof t.image === 'string') return t.image;
+                        if (t.image?.url) return t.image.url;
+                        return 'https://images.unsplash.com/photo-1596760407110-2f759c2b7188?auto=format&fit=crop&w=400&q=80';
+                      })();
+                      const themeColors = {
+                        honeymoon: 'bg-pink-100 text-pink-600',
+                        family: 'bg-blue-100 text-blue-600',
+                        adventure: 'bg-orange-100 text-orange-600',
+                        pilgrimage: 'bg-yellow-100 text-yellow-700',
+                        solo: 'bg-violet-100 text-violet-600',
+                        luxury: 'bg-amber-100 text-amber-700',
+                        beach: 'bg-cyan-100 text-cyan-600',
+                        trekking: 'bg-green-100 text-green-600',
+                      };
+                      const themeClass = themeColors[t.theme] || 'bg-primary/10 text-primary';
+                      return (
+                        <Link key={idx} to={tPath} className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 flex flex-col h-full active:scale-[0.98]">
+                          {/* Image */}
+                          <div className="relative h-48 overflow-hidden">
+                            <img src={imgSrc} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                            {/* Duration badge */}
+                            <div className="absolute bottom-3 left-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-lg text-[11px] font-black text-white">
+                              {t.duration || 'Flexible'}
+                            </div>
+                            {/* Theme badge */}
+                            {t.theme && (
+                              <div className={`absolute top-3 right-3 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wide ${themeClass} backdrop-blur-sm`}>
+                                {t.theme}
+                              </div>
+                            )}
+                          </div>
+                          {/* Card body */}
+                          <div className="p-4 flex flex-col flex-1">
+                            <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">{t.stateRegion || t.destination}</p>
+                            <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">{t.title}</h4>
+                            <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                              <div>
+                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starts from</p>
+                                <p className="text-base font-black text-primary">{formatPrice(t.price)}</p>
+                              </div>
+                              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white shadow-md shadow-primary/30 group-hover:scale-110 transition-all duration-300">
+                                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-5 text-center md:hidden">
+                    <Link to="/tours" className="inline-flex items-center gap-2 text-primary font-bold text-sm border border-primary/20 px-5 py-2.5 rounded-xl hover:bg-primary/5 transition-all">
+                      View All Packages <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </Link>
+                  </div>
+                </div>
+              )}
+
               {/* ── FAQ Section ── */}
               {tour.faq && tour.faq.length > 0 && tour.faq.some(f => f.question && f.answer) && (
                 <div className="mt-12 mb-8">
@@ -639,55 +786,7 @@ const TourDetailView = () => {
                 </div>
               )}
 
-              {/* ── Similar Tours ── */}
-              {similarTours.length > 0 && (
-                <div className="mt-16 mb-16">
-                  <div className="flex justify-between items-center mb-8">
-                    <div>
-                      <p className="text-xs font-black text-primary uppercase tracking-widest mb-1">You Might Also Like</p>
-                      <h3 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight">Similar Tour Packages</h3>
-                    </div>
-                    <Link to="/tours" className="hidden md:flex items-center gap-1.5 text-primary font-black text-xs uppercase tracking-wider hover:gap-3 transition-all">
-                      View All <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                    </Link>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {similarTours.map((t, idx) => {
-                      const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-                      const tPath = `/tours/${encodeURIComponent((t.destination || 'global').toLowerCase())}/${encodeURIComponent((t.stateRegion || 'region').toLowerCase())}/${encodeURIComponent((t.subRegion || 'sub-region').toLowerCase())}/${tSlug}`;
-                      const imgSrc = (() => {
-                        if (!t.image) return 'https://images.unsplash.com/photo-1596760407110-2f759c2b7188?auto=format&fit=crop&w=400&q=80';
-                        if (typeof t.image === 'string') return t.image;
-                        if (t.image?.url) return t.image.url;
-                        return 'https://images.unsplash.com/photo-1596760407110-2f759c2b7188?auto=format&fit=crop&w=400&q=80';
-                      })();
-                      return (
-                        <Link key={idx} to={tPath} className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-800 flex flex-col h-full active:scale-[0.98]">
-                          <div className="relative h-52 overflow-hidden">
-                            <img src={imgSrc} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-black text-primary shadow">
-                              {t.duration || 'Flexible'}
-                            </div>
-                          </div>
-                          <div className="p-4 flex flex-col flex-1">
-                            <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">{t.title}</h4>
-                            <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                              <div>
-                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starts from</p>
-                                <p className="text-base font-black text-primary">{formatPrice(t.price)}</p>
-                              </div>
-                              <div className="w-9 h-9 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
-                                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+              {/* Similar Tours – rendered before FAQ above */}
 
               {/* ── Traveler Reviews ── */}
               <div className="mt-12 mb-16">

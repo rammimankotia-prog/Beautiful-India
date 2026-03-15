@@ -24,32 +24,95 @@
       {
         "day": 1,
         "title": "Arrival in Srinagar",
-        "description": "Pickup from airport\n\nVisit Dal Lake and enjoy Shikara Ride\n\nExplore Mughal Gardens\n\nNight stay in Houseboat / Hotel"
+        "description": "Pickup from airport. Visit Dal Lake and enjoy Shikara Ride. Explore Mughal Gardens. Night stay in Houseboat / Hotel.",
+        "tags": [
+          "Dal Lake",
+          "Shikara Ride",
+          "Mughal Gardens"
+        ],
+        "services": [
+          "transfer",
+          "dinner",
+          "stay"
+        ]
       },
       {
         "day": 2,
-        "title": "Srinagar → Gulmarg",
-        "description": "Drive to Gulmarg (snow destination)\n\nGondola cable car ride\n\nSnow activities like skiing\n\nReturn to Srinagar hotel"
+        "title": "Srinagar to Gulmarg",
+        "description": "Drive to Gulmarg (snow destination). Gondola cable car ride. Snow activities like skiing. Return to Srinagar hotel.",
+        "tags": [
+          "Gulmarg",
+          "Gondola Ride",
+          "Skiing"
+        ],
+        "services": [
+          "breakfast",
+          "transfer",
+          "sightseeing",
+          "dinner",
+          "stay"
+        ]
       },
       {
         "day": 3,
-        "title": "Srinagar → Pahalgam",
-        "description": "Scenic drive to Pahalgam\n\nVisit Betaab Valley & Lidder River\n\nHorse riding and local sightseeing\n\nNight stay in Pahalgam"
+        "title": "Srinagar to Pahalgam",
+        "description": "Scenic drive to Pahalgam. Visit Betaab Valley and Lidder River. Horse riding and local sightseeing. Night stay in Pahalgam.",
+        "tags": [
+          "Pahalgam",
+          "Betaab Valley",
+          "Lidder River"
+        ],
+        "services": [
+          "breakfast",
+          "transfer",
+          "sightseeing",
+          "dinner",
+          "stay"
+        ]
       },
       {
         "day": 4,
-        "title": "Pahalgam → Sonamarg",
-        "description": "Visit glaciers and snow points\n\nPhotography and sightseeing\n\nReturn to Srinagar"
+        "title": "Pahalgam to Sonamarg",
+        "description": "Visit glaciers and snow points. Photography and sightseeing. Return to Srinagar.",
+        "tags": [
+          "Sonamarg",
+          "Glacier",
+          "Snow Points"
+        ],
+        "services": [
+          "breakfast",
+          "transfer",
+          "sightseeing",
+          "stay"
+        ]
       },
       {
         "day": 5,
         "title": "Srinagar Local Sightseeing",
-        "description": "Shalimar Bagh\n\nNishat Bagh\n\nLocal markets & Kashmiri handicrafts"
+        "description": "Shalimar Bagh. Nishat Bagh. Local markets and Kashmiri handicrafts.",
+        "tags": [
+          "Shalimar Bagh",
+          "Nishat Bagh",
+          "Local Markets"
+        ],
+        "services": [
+          "breakfast",
+          "sightseeing",
+          "dinner",
+          "stay"
+        ]
       },
       {
         "day": 6,
         "title": "Departure",
-        "description": "Airport drop with sweet memories"
+        "description": "Airport drop with sweet memories.",
+        "tags": [
+          "Airport Drop"
+        ],
+        "services": [
+          "breakfast",
+          "transfer"
+        ]
       }
     ],
     "faq": [
@@ -647,12 +710,36 @@
     "highlights": "Tsomgo Lake, Nathu La Pass, Rumtek Monastery",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Gangtok Arrival", "description": "Transfer to hotel and evening at MG Marg." },
-      { "day": 2, "title": "Tsomgo Lake & Baba Mandir", "description": "Excursion to high-altitude lake." },
-      { "day": 3, "title": "Gangtok to Pelling", "description": "Scenic drive through tea gardens." },
-      { "day": 4, "title": "Pelling Sightseeing", "description": "Visit Skywalk and Waterfalls." },
-      { "day": 5, "title": "Pelling to Gangtok", "description": "Return for final shopping." },
-      { "day": 6, "title": "Departure", "description": "Drop at Bagdogra/NJP." }
+      {
+        "day": 1,
+        "title": "Gangtok Arrival",
+        "description": "Transfer to hotel and evening at MG Marg."
+      },
+      {
+        "day": 2,
+        "title": "Tsomgo Lake & Baba Mandir",
+        "description": "Excursion to high-altitude lake."
+      },
+      {
+        "day": 3,
+        "title": "Gangtok to Pelling",
+        "description": "Scenic drive through tea gardens."
+      },
+      {
+        "day": 4,
+        "title": "Pelling Sightseeing",
+        "description": "Visit Skywalk and Waterfalls."
+      },
+      {
+        "day": 5,
+        "title": "Pelling to Gangtok",
+        "description": "Return for final shopping."
+      },
+      {
+        "day": 6,
+        "title": "Departure",
+        "description": "Drop at Bagdogra/NJP."
+      }
     ]
   },
   {
@@ -677,11 +764,31 @@
     "highlights": "Living Root Bridge, Dawki River, Cherrapunjee",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Shillong Arrival", "description": "Scotland of the East." },
-      { "day": 2, "title": "Cherrapunjee", "description": "Waterfalls and Caves." },
-      { "day": 3, "title": "Mawlynnong & Dawki", "description": "Cleanest village and crystal clear river." },
-      { "day": 4, "title": "Living Root Bridge Trek", "description": "Adventure in Nongriat." },
-      { "day": 5, "title": "Departure", "description": "Drop at Guwahati." }
+      {
+        "day": 1,
+        "title": "Shillong Arrival",
+        "description": "Scotland of the East."
+      },
+      {
+        "day": 2,
+        "title": "Cherrapunjee",
+        "description": "Waterfalls and Caves."
+      },
+      {
+        "day": 3,
+        "title": "Mawlynnong & Dawki",
+        "description": "Cleanest village and crystal clear river."
+      },
+      {
+        "day": 4,
+        "title": "Living Root Bridge Trek",
+        "description": "Adventure in Nongriat."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Drop at Guwahati."
+      }
     ]
   },
   {
@@ -706,13 +813,41 @@
     "highlights": "Gateway of India, Ajanta Ellora Caves, Lonavala",
     "isFeatured": false,
     "itinerary": [
-      { "day": 1, "title": "Mumbai Arrival", "description": "City tour." },
-      { "day": 2, "title": "Mumbai to Aurangabad", "description": "Flight/Train to base of caves." },
-      { "day": 3, "title": "Ajanta Caves", "description": "Ancient Buddhist art." },
-      { "day": 4, "title": "Ellora Caves", "description": "Magnificent rock-cut architecture." },
-      { "day": 5, "title": "Aurangabad to Pune", "description": "History and modern growth." },
-      { "day": 6, "title": "Lonavala & Khandala", "description": "Hill station retreat." },
-      { "day": 7, "title": "Departure", "description": "Return from Mumbai." }
+      {
+        "day": 1,
+        "title": "Mumbai Arrival",
+        "description": "City tour."
+      },
+      {
+        "day": 2,
+        "title": "Mumbai to Aurangabad",
+        "description": "Flight/Train to base of caves."
+      },
+      {
+        "day": 3,
+        "title": "Ajanta Caves",
+        "description": "Ancient Buddhist art."
+      },
+      {
+        "day": 4,
+        "title": "Ellora Caves",
+        "description": "Magnificent rock-cut architecture."
+      },
+      {
+        "day": 5,
+        "title": "Aurangabad to Pune",
+        "description": "History and modern growth."
+      },
+      {
+        "day": 6,
+        "title": "Lonavala & Khandala",
+        "description": "Hill station retreat."
+      },
+      {
+        "day": 7,
+        "title": "Departure",
+        "description": "Return from Mumbai."
+      }
     ]
   },
   {
@@ -737,12 +872,36 @@
     "highlights": "Madurai Meenakshi, Rameshwaram, Mahabalipuram",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Chennai Arrival", "description": "Visit Marina Beach." },
-      { "day": 2, "title": "Mahabalipuram", "description": "Shore Temple and Pancha Rathas." },
-      { "day": 3, "title": "Pondicherry", "description": "French Colonial heritage." },
-      { "day": 4, "title": "Madurai", "description": "Meenakshi Temple Evening Aarti." },
-      { "day": 5, "title": "Rameshwaram", "description": "Holy dip and Jyotirlinga." },
-      { "day": 6, "title": "Departure", "description": "Drop at Madurai airport." }
+      {
+        "day": 1,
+        "title": "Chennai Arrival",
+        "description": "Visit Marina Beach."
+      },
+      {
+        "day": 2,
+        "title": "Mahabalipuram",
+        "description": "Shore Temple and Pancha Rathas."
+      },
+      {
+        "day": 3,
+        "title": "Pondicherry",
+        "description": "French Colonial heritage."
+      },
+      {
+        "day": 4,
+        "title": "Madurai",
+        "description": "Meenakshi Temple Evening Aarti."
+      },
+      {
+        "day": 5,
+        "title": "Rameshwaram",
+        "description": "Holy dip and Jyotirlinga."
+      },
+      {
+        "day": 6,
+        "title": "Departure",
+        "description": "Drop at Madurai airport."
+      }
     ]
   },
   {
@@ -767,11 +926,31 @@
     "highlights": "Jagannath Temple, Sun Temple Konark, Chilika Lake",
     "isFeatured": false,
     "itinerary": [
-      { "day": 1, "title": "Bhubaneswar Arrival", "description": "Temple city tour." },
-      { "day": 2, "title": "Puri", "description": "Jagannath Temple Darshan." },
-      { "day": 3, "title": "Konark Sun Temple", "description": "Black Pagoda architecture." },
-      { "day": 4, "title": "Chilika Lake", "description": "Irawaddy Dolphin sighting." },
-      { "day": 5, "title": "Departure", "description": "Return to Bhubaneswar." }
+      {
+        "day": 1,
+        "title": "Bhubaneswar Arrival",
+        "description": "Temple city tour."
+      },
+      {
+        "day": 2,
+        "title": "Puri",
+        "description": "Jagannath Temple Darshan."
+      },
+      {
+        "day": 3,
+        "title": "Konark Sun Temple",
+        "description": "Black Pagoda architecture."
+      },
+      {
+        "day": 4,
+        "title": "Chilika Lake",
+        "description": "Irawaddy Dolphin sighting."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Return to Bhubaneswar."
+      }
     ]
   },
   {
@@ -796,12 +975,36 @@
     "highlights": "Kanha Tiger Reserve, Khajuraho Temples, Gwalior Fort",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Khajuraho Arrival", "description": "Western Group of Temples." },
-      { "day": 2, "title": "Orchha", "description": "Riverside heritage." },
-      { "day": 3, "title": "Kanha Transfer", "description": "Drive to Tiger Country." },
-      { "day": 4, "title": "Wildlife Safari", "description": "Morning and Evening Jeep Safaris." },
-      { "day": 5, "title": "Pax Sightseeing", "description": "Local tribal culture." },
-      { "day": 6, "title": "Departure", "description": "Drop at Jabalpur." }
+      {
+        "day": 1,
+        "title": "Khajuraho Arrival",
+        "description": "Western Group of Temples."
+      },
+      {
+        "day": 2,
+        "title": "Orchha",
+        "description": "Riverside heritage."
+      },
+      {
+        "day": 3,
+        "title": "Kanha Transfer",
+        "description": "Drive to Tiger Country."
+      },
+      {
+        "day": 4,
+        "title": "Wildlife Safari",
+        "description": "Morning and Evening Jeep Safaris."
+      },
+      {
+        "day": 5,
+        "title": "Pax Sightseeing",
+        "description": "Local tribal culture."
+      },
+      {
+        "day": 6,
+        "title": "Departure",
+        "description": "Drop at Jabalpur."
+      }
     ]
   },
   {
@@ -826,11 +1029,31 @@
     "highlights": "One-horned Rhino, Brahmaputra River, Kamakhya Temple",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Guwahati Arrival", "description": "Cruise on Brahmaputra." },
-      { "day": 2, "title": "Kaziranga", "description": "Jungle Safari." },
-      { "day": 3, "title": "Elephant Safari", "description": "Rhino spotting." },
-      { "day": 4, "title": "Tea Garden Tour", "description": "Tea tasting experience." },
-      { "day": 5, "title": "Departure", "description": "Drop at Guwahati." }
+      {
+        "day": 1,
+        "title": "Guwahati Arrival",
+        "description": "Cruise on Brahmaputra."
+      },
+      {
+        "day": 2,
+        "title": "Kaziranga",
+        "description": "Jungle Safari."
+      },
+      {
+        "day": 3,
+        "title": "Elephant Safari",
+        "description": "Rhino spotting."
+      },
+      {
+        "day": 4,
+        "title": "Tea Garden Tour",
+        "description": "Tea tasting experience."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Drop at Guwahati."
+      }
     ]
   },
   {
@@ -855,11 +1078,31 @@
     "highlights": "Victoria Memorial, Royal Bengal Tiger, Dakshineswar Temple",
     "isFeatured": false,
     "itinerary": [
-      { "day": 1, "title": "Kolkata Arrival", "description": "Street food tour." },
-      { "day": 2, "title": "Kolkata Sightseeing", "description": "Heritage buildings." },
-      { "day": 3, "title": "Sundarbans Transfer", "description": "Boat ride to mangrove forest." },
-      { "day": 4, "title": "Mangrove Exploration", "description": "Watchtowers and wildlife." },
-      { "day": 5, "title": "Departure", "description": "Return to Kolkata." }
+      {
+        "day": 1,
+        "title": "Kolkata Arrival",
+        "description": "Street food tour."
+      },
+      {
+        "day": 2,
+        "title": "Kolkata Sightseeing",
+        "description": "Heritage buildings."
+      },
+      {
+        "day": 3,
+        "title": "Sundarbans Transfer",
+        "description": "Boat ride to mangrove forest."
+      },
+      {
+        "day": 4,
+        "title": "Mangrove Exploration",
+        "description": "Watchtowers and wildlife."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Return to Kolkata."
+      }
     ]
   },
   {
@@ -884,10 +1127,26 @@
     "highlights": "Golden Temple, Jallianwala Bagh, Wagah Border",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Amritsar Arrival", "description": "Golden Temple night visit." },
-      { "day": 2, "title": "Wagah Border", "description": "Lowering of flags ceremony." },
-      { "day": 3, "title": "Ludhiana Heritage", "description": "Village life experience." },
-      { "day": 4, "title": "Departure", "description": "Return from Amritsar." }
+      {
+        "day": 1,
+        "title": "Amritsar Arrival",
+        "description": "Golden Temple night visit."
+      },
+      {
+        "day": 2,
+        "title": "Wagah Border",
+        "description": "Lowering of flags ceremony."
+      },
+      {
+        "day": 3,
+        "title": "Ludhiana Heritage",
+        "description": "Village life experience."
+      },
+      {
+        "day": 4,
+        "title": "Departure",
+        "description": "Return from Amritsar."
+      }
     ]
   },
   {
@@ -912,11 +1171,31 @@
     "highlights": "Bangaram Island, Scuba Diving, Sunsets",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Agatti Arrival", "description": "Beach transfer." },
-      { "day": 2, "title": "Kadmat Island", "description": "Snorkeling and boat ride." },
-      { "day": 3, "title": "Bangaram Island", "description": "Day trip to uninhabited island." },
-      { "day": 4, "title": "Water Sports", "description": "Scuba and Kayaking." },
-      { "day": 5, "title": "Departure", "description": "Return to Agatti." }
+      {
+        "day": 1,
+        "title": "Agatti Arrival",
+        "description": "Beach transfer."
+      },
+      {
+        "day": 2,
+        "title": "Kadmat Island",
+        "description": "Snorkeling and boat ride."
+      },
+      {
+        "day": 3,
+        "title": "Bangaram Island",
+        "description": "Day trip to uninhabited island."
+      },
+      {
+        "day": 4,
+        "title": "Water Sports",
+        "description": "Scuba and Kayaking."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Return to Agatti."
+      }
     ]
   },
   {
@@ -941,9 +1220,21 @@
     "highlights": "Assi Ghat, Kashi Vishwanath, Sarnath",
     "isFeatured": false,
     "itinerary": [
-      { "day": 1, "title": "Arrival", "description": "Evening Ganga Aarti." },
-      { "day": 2, "title": "Temple Tour", "description": "Kashi Vishwanath and Sarnath." },
-      { "day": 3, "title": "Departure", "description": "Drop at airport/railway station." }
+      {
+        "day": 1,
+        "title": "Arrival",
+        "description": "Evening Ganga Aarti."
+      },
+      {
+        "day": 2,
+        "title": "Temple Tour",
+        "description": "Kashi Vishwanath and Sarnath."
+      },
+      {
+        "day": 3,
+        "title": "Departure",
+        "description": "Drop at airport/railway station."
+      }
     ]
   },
   {
@@ -968,10 +1259,26 @@
     "highlights": "French Quarter, Rock Beach, Auroville",
     "isFeatured": false,
     "itinerary": [
-      { "day": 1, "title": "Arrival", "description": "Beach walk." },
-      { "day": 2, "title": "French Town", "description": "Architecture and Bakeries." },
-      { "day": 3, "title": "Auroville", "description": "Matrimandir meditation." },
-      { "day": 4, "title": "Departure", "description": "Final shopping." }
+      {
+        "day": 1,
+        "title": "Arrival",
+        "description": "Beach walk."
+      },
+      {
+        "day": 2,
+        "title": "French Town",
+        "description": "Architecture and Bakeries."
+      },
+      {
+        "day": 3,
+        "title": "Auroville",
+        "description": "Matrimandir meditation."
+      },
+      {
+        "day": 4,
+        "title": "Departure",
+        "description": "Final shopping."
+      }
     ]
   },
   {
@@ -996,13 +1303,41 @@
     "highlights": "Tawang Monastery, Sela Pass, Bum La Pass",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Guwahati Arrival", "description": "To Bhalukpong." },
-      { "day": 2, "title": "Dirang", "description": "Monasteries and Valleys." },
-      { "day": 3, "title": "Tawang", "description": "Sela Pass crossing." },
-      { "day": 4, "title": "Tawang Sightseeing", "description": "Asia's largest monastery." },
-      { "day": 5, "title": "Bum La Pass", "description": "Indo-China border." },
-      { "day": 6, "title": "Bomdila", "description": "Return leg." },
-      { "day": 7, "title": "Departure", "description": "Drop at Guwahati." }
+      {
+        "day": 1,
+        "title": "Guwahati Arrival",
+        "description": "To Bhalukpong."
+      },
+      {
+        "day": 2,
+        "title": "Dirang",
+        "description": "Monasteries and Valleys."
+      },
+      {
+        "day": 3,
+        "title": "Tawang",
+        "description": "Sela Pass crossing."
+      },
+      {
+        "day": 4,
+        "title": "Tawang Sightseeing",
+        "description": "Asia's largest monastery."
+      },
+      {
+        "day": 5,
+        "title": "Bum La Pass",
+        "description": "Indo-China border."
+      },
+      {
+        "day": 6,
+        "title": "Bomdila",
+        "description": "Return leg."
+      },
+      {
+        "day": 7,
+        "title": "Departure",
+        "description": "Drop at Guwahati."
+      }
     ]
   },
   {
@@ -1027,10 +1362,26 @@
     "highlights": "Hundru Falls, Baba Dham Deoghar, Ranchi Lake",
     "isFeatured": false,
     "itinerary": [
-      { "day": 1, "title": "Ranchi Arrival", "description": "Local city tour." },
-      { "day": 2, "title": "Waterfall Excursion", "description": "Hundru and Jonha Falls." },
-      { "day": 3, "title": "Deoghar Transfer", "description": "Spiritual visit." },
-      { "day": 4, "title": "Departure", "description": "Return leg." }
+      {
+        "day": 1,
+        "title": "Ranchi Arrival",
+        "description": "Local city tour."
+      },
+      {
+        "day": 2,
+        "title": "Waterfall Excursion",
+        "description": "Hundru and Jonha Falls."
+      },
+      {
+        "day": 3,
+        "title": "Deoghar Transfer",
+        "description": "Spiritual visit."
+      },
+      {
+        "day": 4,
+        "title": "Departure",
+        "description": "Return leg."
+      }
     ]
   },
   {
@@ -1053,11 +1404,31 @@
     "highlights": "Chitrakote Falls, Bastar Craft, Temples",
     "isFeatured": false,
     "itinerary": [
-      { "day": 1, "title": "Raipur Arrival", "description": "Transfer to Jagdalpur." },
-      { "day": 2, "title": "Chitrakote Falls", "description": "Niagra of India." },
-      { "day": 3, "title": "Kanger Valley", "description": "Limestone caves." },
-      { "day": 4, "title": "Tribal Market", "description": "Local art and culture." },
-      { "day": 5, "title": "Departure", "description": "Return from Raipur." }
+      {
+        "day": 1,
+        "title": "Raipur Arrival",
+        "description": "Transfer to Jagdalpur."
+      },
+      {
+        "day": 2,
+        "title": "Chitrakote Falls",
+        "description": "Niagra of India."
+      },
+      {
+        "day": 3,
+        "title": "Kanger Valley",
+        "description": "Limestone caves."
+      },
+      {
+        "day": 4,
+        "title": "Tribal Market",
+        "description": "Local art and culture."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Return from Raipur."
+      }
     ]
   },
   {
@@ -1080,11 +1451,31 @@
     "highlights": "Hornbill Festival, Kohima War Cemetery, Dzuko Valley",
     "isFeatured": true,
     "itinerary": [
-      { "day": 1, "title": "Dimapur Arrival", "description": "Drive to Kohima." },
-      { "day": 2, "title": "Kohima Sightseeing", "description": "War cemetery and museum." },
-      { "day": 3, "title": "Khonoma Village", "description": "India's first green village." },
-      { "day": 4, "title": "Dzuko Valley Trek", "description": "Nature hike." },
-      { "day": 5, "title": "Departure", "description": "Return to Dimapur." }
+      {
+        "day": 1,
+        "title": "Dimapur Arrival",
+        "description": "Drive to Kohima."
+      },
+      {
+        "day": 2,
+        "title": "Kohima Sightseeing",
+        "description": "War cemetery and museum."
+      },
+      {
+        "day": 3,
+        "title": "Khonoma Village",
+        "description": "India's first green village."
+      },
+      {
+        "day": 4,
+        "title": "Dzuko Valley Trek",
+        "description": "Nature hike."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Return to Dimapur."
+      }
     ]
   }
 ]
