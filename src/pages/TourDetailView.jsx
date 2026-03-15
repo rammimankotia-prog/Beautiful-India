@@ -1101,7 +1101,7 @@ const TourDetailView = () => {
       {/* Customize & Get Quote Modal */}
       {isQuoteModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white md:rounded-3xl w-full h-full md:h-auto max-w-[850px] md:max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
+          <div className="bg-white md:rounded-3xl w-full h-full md:h-[680px] max-w-[800px] md:max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
             {/* Close Button */}
             <button 
               onClick={() => setIsQuoteModalOpen(false)}
@@ -1111,7 +1111,7 @@ const TourDetailView = () => {
             </button>
 
             {/* Left Pane: Instructions & Trust */}
-            <div className="w-full md:w-[38%] bg-[#f8fcfb] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100">
+            <div className="w-full md:w-[35%] bg-[#f8fcfb] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100">
               <h2 className="text-[28px] font-black text-[#006D77] mb-8">How It Works</h2>
               <div className="space-y-8">
                 <div className="flex gap-4 items-start">
@@ -1154,7 +1154,7 @@ const TourDetailView = () => {
             </div>
 
             {/* Right Pane: Form */}
-            <div className="w-full md:w-[62%] flex flex-col h-full bg-white relative">
+            <div className="w-full md:w-[65%] flex flex-col h-full bg-white relative">
                {/* Modal Header for Mobile */}
                <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-100 bg-white sticky top-0 z-20">
                   <div className="flex items-center gap-2">
@@ -1471,32 +1471,32 @@ const TourDetailView = () => {
                    </div>
                  )}
                 </form>
+              </div>
 
-                {/* Integrated Action Button */}
-                <div className="mt-8 mb-4">
-                   <button 
-                     type="button"
-                     onClick={() => {
-                       if (modalStep < 3) setModalStep(modalStep + 1);
-                       else handleLeadSubmit();
-                     }}
-                     className="w-full h-14 bg-[#ff5a5f] text-white font-black rounded-2xl hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-red-500/20 group"
-                   >
-                     <span>{modalStep === 3 ? 'GET FREE QUOTES' : 'NEXT'}</span>
-                     <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">trending_flat</span>
-                   </button>
-                   
-                   {modalStep > 1 && (
-                     <button 
-                       type="button"
-                       onClick={() => setModalStep(modalStep - 1)}
-                       className="w-full mt-3 py-2 text-slate-400 font-bold text-sm hover:text-slate-600 transition-colors uppercase tracking-widest"
-                     >
-                       Back
-                     </button>
-                   )}
-                </div>
-               </div>
+              {/* Fixed Action Button Footer (Inside right pane) */}
+              <div className="p-6 md:px-10 md:pb-8 pt-4 border-t border-slate-100 bg-white">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (modalStep < 3) setModalStep(modalStep + 1);
+                    else handleLeadSubmit();
+                  }}
+                  className="w-full h-14 bg-[#ff5a5f] text-white font-black rounded-2xl hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-red-500/20 group"
+                >
+                  <span>{modalStep === 3 ? 'GET FREE QUOTES' : 'NEXT'}</span>
+                  <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">trending_flat</span>
+                </button>
+                
+                {modalStep > 1 && (
+                  <button 
+                    type="button"
+                    onClick={() => setModalStep(modalStep - 1)}
+                    className="w-full mt-3 py-2 text-slate-400 font-bold text-sm hover:text-slate-600 transition-colors uppercase tracking-widest"
+                  >
+                    Back
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
