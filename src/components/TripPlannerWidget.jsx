@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const TripPlannerWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { sender: 'bot', text: 'Welcome to the Trip Planner! Where do you want to travel?' }
+        { sender: 'bot', text: "Namaste, Welcome to the The Beautiful India- Bharat Darshan. My Name is 'Maayra' Where do you want to travel?" }
     ]);
     const [inputValue, setInputValue] = useState('');
     const [step, setStep] = useState(0);
@@ -79,7 +79,7 @@ const TripPlannerWidget = () => {
             
             // Post to backend
             // Mock submission for static site
-            console.log("Trip Planner Lead submitted (mocked):", {
+            console.log("Lead submitted via Bharat Darshan Mitra (mocked):", {
                 name: updatedData.name,
                 to: updatedData.destination,
                 departureDate: updatedData.date,
@@ -107,9 +107,9 @@ const TripPlannerWidget = () => {
             {!isOpen && (
                 <button 
                     onClick={() => setIsOpen(true)}
-                    className="w-16 h-16 bg-[#0a6c75] rounded-full flex items-center justify-center shadow-2xl hover:bg-[#07565e] transition-transform hover:scale-105"
+                    className="w-16 h-16 bg-[#0a6c75] rounded-full flex items-center justify-center shadow-2xl hover:bg-[#07565e] transition-transform hover:scale-105 p-2"
                 >
-                    <span className="material-symbols-outlined text-white text-[32px]">chat</span>
+                    <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="Chat" className="w-full h-full object-contain filter brightness-0 invert" />
                 </button>
             )}
 
@@ -117,10 +117,10 @@ const TripPlannerWidget = () => {
             {isOpen && (
                 <div className="w-[350px] h-[500px] bg-white rounded-t-xl rounded-bl-xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-fade-in-up">
                     {/* Header */}
-                    <div className="bg-[#0a6c75] text-white p-4 flex items-center justify-between shadow-sm z-10">
+                    <div className="bg-[#0a6c75] text-white p-4 flex items-center justify-between shadow-sm z-10 transition-all">
                         <div className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[20px]">explore</span>
-                            <span className="font-extrabold tracking-wide text-[16px]">Tour Expert ' Maayra</span>
+                            <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="Logo" className="w-8 h-8 object-contain filter brightness-0 invert" />
+                            <span className="font-extrabold tracking-wide text-[16px]">Bharat Darshan Mitra</span>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="hover:text-slate-200 transition-colors">
                             <span className="material-symbols-outlined text-[20px]">close</span>
