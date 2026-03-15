@@ -175,7 +175,7 @@ const TourDetailView = () => {
   };
 
   const handleBookNow = () => {
-    navigate('/checkout/traveler', { state: { tour } });
+    setIsQuoteModalOpen(true);
   };
 
   const similarTours = (() => {
