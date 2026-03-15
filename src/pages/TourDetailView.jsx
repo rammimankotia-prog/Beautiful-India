@@ -388,30 +388,96 @@ const TourDetailView = () => {
                     )}
                   </div>
                   {/* Description */}
-                  <div className="prose prose-lg dark:prose-invert  text-text-secondary-light dark:text-text-secondary-dark leading-relaxed">
-                    <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Overview</h3>
-                    <p className="mb-4">
-                      {tour.description}
-                    </p>
-                    <p>
-                      Embark on an unforgettable journey specifically designed for the discerning traveler. Our {tour.duration} {tour.title} package combines thrilling activities with hand-picked premium accommodations. From the moment you arrive, every detail is taken care of by our professional guides.
-                    </p>
-                  </div>
-
-                  {/* Highlights */}
-                  {tour.highlights && (
-                    <div className="flex flex-col gap-6 mt-4 p-8 border border-slate-200 dark:border-slate-800 rounded-[2px] bg-white dark:bg-slate-900 shadow-sm border-t-0 border-l-0 border-r-0 border-b-2">
-                      <h3 className="text-[26px] font-bold text-slate-800 dark:text-slate-200">Highlights</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                        {tour.highlights.split('\n').filter(Boolean).map((highlight, idx) => (
-                          <div key={idx} className="flex gap-4 text-[#334155] dark:text-slate-300 items-start">
-                            <span className="material-symbols-outlined text-[#0a6c75] text-[20px] shrink-0 font-bold" style={{fontVariationSettings: "'FILL' 0, 'wght' 700"}}>check</span>
-                            <span className="leading-relaxed text-[16px]">{highlight}</span>
+                  {/* ── Overview & Highlights ── */}
+                  <div className="flex flex-col gap-8">
+                    {/* Overview */}
+                    <div className="relative">
+                      <div className="flex items-center gap-3 mb-6">
+                        <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
+                          <span className="material-symbols-outlined text-[14px]">info</span>
+                          Tour Overview
+                        </span>
+                      </div>
+                      
+                      {/* Price Guide Card */}
+                      <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-orange-600 dark:text-orange-400">payments</span>
                           </div>
-                        ))}
+                          <div>
+                            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estimated Price Guide</p>
+                            <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">
+                              ₹{tour.price?.toLocaleString()} - ₹{(tour.price + 10000)?.toLocaleString()}
+                              <span className="text-sm font-medium text-slate-400 ml-2">/ per person</span>
+                            </h4>
+                          </div>
+                        </div>
+                        <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">calendar_month</span>
+                          </div>
+                          <div>
+                            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Package Duration</p>
+                            <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">{tour.duration}</h4>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="prose prose-lg dark:prose-invert max-w-none">
+                        <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed italic border-l-4 border-primary/30 pl-6 py-1 mb-8">
+                          "{tour.description}"
+                        </p>
+                        <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-[17px] space-y-4">
+                          <p>
+                            Embark on an unforgettable journey specifically designed for the discerning traveler. Our <span className="font-bold text-slate-800 dark:text-slate-200">{tour.duration} {tour.title}</span> combines thrilling activities with hand-picked premium accommodations.
+                          </p>
+                          <p>
+                            From the moment you arrive, every detail is taken care of by our professional guides, ensuring a seamless and enriching travel experience that captures the true essence of <span className="text-primary font-semibold">{tour.location}</span>.
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  )}
+
+                    {/* Highlights */}
+                    {tour.highlights && (
+                      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl shadow-slate-200/50 dark:shadow-none">
+                        {/* Highlights Header */}
+                        <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="material-symbols-outlined text-primary text-xl" style={{fontVariationSettings: "'FILL' 1"}}>auto_awesome</span>
+                            </div>
+                            <h3 className="text-xl font-black text-slate-800 dark:text-slate-100">Package Highlights</h3>
+                          </div>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">Top Rated Experience</p>
+                        </div>
+
+                        {/* Highlights Grid */}
+                        <div className="p-8">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                            {tour.highlights.split('\n').filter(Boolean).map((highlight, idx) => (
+                              <div key={idx} className="group flex gap-4 items-start transition-all hover:translate-x-1">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-transform">
+                                  <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-[16px] font-black">done</span>
+                                </span>
+                                <span className="text-[15px] font-medium text-slate-700 dark:text-slate-300 leading-snug group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{highlight}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Subtle Footer/Tagline */}
+                        <div className="px-8 py-4 bg-primary/5 border-t border-primary/10">
+                          <p className="text-[11px] text-primary/70 font-bold uppercase tracking-[0.2em] flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                            Premium inclusions for a worry-free holiday
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Itinerary — TravelTriangle Style */}
                   <div className="flex flex-col gap-4 mt-4">
