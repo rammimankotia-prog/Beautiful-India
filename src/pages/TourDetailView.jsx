@@ -285,9 +285,9 @@ const TourDetailView = () => {
       <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
         {/* Top Navigation */}
 
-        <main className="flex h-full grow flex-col pb-20">
-          <div className="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
-            <div className="flex flex-col flex-1 w-full gap-6">
+        <main className="flex h-full grow flex-col pb-10 md:pb-20">
+          <div className="px-3 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-2 md:py-5">
+            <div className="flex flex-col flex-1 w-full gap-4 md:gap-6">
 
               {/* ── Premium Header ── */}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-8">
@@ -298,9 +298,9 @@ const TourDetailView = () => {
                     <span className="material-symbols-outlined text-[13px]">explore</span>
                     {tour.destination || 'India'} · {tour.stateRegion || ''}
                   </p>
-                  <h1 className="text-4xl md:text-5xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white">{tour.title}</h1>
+                  <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight text-slate-900 dark:text-white">{tour.title}</h1>
                   {/* Info Pills */}
-                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                  <div className="flex flex-wrap items-center gap-2 mt-1 mb-2">
                     <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-bold">
                       <span className="material-symbols-outlined text-[14px]">schedule</span>
                       {tour.duration}
@@ -325,11 +325,11 @@ const TourDetailView = () => {
                 </div>
 
                 {/* Right: Price + CTA */}
-                <div className="flex flex-col items-end gap-3 shrink-0">
-                  <div className="text-right">
-                    <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest">Starting from</p>
-                    <p className="text-3xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.price, true)}</p>
-                    <p className="text-xs text-slate-400 font-bold mt-0.5 uppercase">{tour.priceBasis === 'per_package' ? 'Per Package' : 'Per Person'}</p>
+                <div className="flex flex-col items-start md:items-end gap-3 shrink-0 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+                  <div className="text-left md:text-right">
+                    <p className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase tracking-widest">Starting from</p>
+                    <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.price, true)}</p>
+                    <p className="text-[10px] md:text-xs text-slate-400 font-bold mt-0.5 uppercase">{tour.priceBasis === 'per_package' ? 'Per Package' : 'Per Person'}</p>
                   </div>
                   {(tour.nature === 'group' || tour.nature === 'private') && tour.minPersons > 1 && (
                     <span className="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wide">
@@ -338,7 +338,7 @@ const TourDetailView = () => {
                   )}
                   <button
                     onClick={handleBookNow}
-                    className="flex items-center gap-2 cursor-pointer px-8 h-12 bg-primary text-white text-sm font-black rounded-xl hover:bg-primary/90 active:scale-95 transition-all shadow-lg shadow-primary/30 uppercase tracking-wide"
+                    className="flex items-center justify-center gap-2 cursor-pointer w-full md:w-auto px-8 h-12 bg-primary text-white text-sm font-black rounded-xl hover:bg-primary/90 active:scale-95 transition-all shadow-lg shadow-primary/30 uppercase tracking-wide"
                   >
                     <span className="material-symbols-outlined text-[18px]">calendar_month</span>
                     Book Now
@@ -420,12 +420,12 @@ const TourDetailView = () => {
                       // 4+ photos — 2-col right with "View All" on last cell
                       const extraCount = Math.max(count - 5, 0);
                       return (
-                        <div className="grid grid-cols-4 grid-rows-2 gap-3" style={{ height: '480px' }}>
-                          <Thumb img={userPhotos[0]} className="col-span-2 row-span-2" large />
-                          <Thumb img={userPhotos[1]} className="h-full" />
-                          <Thumb img={userPhotos[2]} className="h-full" />
-                          {count >= 4 ? <Thumb img={userPhotos[3]} className="h-full" /> : <div className="h-full rounded-2xl bg-slate-100 dark:bg-slate-800" />}
-                          <div className="relative overflow-hidden rounded-2xl cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 h-full">
+                        <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-none md:grid-rows-2 gap-2 md:gap-3 h-[280px] md:h-[480px]">
+                          <Thumb img={userPhotos[0]} className="col-span-2 row-span-1 md:row-span-2" large />
+                          <Thumb img={userPhotos[1]} className="h-full hidden md:block" />
+                          <Thumb img={userPhotos[2]} className="h-full hidden md:block" />
+                          {count >= 4 ? <Thumb img={userPhotos[3]} className="h-full hidden md:block" /> : <div className="h-full rounded-2xl bg-slate-100 dark:bg-slate-800 hidden md:block" />}
+                          <div className="relative overflow-hidden rounded-2xl cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 h-full hidden md:block">
                             <div className="absolute inset-0 bg-center bg-cover transition-transform duration-700 group-hover:scale-110"
                               style={{ backgroundImage: `url('${(userPhotos[4] || userPhotos[count - 1]).url}')` }} />
                             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/60 transition-colors duration-300 flex flex-col items-center justify-center gap-1">
@@ -474,11 +474,11 @@ const TourDetailView = () => {
               })()}
 
               {/* Content Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 mt-4">
                 {/* Main Content (Left Column) */}
                 <div className="lg:col-span-2 flex flex-col gap-8">
                   {/* Tags */}
-                  <div className="flex gap-3 flex-wrap">
+                  <div className="flex gap-2 min-[400px]:gap-3 flex-wrap mb-2">
                     <div className="flex h-8 items-center justify-center gap-x-2 rounded-full bg-primary/10 px-4">
                       <span className="material-symbols-outlined text-primary text-sm">explore</span>
                       <p className="text-primary text-sm font-semibold leading-normal">{tour.nature || 'Adventure'}</p>
@@ -499,7 +499,7 @@ const TourDetailView = () => {
                   <div id="overview" className="flex flex-col gap-8">
                     {/* Overview */}
                     <div className="relative">
-                      <div className="flex items-center gap-3 mb-6">
+                      <div className="flex items-center gap-3 mb-4 md:mb-6">
                         <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
                           <span className="material-symbols-outlined text-[14px]">info</span>
                           Tour Overview
@@ -828,10 +828,10 @@ const TourDetailView = () => {
                     </div>
 
                     {/* Middle Pricing Card */}
-                    <div className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-4 border-b-2">
-                       <div className="flex justify-between items-start">
-                          <div>
-                            <p className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Starting from:</p>
+                    <div className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 p-4 md:p-5 flex flex-col gap-4 border-b-2">
+                       <div className="flex flex-col min-[400px]:flex-row justify-between items-start gap-4">
+                          <div className="w-full min-[400px]:w-auto">
+                            <p className="text-[10px] md:text-[11px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Starting from:</p>
                             <div className="flex items-baseline gap-2">
                                <span className="text-2xl font-black text-emerald-600 dark:text-emerald-500">{formatPrice(tour.price, true)}/-</span>
                                <span className="text-sm text-slate-400 line-through font-medium">{formatPrice(Math.round(tour.price * 1.15), true)}/-</span>
@@ -839,9 +839,9 @@ const TourDetailView = () => {
                             <p className="text-[11px] text-slate-500 font-bold mt-1">Per {tour.priceBasis === 'per_package' ? 'Package' : 'Person on twin sharing'}.</p>
                             <p className="text-[10px] text-orange-600 dark:text-orange-400 font-black mt-1 uppercase italic">Hotel cost may vary - submit details for rates!</p>
                           </div>
-                          <div className="text-right">
-                             <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">Price For Month</p>
-                             <select className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-1 text-xs font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer">
+                          <div className="w-full min-[400px]:w-auto flex flex-row min-[400px]:flex-col justify-between items-center min-[400px]:items-end gap-2">
+                             <p className="text-[10px] text-slate-400 font-bold uppercase mb-0 min-[400px]:mb-1">Month</p>
+                             <select className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-1 text-xs font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer flex-1 min-[400px]:flex-none">
                                 {availableMonths.map(month => (
                                   <option key={month} value={month}>{month}</option>
                                 ))}
