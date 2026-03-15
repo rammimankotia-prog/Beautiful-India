@@ -39,7 +39,9 @@ const AdminNewTourUploadForm = () => {
     bookingEnd: '',
     availableFrom: '',
     availableTo: '',
-    cityPath: ''
+    cityPath: '',
+    hotelCategory: [], 
+    accommodationType: []
   });
 
   const [categories, setCategories] = React.useState({
@@ -87,7 +89,20 @@ const AdminNewTourUploadForm = () => {
       { value: 'cultural',  label: 'Cultural',  icon: '🏛️' },
     ],
     natures: ['group', 'private', 'self-drive', 'cruise', 'solo', 'honeymoon'],
-    styles: ['budget', 'standard', 'comfort', 'luxury', 'ultra-luxury']
+    styles: ['budget', 'standard', 'comfort', 'luxury', 'ultra-luxury'],
+    hotelCategories: [
+      { value: '3_star', label: '3 Star', icon: '⭐' },
+      { value: '4_star', label: '4 Star', icon: '⭐⭐' },
+      { value: '5_star', label: '5 Star', icon: '⭐⭐⭐' },
+      { value: 'budget', label: 'Budget', icon: '💰' }
+    ],
+    accommodationTypes: [
+      { value: 'hotel', label: 'Hotel', icon: '🏨' },
+      { value: 'resort', label: 'Resort', icon: '🌴' },
+      { value: 'houseboat', label: 'Houseboat', icon: '🚢' },
+      { value: 'villa', label: 'Villa', icon: '🏡' },
+      { value: 'apartment', label: 'Apartment', icon: '🏢' }
+    ]
   });
 
   // Canonical theme icon/label map — source of truth for the chip renderer
@@ -384,6 +399,72 @@ const AdminNewTourUploadForm = () => {
 />
 </label>
 </div>
+
+{/* ── HOTEL & ACCOMMODATION (Shifted here - Multi-select) ── */}
+<div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50 dark:bg-slate-800/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
+  <div>
+    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+      <span className="material-symbols-outlined text-[18px]">star</span> Hotel Category
+      <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Multi-select</span>
+    </p>
+    <div className="flex flex-wrap gap-2">
+      {categories.hotelCategories.map(cat => {
+        const isSelected = (formData.hotelCategory || []).includes(cat.value);
+        return (
+          <button
+            key={cat.value}
+            type="button"
+            onClick={() => {
+              const current = formData.hotelCategory || [];
+              const updated = current.includes(cat.value)
+                ? current.filter(v => v !== cat.value)
+                : [...current, cat.value];
+              setFormData(prev => ({ ...prev, hotelCategory: updated }));
+            }}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
+              isSelected
+                ? 'bg-primary text-white border-primary shadow-md transform scale-105'
+                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/50'
+            }`}
+          >
+            <span>{cat.icon}</span> {cat.label}
+          </button>
+        );
+      })}
+    </div>
+  </div>
+  <div>
+    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+      <span className="material-symbols-outlined text-[18px]">apartment</span> Accommodation Type
+      <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Multi-select</span>
+    </p>
+    <div className="flex flex-wrap gap-2">
+      {categories.accommodationTypes.map(type => {
+        const isSelected = (formData.accommodationType || []).includes(type.value);
+        return (
+          <button
+            key={type.value}
+            type="button"
+            onClick={() => {
+              const current = formData.accommodationType || [];
+              const updated = current.includes(type.value)
+                ? current.filter(v => v !== type.value)
+                : [...current, type.value];
+              setFormData(prev => ({ ...prev, accommodationType: updated }));
+            }}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
+              isSelected
+                ? 'bg-primary text-white border-primary shadow-md transform scale-105'
+                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/50'
+            }`}
+          >
+            <span>{type.icon}</span> {type.label}
+          </button>
+        );
+      })}
+    </div>
+  </div>
+</div>
 {/* City Path */}
 <div className="col-span-1 md:col-span-2">
 <label className="flex flex-col flex-1">
@@ -435,97 +516,10 @@ const AdminNewTourUploadForm = () => {
 ></textarea>
 </label>
 </div>
-{/* Inclusions & Exclusions */}
-<div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Inclusions (one per line)</span>
-<textarea
-  name="inclusions"
-  value={formData.inclusions || ''}
-  onChange={handleChange}
-  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
-  placeholder="Accommodation&#10;Meals&#10;Transportation"
-></textarea>
-</label>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Exclusions (one per line)</span>
-<textarea
-  name="exclusions"
-  value={formData.exclusions || ''}
-  onChange={handleChange}
-  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
-  placeholder="Visas&#10;Personal travel insurance&#10;Optional activities"
-></textarea>
-</label>
-</div>
 </div>
 </div>
 
-{/* Section 3: Availability & Booking Validity */}
-<div className="space-y-6">
-<h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Tour Availability & Booking Validity</h2>
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-  {/* Booking Validity */}
-  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
-    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
-      <span className="material-symbols-outlined text-sm">calendar_month</span>
-      Booking Validity Window
-    </h3>
-    <div className="grid grid-cols-1 gap-4">
-      <label className="flex flex-col">
-        <span className="text-slate-600 dark:text-slate-400 text-xs font-medium pb-1">Booking Start Date</span>
-        <input 
-          type="date" 
-          name="bookingStart"
-          value={formData.bookingStart || ''}
-          onChange={handleChange}
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </label>
-      <label className="flex flex-col">
-        <span className="text-slate-600 dark:text-slate-400 text-xs font-medium pb-1">Booking End Date</span>
-        <input 
-          type="date" 
-          name="bookingEnd"
-          value={formData.bookingEnd || ''}
-          onChange={handleChange}
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </label>
-    </div>
-  </div>
 
-  {/* Tour Availability */}
-  <div className="p-4 bg-primary/5 rounded-xl border border-dashed border-primary/20">
-    <h3 className="text-sm font-bold text-primary mb-4 flex items-center gap-2">
-      <span className="material-symbols-outlined text-sm">event_available</span>
-      Tour Operation Period
-    </h3>
-    <div className="grid grid-cols-1 gap-4">
-      <label className="flex flex-col">
-        <span className="text-primary/70 text-xs font-medium pb-1">Available From</span>
-        <input 
-          type="date" 
-          name="availableFrom"
-          value={formData.availableFrom || ''}
-          onChange={handleChange}
-          className="w-full rounded-lg border border-primary/20 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </label>
-      <label className="flex flex-col">
-        <span className="text-primary/70 text-xs font-medium pb-1">Available To</span>
-        <input 
-          type="date" 
-          name="availableTo"
-          value={formData.availableTo || ''}
-          onChange={handleChange}
-          className="w-full rounded-lg border border-primary/20 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </label>
-    </div>
-  </div>
-</div>
-</div>
 {/* Section 2: Categorization */}
 <div className="space-y-8">
 <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -642,6 +636,7 @@ const AdminNewTourUploadForm = () => {
   </div>
 </div>
 
+
 {/* Live Preview Badge */}
 {(formData.stateRegion || formData.theme) && (
   <div className="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl px-5 py-4 flex flex-wrap items-center gap-3">
@@ -660,101 +655,100 @@ const AdminNewTourUploadForm = () => {
   </div>
 )}
 
-{/* Duration + Nature in a row */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Duration</span>
-<input 
-  name="duration"
-  value={formData.duration}
-  onChange={handleChange}
-  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400" 
-  placeholder="e.g. 7 Days" 
-  type="text"
-/>
-</label>
-</div>
-{/* Nature */}
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Nature</span>
-<select 
-  name="nature"
-  value={formData.nature}
-  onChange={handleChange}
-  className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
-<option disabled value="">Select nature type</option>
-{categories.natures.map(cat => <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>)}
-</select>
-</label>
-</div>
-{/* Style */}
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Accommodation Style</span>
-<select 
-  name="style"
-  value={formData.style}
-  onChange={handleChange}
-  className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
-<option disabled value="">Select style</option>
-{categories.styles.map(cat => <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>)}
-</select>
-</label>
-</div>
-{/* Price Category */}
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Price Category</span>
-<select 
-  name="priceCategory"
-  value={formData.priceCategory}
-  onChange={handleChange}
-  className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
-<option disabled value="">Select category</option>
-<option value="low">₹ (Economy)</option>
-<option value="medium">₹₹ (Moderate)</option>
-<option value="high">₹₹₹ (Premium)</option>
-<option value="ultra">₹₹₹₹ (Ultra Luxury)</option>
-</select>
-</label>
-</div>
-{/* Pricing Basis */}
-<div>
-<label className="flex flex-col flex-1">
-  <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Pricing Basis</span>
-  <select 
-    name="priceBasis"
-    value={formData.priceBasis}
-    onChange={handleChange}
-    className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
-    <option value="per_person">Per Person</option>
-    <option value="per_package">Per Package (Group / Honeymoon)</option>
-  </select>
-</label>
-</div>
-</div>{/* end Duration+Nature+Style+Pricing grid */}
-
-{/* Base Price — full width row */}
-<div>
-  <label className="flex flex-col">
-    <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Base Price (INR) <span className="text-red-500">*</span></span>
-    <div className="relative flex items-center">
-      <span className="absolute left-4 text-slate-500 font-bold">₹</span>
+{/* Duration + Nature + Style + Price Category + Pricing Basis + Base Price in one row */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+  <div>
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Duration</span>
       <input 
-        name="price"
-        value={formData.price}
-        onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value === '' ? '' : parseInt(e.target.value) }))}
-        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 font-bold" 
-        min="0" 
-        placeholder="0" 
-        type="number"
-        required
+        name="duration"
+        value={formData.duration}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400" 
+        placeholder="e.g. 7 Days" 
+        type="text"
       />
-    </div>
-  </label>
-</div>
+    </label>
+  </div>
+  {/* Nature */}
+  <div>
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Nature</span>
+      <select 
+        name="nature"
+        value={formData.nature}
+        onChange={handleChange}
+        className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+        <option disabled value="">Select nature type</option>
+        {categories.natures.map(cat => <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>)}
+      </select>
+    </label>
+  </div>
+  {/* Style */}
+  <div>
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Accommodation Style</span>
+      <select 
+        name="style"
+        value={formData.style}
+        onChange={handleChange}
+        className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+        <option disabled value="">Select style</option>
+        {categories.styles.map(cat => <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>)}
+      </select>
+    </label>
+  </div>
+  {/* Price Category */}
+  <div>
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Price Category</span>
+      <select 
+        name="priceCategory"
+        value={formData.priceCategory}
+        onChange={handleChange}
+        className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+        <option disabled value="">Select category</option>
+        <option value="low">₹ (Economy)</option>
+        <option value="medium">₹₹ (Moderate)</option>
+        <option value="high">₹₹₹ (Premium)</option>
+        <option value="ultra">₹₹₹₹ (Ultra Luxury)</option>
+      </select>
+    </label>
+  </div>
+  {/* Pricing Basis */}
+  <div>
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Pricing Basis</span>
+      <select 
+        name="priceBasis"
+        value={formData.priceBasis}
+        onChange={handleChange}
+        className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+        <option value="per_person">Per Person</option>
+        <option value="per_package">Per Package (Group / Honeymoon)</option>
+      </select>
+    </label>
+  </div>
+  {/* Base Price */}
+  <div>
+    <label className="flex flex-col">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Base Price (INR) <span className="text-red-500">*</span></span>
+      <div className="relative flex items-center">
+        <span className="absolute left-4 text-slate-500 font-bold">₹</span>
+        <input 
+          name="price"
+          value={formData.price}
+          onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value === '' ? '' : parseInt(e.target.value) }))}
+          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 font-bold" 
+          min="0" 
+          placeholder="0" 
+          type="number"
+          required
+        />
+      </div>
+    </label>
+  </div>
+</div>{/* end one-line row */}
 
 {/* Conditional: Min Persons for Group/Private Tours */}
 {(formData.nature === 'group' || formData.nature === 'private') && (
@@ -992,6 +986,38 @@ const AdminNewTourUploadForm = () => {
     ))}
   </div>
 </div>
+{/* Section 4.5: Inclusions & Exclusions */}
+<div className="space-y-6 mb-12">
+  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Package Inclusions & Exclusions</h2>
+  </div>
+  
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Inclusions */}
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Inclusions (one per line)</span>
+      <textarea
+        name="inclusions"
+        value={formData.inclusions || ''}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
+        placeholder="Accommodation&#10;Meals&#10;Transportation"
+      ></textarea>
+    </label>
+    {/* Exclusions */}
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Exclusions (one per line)</span>
+      <textarea
+        name="exclusions"
+        value={formData.exclusions || ''}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
+        placeholder="Visas&#10;Personal travel insurance&#10;Optional activities"
+      ></textarea>
+    </label>
+  </div>
+</div>
+
 {/* Section 5: Media Gallery */}
 <div className="space-y-6">
   <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
@@ -1081,6 +1107,83 @@ const AdminNewTourUploadForm = () => {
       Captions appear below photos in the tour gallery on the user-facing tour page.
     </p>
   )}
+</div>
+
+{/* Redesigned Booking & Operation Dates section */}
+<div className="mt-12 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:shadow-md">
+  <div className="flex items-center gap-3 mb-6">
+    <div className="bg-primary/10 p-2 rounded-lg text-primary flex items-center justify-center">
+      <span className="material-symbols-outlined text-[20px]">calendar_today</span>
+    </div>
+    <div>
+      <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-none">Booking & Operation Dates</h2>
+      <p className="text-xs text-slate-500 mt-1">Define when travelers can book and when the tour operates.</p>
+    </div>
+  </div>
+  
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {/* Booking Period */}
+    <div className="space-y-4 pt-1">
+      <label className="flex flex-col">
+        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+          <span className="w-1 h-1 bg-primary rounded-full"></span> Booking Starts
+        </span>
+        <input 
+          type="date" 
+          name="bookingStart"
+          value={formData.bookingStart || ''}
+          onChange={handleChange}
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
+        />
+      </label>
+    </div>
+
+    <div className="space-y-4 pt-1">
+      <label className="flex flex-col">
+        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+          <span className="w-1 h-1 bg-red-400 rounded-full"></span> Booking Ends
+        </span>
+        <input 
+          type="date" 
+          name="bookingEnd"
+          value={formData.bookingEnd || ''}
+          onChange={handleChange}
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
+        />
+      </label>
+    </div>
+
+    {/* Operation Period */}
+    <div className="space-y-4 pt-1 sm:border-l sm:pl-6 border-slate-200 dark:border-slate-700 lg:border-l-0 lg:pl-0">
+      <label className="flex flex-col">
+        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+          <span className="w-1 h-1 bg-emerald-400 rounded-full"></span> Operation From
+        </span>
+        <input 
+          type="date" 
+          name="availableFrom"
+          value={formData.availableFrom || ''}
+          onChange={handleChange}
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
+        />
+      </label>
+    </div>
+
+    <div className="space-y-4 pt-1 sm:pl-6 lg:pl-0 border-slate-200 dark:border-slate-700">
+      <label className="flex flex-col">
+        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+          <span className="w-1 h-1 bg-emerald-600 rounded-full"></span> Operation To
+        </span>
+        <input 
+          type="date" 
+          name="availableTo"
+          value={formData.availableTo || ''}
+          onChange={handleChange}
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
+        />
+      </label>
+    </div>
+  </div>
 </div>
 </form>
 {/* Form Actions Footer */}

@@ -423,18 +423,54 @@ const TourDetailView = () => {
                             <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">{tour.duration}</h4>
                           </div>
                         </div>
+                        <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
+                            <div className="flex -space-x-2">
+                              {(() => {
+                                const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : ['hotel']);
+                                const typeIcons = {
+                                  hotel: 'hotel',
+                                  resort: 'nature_people',
+                                  houseboat: 'sailing',
+                                  villa: 'house',
+                                  apartment: 'apartment'
+                                };
+                                return types.map((t, idx) => (
+                                  <span key={idx} title={t.charAt(0).toUpperCase() + t.slice(1)} className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/50 rounded-full p-1 border border-white dark:border-slate-800 text-[18px]">
+                                    {typeIcons[t] || 'apartment'}
+                                  </span>
+                                ));
+                              })()}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Accommodation</p>
+                            <h4 className="text-xl font-black text-slate-800 dark:text-slate-100 flex flex-wrap items-center gap-2">
+                              {(() => {
+                                const cats = Array.isArray(tour.hotelCategory) ? tour.hotelCategory : (tour.hotelCategory ? [tour.hotelCategory] : []);
+                                if (cats.length === 0) return 'Accommodation';
+                                return cats.map(c => c === 'budget' ? 'Budget' : c.replace('_star', '') + '⭐').join(' / ');
+                              })()}
+                              <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 ml-1">
+                                {(() => {
+                                  const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : []);
+                                  return types.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(' & ');
+                                })()}
+                              </span>
+                            </h4>
+                          </div>
+                        </div>
                       </div>
 
                       <div className="prose prose-lg dark:prose-invert max-w-none">
-                        <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed italic border-l-4 border-primary/30 pl-6 py-1 mb-8">
-                          "{tour.description}"
-                        </p>
+
                         <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-[17px] space-y-4">
                           <p>
                             Embark on an unforgettable journey specifically designed for the discerning traveler. Our <span className="font-bold text-slate-800 dark:text-slate-200">{tour.duration} {tour.title}</span> combines thrilling activities with hand-picked premium accommodations.
                           </p>
                           <p>
-                            From the moment you arrive, every detail is taken care of by our professional guides, ensuring a seamless and enriching travel experience that captures the true essence of <span className="text-primary font-semibold">{tour.location}</span>.
+                            From the moment you arrive, every detail is taken care of by our professional guides, ensuring a seamless and enriching travel experience that captures the true essence of <span className="text-primary font-semibold">{tour.stateRegion || tour.destination || 'the destination'}</span>.
                           </p>
                         </div>
                       </div>
@@ -628,14 +664,22 @@ const TourDetailView = () => {
                       <div className="space-y-5">
                         {/* Hotel Selection */}
                         <div>
-                          <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-2">Hotel included in package:</p>
-                          <div className="flex items-center gap-3">
-                            <label className="flex items-center gap-2 cursor-pointer group">
-                              <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center p-0.5">
-                                <div className="w-full h-full bg-primary rounded-full"></div>
-                              </div>
-                              <span className="text-sm font-medium text-slate-600 dark:text-slate-400">3 Star</span>
-                            </label>
+                          <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-2">Staying at:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {(() => {
+                              const cats = Array.isArray(tour.hotelCategory) ? tour.hotelCategory : (tour.hotelCategory ? [tour.hotelCategory] : []);
+                              const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : []);
+                              
+                              return [
+                                ...cats.map(c => ({ label: c === 'budget' ? 'Budget' : c.replace('_star', '') + ' Star', icon: 'star' })),
+                                ...types.map(t => ({ label: t.charAt(0).toUpperCase() + t.slice(1), icon: 'apartment' }))
+                              ].map((item, idx) => (
+                                <span key={idx} className="inline-flex items-center gap-1 px-2 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase rounded-lg border border-primary/10">
+                                  <span className="material-symbols-outlined text-[12px]">{item.icon}</span>
+                                  {item.label}
+                                </span>
+                              ));
+                            })()}
                           </div>
                         </div>
 
@@ -649,18 +693,31 @@ const TourDetailView = () => {
 
                         {/* Service Icons */}
                         <div className="grid grid-cols-5 gap-1 pt-2">
-                          {[
-                            { icon: 'apartment', label: '3 Stars' },
-                            { icon: 'explore', label: 'Sightseeing' },
-                            { icon: 'restaurant', label: 'Breakfast' },
-                            { icon: 'bed', label: 'Stay' },
-                            { icon: 'local_taxi', label: 'Transfers' }
-                          ].map((item, idx) => (
-                            <div key={idx} className="flex flex-col items-center gap-1">
-                              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300 text-xl font-light">{item.icon}</span>
-                              <span className="text-[9px] text-slate-500 font-bold text-center uppercase leading-tight">{item.label}</span>
-                            </div>
-                          ))}
+                          {(() => {
+                            const cats = Array.isArray(tour.hotelCategory) ? tour.hotelCategory : (tour.hotelCategory ? [tour.hotelCategory] : []);
+                            const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : []);
+                            
+                            const typeIcons = {
+                              hotel: 'hotel',
+                              resort: 'nature_people',
+                              houseboat: 'sailing',
+                              villa: 'house',
+                              apartment: 'apartment'
+                            };
+
+                            return [
+                              { icon: typeIcons[types[0]] || 'apartment', label: types[0]?.charAt(0).toUpperCase() + types[0]?.slice(1) || 'Accommodation' },
+                              { icon: 'explore', label: 'Sightseeing' },
+                              { icon: 'restaurant', label: 'Breakfast' },
+                              { icon: 'bed', label: 'Stay' },
+                              { icon: 'local_taxi', label: 'Transfers' }
+                            ].map((item, idx) => (
+                              <div key={idx} className="flex flex-col items-center gap-1">
+                                <span className="material-symbols-outlined text-slate-700 dark:text-slate-300 text-xl font-light">{item.icon}</span>
+                                <span className="text-[9px] text-slate-500 font-bold text-center uppercase leading-tight line-clamp-1">{item.label}</span>
+                              </div>
+                            ));
+                          })()}
                         </div>
                       </div>
                     </div>
