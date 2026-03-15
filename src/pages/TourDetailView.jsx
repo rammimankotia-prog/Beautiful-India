@@ -1101,17 +1101,17 @@ const TourDetailView = () => {
       {/* Customize & Get Quote Modal */}
       {isQuoteModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white md:rounded-2xl w-full h-full md:h-auto max-w-[900px] md:max-h-[95vh] overflow-hidden flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
+          <div className="bg-white md:rounded-3xl w-full h-full md:h-auto max-w-[850px] md:max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
             {/* Close Button */}
             <button 
               onClick={() => setIsQuoteModalOpen(false)}
-              className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors"
+              className="absolute top-4 right-4 z-[30] w-10 h-10 flex items-center justify-center rounded-full bg-slate-50/80 backdrop-blur hover:bg-white text-slate-500 shadow-sm transition-all border border-slate-100"
             >
               <span className="material-symbols-outlined text-xl">close</span>
             </button>
 
             {/* Left Pane: Instructions & Trust */}
-            <div className="w-full md:w-[45%] bg-[#f8fcfb] p-6 md:p-10 border-b md:border-b-0 md:border-r border-slate-100">
+            <div className="w-full md:w-[38%] bg-[#f8fcfb] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100">
               <h2 className="text-[28px] font-black text-[#006D77] mb-8">How It Works</h2>
               <div className="space-y-8">
                 <div className="flex gap-4 items-start">
@@ -1145,16 +1145,16 @@ const TourDetailView = () => {
               </div>
 
               {/* Call Support */}
-              <div className="text-center pt-4 border-t border-slate-200">
-                <p className="text-slate-400 text-xs font-bold uppercase flex items-center justify-center gap-2 mb-2">
-                  <span className="material-symbols-outlined text-sm">call</span> Call Us for details
+              <div className="mt-auto pt-6 border-t border-slate-200/60 hidden md:block">
+                <p className="text-slate-400 text-[10px] font-black uppercase flex items-center justify-center gap-2 mb-2 tracking-widest">
+                  <span className="material-symbols-outlined text-xs">call</span> Help & Support
                 </p>
-                <p className="text-2xl font-black text-[#006D77]">0000 0000 00</p>
+                <p className="text-xl font-black text-[#006D77] text-center tracking-tight">0000 0000 00</p>
               </div>
             </div>
 
             {/* Right Pane: Form */}
-            <div className="w-full md:w-[55%] flex flex-col h-full bg-white">
+            <div className="w-full md:w-[62%] flex flex-col h-full bg-white relative">
                {/* Modal Header for Mobile */}
                <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-100 bg-white sticky top-0 z-20">
                   <div className="flex items-center gap-2">
@@ -1168,9 +1168,12 @@ const TourDetailView = () => {
                   </div>
                </div>
 
-               <div className="flex-1 overflow-y-auto p-6 md:p-12">
-                  <div className="hidden md:flex w-16 h-16 bg-primary/10 rounded-2xl items-center justify-center mb-6 mx-auto">
-                     <span className="material-symbols-outlined text-primary text-4xl">location_on</span>
+                <div className="flex-1 overflow-y-auto p-6 md:px-10 md:py-8">
+                  <div className="hidden md:flex flex-col items-center mb-6">
+                     <span className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-2">
+                        <span className="material-symbols-outlined text-primary text-2xl">location_on</span>
+                     </span>
+                     <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Step {modalStep} of 3</p>
                   </div>
                   <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 md:mb-8 text-center">
                     {modalStep === 1 ? 'Where do you want to go?' : 
@@ -1468,21 +1471,31 @@ const TourDetailView = () => {
                    </div>
                  )}
                 </form>
-               </div>
 
-               {/* Sticky Footer for Action Button */}
-               <div className="p-4 md:p-0 border-t border-slate-100 md:border-0 bg-white md:bg-transparent sticky bottom-0 md:static">
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      if (modalStep < 3) setModalStep(modalStep + 1);
-                      else handleLeadSubmit(); // Submit
-                    }}
-                    className="w-full h-14 bg-[#ff5a5f] text-white font-black rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-red-500/20"
-                  >
-                    {modalStep === 3 ? 'GET FREE QUOTES' : 'NEXT'}
-                    <span className="material-symbols-outlined text-xl">trending_flat</span>
-                  </button>
+                {/* Integrated Action Button */}
+                <div className="mt-8 mb-4">
+                   <button 
+                     type="button"
+                     onClick={() => {
+                       if (modalStep < 3) setModalStep(modalStep + 1);
+                       else handleLeadSubmit();
+                     }}
+                     className="w-full h-14 bg-[#ff5a5f] text-white font-black rounded-2xl hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-red-500/20 group"
+                   >
+                     <span>{modalStep === 3 ? 'GET FREE QUOTES' : 'NEXT'}</span>
+                     <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">trending_flat</span>
+                   </button>
+                   
+                   {modalStep > 1 && (
+                     <button 
+                       type="button"
+                       onClick={() => setModalStep(modalStep - 1)}
+                       className="w-full mt-3 py-2 text-slate-400 font-bold text-sm hover:text-slate-600 transition-colors uppercase tracking-widest"
+                     >
+                       Back
+                     </button>
+                   )}
+                </div>
                </div>
             </div>
           </div>
