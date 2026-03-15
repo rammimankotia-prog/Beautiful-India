@@ -11,6 +11,7 @@ const Header = () => {
     const { user, logout } = useAuth();
     const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const navLinks = [
         { name: 'Home', path: '/' },
@@ -25,11 +26,11 @@ const Header = () => {
             {/* Logo */}
             <div className="flex items-center gap-2">
                 <Link to="/" className="flex items-center gap-2 text-gray-900">
-                    <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="The Beautiful India" className="h-16 w-auto object-contain drop-shadow-sm hover:opacity-90 transition-opacity" />
+                    <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="The Beautiful India" className="h-12 md:h-16 w-auto object-contain drop-shadow-sm hover:opacity-90 transition-opacity" />
                 </Link>
             </div>
 
-            {/* Navigation */}
+            {/* Navigation (Desktop) */}
             <nav className="hidden lg:flex items-center gap-8 ml-8 flex-1 justify-center">
                 {navLinks.map(link => {
                     const isActive = currentPath === link.path || (link.path === '/tours' && currentPath.startsWith('/tours'));
@@ -49,13 +50,13 @@ const Header = () => {
                 })}
             </nav>
 
-            {/* Right Actions */}
-            <div className="flex items-center gap-4 ml-auto relative">
+            {/* Right Actions (Desktop) */}
+            <div className="hidden md:flex items-center gap-2 md:gap-4 ml-auto relative">
                 {/* Currency Switcher */}
                 <select 
                     value={currency} 
                     onChange={(e) => setCurrency(e.target.value)}
-                    className="bg-slate-800 border border-slate-700 text-slate-200 text-sm font-semibold rounded-lg block p-2 cursor-pointer focus:ring-primary focus:border-primary ml-2 uppercase"
+                    className="bg-slate-800 border border-slate-700 text-slate-200 text-xs md:text-sm font-semibold rounded-lg block p-1.5 md:p-2 cursor-pointer focus:ring-primary focus:border-primary ml-1 md:ml-2 uppercase"
                 >
                     {currencies.map(c => (
                         <option key={c} value={c}>{c}</option>
@@ -65,14 +66,14 @@ const Header = () => {
                 {!user ? (
                     <button 
                         onClick={() => setIsSignInModalOpen(true)}
-                        className="bg-primary hover:bg-[#005a63] text-white text-sm font-bold py-2.5 px-6 rounded-lg transition-colors shadow-sm ml-2"
+                        className="bg-primary hover:bg-[#005a63] text-white text-[12px] md:text-sm font-bold py-2 md:py-2.5 px-4 md:px-6 rounded-lg transition-colors shadow-sm ml-1 md:ml-2"
                     >
                         Sign In
                     </button>
                 ) : (
                     <div className="relative ml-2">
                         <div 
-                            className="w-10 h-10 rounded-full bg-slate-800 overflow-hidden cursor-pointer border-2 border-primary/50 hover:border-primary transition-colors flex items-center justify-center p-0.5"
+                            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-800 overflow-hidden cursor-pointer border-2 border-primary/50 hover:border-primary transition-colors flex items-center justify-center p-0.5"
                             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                         >
                             <img 
@@ -116,11 +117,99 @@ const Header = () => {
                 onClose={() => setIsSignInModalOpen(false)} 
             />
 
-            {/* Mobile Menu */}
-            <div className="lg:hidden flex items-center ml-4">
-                <button className="text-slate-300 hover:text-white transition-colors">
-                    <span className="material-symbols-outlined text-2xl">menu</span>
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center ml-2">
+                <button 
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="text-slate-300 hover:text-white transition-colors p-1"
+                >
+                    <span className="material-symbols-outlined text-2xl">
+                        {isMobileMenuOpen ? 'close' : 'menu'}
+                    </span>
                 </button>
+            </div>
+
+            {/* Mobile Menu Drawer */}
+            <div className={`lg:hidden fixed inset-0 z-[60] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                {/* Backdrop */}
+                <div 
+                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+                
+                {/* Content */}
+                <div className={`absolute right-0 top-0 bottom-0 w-64 bg-slate-900 shadow-2xl transition-transform duration-300 p-6 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <div className="flex justify-between items-center mb-10">
+                        <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="Logo" className="h-10 w-auto" />
+                        <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-400 hover:text-white">
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+
+                    <nav className="flex flex-col gap-4">
+                        {navLinks.map(link => {
+                            const isActive = currentPath === link.path;
+                            return (
+                                <Link 
+                                    key={link.name} 
+                                    to={link.path}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={`text-lg font-medium py-2 transition-colors ${isActive ? 'text-primary' : 'text-slate-300 hover:text-white'}`}
+                                >
+                                    {link.name}
+                                </Link>
+                            )
+                        })}
+                    </nav>
+
+                    {/* Mobile Actions */}
+                    <div className="mt-6 flex flex-col gap-4">
+                        <div className="flex items-center justify-between bg-slate-800/50 p-3 rounded-xl border border-slate-700">
+                            <span className="text-slate-400 text-sm font-bold uppercase tracking-wider">Currency</span>
+                            <select 
+                                value={currency} 
+                                onChange={(e) => setCurrency(e.target.value)}
+                                className="bg-transparent text-white text-sm font-bold focus:outline-none uppercase"
+                            >
+                                {currencies.map(c => (
+                                    <option key={c} value={c} className="bg-slate-900">{c}</option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        {!user ? (
+                            <button 
+                                onClick={() => {
+                                    setIsSignInModalOpen(true);
+                                    setIsMobileMenuOpen(false);
+                                }}
+                                className="w-full bg-primary hover:bg-[#005a63] text-white font-bold py-3 rounded-xl transition-colors shadow-lg"
+                            >
+                                Sign In
+                            </button>
+                        ) : (
+                            <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700">
+                                <img src={user.avatar} alt="Avatar" className="w-10 h-10 rounded-full bg-white" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                                    <button onClick={logout} className="text-xs text-red-400 font-bold hover:text-red-300">Sign Out</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="mt-10 pt-10 border-t border-slate-800 flex flex-col gap-4">
+                        <div className="text-slate-500 text-xs font-bold uppercase tracking-widest">Connect With Us</div>
+                        <div className="flex gap-4">
+                            <span className="material-symbols-outlined text-slate-400">call</span>
+                            <span className="text-slate-300 text-sm">0000 0000 00</span>
+                        </div>
+                        <div className="flex gap-4">
+                            <span className="material-symbols-outlined text-slate-400">mail</span>
+                            <span className="text-slate-300 text-sm">info@beautifulindia.com</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
     );

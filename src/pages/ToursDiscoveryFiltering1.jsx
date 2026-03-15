@@ -184,49 +184,33 @@ const ToursDiscoveryFiltering1 = () => {
     return (
         <div data-page="tours_discovery_filtering_1" className="min-h-screen bg-[#f4f7f6]">
             {/* Hero Banner — shown for destination slug OR query param filters */}
-            {(regionSlug && stateRegion !== 'All States') || searchParams.get('theme') || searchParams.get('destination') ? (
-                <div
-                    className="relative py-14 px-6 text-center overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #065f46 100%)' }}
-                >
-                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 50%, white 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-                    <div className="relative z-10 max-w-3xl mx-auto">
-                        <Link to="/" className="inline-flex items-center gap-1 text-white/70 hover:text-white text-[13px] font-bold mb-4 transition-colors">
-                            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                            Back to Bharat Darshan
-                        </Link>
-                        <h1 className="text-4xl md:text-5xl font-black text-white mb-2" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
-                            {searchParams.get('theme')
-                                ? `${searchParams.get('theme').charAt(0).toUpperCase() + searchParams.get('theme').slice(1)} Tour Packages`
-                                : searchParams.get('destination')
-                                    ? `${searchParams.get('destination')} Tour Packages`
-                                    : `${stateRegion} Tour Packages`}
-                        </h1>
-                        <div className="flex flex-wrap justify-center gap-2 mt-3 mb-2">
-                            {themeFilters.map(t => (
-                                <span key={t} className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full capitalize border border-white/30">
-                                    🏷️ {t}
-                                </span>
-                            ))}
-                            {stateRegion !== 'All States' && (
-                                <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full border border-white/30">
-                                    📍 {stateRegion}
-                                </span>
-                            )}
-                        </div>
-                        <p className="text-white/80 font-medium text-base">
-                            {filteredTours.length > 0
-                                ? `${filteredTours.length} handpicked packages — fully customizable, best prices guaranteed`
-                                : 'Explore our curated collection of tours'}
-                        </p>
-                    </div>
+            {/* Hero Section */}
+            <section className="relative h-[250px] md:h-[350px] flex items-center justify-center overflow-hidden">
+                <img
+                    src="https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80"
+                    alt="Ancient Indian temple architecture - Explore our tour packages"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-slate-900/40 backdrop-blur-[2px]" />
+                <div className="relative z-10 text-center px-4">
+                    <h1 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight">
+                        {searchParams.get('theme')
+                            ? `${searchParams.get('theme').charAt(0).toUpperCase() + searchParams.get('theme').slice(1)} Tour Packages`
+                            : searchParams.get('destination')
+                                ? `${searchParams.get('destination')} Tour Packages`
+                                : `${stateRegion !== 'All States' ? stateRegion : 'Our'} Tour Packages`}
+                    </h1>
+                    <p className="text-slate-200 text-sm md:text-lg font-medium max-w-2xl mx-auto">
+                        Handpicked experiences crafted for the discerning traveler. Explore the best of India.
+                    </p>
                 </div>
-            ) : null}
+            </section>
 
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
                     {/* Sidebar */}
-                    <aside className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-8">
+                    <aside className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:sticky lg:top-8">
                         <h2 className="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-2">
                             <span className="material-symbols-outlined text-[22px]">tune</span> 
                             Filter Tours
@@ -427,12 +411,18 @@ const ToursDiscoveryFiltering1 = () => {
                                         return (
                                             <div key={tour.id} className="bg-white rounded-[20px] shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col group overflow-hidden">
                                                 {/* Image Container */}
-                                                <div className="relative h-[220px] overflow-hidden">
-                                                    <img 
-                                                        src={tour.image || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80'} 
-                                                        alt={tour.title}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                                <div className="relative h-48 md:h-56 overflow-hidden">
+                                                    <img
+                                                        src={tour.image || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80'}
+                                                        alt={`Tour package for ${tour.title} in ${tour.destination}`}
+                                                        loading="lazy"
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                                     />
+                                                    <div className="absolute top-4 left-4">
+                                                        <span className="bg-white/95 backdrop-blur-md text-primary text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg uppercase tracking-wider">
+                                                            {tour.category || themeTag}
+                                                        </span>
+                                                    </div>
                                                     
                                                     {/* Heart Icon */}
                                                     <button className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white hover:bg-[#006D77]/80 transition-colors z-10 w-8 h-8 flex items-center justify-center">

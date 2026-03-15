@@ -96,6 +96,19 @@ const AntiGravityWrapper = ({ children }) => {
     return (
         <div className="relative min-h-screen">
             {children}
+            
+            {/* Physics Control Button - Hidden on Mobile */}
+            <button 
+                onClick={() => setIsEnabled(!isEnabled)}
+                className="hidden lg:flex fixed bottom-24 right-6 z-[100] items-center gap-2 px-6 py-3 bg-accent text-primary font-black rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all border-2 border-primary/20"
+            >
+                <span className="material-symbols-outlined">
+                    {isEnabled ? 'blur_off' : 'blur_on'}
+                </span>
+                {isEnabled ? 'DISABLE ANTI-GRAVITY' : 'ANTI-GRAVITY MODE'}
+            </button>
+
+            <div ref={boxRef} className="fixed inset-0 pointer-events-none z-[90]" />
         </div>
     );
 };

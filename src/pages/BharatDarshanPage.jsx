@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const destinations = [
   {
@@ -229,10 +230,21 @@ const BharatDarshanPage = () => {
   };
 
   return (
-    <div className="font-sans bg-[#f8fafc]">
+    <main className="font-sans bg-[#f8fafc]">
+      <Helmet>
+        <title>Bharat Darshan - Explore the Incredible Soul of India | Tours & Packages</title>
+        <meta name="description" content="Discover India's beauty with Bharat Darshan. Curated tour packages for Himachal, Kashmir, Rajasthan, Kerala, and more. 100% customizable trips to India's top destinations." />
+        <meta name="keywords" content="Bharat Darshan, India Tours, Tour Packages India, Travel India, Himachal Tours, Rajasthan Packages, Kerala Backwaters, Incredible India" />
+        <meta property="og:title" content="Bharat Darshan - Discover the Soul of India" />
+        <meta property="og:description" content="Explore expertly curated tour packages for every Indian state. From the Himalayas to coastal beaches, plan your perfect trip with Bharat Darshan." />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80" />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://rammimankotia-prog.github.io/Beautiful-India" />
+      </Helmet>
+
       {/* ── Hero ── */}
-      <div
-        className="relative min-h-[520px] flex flex-col items-center justify-center text-center overflow-hidden"
+      <section
+        className="relative min-h-[520px] lg:min-h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #0d9488 50%, #065f46 100%)' }}
       >
         {/* Decorative circles */}
@@ -240,40 +252,40 @@ const BharatDarshanPage = () => {
         <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(30%, 30%)' }} />
 
         <div className="relative z-10 max-w-4xl px-6 py-20">
-          <span className="inline-block bg-white/20 text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">🇮🇳 Bharat Darshan</span>
-          <h1 className="text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-4" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
+          <span className="inline-block bg-white/20 text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">🇮🇳 Bharat Darshan</span>
+          <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight mb-4" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
             Discover the Soul of India
           </h1>
-          <p className="text-lg text-white/85 font-medium max-w-2xl mx-auto mb-10">
+          <p className="text-base md:text-lg text-white/85 font-medium max-w-2xl mx-auto mb-10">
             From the mighty Himalayas to palm-fringed beaches, from royal palaces to serene backwaters – explore Bharat in all its glory with expertly curated packages.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="#destinations" className="px-8 py-3.5 bg-white text-[#0a6c75] font-black rounded-full hover:bg-teal-50 transition-all shadow-xl text-[15px]">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#destinations" className="px-8 py-3.5 bg-white text-[#0a6c75] font-black rounded-full hover:bg-teal-50 transition-all shadow-xl text-[14px] md:text-[15px]">
               Explore Destinations
             </a>
-            <a href="#get-quote" className="px-8 py-3.5 bg-white/20 text-white border-2 border-white/50 font-black rounded-full hover:bg-white/30 transition-all text-[15px] backdrop-blur-sm">
+            <a href="#get-quote" className="px-8 py-3.5 bg-white/20 text-white border-2 border-white/50 font-black rounded-full hover:bg-white/30 transition-all text-[14px] md:text-[15px] backdrop-blur-sm">
               Get Free Quote
             </a>
           </div>
           {/* Stats */}
-          <div className="flex justify-center gap-10 mt-14 text-white">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 mt-14 text-white">
             {[['2,500+', 'Packages'], ['50+', 'Destinations'], ['1 Lakh+', 'Happy Travelers'], ['100%', 'Customizable']].map(([num, lab]) => (
               <div key={lab} className="text-center">
-                <div className="text-2xl font-black">{num}</div>
-                <div className="text-xs text-white/70 font-bold">{lab}</div>
+                <div className="text-xl md:text-2xl font-black">{num}</div>
+                <div className="text-[10px] md:text-xs text-white/70 font-bold uppercase tracking-wider">{lab}</div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ── Travel by Theme ── */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-black text-slate-800">Travel by Theme</h2>
-          <p className="text-slate-500 mt-2">Find packages crafted for your unique travel style</p>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800">Travel by Theme</h2>
+          <p className="text-slate-500 mt-2 text-sm md:text-base">Find packages crafted for your unique travel style</p>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
           {themes.map(t => (
             <div
               key={t.label}
@@ -283,16 +295,16 @@ const BharatDarshanPage = () => {
               }}
               className={`flex flex-col items-center p-4 rounded-2xl border transition-all cursor-pointer group ${activeFilter === t.label ? 'bg-teal-50 border-[#0a6c75] shadow-md ring-1 ring-[#0a6c75]' : 'bg-white border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1'}`}
             >
-              <div className="text-3xl mb-2">{t.icon}</div>
-              <div className={`text-[13px] font-bold transition-colors text-center ${activeFilter === t.label ? 'text-[#0a6c75]' : 'text-slate-700 group-hover:text-[#0a6c75]'}`}>{t.label}</div>
+              <div className="text-2xl md:text-3xl mb-2">{t.icon}</div>
+              <div className={`text-[12px] md:text-[13px] font-bold transition-colors text-center ${activeFilter === t.label ? 'text-[#0a6c75]' : 'text-slate-700 group-hover:text-[#0a6c75]'}`}>{t.label}</div>
               <div className="text-[10px] text-slate-400 font-medium mt-0.5 text-center">{t.count}</div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* ── Destinations ── */}
-      <div id="destinations" className="max-w-7xl mx-auto px-6 pb-20">
+      <section id="destinations" className="max-w-7xl mx-auto px-6 pb-20">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h2 className="text-3xl font-black text-slate-800">Popular Destinations</h2>
@@ -314,10 +326,10 @@ const BharatDarshanPage = () => {
 
         <div ref={resultsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredDest.map(dest => (
-            <div key={dest.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer">
+            <article key={dest.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer">
               {/* Image */}
               <Link to={`/tours?destination=${encodeURIComponent(dest.name)}`} className="block relative h-48 overflow-hidden">
-                <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={dest.image} alt={`Travel packages for ${dest.name} - ${dest.tagline}`} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <span className="absolute top-3 left-3 bg-white/90 text-slate-700 text-[11px] font-black px-2.5 py-1 rounded-full backdrop-blur-sm">
                   {dest.badge}
@@ -341,12 +353,12 @@ const BharatDarshanPage = () => {
                 {/* Meta */}
                 <div className="flex justify-between items-center text-[12px] text-slate-500 font-bold mb-4">
                   <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">schedule</span> {dest.duration}</span>
-                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">wb_sunny</span> Best: {dest.bestTime}</span>
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">wb_sunny</span> {dest.bestTime}</span>
                 </div>
                 {/* Price + CTA */}
                 <div className="flex justify-between items-center">
                   <div>
-                    <div className="text-[11px] text-slate-400 font-bold">Starting From</div>
+                    <div className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Starting From</div>
                     <div className="text-[20px] font-black text-[#0a6c75]">₹{dest.startingFrom.toLocaleString('en-IN')}</div>
                   </div>
                   <Link to={`/tours?destination=${encodeURIComponent(dest.name)}`} className="px-4 py-2 bg-[#0a6c75] text-white text-[12px] font-black rounded-xl hover:bg-[#07565e] transition-colors shadow-sm">
@@ -357,12 +369,12 @@ const BharatDarshanPage = () => {
                   {dest.packages} packages available
                 </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
 
         {/* ── Featured Tour Packages ── */}
-        <div className="mt-20">
+        <section className="mt-20">
           <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
             <div>
               <h2 className="text-3xl font-black text-slate-800">Recommended Tour Packages</h2>
@@ -382,28 +394,30 @@ const BharatDarshanPage = () => {
           ) : filteredTourPackages.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredTourPackages.map(tour => (
-                <Link to={`/tour/${tour.id}`} key={tour.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col">
-                  {/* Image */}
-                  <div className="relative h-44 overflow-hidden">
-                    <img src={tour.image} alt={tour.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-[#0a6c75] text-[10px] font-black px-2 py-0.5 rounded-full">
-                      {tour.duration}
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="p-4 flex-1 flex flex-col">
-                    <div className="text-[10px] font-black text-[#0a6c75] uppercase tracking-wider mb-1">{tour.stateRegion}</div>
-                    <h3 className="font-extrabold text-slate-800 text-[14px] leading-tight mb-2 line-clamp-2">{tour.title}</h3>
-                    <p className="text-slate-500 text-[12px] line-clamp-2 mb-4 flex-1">{tour.description}</p>
-                    <div className="flex justify-between items-center mt-auto pt-3 border-t border-slate-50">
-                      <div>
-                        <div className="text-[9px] text-slate-400 font-bold uppercase">Starting At</div>
-                        <div className="text-[16px] font-black text-[#0a6c75]">₹{parseInt(tour.price).toLocaleString('en-IN')}</div>
+                <article key={tour.id}>
+                  <Link to={`/tour/${tour.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col h-full">
+                    {/* Image */}
+                    <div className="relative h-44 overflow-hidden">
+                      <img src={tour.image} alt={tour.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-[#0a6c75] text-[10px] font-black px-2 py-0.5 rounded-full">
+                        {tour.duration}
                       </div>
-                      <span className="material-symbols-outlined text-slate-300 group-hover:text-[#0a6c75] transition-colors">arrow_circle_right</span>
                     </div>
-                  </div>
-                </Link>
+                    {/* Body */}
+                    <div className="p-4 flex-1 flex flex-col">
+                      <div className="text-[10px] font-black text-[#0a6c75] uppercase tracking-wider mb-1">{tour.stateRegion}</div>
+                      <h3 className="font-extrabold text-slate-800 text-[14px] leading-tight mb-2 line-clamp-2">{tour.title}</h3>
+                      <p className="text-slate-500 text-[12px] line-clamp-2 mb-4 flex-1">{tour.description}</p>
+                      <div className="flex justify-between items-center mt-auto pt-3 border-t border-slate-50">
+                        <div>
+                          <div className="text-[9px] text-slate-400 font-bold uppercase">Starting At</div>
+                          <div className="text-[16px] font-black text-[#0a6c75]">₹{parseInt(tour.price).toLocaleString('en-IN')}</div>
+                        </div>
+                        <span className="material-symbols-outlined text-slate-300 group-hover:text-[#0a6c75] transition-colors">arrow_circle_right</span>
+                      </div>
+                    </div>
+                  </Link>
+                </article>
               ))}
             </div>
           ) : (
@@ -419,11 +433,11 @@ const BharatDarshanPage = () => {
               </button>
             </div>
           )}
-        </div>
-      </div>
+        </section>
+      </section>
 
       {/* ── Top 4 Metro Cities ── */}
-      <div className="bg-[#f1f5f9] py-20">
+      <section className="bg-[#f1f5f9] py-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black text-slate-800">Top 4 Metro Cities of India</h2>
@@ -431,9 +445,9 @@ const BharatDarshanPage = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {metroCitiesIndia.map(city => (
-              <div key={city.name} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group">
+              <article key={city.name} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group">
                 <div className="relative h-44 overflow-hidden">
-                  <img src={city.image} alt={city.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={city.image} alt={`Tourism and tour packages in ${city.name}`} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-3 left-4">
                     <h3 className="text-white font-extrabold text-xl">{city.name}</h3>
@@ -447,14 +461,14 @@ const BharatDarshanPage = () => {
                     View Tours <span className="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
                   </Link>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ── Why Bharat Darshan ── */}
-      <div className="bg-white py-20">
+      <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black text-slate-800">Why Bharat Darshan?</h2>
@@ -481,10 +495,10 @@ const BharatDarshanPage = () => {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ── Lead Capture ── */}
-      <div id="get-quote" className="py-20" style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #065f46 100%)' }}>
+      <section id="get-quote" className="py-20" style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #065f46 100%)' }}>
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-black text-white">Plan Your Bharat Darshan Trip</h2>
@@ -539,10 +553,10 @@ const BharatDarshanPage = () => {
             </div>
           )}
         </div>
-      </div>
+      </section>
 
       {/* ── FAQ ── */}
-      <div className="max-w-3xl mx-auto px-6 py-20">
+      <section className="max-w-3xl mx-auto px-6 py-20">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-black text-slate-800">Frequently Asked Questions</h2>
           <p className="text-slate-500 mt-2">Everything you need to know about Bharat Darshan trips</p>
@@ -567,8 +581,8 @@ const BharatDarshanPage = () => {
             </div>
           ))}
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

@@ -40,111 +40,128 @@ const Footer = () => {
             </div>
 
             {/* Expanded Content (Simulated for this implementation) */}
-            <div className={`transition-all duration-300 overflow-hidden ${isSearchesOpen ? 'max-h-40' : 'max-h-0'}`}>
-                <div className="container mx-auto px-4 py-4 text-xs text-gray-400 text-center">
-                    Popular travel searches and trending destinations would appear here.
+            <div className={`transition-all duration-300 overflow-hidden ${isSearchesOpen ? 'max-h-[500px]' : 'max-h-0'}`}>
+                <div className="container mx-auto px-4 py-8 text-xs text-gray-400">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                        {/* More detailed travel searches could go here */}
+                        <div className="space-y-2">
+                           <h4 className="text-white font-bold mb-3 uppercase tracking-wider text-[10px]">Top Destinations</h4>
+                           <ul className="space-y-1.5 opacity-80">
+                             <li>Thailand</li>
+                             <li>Singapore</li>
+                             <li>Dubai</li>
+                             <li>Bali</li>
+                           </ul>
+                        </div>
+                        {/* Additional columns... */}
+                    </div>
                 </div>
             </div>
 
             <div className="container mx-auto px-4 md:px-10 py-10 max-w-7xl">
                 {/* Top Links & Contact */}
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-200 w-full lg:w-2/3">
-                        {topLinks.slice(0, 8).map((link, i) => (
-                            <Link key={i} to={link.path} className="hover:text-white transition-colors">{link.label}</Link>
-                        ))}
-                        <div className="w-full h-0 mb-1"></div>
-                        {topLinks.slice(8).map((link, i) => (
+                <div className="flex flex-col lg:flex-row justify-between items-start gap-10 mb-10 pb-10 border-b border-[#3c4248]">
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px] text-gray-300 w-full lg:w-2/3">
+                        {topLinks.map((link, i) => (
                             <Link key={i} to={link.path} className="hover:text-white transition-colors">{link.label}</Link>
                         ))}
                     </div>
                     
-                    <div className="flex flex-col gap-2 w-full lg:w-1/3 lg:items-end text-sm">
-                        <div className="flex items-center gap-2 font-bold justify-end w-full">
-                            <span className="material-symbols-outlined text-[18px]">call</span>
+                    <div className="flex flex-col sm:flex-row lg:flex-col gap-6 w-full lg:w-1/3 lg:items-end">
+                        <div className="flex items-center gap-3 font-bold text-lg">
+                            <span className="material-symbols-outlined text-[#ff3d31]">call</span>
                             <span>0000 0000 00</span>
                         </div>
-                        <div className="flex items-center gap-2 justify-end w-full">
-                            <span className="material-symbols-outlined text-[18px]">mail</span>
-                            <span className="text-gray-200">customercare@beautifulindia.com</span>
+                        <div className="flex items-center gap-3 text-sm">
+                            <span className="material-symbols-outlined text-gray-400">mail</span>
+                            <span className="text-gray-300">customercare@beautifulindia.com</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Footer Links Matrix */}
-                <div className="flex flex-col space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
                     {/* Domestic */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#343a40] p-3 rounded-md shadow-sm">
-                        <span className="font-bold text-white min-w-[140px]">Domestic</span>
-                        {domestic.map((dest, i) => (
-                            <React.Fragment key={i}>
-                                <Link to="#!" className="text-gray-300 hover:text-white whitespace-nowrap">{dest}</Link>
-                                {i < domestic.length - 1 && <span className="text-gray-600">|</span>}
-                            </React.Fragment>
-                        ))}
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
+                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">Domestic</span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
+                            {domestic.map((dest, i) => (
+                                <React.Fragment key={i}>
+                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{dest}</Link>
+                                    {i < domestic.length - 1 && <span className="text-gray-700">|</span>}
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Domestic Packages */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#343a40] p-3 rounded-md shadow-sm">
-                        <span className="font-bold text-white min-w-[140px]">Domestic Packages</span>
-                        {domPackages.map((pkg, i) => (
-                            <React.Fragment key={i}>
-                                <Link to="#!" className="text-gray-300 hover:text-white whitespace-nowrap">{pkg}</Link>
-                                {i < domPackages.length - 1 && <span className="text-gray-600">|</span>}
-                            </React.Fragment>
-                        ))}
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
+                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">Domestic Packages</span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
+                            {domPackages.map((pkg, i) => (
+                                <React.Fragment key={i}>
+                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{pkg}</Link>
+                                    {i < domPackages.length - 1 && <span className="text-gray-700">|</span>}
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Metro Cities */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#343a40] p-3 rounded-md shadow-sm">
-                        <span className="font-bold text-white min-w-[140px]">Top 4 Metro Cities</span>
-                        {metroCities.map((city, i) => (
-                            <React.Fragment key={i}>
-                                <Link to="#!" className="text-gray-300 hover:text-white whitespace-nowrap">{city}</Link>
-                                {i < metroCities.length - 1 && <span className="text-gray-600">|</span>}
-                            </React.Fragment>
-                        ))}
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
+                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">Top 4 Metro Cities</span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
+                            {metroCities.map((city, i) => (
+                                <React.Fragment key={i}>
+                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{city}</Link>
+                                    {i < metroCities.length - 1 && <span className="text-gray-700">|</span>}
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
 
                     {/* International Packages */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#343a40] p-3 rounded-md shadow-sm">
-                        <span className="font-bold text-white min-w-[140px]">International Packages</span>
-                        {intPackages.map((pkg, i) => (
-                            <React.Fragment key={i}>
-                                <Link to="#!" className="text-gray-300 hover:text-white whitespace-nowrap">{pkg}</Link>
-                                {i < intPackages.length - 1 && <span className="text-gray-600">|</span>}
-                            </React.Fragment>
-                        ))}
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
+                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">International Packages</span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
+                            {intPackages.map((pkg, i) => (
+                                <React.Fragment key={i}>
+                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{pkg}</Link>
+                                    {i < intPackages.length - 1 && <span className="text-gray-700">|</span>}
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Blogs */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#343a40] p-3 rounded-md shadow-sm">
-                        <span className="font-bold text-white min-w-[140px]">Explore Travel Blogs</span>
-                        {blogs.map((num, i) => (
-                            <React.Fragment key={i}>
-                                <Link to="#!" className="text-gray-300 hover:text-white whitespace-nowrap">{num}</Link>
-                                {i < blogs.length - 1 && <span className="text-gray-600">|</span>}
-                            </React.Fragment>
-                        ))}
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
+                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">Explore Travel Blogs</span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
+                            {blogs.map((num, i) => (
+                                <React.Fragment key={i}>
+                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{num}</Link>
+                                    {i < blogs.length - 1 && <span className="text-gray-700">|</span>}
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
-
                 </div>
                 
                 {/* Logo, Copyright & Sitemap */}
-                <div className="mt-12 pt-6 border-t border-[#3c4248] flex flex-col md:flex-row items-center justify-between gap-6">
-                   <Link to="/" className="flex items-center gap-2 text-white">
-                        <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="The Beautiful India" className="h-14 w-auto object-contain brightness-0 invert" />
+                <div className="mt-16 pt-8 border-t border-[#3c4248] flex flex-col md:flex-row items-center justify-between gap-8">
+                   <Link to="/" className="flex items-center gap-2 group">
+                        <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="The Beautiful India" className="h-12 md:h-14 w-auto object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity" />
                    </Link>
-                   <div className="flex items-center gap-4">
+                   <div className="flex flex-col md:flex-row items-center gap-6">
                      <Link
                        to="/nav"
-                       className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs font-semibold border border-gray-600 hover:border-gray-400 px-3 py-1.5 rounded-lg"
+                       className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-xs font-bold border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-full"
                      >
-                       <span className="material-symbols-outlined text-[14px]">map</span>
+                       <span className="material-symbols-outlined text-[16px]">map</span>
                        Sitemap
                      </Link>
-                     <p className="text-gray-400 text-xs text-center md:text-right">
-                         © 2026 The Beautiful India. All rights reserved.
+                     <p className="text-gray-500 text-[11px] font-medium tracking-wide">
+                         © 2026 THE BEAUTIFUL INDIA. ALL RIGHTS RESERVED.
                      </p>
                    </div>
                 </div>
