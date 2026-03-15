@@ -1100,8 +1100,8 @@ const TourDetailView = () => {
 
       {/* Customize & Get Quote Modal */}
       {isQuoteModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-2xl w-full max-w-[900px] max-h-[95vh] overflow-y-auto flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white md:rounded-2xl w-full h-full md:h-auto max-w-[900px] md:max-h-[95vh] overflow-hidden flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
             {/* Close Button */}
             <button 
               onClick={() => setIsQuoteModalOpen(false)}
@@ -1154,11 +1154,29 @@ const TourDetailView = () => {
             </div>
 
             {/* Right Pane: Form */}
-            <div className="w-full md:w-[55%] p-6 md:p-12 flex flex-col justify-center items-center">
-               <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-primary text-4xl">location_on</span>
+            <div className="w-full md:w-[55%] flex flex-col h-full bg-white">
+               {/* Modal Header for Mobile */}
+               <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-100 bg-white sticky top-0 z-20">
+                  <div className="flex items-center gap-2">
+                     <span className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <span className="material-symbols-outlined text-primary text-xl">location_on</span>
+                     </span>
+                     <div>
+                        <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">Request Quote</h3>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase">Step {modalStep} of 3</p>
+                     </div>
+                  </div>
                </div>
-               <h3 className="text-2xl font-black text-slate-800 mb-8 text-center">Where do you want to go?</h3>
+
+               <div className="flex-1 overflow-y-auto p-6 md:p-12">
+                  <div className="hidden md:flex w-16 h-16 bg-primary/10 rounded-2xl items-center justify-center mb-6 mx-auto">
+                     <span className="material-symbols-outlined text-primary text-4xl">location_on</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 md:mb-8 text-center">
+                    {modalStep === 1 ? 'Where do you want to go?' : 
+                     modalStep === 2 ? 'Customize Your Trip' : 
+                     'Contact Information'}
+                  </h3>
                
                <form className="w-full space-y-6">
                  {modalStep === 1 && (
@@ -1449,21 +1467,23 @@ const TourDetailView = () => {
                       </div>
                    </div>
                  )}
+                </form>
+               </div>
 
+               {/* Sticky Footer for Action Button */}
+               <div className="p-4 md:p-0 border-t border-slate-100 md:border-0 bg-white md:bg-transparent sticky bottom-0 md:static">
                   <button 
                     type="button"
                     onClick={() => {
                       if (modalStep < 3) setModalStep(modalStep + 1);
                       else handleLeadSubmit(); // Submit
                     }}
-                    className="w-full h-14 bg-[#ff5a5f] text-white font-black rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-red-500/20 mt-8"
+                    className="w-full h-14 bg-[#ff5a5f] text-white font-black rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-red-500/20"
                   >
                     {modalStep === 3 ? 'GET FREE QUOTES' : 'NEXT'}
                     <span className="material-symbols-outlined text-xl">trending_flat</span>
                   </button>
-               </form>
-
-               <p className="mt-8 text-[11px] text-slate-400 font-medium text-center">650+ Agents | 40 Lac+ Travelers | 65+ Destinations</p>
+               </div>
             </div>
           </div>
         </div>
