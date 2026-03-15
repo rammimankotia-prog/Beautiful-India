@@ -364,11 +364,12 @@ const ToursDiscoveryFiltering1 = () => {
         <div data-page="tours_discovery_filtering_1" className="min-h-screen bg-[#f6f8f8]">
 
             {/* ── Hero ──────────────────────────────────────────────────────── */}
-            <section className="relative h-[220px] md:h-[320px] flex items-end overflow-hidden">
+            <section className="relative h-[220px] md:h-[320px] flex items-end overflow-hidden bg-slate-700">
                 <img
                     src="https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=1400"
                     alt={pageTitle}
-                    loading="lazy"
+                    loading="eager"
+                    fetchPriority="high"
                     className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent" />
