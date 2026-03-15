@@ -34,7 +34,71 @@ const TourDetailView = () => {
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [allTours, setAllTours] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [showSticky, setShowSticky] = useState(false);
+  const [activeSection, setActiveSection] = useState('overview');
   const { formatPrice } = useCurrency();
+
+  // Sticky Nav Visibility & Active Section Tracking
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show sticky after 600px scroll
+      setShowSticky(window.scrollY > 600);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Intersection Observer for Active Section
+    const observerOptions = {
+      root: null,
+      rootMargin: '-10% 0px -80% 0px', // Focus on the top 10%-20% of the viewport
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    const sections = ['overview', 'itinerary', 'inclusions', 'faq', 'reviews'];
+    
+    // Use a small timeout to ensure DOM is ready after loading state changes
+    const timeoutId = setTimeout(() => {
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    }, 500);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.unobserve(el);
+      });
+    };
+  }, [loading]); // Re-run when content is loaded
+
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      setActiveSection(id); // Set immediately for UI responsiveness
+      const offset = 80; // Sticky nav height offset
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -175,6 +239,49 @@ const TourDetailView = () => {
 
   return (
     <div data-page="tour_detail_view">
+      {/* Sticky Navigation Bar (Desktop Only) */}
+      <div className={`fixed top-0 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 z-[90] transition-all duration-500 shadow-xl overflow-hidden hidden md:block ${showSticky ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}`}>
+        <div className="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between">
+           {/* Left: Nav Links */}
+           <div className="flex items-center gap-1">
+              {[
+                { id: 'overview', label: 'Overview' },
+                { id: 'itinerary', label: 'Itinerary' },
+                { id: 'inclusions', label: 'Inclusions' },
+                { id: 'faq', label: 'FAQ' },
+                { id: 'reviews', label: 'Reviews' }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${
+                    activeSection === item.id 
+                      ? 'bg-primary text-white shadow-lg shadow-primary/30 scale-105' 
+                      : 'text-slate-500 hover:text-primary hover:bg-primary/5'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+           </div>
+
+           {/* Right: Quick Price & CTA */}
+           <div className="flex items-center gap-6">
+              <div className="text-right">
+                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Special Price</p>
+                 <p className="text-xl font-black text-primary leading-none">{formatPrice(tour.price, true)}</p>
+              </div>
+              <button 
+                onClick={() => setIsQuoteModalOpen(true)}
+                className="px-8 h-12 bg-primary text-white font-black rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 text-sm"
+              >
+                GET FREE QUOTES
+                <span className="material-symbols-outlined text-[18px]">trending_flat</span>
+              </button>
+           </div>
+        </div>
+      </div>
+
       <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
         {/* Top Navigation */}
 
@@ -389,7 +496,7 @@ const TourDetailView = () => {
                   </div>
                   {/* Description */}
                   {/* ── Overview & Highlights ── */}
-                  <div className="flex flex-col gap-8">
+                  <div id="overview" className="flex flex-col gap-8">
                     {/* Overview */}
                     <div className="relative">
                       <div className="flex items-center gap-3 mb-6">
@@ -408,7 +515,7 @@ const TourDetailView = () => {
                           <div>
                             <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estimated Price Guide</p>
                             <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">
-                              ₹{tour.price?.toLocaleString()} - ₹{(tour.price + 10000)?.toLocaleString()}
+                              {formatPrice(tour.price, true)} - {formatPrice(tour.price + 10000, true)}
                               <span className="text-sm font-medium text-slate-400 ml-2">/ per person</span>
                             </h4>
                           </div>
@@ -516,7 +623,7 @@ const TourDetailView = () => {
                   </div>
 
                   {/* Itinerary — TravelTriangle Style */}
-                  <div className="flex flex-col gap-4 mt-4">
+                  <div id="itinerary" className="flex flex-col gap-4 mt-4">
                     <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Day-by-Day Itinerary</h3>
                     {(() => {
                       const SERVICE_ICONS = {
@@ -596,8 +703,7 @@ const TourDetailView = () => {
 
 
                   {/* ── Inclusions & Exclusions ── */}
-                  {(tour.inclusions || tour.exclusions) && (
-                    <div className="mt-8">
+                  <div id="inclusions" className="mt-8">
                       <div className="flex items-center gap-3 mb-5">
                         <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
                           <span className="material-symbols-outlined text-[14px]">checklist</span>
@@ -653,7 +759,6 @@ const TourDetailView = () => {
                         )}
                       </div>
                     </div>
-                  )}
 
                 </div>
                 {/* Sidebar (Right Column) */}
@@ -839,7 +944,7 @@ const TourDetailView = () => {
                             <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                               <div>
                                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starts from</p>
-                                <p className="text-base font-black text-primary">{formatPrice(t.price)}</p>
+                                <p className="text-base font-black text-primary">{formatPrice(t.price, true)}</p>
                               </div>
                               <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white shadow-md shadow-primary/30 group-hover:scale-110 transition-all duration-300">
                                 <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -860,7 +965,7 @@ const TourDetailView = () => {
 
               {/* ── FAQ Section ── */}
               {tour.faq && tour.faq.length > 0 && tour.faq.some(f => f.question && f.answer) && (
-                <div className="mt-12 mb-8">
+                <div id="faq" className="mt-12 mb-8">
                   {/* Header */}
                   <div className="flex flex-col items-center text-center mb-10">
                     <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4">
@@ -912,7 +1017,7 @@ const TourDetailView = () => {
               {/* Similar Tours – rendered before FAQ above */}
 
               {/* ── Traveler Reviews ── */}
-              <div className="mt-12 mb-16">
+              <div id="reviews" className="mt-12 mb-16">
                 {/* Header Row */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                   <div>
@@ -995,8 +1100,8 @@ const TourDetailView = () => {
 
       {/* Customize & Get Quote Modal */}
       {isQuoteModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-2xl w-full max-w-[900px] overflow-hidden flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-2xl w-full max-w-[900px] max-h-[95vh] overflow-y-auto flex flex-col md:flex-row shadow-2xl relative animate-in zoom-in-95 duration-300">
             {/* Close Button */}
             <button 
               onClick={() => setIsQuoteModalOpen(false)}
@@ -1006,7 +1111,7 @@ const TourDetailView = () => {
             </button>
 
             {/* Left Pane: Instructions & Trust */}
-            <div className="w-full md:w-[45%] bg-[#f8fcfb] p-8 md:p-10 border-r border-slate-100">
+            <div className="w-full md:w-[45%] bg-[#f8fcfb] p-6 md:p-10 border-b md:border-b-0 md:border-r border-slate-100">
               <h2 className="text-[28px] font-black text-[#006D77] mb-8">How It Works</h2>
               <div className="space-y-8">
                 <div className="flex gap-4 items-start">
@@ -1049,7 +1154,7 @@ const TourDetailView = () => {
             </div>
 
             {/* Right Pane: Form */}
-            <div className="w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center items-center">
+            <div className="w-full md:w-[55%] p-6 md:p-12 flex flex-col justify-center items-center">
                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
                   <span className="material-symbols-outlined text-primary text-4xl">location_on</span>
                </div>
@@ -1238,7 +1343,7 @@ const TourDetailView = () => {
                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300 w-full">
                       <div className="space-y-4">
                         <label className="text-sm font-black text-slate-400 uppercase ml-1">Travelers</label>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                            <div className="p-4 border border-slate-200 rounded-xl flex items-center justify-between">
                               <span className="font-bold text-slate-600">Adults</span>
                               <div className="flex items-center gap-3">
@@ -1260,7 +1365,7 @@ const TourDetailView = () => {
 
                       <div className="space-y-4">
                         <label className="text-sm font-black text-slate-400 uppercase ml-1">Hotel Category</label>
-                        <div className="grid grid-cols-4 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                            {['2', '3', '4', '5'].map(star => (
                              <button
                                key={star}
@@ -1275,7 +1380,7 @@ const TourDetailView = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-4">
                           <label className="text-sm font-black text-slate-400 uppercase ml-1">Food Preference</label>
                           <div className="flex flex-col gap-2">
