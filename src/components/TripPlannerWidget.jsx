@@ -109,7 +109,7 @@ const TripPlannerWidget = () => {
                     onClick={() => setIsOpen(true)}
                     className="w-16 h-16 bg-[#0a6c75] rounded-full flex items-center justify-center shadow-2xl hover:bg-[#07565e] transition-transform hover:scale-105 p-2"
                 >
-                    <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="Chat" className="w-full h-full object-contain filter brightness-0 invert" />
+                    <img src={`${import.meta.env.BASE_URL}vite.svg`} alt="Chat" className="w-full h-full object-contain" />
                 </button>
             )}
 
@@ -119,7 +119,7 @@ const TripPlannerWidget = () => {
                     {/* Header */}
                     <div className="bg-[#0a6c75] text-white p-4 flex items-center justify-between shadow-sm z-10 transition-all">
                         <div className="flex items-center gap-2">
-                            <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="Logo" className="w-8 h-8 object-contain filter brightness-0 invert" />
+                            <img src={`${import.meta.env.BASE_URL}vite.svg`} alt="Logo" className="w-8 h-8 object-contain" />
                             <span className="font-extrabold tracking-wide text-[16px]">Bharat Darshan Mitra</span>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="hover:text-slate-200 transition-colors">
