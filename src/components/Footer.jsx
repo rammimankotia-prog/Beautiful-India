@@ -18,9 +18,55 @@ const Footer = () => {
         { label: "Contact Us", path: "/contact" }
     ];
 
-    const international = ["Thailand", "Singapore", "Malaysia", "Nepal", "Sri Lanka", "Europe", "Mauritius", "Maldives", "Egypt", "Africa", "Australia"];
-    const domestic = ["Kerala", "Ladakh", "Goa", "Rajasthan", "Kashmir", "Andaman", "Andhra Pradesh", "Bihar", "Gujarat", "Himachal", "Karnataka"];
-    const metroCities = ["Delhi", "Mumbai", "Kolkatta", "Chennai"];
+    const international = [
+        { label: "Thailand", slug: "thailand" },
+        { label: "Singapore", slug: "singapore" },
+        { label: "Malaysia", slug: "malaysia" },
+        { label: "Nepal", slug: "nepal" },
+        { label: "Sri Lanka", slug: "sri-lanka" },
+        { label: "Europe", slug: "europe" },
+        { label: "Mauritius", slug: "mauritius" },
+        { label: "Maldives", slug: "maldives" },
+        { label: "Egypt", slug: "egypt" },
+        { label: "Africa", slug: "africa" },
+        { label: "Australia", slug: "australia" }
+    ];
+    const domestic = [
+        { label: "Kerala", slug: "kerala" },
+        { label: "Ladakh", slug: "ladakh" },
+        { label: "Goa", slug: "goa" },
+        { label: "Rajasthan", slug: "rajasthan" },
+        { label: "Kashmir", slug: "kashmir" },
+        { label: "Andaman", slug: "andaman" },
+        { label: "Andhra Pradesh", slug: "andhra-pradesh" },
+        { label: "Bihar", slug: "bihar" },
+        { label: "Gujarat", slug: "gujarat" },
+        { label: "Himachal", slug: "himachal" },
+        { label: "Karnataka", slug: "karnataka" },
+        { label: "Uttarakhand", slug: "uttarakhand" },
+        { label: "Sikkim", slug: "sikkim" },
+        { label: "Meghalaya", slug: "meghalaya" },
+        { label: "Maharashtra", slug: "maharashtra" },
+        { label: "Tamil Nadu", slug: "tamil-nadu" },
+        { label: "Odisha", slug: "odisha" },
+        { label: "Madhya Pradesh", slug: "madhya-pradesh" },
+        { label: "Assam", slug: "assam" },
+        { label: "West Bengal", slug: "west-bengal" },
+        { label: "Punjab", slug: "punjab" },
+        { label: "Lakshadweep", slug: "lakshadweep" },
+        { label: "Varanasi", slug: "varanasi" },
+        { label: "Pondicherry", slug: "pondicherry" },
+        { label: "Arunachal Pradesh", slug: "arunachal-pradesh" },
+        { label: "Jharkhand", slug: "jharkhand" },
+        { label: "Chhattisgarh", slug: "chhattisgarh" },
+        { label: "Nagaland", slug: "nagaland" },
+    ];
+    const metroCities = [
+        { label: "Delhi", slug: "delhi" },
+        { label: "Mumbai", slug: "mumbai" },
+        { label: "Kolkatta", slug: "kolkatta" },
+        { label: "Chennai", slug: "chennai" }
+    ];
     const domPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
     const intPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
     const blogs = Array.from({length: 20}, (_, i) => (i + 1).toString());
@@ -47,10 +93,9 @@ const Footer = () => {
                         <div className="space-y-2">
                            <h4 className="text-white font-bold mb-3 uppercase tracking-wider text-[10px]">Top Destinations</h4>
                            <ul className="space-y-1.5 opacity-80">
-                             <li>Thailand</li>
-                             <li>Singapore</li>
-                             <li>Dubai</li>
-                             <li>Bali</li>
+                             {international.slice(0, 4).map((dest, i) => (
+                               <li key={i}><Link to={`/${dest.slug}`} className="hover:text-white">{dest.label}</Link></li>
+                             ))}
                            </ul>
                         </div>
                         {/* Additional columns... */}
@@ -87,7 +132,7 @@ const Footer = () => {
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
                             {domestic.map((dest, i) => (
                                 <React.Fragment key={i}>
-                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{dest}</Link>
+                                    <Link to={`/${dest.slug}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{dest.label}</Link>
                                     {i < domestic.length - 1 && <span className="text-gray-700">|</span>}
                                 </React.Fragment>
                             ))}
@@ -100,7 +145,7 @@ const Footer = () => {
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
                             {domPackages.map((pkg, i) => (
                                 <React.Fragment key={i}>
-                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{pkg}</Link>
+                                    <Link to={`/tours?q=${encodeURIComponent(pkg)}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{pkg}</Link>
                                     {i < domPackages.length - 1 && <span className="text-gray-700">|</span>}
                                 </React.Fragment>
                             ))}
@@ -113,7 +158,7 @@ const Footer = () => {
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
                             {metroCities.map((city, i) => (
                                 <React.Fragment key={i}>
-                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{city}</Link>
+                                    <Link to={`/${city.slug}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{city.label}</Link>
                                     {i < metroCities.length - 1 && <span className="text-gray-700">|</span>}
                                 </React.Fragment>
                             ))}
@@ -124,10 +169,10 @@ const Footer = () => {
                     <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
                         <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">International Packages</span>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
-                            {intPackages.map((pkg, i) => (
+                            {international.map((dest, i) => (
                                 <React.Fragment key={i}>
-                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{pkg}</Link>
-                                    {i < intPackages.length - 1 && <span className="text-gray-700">|</span>}
+                                    <Link to={`/${dest.slug}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{dest.label}</Link>
+                                    {i < international.length - 1 && <span className="text-gray-700">|</span>}
                                 </React.Fragment>
                             ))}
                         </div>
@@ -139,7 +184,7 @@ const Footer = () => {
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
                             {blogs.map((num, i) => (
                                 <React.Fragment key={i}>
-                                    <Link to="#!" className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{num}</Link>
+                                    <Link to={`/blog/post-${num}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{num}</Link>
                                     {i < blogs.length - 1 && <span className="text-gray-700">|</span>}
                                 </React.Fragment>
                             ))}
