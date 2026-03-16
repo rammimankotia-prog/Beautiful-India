@@ -379,11 +379,21 @@ const AdminNewTourUploadForm = () => {
               <nav className="flex text-xs font-medium text-slate-400 mb-2 gap-2 items-center">
                 <Link className="hover:text-primary" to="/admin">Admin</Link>
                 <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                <Link className="hover:text-primary" to="/admin">Tours</Link>
+                <Link className="hover:text-primary" to="/admin/tours">Tours</Link>
                 <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                <span className="text-slate-600 dark:text-slate-300">{isEdit ? 'Edit Tour' : 'Add New'}</span>
+                {typeParam === 'train' ? (
+                  <>
+                    <span className="text-slate-600 dark:text-slate-300">Train Tours</span>
+                    <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <span className="text-slate-600 dark:text-slate-300 font-bold">Create New Train tour</span>
+                  </>
+                ) : (
+                  <span className="text-slate-600 dark:text-slate-300">{isEdit ? 'Edit Tour' : 'Add New'}</span>
+                )}
               </nav>
-              <h1 className="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight">{isEdit ? 'Edit Tour Package' : 'Create New Tour'}</h1>
+              <h1 className="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight">
+                {typeParam === 'train' ? 'Create New Train Tour' : (isEdit ? 'Edit Tour Package' : 'Create New Tour')}
+              </h1>
               <p className="text-slate-500 dark:text-slate-400 text-base font-normal">{isEdit ? 'Modify the existing tour details below.' : 'Fill in the comprehensive details below to publish a new tour package.'}</p>
             </div>
 {/* Form Container */}
