@@ -77,7 +77,9 @@ const AdminNewTourUploadForm = () => {
     transports: categoriesData.categories.transports || [
       { value: 'mixed', label: 'Mixed', icon: '🚗' },
       { value: 'train', label: 'Train', icon: '🚆' }
-    ]
+    ],
+    natures: categoriesData.categories.natures || [],
+    styles: categoriesData.categories.styles || []
   });
 
   // Derive THEME_MAP from dynamic themes + fallback defaults
@@ -127,7 +129,7 @@ const AdminNewTourUploadForm = () => {
         console.error('Failed to parse categories', e);
       }
     }
-  }, []);
+  }, []); // Run only once on mount to avoid infinite loops with THEME_MAP
 
   React.useEffect(() => {
     if (isEdit) {
@@ -592,6 +594,82 @@ const AdminNewTourUploadForm = () => {
         <span>{t.icon}</span> {t.label}
       </button>
     ))}
+  </div>
+</div>
+
+{/* ── TOUR NATURE CHIPS ── */}
+<div>
+  <div className="flex items-center justify-between mb-2">
+    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+      🤝 Tour Nature
+      <span className="font-normal text-slate-400 ml-1">(Group type, Private, etc.)</span>
+    </p>
+    <Link
+      to="/admin/categorization"
+      target="_blank"
+      className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+    >
+      <span className="material-symbols-outlined text-[14px]">edit</span>
+      Manage nature ↗
+    </Link>
+  </div>
+  <div className="flex flex-wrap gap-2 mb-4">
+    {(categories.natures || []).map(n => {
+      const val = typeof n === 'string' ? n : n.value;
+      const lab = typeof n === 'string' ? n.charAt(0).toUpperCase() + n.slice(1) : n.label;
+      return (
+        <button
+          key={val}
+          type="button"
+          onClick={() => setFormData(prev => ({ ...prev, nature: val }))}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+            formData.nature === val
+              ? 'bg-primary text-white border-primary shadow-sm'
+              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary'
+          }`}
+        >
+          <span>{formData.nature === val ? '✅' : '🤝'}</span> {lab}
+        </button>
+      );
+    })}
+  </div>
+</div>
+
+{/* ── ACCOMMODATION STYLE CHIPS ── */}
+<div>
+  <div className="flex items-center justify-between mb-2">
+    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+      🏨 Accommodation Style
+      <span className="font-normal text-slate-400 ml-1">(Budget vs Luxury tier)</span>
+    </p>
+    <Link
+      to="/admin/categorization"
+      target="_blank"
+      className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+    >
+      <span className="material-symbols-outlined text-[14px]">edit</span>
+      Manage styles ↗
+    </Link>
+  </div>
+  <div className="flex flex-wrap gap-2 mb-4">
+    {(categories.styles || []).map(s => {
+      const val = typeof s === 'string' ? s : s.value;
+      const lab = typeof s === 'string' ? s.charAt(0).toUpperCase() + s.slice(1) : s.label;
+      return (
+        <button
+          key={val}
+          type="button"
+          onClick={() => setFormData(prev => ({ ...prev, style: val }))}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+            formData.style === val
+              ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-sm'
+              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75] hover:text-[#0a6c75]'
+          }`}
+        >
+          <span>{formData.style === val ? '✨' : '🏨'}</span> {lab}
+        </button>
+      );
+    })}
   </div>
 </div>
 

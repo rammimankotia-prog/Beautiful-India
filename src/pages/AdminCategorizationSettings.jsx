@@ -15,8 +15,13 @@ const DISPLAY_NAMES = {
   subregions: 'Subregions & Cities',
   themes: 'Travel Themes',
   natures: 'Tour Nature',
-  styles: 'Accommodation Styles'
+  styles: 'Accommodation Styles',
+  hotelCategories: 'Hotel Ratings',
+  accommodationTypes: 'Stay Types',
+  transports: 'Transport Modes'
 };
+
+const OBJECT_CATEGORIES = ['themes', 'hotelCategories', 'accommodationTypes', 'transports'];
 
 const SidebarLink = ({ to, icon, label, active }) => (
   <Link
@@ -30,7 +35,10 @@ const SidebarLink = ({ to, icon, label, active }) => (
 
 const AdminCategorizationSettings = () => {
   const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
-  const [newItems, setNewItems] = useState({ destinations: '', states: '', subregions: '', themes: '', natures: '', styles: '' });
+  const [newItems, setNewItems] = useState({ 
+    destinations: '', states: '', subregions: '', themes: '', natures: '', 
+    styles: '', hotelCategories: '', accommodationTypes: '', transports: '' 
+  });
   const [toastMsg, setToastMsg] = useState('');
   const [expandedKey, setExpandedKey] = useState('states'); // open states by default
 
@@ -51,39 +59,46 @@ const AdminCategorizationSettings = () => {
 
   const showToast = (msg) => {
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(''), 2500);
+    setTimeout(() => setToastMsg(''), 3000);
   };
 
   const handleAdd = (key, value) => {
-    const val = (value || newItems[key]).trim();
+    const val = (value || newItems[key] || '').trim();
     if (!val) return;
     
     // Check if exists (handle both string and object arrays)
-    const exists = categories[key].some(item => 
+    const currentList = categories[key] || [];
+    const exists = currentList.some(item => 
       typeof item === 'string' ? item === val : item.value === val || item.label === val
     );
     
-    if (exists) { showToast(`"${val}" already exists`); return; }
+    if (exists) { showToast(`⚠️ "${val}" already exists`); return; }
     
     let itemToAdd = val;
-    if (key === 'themes') {
+    if (OBJECT_CATEGORIES.includes(key)) {
       itemToAdd = { 
         value: val.toLowerCase().replace(/\s+/g, '_'), 
         label: val, 
-        icon: '📍', // Default icon
-        count: '0 Packages' 
+        icon: '📍', 
+        count: key === 'themes' ? '0 Packages' : undefined
       };
+      
+      // Special icons for specific object types if known
+      if (key === 'hotelCategories') itemToAdd.icon = '⭐';
+      if (key === 'accommodationTypes') itemToAdd.icon = '🏨';
+      if (key === 'transports') itemToAdd.icon = '🚌';
     }
     
-    const updated = { ...categories, [key]: [...categories[key], itemToAdd] };
+    const updated = { ...categories, [key]: [...currentList, itemToAdd] };
     saveCategories(updated);
     if (!value) setNewItems(prev => ({ ...prev, [key]: '' }));
     showToast(`✅ Added "${val}"`);
   };
 
   const handleRemove = (key, item) => {
-    const itemValue = typeof item === 'string' ? item : item.label;
-    const updated = { ...categories, [key]: categories[key].filter(i => 
+    const itemValue = typeof item === 'string' ? item : item?.label || 'Item';
+    const currentList = categories[key] || [];
+    const updated = { ...categories, [key]: currentList.filter(i => 
       typeof i === 'string' ? i !== item : i.label !== itemValue
     ) };
     saveCategories(updated);
@@ -92,21 +107,22 @@ const AdminCategorizationSettings = () => {
 
   const handleSync = () => {
     saveCategories(DEFAULT_CATEGORIES);
-    showToast('✅ Synced all categories with Bharat Darshan defaults');
+    showToast('♻️ Synced with system defaults');
   };
 
   return (
-    <div data-page="admin_categorization_settings" className="min-h-screen bg-slate-50">
+    <div data-page="admin_categorization_settings" className="min-h-screen bg-slate-50 flex flex-col">
       {/* Toast */}
       {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-[999] bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-2xl animate-pulse">
+        <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700 transition-all duration-300 transform translate-y-0 scale-100">
+          <span className="material-symbols-outlined text-emerald-400">info</span>
           {toastMsg}
         </div>
       )}
 
       <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex-col hidden md:flex">
+        <aside className="w-64 bg-white border-r border-slate-200 flex-shrink-0 flex-col hidden md:flex">
           <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
             <SidebarLink to="/admin/overview" icon="space_dashboard" label="Overview" />
             <SidebarLink to="/admin/tours" icon="tour" label="Manage Tours" />
@@ -122,7 +138,7 @@ const AdminCategorizationSettings = () => {
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6 lg:p-10">
-          <div className="max-w-5xl mx-auto space-y-8">
+          <div className="max-w-5xl mx-auto space-y-8 pb-20">
 
             {/* Header */}
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -133,65 +149,64 @@ const AdminCategorizationSettings = () => {
                   <span className="text-slate-600">Categorization</span>
                 </nav>
                 <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Categorization Settings</h1>
-                <p className="text-slate-500 mt-1 text-sm font-medium">Manage all lookup options that drive homepage filters, tour upload form, and discovery pages.</p>
+                <p className="text-slate-500 mt-1 text-sm font-medium">Manage destinations, themes, and tour nature settings.</p>
               </div>
-              <div className="flex gap-3">
-                <Link to="/admin/tours/new" className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow-sm hover:bg-primary/90 transition-colors">
-                  <span className="material-symbols-outlined text-[18px]">add</span> Upload Tour
-                </Link>
-                <button
-                  onClick={() => {
-                    showToast('💾 Staged! Please ask your AI assistant to "Commit categorization changes".');
-                  }}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl shadow-sm hover:bg-emerald-700 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[18px]">save_as</span> Save to System
-                </button>
-                <button
-                  onClick={handleSync}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-xl shadow-sm hover:border-primary hover:text-primary transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[18px]">sync</span> Sync Defaults
-                </button>
+              <div className="flex flex-col items-end gap-3">
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleSync}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-xl shadow-sm hover:border-primary hover:text-primary transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">sync</span> Reset to Defaults
+                  </button>
+                  <button
+                    onClick={() => {
+                      console.log('Staging categorization changes for system persistence...');
+                      showToast('✅ Staged Successfully! Please click Send to let me commit these changes permanently.');
+                    }}
+                    className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-emerald-700 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">check_circle</span> Save to System
+                  </button>
+                </div>
+                <p className="text-[10px] text-slate-400 font-medium italic">Changes are staged in browser. AI assistance required for final JSON commit.</p>
               </div>
             </div>
 
             {/* How it works banner */}
-            <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 rounded-2xl p-5 flex items-start gap-4">
-              <span className="material-symbols-outlined text-primary text-3xl mt-0.5">tips_and_updates</span>
+            <div className="bg-teal-50 border border-teal-100 rounded-2xl p-5 flex items-start gap-4">
+              <span className="material-symbols-outlined text-primary text-3xl mt-0.5">help</span>
               <div>
-                <p className="font-bold text-teal-800 text-sm mb-1">How this connects to your homepage</p>
+                <p className="font-bold text-teal-800 text-sm mb-1">How this works</p>
                 <p className="text-teal-700 text-[13px] leading-relaxed">
-                  <strong>States & Countries</strong> populate the Bharat Darshan destination chips on your homepage. &nbsp;
-                  <strong>Travel Themes</strong> drive the "Travel by Theme" section. &nbsp;
-                  All values here are the same ones shown in the <strong>Tour Upload Form</strong>. Syncing keeps everything consistent.
+                  Adding or removing items here updates your local browser immediately. To make these changes <strong>permanent</strong> for all users, click "Save to System" and then ask me to commit the changes.
                 </p>
               </div>
             </div>
 
             {/* Category Panels */}
             {Object.keys(DEFAULT_CATEGORIES).map(key => {
-              const meta = CATEGORY_META[key];
-              const preset = PRESETS[key];
+              const meta = CATEGORY_META[key] || { icon: '📦', color: 'bg-slate-50', badge: 'bg-slate-100', desc: 'Category' };
+              const preset = PRESETS[key] || { chips: [], label: 'Presets', icon: '✨' };
               const isOpen = expandedKey === key;
+              const currentItems = categories[key] || [];
 
               return (
-                <div key={key} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                  {/* Panel Header — click to expand */}
+                <div key={key} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all">
                   <button
                     onClick={() => setExpandedKey(isOpen ? null : key)}
-                    className="w-full flex items-center justify-between px-6 py-5 hover:bg-slate-50/80 transition-colors text-left"
+                    className="w-full flex items-center justify-between px-6 py-5 hover:bg-slate-50/50 transition-colors text-left"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{meta.icon}</span>
                       <div>
-                        <h2 className="text-base font-bold text-slate-900">{DISPLAY_NAMES[key]}</h2>
+                        <h2 className="text-base font-bold text-slate-900">{DISPLAY_NAMES[key] || key}</h2>
                         <p className="text-xs text-slate-400 mt-0.5">{meta.desc}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className={`text-xs font-bold px-3 py-1 rounded-full ${meta.badge}`}>
-                        {categories[key].length} items
+                        {currentItems.length} items
                       </span>
                       <span className="material-symbols-outlined text-slate-400 text-[22px] transition-transform" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }}>
                         expand_more
@@ -201,27 +216,30 @@ const AdminCategorizationSettings = () => {
 
                   {isOpen && (
                     <div className="border-t border-slate-100">
-                      {/* Current Items as chips */}
                       <div className="px-6 pt-5 pb-4">
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Current Values</p>
-                        {categories[key].length === 0 ? (
-                          <p className="text-sm text-slate-400 italic border border-dashed border-slate-200 rounded-xl py-5 text-center">
-                            No items yet. Add from presets below or type your own.
-                          </p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Live Items</p>
+                        {currentItems.length === 0 ? (
+                          <div className="border-2 border-dashed border-slate-100 rounded-2xl p-8 text-center">
+                            <p className="text-sm text-slate-400 italic">Empty. Choose from presets below.</p>
+                          </div>
                         ) : (
                           <div className="flex flex-wrap gap-2">
-                            {categories[key].map((item, idx) => (
+                            {currentItems.map((item, idx) => (
                               <span
                                 key={idx}
-                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border ${meta.color}`}
+                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border ${meta.color} shadow-sm transition-all`}
                               >
-                                {typeof item === 'string' ? item : `${item.icon || ''} ${item.label}`}
+                                {typeof item === 'string' ? item : (
+                                  <>
+                                    <span className="opacity-80">{item.icon}</span>
+                                    <span>{item.label}</span>
+                                  </>
+                                )}
                                 <button
                                   onClick={() => handleRemove(key, item)}
-                                  className="hover:bg-red-100 hover:text-red-600 rounded-full p-0.5 transition-colors ml-0.5"
-                                  title={`Remove ${typeof item === 'string' ? item : item.label}`}
+                                  className="hover:bg-red-500 hover:text-white rounded-lg p-0.5 transition-all -mr-1"
                                 >
-                                  <span className="material-symbols-outlined text-[14px] block">close</span>
+                                  <span className="material-symbols-outlined text-[16px] block">close</span>
                                 </button>
                               </span>
                             ))}
@@ -229,14 +247,11 @@ const AdminCategorizationSettings = () => {
                         )}
                       </div>
 
-                      {/* Preset Quick-Add Row */}
-                      <div className="px-6 pb-4 bg-slate-50/60 border-t border-slate-100 pt-4">
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
-                          {preset.icon} {preset.label} — click to add
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="px-6 pb-6 bg-slate-50/30 border-t border-slate-100 pt-6">
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Quick Add Presets</p>
+                        <div className="flex flex-wrap gap-2 mb-6">
                           {preset.chips.map(chip => {
-                            const alreadyAdded = categories[key].some(i => 
+                            const alreadyAdded = currentItems.some(i => 
                               typeof i === 'string' ? i === chip : i.value === chip || i.label === chip
                             );
                             return (
@@ -244,39 +259,34 @@ const AdminCategorizationSettings = () => {
                                 key={chip}
                                 onClick={() => !alreadyAdded && handleAdd(key, chip)}
                                 disabled={alreadyAdded}
-                                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+                                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
                                   alreadyAdded
-                                    ? 'bg-primary/10 text-primary border-primary/30 cursor-default'
-                                    : 'bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary hover:bg-primary/5 cursor-pointer'
+                                    ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-default opacity-60'
+                                    : 'bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary hover:shadow-md active:scale-95'
                                 }`}
                               >
-                                {alreadyAdded && <span className="material-symbols-outlined text-[14px]">check</span>}
-                                {!alreadyAdded && <span className="material-symbols-outlined text-[14px]">add</span>}
+                                <span className="material-symbols-outlined text-[16px]">{alreadyAdded ? 'check' : 'add'}</span>
                                 {chip}
                               </button>
                             );
                           })}
                         </div>
-                      </div>
 
-                      {/* Custom Add Input */}
-                      <div className="px-6 pb-5">
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Add Custom Value</p>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 items-center bg-white p-2 rounded-2xl border border-slate-200 shadow-inner group-focus-within:border-primary">
                           <input
                             type="text"
-                            placeholder={`Type a new ${DISPLAY_NAMES[key].toLowerCase().replace(/s$/, '').split(' ').pop()}…`}
-                            value={newItems[key]}
+                            placeholder={`Define custom ${DISPLAY_NAMES[key] || key}…`}
+                            value={newItems[key] || ''}
                             onChange={(e) => setNewItems(prev => ({ ...prev, [key]: e.target.value }))}
                             onKeyDown={(e) => e.key === 'Enter' && handleAdd(key)}
-                            className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
+                            className="flex-1 px-4 py-2 text-sm focus:outline-none bg-transparent"
                           />
                           <button
                             onClick={() => handleAdd(key)}
-                            disabled={!newItems[key].trim()}
-                            className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+                            disabled={!(newItems[key] || '').trim()}
+                            className="px-6 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 disabled:opacity-20 transition-all active:scale-95"
                           >
-                            <span className="material-symbols-outlined text-[18px]">add</span> Add
+                            Add
                           </button>
                         </div>
                       </div>
@@ -285,18 +295,9 @@ const AdminCategorizationSettings = () => {
                 </div>
               );
             })}
-
           </div>
         </main>
       </div>
-
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes slideInUp {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        .animate-pulse { animation: slideInUp 0.3s ease; }
-      `}} />
     </div>
   );
 };
