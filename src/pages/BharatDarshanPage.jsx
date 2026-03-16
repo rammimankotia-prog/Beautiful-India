@@ -467,6 +467,58 @@ const BharatDarshanPage = () => {
         </div>
       </section>
 
+      {/* ── Travel by Train ── */}
+      <section className="py-20 relative overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #fff 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+            <div className="text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-400/20 text-amber-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-3 border border-amber-400/30">
+                <span className="material-symbols-outlined text-[14px]">train</span> Luxury Rail Journeys
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">Travel by Train</h2>
+              <p className="text-white/60 mt-2 max-w-xl">Experience the scenic beauty of India through the windows of a train. Romantic, sustainable, and iconic.</p>
+            </div>
+            <Link to="/tours/tours-by-train" className="px-8 py-3.5 bg-amber-400 text-slate-900 font-black rounded-2xl hover:bg-amber-300 transition-all shadow-xl shadow-amber-400/20 flex items-center gap-2 whitespace-nowrap">
+              View All Train Tours <span className="material-symbols-outlined">arrow_forward</span>
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {allTours.filter(t => t.transport === 'train').slice(0, 3).map(tour => (
+              <article key={tour.id} className="group relative bg-[#0f172a] rounded-3xl overflow-hidden border border-white/10 hover:border-amber-400/50 transition-all duration-500 hover:shadow-2xl hover:shadow-amber-400/10">
+                <div className="relative h-64 overflow-hidden">
+                  <img src={tour.image} alt={tour.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent" />
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    <span className="bg-amber-400 text-slate-900 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Train Tour</span>
+                    <span className="bg-white/10 backdrop-blur-md text-white text-[10px] font-black px-3 py-1 rounded-full border border-white/20 uppercase tracking-tighter">{tour.duration}</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="text-amber-400 flex items-center gap-1 mb-2">
+                    <span className="material-symbols-outlined text-[16px]">location_on</span>
+                    <span className="text-[11px] font-bold uppercase tracking-wider">{tour.stateRegion}</span>
+                  </div>
+                  <h3 className="text-xl font-black text-white mb-3 leading-tight group-hover:text-amber-400 transition-colors line-clamp-1">{tour.title}</h3>
+                  <p className="text-white/50 text-sm mb-6 line-clamp-2 font-medium">{tour.description}</p>
+                  
+                  <div className="flex items-center justify-between pt-5 border-t border-white/5">
+                    <div>
+                      <div className="text-[10px] text-white/40 font-black uppercase tracking-widest">Starts at</div>
+                      <div className="text-2xl font-black text-white">₹{parseInt(tour.price).toLocaleString('en-IN')}</div>
+                    </div>
+                    <Link to={`/tour/${tour.id}`} className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white group-hover:bg-amber-400 group-hover:text-slate-900 transition-all duration-300">
+                      <span className="material-symbols-outlined">arrow_outward</span>
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Why Bharat Darshan ── */}
       <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-6">

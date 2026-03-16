@@ -69,6 +69,7 @@ import BharatDarshanPage from './pages/BharatDarshanPage';
 import ContactPage from './pages/ContactPage';
 import AboutUsPage from './pages/AboutUsPage';
 import FestivalsPage from './pages/FestivalsPage';
+import ToursByTrain from './pages/ToursByTrain';
 
 /**
  * All 56 Wanderlust pages, organised by group.
@@ -151,5 +152,6 @@ export const routes = [
   { path: '/wanderbot', element: <WanderbotTourMatchmakerChatbot /> },
   { path: '/emails/welcome', element: <WelcomeEmailTemplate /> },
   { path: '/bharat-darshan', element: <BharatDarshanPage /> },
+  { path: '/tours/tours-by-train', element: <ToursByTrain /> },
   { path: '/:regionSlug', element: <ToursDiscoveryFiltering1 /> }
 ];

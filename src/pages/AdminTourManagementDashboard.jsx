@@ -102,15 +102,21 @@ const AdminTourManagementDashboard = () => {
 <h1 className="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight tracking-tight">Manage Tours</h1>
 <p className="text-slate-500 dark:text-slate-400 mt-1">View, edit, and create new tour packages.</p>
 </div>
+<div className="flex flex-wrap items-center gap-3">
+<Link to="/admin/tours/new?type=train" className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-5 bg-[#0a6c75] text-white text-sm font-bold leading-normal hover:bg-[#085a62] transition-colors shadow-sm gap-2">
+<span className="material-symbols-outlined text-sm">train</span>
+<span className="truncate">Create Train Tour</span>
+</Link>
 <Link to="/admin/tours/new" className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary text-white text-sm font-medium leading-normal hover:bg-primary/90 transition-colors shadow-sm gap-2">
 <span className="material-symbols-outlined text-sm">add</span>
 <span className="truncate">Create New Tour</span>
 </Link>
 </div>
+</div>
 {/* Tabs & View Toggle */}
 <div className="border-b border-slate-200 dark:border-slate-700 mb-6 flex justify-between items-end">
 <nav aria-label="Tabs" className="flex gap-8 px-2">
-  {['All Tours', 'Active', 'Drafts', 'Archived'].map(tab => (
+  {['All Tours', 'Active', 'Train Tours', 'Drafts', 'Archived'].map(tab => (
     <button 
       key={tab}
       onClick={() => setActiveTab(tab)}
@@ -191,13 +197,20 @@ const AdminTourManagementDashboard = () => {
       <tr><td colSpan="7" className="text-center py-10">Loading tours...</td></tr>
     ) : tours
         .filter(tour => {
+           // 1. Filter by Folder if in folder view and something is selected
            if (viewMode === 'folders' && selectedDest && selectedState) {
-              return (tour.destination || 'Uncategorized') === selectedDest && (tour.stateRegion || 'Unspecified') === selectedState;
+              if ((tour.destination || 'Uncategorized') !== selectedDest || (tour.stateRegion || 'Unspecified') !== selectedState) {
+                return false;
+              }
            }
-           if (activeTab === 'Active') return tour.status === 'active';
-           if (activeTab === 'Drafts') return tour.status === 'draft';
-           if (activeTab === 'Archived') return tour.status === 'paused';
-           return true;
+           
+           // 2. Filter by Tab (Additive)
+           if (activeTab === 'Active' && tour.status !== 'active') return false;
+           if (activeTab === 'Train Tours' && tour.transport !== 'train') return false;
+           if (activeTab === 'Drafts' && tour.status !== 'draft') return false;
+           if (activeTab === 'Archived' && tour.status !== 'paused') return false;
+           
+           return true; 
         })
         .map(tour => (
     <tr key={tour.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">

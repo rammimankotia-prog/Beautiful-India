@@ -6,12 +6,14 @@ import { Link } from 'react-router-dom';
  * Auto-generated from: admin_new_tour_upload_form/code.html
  * Group: admin | Path: /admin/tours/new
  */
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 const AdminNewTourUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const isEdit = Boolean(id);
+  const typeParam = searchParams.get('type');
   const [formData, setFormData] = React.useState({
     title: '',
     description: '',
@@ -41,7 +43,8 @@ const AdminNewTourUploadForm = () => {
     availableTo: '',
     cityPath: '',
     hotelCategory: [], 
-    accommodationType: []
+    accommodationType: [],
+    transport: typeParam === 'train' ? 'train' : 'mixed'
   });
 
   const [categories, setCategories] = React.useState({
@@ -102,6 +105,12 @@ const AdminNewTourUploadForm = () => {
       { value: 'houseboat', label: 'Houseboat', icon: '🚢' },
       { value: 'villa', label: 'Villa', icon: '🏡' },
       { value: 'apartment', label: 'Apartment', icon: '🏢' }
+    ],
+    transports: [
+      { value: 'mixed', label: 'Mixed', icon: '🚗' },
+      { value: 'train', label: 'Train', icon: '🚆' },
+      { value: 'flight', label: 'Flight', icon: '✈️' },
+      { value: 'bus', label: 'Bus', icon: '🚌' }
     ]
   });
 
@@ -459,6 +468,31 @@ const AdminNewTourUploadForm = () => {
             }`}
           >
             <span>{type.icon}</span> {type.label}
+          </button>
+        );
+      })}
+    </div>
+  </div>
+  <div className="col-span-1 md:col-span-2">
+    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2 border-t border-slate-100 dark:border-slate-800 pt-5 mt-2">
+      <span className="material-symbols-outlined text-[18px]">directions_transit</span> Transport Type
+      <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Single-select</span>
+    </p>
+    <div className="flex flex-wrap gap-2">
+      {categories.transports.map(tr => {
+        const isSelected = formData.transport === tr.value;
+        return (
+          <button
+            key={tr.value}
+            type="button"
+            onClick={() => setFormData(prev => ({ ...prev, transport: tr.value }))}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
+              isSelected
+                ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105'
+                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50'
+            }`}
+          >
+            <span>{tr.icon}</span> {tr.label}
           </button>
         );
       })}

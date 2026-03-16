@@ -12,10 +12,19 @@ const Header = () => {
     const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isToursDropdownOpen, setIsToursDropdownOpen] = useState(false);
+    const [isMobileToursOpen, setIsMobileToursOpen] = useState(false);
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Tours', path: '/tours' },
+        { 
+            name: 'Tours', 
+            path: '/tours',
+            subItems: [
+                { name: 'All Tours', path: '/tours', icon: 'explore' },
+                { name: 'Tours by Train', path: '/tours/tours-by-train', icon: 'train' }
+            ]
+        },
         { name: 'Destinations', path: '/guides' },
         { name: 'About Us', path: '/about' },
         { name: 'Contact', path: '/contact' }
@@ -35,6 +44,44 @@ const Header = () => {
                 {navLinks.map(link => {
                     const isActive = currentPath === link.path || (link.path === '/tours' && currentPath.startsWith('/tours'));
                     
+                    if (link.subItems) {
+                        return (
+                            <div 
+                                key={link.name}
+                                className="relative group"
+                                onMouseEnter={() => setIsToursDropdownOpen(true)}
+                                onMouseLeave={() => setIsToursDropdownOpen(false)}
+                            >
+                                <button 
+                                    className={`flex items-center gap-1 text-[15px] font-medium transition-colors ${isActive ? 'text-white font-bold' : 'text-slate-300 hover:text-white'}`}
+                                >
+                                    {link.name}
+                                    <span className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${isToursDropdownOpen ? 'rotate-180' : ''}`}>
+                                        expand_more
+                                    </span>
+                                    {isActive && (
+                                        <div className="absolute -bottom-[22px] left-0 right-0 h-0.5 bg-primary"></div>
+                                    )}
+                                </button>
+
+                                {/* Dropdown Menu */}
+                                <div className={`absolute left-1/2 -translate-x-1/2 mt-[12px] w-56 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl py-3 transition-all duration-300 origin-top overflow-hidden z-50 ${isToursDropdownOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+                                    <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-xl -z-10"></div>
+                                    {link.subItems.map(subItem => (
+                                        <Link
+                                            key={subItem.name}
+                                            to={subItem.path}
+                                            className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all font-medium"
+                                        >
+                                            <span className="material-symbols-outlined text-[20px] text-primary">{subItem.icon}</span>
+                                            {subItem.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    }
+
                     return (
                         <Link 
                             key={link.name} 
@@ -146,15 +193,46 @@ const Header = () => {
                         </button>
                     </div>
 
-                    <nav className="flex flex-col gap-4">
+                    <nav className="flex flex-col gap-2">
                         {navLinks.map(link => {
-                            const isActive = currentPath === link.path;
+                            const isActive = currentPath === link.path || (link.path === '/tours' && currentPath.startsWith('/tours'));
+                            
+                            if (link.subItems) {
+                                return (
+                                    <div key={link.name} className="flex flex-col">
+                                        <button 
+                                            onClick={() => setIsMobileToursOpen(!isMobileToursOpen)}
+                                            className={`flex items-center justify-between text-lg font-medium py-3 transition-colors ${isActive ? 'text-primary' : 'text-slate-300 hover:text-white'}`}
+                                        >
+                                            {link.name}
+                                            <span className={`material-symbols-outlined transition-transform duration-300 ${isMobileToursOpen ? 'rotate-180' : ''}`}>
+                                                expand_more
+                                            </span>
+                                        </button>
+                                        
+                                        <div className={`flex flex-col gap-2 pl-4 overflow-hidden transition-all duration-300 ${isMobileToursOpen ? 'max-h-40 opacity-100 mt-1 mb-3' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                                            {link.subItems.map(subItem => (
+                                                <Link 
+                                                    key={subItem.name} 
+                                                    to={subItem.path}
+                                                    onClick={() => setIsMobileMenuOpen(false)}
+                                                    className={`flex items-center gap-2 text-sm py-2 transition-colors ${currentPath === subItem.path ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+                                                >
+                                                    <span className="material-symbols-outlined text-[18px] text-primary">{subItem.icon}</span>
+                                                    {subItem.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            }
+
                             return (
                                 <Link 
                                     key={link.name} 
                                     to={link.path}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`text-lg font-medium py-2 transition-colors ${isActive ? 'text-primary' : 'text-slate-300 hover:text-white'}`}
+                                    className={`text-lg font-medium py-3 transition-colors ${isActive ? 'text-primary' : 'text-slate-300 hover:text-white'}`}
                                 >
                                     {link.name}
                                 </Link>
