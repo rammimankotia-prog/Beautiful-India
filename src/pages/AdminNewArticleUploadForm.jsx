@@ -74,8 +74,38 @@ const AdminNewArticleUploadForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`Article ${id ? 'updated' : 'created'} (mocked):`, formData);
-    alert(`Article ${id ? 'Updated' : 'Created'} Successfully (Mocked for static site)`);
+    setLoading(true);
+
+    const savedGuides = localStorage.getItem('wanderlust_admin_guides');
+    let guides = [];
+    if (savedGuides) {
+      try {
+        guides = JSON.parse(savedGuides);
+      } catch (err) {
+        console.error("Error parsing guides:", err);
+      }
+    }
+
+    const guideToSave = { 
+      ...formData, 
+      id: id || Date.now().toString(),
+      date: formData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    };
+
+    let updatedGuides;
+    if (id) {
+      updatedGuides = guides.map(g => String(g.id) === String(id) ? guideToSave : g);
+      if (!guides.find(g => String(g.id) === String(id))) {
+        updatedGuides = [...guides, guideToSave];
+      }
+    } else {
+      updatedGuides = [...guides, guideToSave];
+    }
+
+    localStorage.setItem('wanderlust_admin_guides', JSON.stringify(updatedGuides));
+    alert(`Article ${id ? 'Updated' : 'Created'} Successfully! (Stored in Local Storage)`);
+    
+    setLoading(false);
     navigate('/admin/guides');
   };
 

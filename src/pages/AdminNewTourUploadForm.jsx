@@ -132,7 +132,8 @@ const AdminNewTourUploadForm = () => {
   }, []); // Run only once on mount to avoid infinite loops with THEME_MAP
 
   React.useEffect(() => {
-    if (isEdit) {
+    if (id) {
+      setIsEdit(true);
       // First check localStorage for session changes
       const savedTours = localStorage.getItem('wanderlust_admin_tours');
       if (savedTours) {
@@ -140,24 +141,26 @@ const AdminNewTourUploadForm = () => {
           const tours = JSON.parse(savedTours);
           const matched = tours.find(t => String(t.id) === String(id));
           if (matched) {
-            setFormData(matched);
+            setFormData(prev => ({ ...prev, ...matched }));
+            console.log("Loaded tour from localStorage session");
             return;
           }
         } catch (e) {
-          console.error("Local storage parse error:", e);
+          console.error("Local storage error:", e);
         }
       }
 
-      // Fallback to static data
       fetch(`${import.meta.env.BASE_URL}data/tours.json`)
         .then(res => res.json())
         .then(data => {
           const matched = data.find(t => String(t.id) === String(id));
-          if (matched) setFormData(matched);
+          if (matched) setFormData(prev => ({ ...prev, ...matched }));
         })
-        .catch(err => console.error("Fetch tour error:", err));
+        .catch(err => {
+          console.error("Failed to load tour:", err);
+        });
     }
-  }, [id, isEdit]);
+  }, [id]);
 
   // Get states filtered by selected destination
   const availableStates = React.useMemo(() => {
@@ -217,10 +220,44 @@ const AdminNewTourUploadForm = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(`Tour ${isEdit ? 'updated' : 'created'} (mocked):`, formData);
-    alert(`Tour ${isEdit ? 'Updated' : 'Created'} Successfully (Mocked for static site)`);
-    navigate('/admin');
+    if (e && e.preventDefault) e.preventDefault();
+    setLoading(true);
+
+    const savedTours = localStorage.getItem('wanderlust_admin_tours');
+    let tours = [];
+    if (savedTours) {
+      try {
+        tours = JSON.parse(savedTours);
+      } catch (err) {
+        console.error("Error parsing tours:", err);
+      }
+    }
+
+    const tourToSave = { ...formData };
+    
+    // Ensure ID exists
+    if (!tourToSave.id) {
+      tourToSave.id = Date.now().toString(); // Simple ID generation
+    }
+
+    let updatedTours;
+    if (isEdit) {
+      updatedTours = tours.map(t => String(t.id) === String(id) ? tourToSave : t);
+      // If it wasn't in localStorage yet (first time editing defaults), add it
+      if (!tours.find(t => String(t.id) === String(id))) {
+        updatedTours = [...tours, tourToSave];
+      }
+    } else {
+      updatedTours = [...tours, tourToSave];
+    }
+
+    localStorage.setItem('wanderlust_admin_tours', JSON.stringify(updatedTours));
+    
+    const statusMsg = tourToSave.status === 'draft' ? 'Draft Saved' : (isEdit ? 'Tour Updated' : 'Tour Published');
+    alert(`${statusMsg} Successfully! (Stored in Local Storage)`);
+    
+    setLoading(false);
+    navigate('/admin/tours');
   };
 
   // ── Image helpers — images are stored as { url, caption } objects ──
