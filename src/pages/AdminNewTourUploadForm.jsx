@@ -119,7 +119,7 @@ const AdminNewTourUploadForm = () => {
         if (parsed.themes && Array.isArray(parsed.themes)) {
           parsed.themes = parsed.themes.map(t => {
             if (typeof t === 'string') {
-              return { value: t, ...(THEME_MAP[t] || { label: t.charAt(0).toUpperCase() + t.slice(1), icon: '🏷️' }) };
+              return { value: t, label: t.charAt(0).toUpperCase() + t.slice(1), icon: '🏷️' };
             }
             return t;
           });
@@ -170,7 +170,7 @@ const AdminNewTourUploadForm = () => {
   const handleAddDay = () => {
     const newItinerary = [...(formData.itinerary || [])];
     const nextDay = newItinerary.length > 0 ? newItinerary[newItinerary.length - 1].day + 1 : 1;
-    newItinerary.push({ day: nextDay, title: '', description: '' });
+    newItinerary.push({ day: nextDay, title: '', description: '', tags: [], services: [] });
     setFormData(prev => ({ ...prev, itinerary: newItinerary }));
   };
 
@@ -356,7 +356,7 @@ const AdminNewTourUploadForm = () => {
             </div>
 {/* Form Container */}
 <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-<form className="p-6 md:p-8 space-y-8">
+<form className="p-6 md:p-8 space-y-8" onSubmit={handleSubmit}>
 {/* Section 1: Basic Info */}
 <div className="space-y-6">
 <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Basic Information</h2>
@@ -580,20 +580,25 @@ const AdminNewTourUploadForm = () => {
     </Link>
   </div>
   <div className="flex flex-wrap gap-2 mb-4">
-    {categories.themes.map(t => (
-      <button
-        key={t.value}
-        type="button"
-        onClick={() => setFormData(prev => ({ ...prev, theme: t.value }))}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-          formData.theme === t.value
-            ? 'bg-primary text-white border-primary shadow-sm'
-            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary'
-        }`}
-      >
-        <span>{t.icon}</span> {t.label}
-      </button>
-    ))}
+    {(categories.themes || []).map(t => {
+      const themeObj = typeof t === 'string' 
+        ? { value: t, label: t.charAt(0).toUpperCase() + t.slice(1), icon: '🏷️' } 
+        : t;
+      return (
+        <button
+          key={themeObj.value}
+          type="button"
+          onClick={() => setFormData(prev => ({ ...prev, theme: themeObj.value }))}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+            formData.theme === themeObj.value
+              ? 'bg-primary text-white border-primary shadow-sm'
+              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary'
+          }`}
+        >
+          <span>{themeObj.icon || '🏷️'}</span> {themeObj.label || themeObj.value}
+        </button>
+      );
+    })}
   </div>
 </div>
 
@@ -845,27 +850,26 @@ const AdminNewTourUploadForm = () => {
                 { id: 'train',     icon: 'train',          label: 'Train',     color: 'text-indigo-600' },
               ].map(svc => {
                 const currentServices = Array.isArray(day.services) ? day.services : [];
-                const checked = currentServices.includes(svc.id);
+                const isSelected = currentServices.includes(svc.id);
                 return (
-                  <label key={svc.id} className={`flex items-center gap-1.5 cursor-pointer px-3 py-1.5 rounded-xl border transition-all ${
-                    checked
-                      ? 'bg-primary/10 border-primary/40 text-primary'
-                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'
-                  }`}>
-                    <input 
-                      type="checkbox"
-                      checked={checked}
-                      onChange={(e) => {
-                        const updated = e.target.checked 
-                          ? [...currentServices, svc.id]
-                          : currentServices.filter(s => s !== svc.id);
-                        handleItineraryChange(index, 'services', updated);
-                      }}
-                      className="sr-only"
-                    />
+                  <button
+                    key={svc.id}
+                    type="button"
+                    onClick={() => {
+                      const updated = isSelected
+                        ? currentServices.filter(s => s !== svc.id)
+                        : [...currentServices, svc.id];
+                      handleItineraryChange(index, 'services', updated);
+                    }}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+                      isSelected
+                        ? 'bg-primary/10 border-primary/40 text-primary shadow-sm'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-primary/30'
+                    }`}
+                  >
                     <span className={`material-symbols-outlined text-[18px] ${svc.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{svc.icon}</span>
                     <span className="text-xs font-semibold">{svc.label}</span>
-                  </label>
+                  </button>
                 );
               })}
             </div>
@@ -1145,8 +1149,10 @@ const AdminNewTourUploadForm = () => {
                     Save as Draft
                 </button>
 <button 
+  type="button"
   onClick={handleSubmit}
-  className="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all shadow-sm flex items-center gap-2" type="submit">
+  className="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all shadow-sm flex items-center gap-2"
+>
 <span className="material-symbols-outlined text-sm">check_circle</span>
                     {isEdit ? 'Update Tour' : 'Publish Tour'}
                 </button>
