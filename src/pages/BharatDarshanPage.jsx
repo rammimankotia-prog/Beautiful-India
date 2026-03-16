@@ -220,13 +220,27 @@ const BharatDarshanPage = () => {
         d.name.toLowerCase() === activeFilter.toLowerCase()
       );
 
+  // Refine tour filtering logic
   const filteredTourPackages = activeFilter === 'All'
     ? allTours.slice(0, 8) // Show top 8 by default
-    : allTours.filter(t => 
-        t.theme?.toLowerCase().includes(activeFilter.toLowerCase()) || 
-        t.stateRegion?.toLowerCase().includes(activeFilter.toLowerCase()) ||
-        destinations.find(d => d.name === t.stateRegion && d.badge.includes(activeFilter))
-      );
+    : allTours.filter(t => {
+        const query = activeFilter.toLowerCase();
+        return (
+          t.theme?.toLowerCase().includes(query) || 
+          t.stateRegion?.toLowerCase().includes(query) ||
+          (t.title?.toLowerCase().includes(query)) ||
+          destinations.find(d => d.name === t.stateRegion && d.badge.toLowerCase().includes(query))
+        );
+      });
+
+  const handleThemeClick = (themeLabel) => {
+    if (activeFilter === themeLabel) {
+      setActiveFilter('All');
+    } else {
+      setActiveFilter(themeLabel);
+      scrollToResults();
+    }
+  };
 
   const handleLeadSubmit = async (e) => {
     e.preventDefault();
@@ -298,10 +312,7 @@ const BharatDarshanPage = () => {
           {themes.map(t => (
             <div
               key={t.label}
-              onClick={() => {
-                setActiveFilter(t.label);
-                scrollToResults();
-              }}
+              onClick={() => handleThemeClick(t.label)}
               className={`flex flex-col items-center p-4 rounded-2xl border transition-all cursor-pointer group ${activeFilter === t.label ? 'bg-teal-50 border-[#0a6c75] shadow-md ring-1 ring-[#0a6c75]' : 'bg-white border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1'}`}
             >
               <div className="text-2xl md:text-3xl mb-2">{t.icon}</div>
