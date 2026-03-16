@@ -1040,6 +1040,16 @@ const AdminNewTourUploadForm = () => {
   {/* Drop Zone */}
   <label
     htmlFor="file-upload"
+    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+    onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
+    onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); }}
+    onDrop={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleImageUpload({ target: { files: e.dataTransfer.files } });
+      }
+    }}
     className="flex flex-col items-center justify-center w-full rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 px-6 py-10 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-primary/50 transition-all group"
   >
     <span className="material-symbols-outlined text-5xl text-slate-400 group-hover:text-primary transition-colors mb-3">add_photo_alternate</span>
