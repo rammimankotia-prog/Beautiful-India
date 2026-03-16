@@ -160,16 +160,31 @@ const AdminCategorizationSettings = () => {
                     <span className="material-symbols-outlined text-[18px]">sync</span> Reset to Defaults
                   </button>
                   <button
-                    onClick={() => {
-                      console.log('Staging categorization changes for system persistence...');
-                      showToast('✅ Staged Successfully! Please click Send to let me commit these changes permanently.');
+                    onClick={async () => {
+                      try {
+                        const res = await fetch('/api/save-categories', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(categories)
+                        });
+                        const result = await res.json();
+                        if (result.success) {
+                          showToast('✅ Saved successfully to categories.json');
+                        } else {
+                          showToast('❌ Error saving system configuration');
+                          console.error('Save error:', result.error);
+                        }
+                      } catch (err) {
+                        showToast('❌ Error connecting to development server');
+                        console.error('Fetch error:', err);
+                      }
                     }}
                     className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-emerald-700 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <span className="material-symbols-outlined text-[20px]">check_circle</span> Save to System
                   </button>
                 </div>
-                <p className="text-[10px] text-slate-400 font-medium italic">Changes are staged in browser. AI assistance required for final JSON commit.</p>
+                <p className="text-[10px] text-slate-400 font-medium italic">Saves permanently to categories.json (requires dev server)</p>
               </div>
             </div>
 
