@@ -235,6 +235,16 @@ const AdminNewTourUploadForm = () => {
 
     const tourToSave = { ...formData };
     
+    // Process itinerary tags: convert string to array
+    if (tourToSave.itinerary) {
+      tourToSave.itinerary = tourToSave.itinerary.map(day => ({
+        ...day,
+        tags: typeof day.tags === 'string' 
+          ? day.tags.split(',').map(t => t.trim()).filter(Boolean) 
+          : (Array.isArray(day.tags) ? day.tags : [])
+      }));
+    }
+
     // Ensure ID exists
     if (!tourToSave.id) {
       tourToSave.id = Date.now().toString(); // Simple ID generation
@@ -877,8 +887,8 @@ const AdminNewTourUploadForm = () => {
               Highlight Tags
             </span>
             <input 
-              value={Array.isArray(day.tags) ? day.tags.join(', ') : (day.tags || '')}
-              onChange={(e) => handleItineraryChange(index, 'tags', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
+              value={typeof day.tags === 'string' ? day.tags : (Array.isArray(day.tags) ? day.tags.join(', ') : '')}
+              onChange={(e) => handleItineraryChange(index, 'tags', e.target.value)}
               className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" 
               placeholder="e.g. Dal Lake, Gondola Ride, Gulmarg (comma-separated)" 
               type="text"
