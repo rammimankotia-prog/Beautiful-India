@@ -58,7 +58,6 @@ const AdminLeadsDashboard = () => {
     };
 
     const handleDelete = (id) => {
-        if (!window.confirm("Are you sure you want to delete this inquiry?")) return;
         const updated = leads.filter(l => l.id !== id);
         saveLeadsLocally(updated);
         showToast("Inquiry deleted");

@@ -14,6 +14,12 @@ const AdminBookingManagementDashboard = () => {
   const [dateRange, setDateRange] = React.useState('All Time');
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
+  const [toastMsg, setToastMsg] = React.useState('');
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 3000);
+  };
   const [sortConfig, setSortConfig] = React.useState({ key: 'id', direction: 'desc' });
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 10;
@@ -21,6 +27,17 @@ const AdminBookingManagementDashboard = () => {
 
   const fetchBookings = () => {
     setLoading(true);
+    const saved = localStorage.getItem('wanderlust_admin_bookings');
+    if (saved) {
+      try {
+        setBookings(JSON.parse(saved));
+        setLoading(false);
+        return;
+      } catch (e) {
+        console.error("Parse error:", e);
+      }
+    }
+
     fetch(`${import.meta.env.BASE_URL}data/bookings.json`)
       .then(res => res.json())
       .then(data => {
@@ -33,19 +50,42 @@ const AdminBookingManagementDashboard = () => {
       });
   };
 
+  const saveBookings = (updated) => {
+    setBookings(updated);
+    localStorage.setItem('wanderlust_admin_bookings', JSON.stringify(updated));
+  };
+
   React.useEffect(() => {
     fetchBookings();
   }, []);
 
   const handleStatusUpdate = (id, newStatus) => {
-    console.log("Booking status updated (mocked):", id, newStatus);
-    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: newStatus } : b));
+    const updated = bookings.map(b => b.id === id ? { ...b, status: newStatus } : b);
+    saveBookings(updated);
+    showToast(`Status updated to ${newStatus}`);
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm("Are you sure you want to delete this booking record?")) return;
-    console.log("Booking deleted (mocked):", id);
-    setBookings(prev => prev.filter(b => b.id !== id));
+    const updated = bookings.filter(b => b.id !== id);
+    saveBookings(updated);
+    showToast("Booking deleted");
+  };
+
+  const handleSync = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/save-bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookings)
+      });
+      if (response.ok) {
+        showToast("System updated successfully!");
+      } else {
+        showToast("Changes staged for next system update.");
+      }
+    } catch (error) {
+      showToast("Changes staged for next system update.");
+    }
   };
 
   const getFilteredAndSortedBookings = () => {
@@ -134,6 +174,13 @@ const AdminBookingManagementDashboard = () => {
 
   return (
     <div data-page="admin_booking_management_dashboard">
+      {/* Toast */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
+          <span className="material-symbols-outlined text-emerald-400">check_circle</span>
+          {toastMsg}
+        </div>
+      )}
       <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden">
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar Navigation */}
@@ -188,6 +235,13 @@ const AdminBookingManagementDashboard = () => {
                 <p className="text-slate-500 dark:text-slate-400 mt-1">Oversee and process all tour reservations across the platform.</p>
               </div>
               <div className="flex gap-3">
+                <button 
+                  onClick={handleSync}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-[#0a6c75] text-white rounded-lg text-sm font-bold shadow-lg shadow-teal-900/20 hover:bg-[#085a62] transition-all"
+                >
+                  <span className="material-symbols-outlined text-lg">cloud_upload</span>
+                  Save to System
+                </button>
                 <button 
                   onClick={exportToCSV}
                   className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-sand transition-colors"

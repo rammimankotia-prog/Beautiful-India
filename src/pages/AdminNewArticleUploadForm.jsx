@@ -34,6 +34,21 @@ const AdminNewArticleUploadForm = () => {
 
   useEffect(() => {
     if (id) {
+      // First check localStorage
+      const savedGuides = localStorage.getItem('wanderlust_admin_guides');
+      if (savedGuides) {
+        try {
+          const guides = JSON.parse(savedGuides);
+          const matched = guides.find(g => String(g.id) === String(id));
+          if (matched) {
+            setFormData(prev => ({ ...prev, ...matched }));
+            return;
+          }
+        } catch (e) {
+          console.error("Local storage error:", e);
+        }
+      }
+
       fetch(`${import.meta.env.BASE_URL}data/guides.json`)
         .then(res => res.json())
         .then(data => {

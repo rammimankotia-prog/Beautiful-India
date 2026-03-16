@@ -133,6 +133,22 @@ const AdminNewTourUploadForm = () => {
 
   React.useEffect(() => {
     if (isEdit) {
+      // First check localStorage for session changes
+      const savedTours = localStorage.getItem('wanderlust_admin_tours');
+      if (savedTours) {
+        try {
+          const tours = JSON.parse(savedTours);
+          const matched = tours.find(t => String(t.id) === String(id));
+          if (matched) {
+            setFormData(matched);
+            return;
+          }
+        } catch (e) {
+          console.error("Local storage parse error:", e);
+        }
+      }
+
+      // Fallback to static data
       fetch(`${import.meta.env.BASE_URL}data/tours.json`)
         .then(res => res.json())
         .then(data => {

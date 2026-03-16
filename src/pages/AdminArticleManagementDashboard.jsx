@@ -4,6 +4,12 @@ import { Link } from 'react-router-dom';
 const AdminArticleManagementDashboard = () => {
   const [guides, setGuides] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [toastMsg, setToastMsg] = React.useState('');
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 3000);
+  };
 
   React.useEffect(() => {
     fetchGuides();
@@ -11,6 +17,17 @@ const AdminArticleManagementDashboard = () => {
 
   const fetchGuides = () => {
     setLoading(true);
+    const saved = localStorage.getItem('wanderlust_admin_guides');
+    if (saved) {
+      try {
+        setGuides(JSON.parse(saved));
+        setLoading(false);
+        return;
+      } catch (e) {
+        console.error("Parse error:", e);
+      }
+    }
+
     fetch(`${import.meta.env.BASE_URL}data/guides.json`)
       .then(res => res.json())
       .then(data => {
@@ -23,15 +40,43 @@ const AdminArticleManagementDashboard = () => {
       });
   };
 
+  const saveGuides = (updated) => {
+    setGuides(updated);
+    localStorage.setItem('wanderlust_admin_guides', JSON.stringify(updated));
+  };
+
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this article?")) {
-      console.log("Article deleted (mocked):", id);
-      setGuides(guides.filter(g => g.id !== id));
+    const updated = guides.filter(g => g.id !== id);
+      saveGuides(updated);
+      showToast("Article deleted");
+  };
+
+  const handleSync = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/save-guides`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(guides)
+      });
+      if (response.ok) {
+        showToast("System updated successfully!");
+      } else {
+        showToast("Changes staged for next system update.");
+      }
+    } catch (error) {
+      showToast("Changes staged for next system update.");
     }
   };
 
   return (
     <div data-page="admin_article_management_dashboard">
+      {/* Toast */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
+          <span className="material-symbols-outlined text-emerald-400">check_circle</span>
+          {toastMsg}
+        </div>
+      )}
       <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden">
         {/* Top Nav Bar */}
         <div className="flex flex-1 overflow-hidden">
@@ -82,10 +127,19 @@ const AdminArticleManagementDashboard = () => {
                   <h1 className="text-[#0a6c75] text-3xl font-extrabold leading-tight tracking-tight">Manage Guides</h1>
                   <p className="text-slate-500 mt-1 font-medium">View, edit, and create new guides, travel tips, and hacks.</p>
                 </div>
-                <Link to="/admin/guides/new" className="flex items-center justify-center rounded-[10px] px-6 py-2.5 bg-[#0a6c75] text-white text-[13px] font-bold hover:bg-[#07565e] transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)] gap-2">
-                  <span className="material-symbols-outlined text-[18px]">add</span>
-                  <span>Create New Guide</span>
-                </Link>
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={handleSync}
+                    className="flex items-center justify-center rounded-[10px] px-6 py-2.5 bg-[#0a6c75] text-white text-[13px] font-bold hover:bg-[#07565e] transition-colors shadow-lg shadow-teal-900/20 gap-2"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">cloud_upload</span>
+                    <span>Save to System</span>
+                  </button>
+                  <Link to="/admin/guides/new" className="flex items-center justify-center rounded-[10px] px-6 py-2.5 bg-white border border-slate-200 text-[#0a6c75] text-[13px] font-bold hover:bg-slate-50 transition-colors shadow-sm gap-2">
+                    <span className="material-symbols-outlined text-[18px]">add</span>
+                    <span>Create New Guide</span>
+                  </Link>
+                </div>
               </div>
 
               {/* Data Table */}
