@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import categoriesData from '../data/categories.json';
 
 /**
  * Auto-generated from: admin_new_tour_upload_form/code.html
@@ -48,90 +49,45 @@ const AdminNewTourUploadForm = () => {
   });
 
   const [categories, setCategories] = React.useState({
-    destinations: ['India', 'International', 'Asia', 'Europe', 'Americas', 'Africa', 'Oceania'],
-    destinationStates: {
-      'India': [
-        'Himachal Pradesh', 'Kashmir', 'Rajasthan', 'Kerala', 'Ladakh', 'Goa',
-        'Uttarakhand', 'Andaman Islands', 'Sikkim', 'Assam', 'Meghalaya',
-        'Arunachal Pradesh', 'Odisha', 'Karnataka', 'Tamil Nadu', 'Maharashtra',
-        'Gujarat', 'Madhya Pradesh', 'Uttar Pradesh', 'Bihar', 'West Bengal',
-        'Telangana', 'Andhra Pradesh', 'Punjab', 'Haryana', 'Himachal Pradesh',
-        'Jammu', 'Lakshadweep', 'Puducherry', 'Northeast India'
-      ],
-      'International': ['Thailand', 'Bali', 'Dubai', 'Singapore', 'Maldives', 'Sri Lanka', 'Nepal', 'Bhutan'],
-      'Asia': ['Japan', 'Vietnam', 'Cambodia', 'Myanmar', 'Philippines', 'Malaysia'],
-      'Europe': ['France', 'Italy', 'Switzerland', 'Greece', 'Spain', 'Portugal', 'Germany'],
-      'Americas': ['USA', 'Canada', 'Mexico', 'Brazil', 'Peru', 'Argentina'],
-      'Africa': ['Kenya', 'Tanzania', 'South Africa', 'Morocco', 'Egypt'],
-      'Oceania': ['Australia', 'New Zealand', 'Fiji'],
+    ...categoriesData.categories,
+    destinationStates: categoriesData.categories.destinationStates || {
+      'India': categoriesData.categories.states,
+      'International': ['Thailand', 'Bali', 'Dubai', 'Singapore', 'Maldives', 'Sri Lanka', 'Nepal', 'Bhutan']
     },
-    subregionsByState: {
-      'Himachal Pradesh': ['Shimla', 'Manali', 'Dharamshala', 'Kasol', 'Spiti Valley', 'Kullu', 'Dalhousie', 'Bir Billing', 'Kinnaur', 'Kufri'],
-      'Kashmir': ['Srinagar', 'Gulmarg', 'Pahalgam', 'Sonamarg', 'Yusmarg', 'Dal Lake', 'Betaab Valley'],
-      'Rajasthan': ['Jaipur', 'Udaipur', 'Jaisalmer', 'Jodhpur', 'Pushkar', 'Ranthambore', 'Mount Abu', 'Bikaner'],
-      'Kerala': ['Munnar', 'Alleppey', 'Wayanad', 'Thekkady', 'Kovalam', 'Varkala', 'Kochi', 'Kottayam'],
-      'Ladakh': ['Leh', 'Pangong Lake', 'Nubra Valley', 'Tso Moriri', 'Zanskar', 'Khardung La', 'Magnetic Hill'],
-      'Goa': ['North Goa', 'South Goa', 'Panaji', 'Old Goa', 'Calangute', 'Anjuna', 'Dudhsagar'],
-      'Uttarakhand': ['Rishikesh', 'Haridwar', 'Nainital', 'Mussoorie', 'Jim Corbett', 'Kedarnath', 'Badrinath', 'Auli', 'Lansdowne'],
-      'Andaman Islands': ['Port Blair', 'Havelock Island', 'Neil Island', 'Ross Island', 'Baratang', 'Diglipur'],
-      'Sikkim': ['Gangtok', 'Pelling', 'Lachung', 'Ravangla', 'Namchi'],
+    subregionsByState: categoriesData.categories.subregionsByState || {
+      'Himachal Pradesh': ['Shimla', 'Manali', 'Dharamshala', 'Kasol', 'Spiti Valley'],
+      'Kashmir': ['Srinagar', 'Gulmarg', 'Pahalgam', 'Sonamarg'],
+      'Kerala': ['Munnar', 'Alleppey', 'Wayanad'],
+      'Ladakh': ['Leh', 'Pangong Lake', 'Nubra Valley'],
+      'Goa': ['North Goa', 'South Goa'],
+      'Uttarakhand': ['Rishikesh', 'Haridwar', 'Nainital'],
+      'Andaman Islands': ['Port Blair', 'Havelock Island'],
     },
-    // Homepage themes — these match exactly what shows on /tours?theme=X
-    themes: [
-      { value: 'honeymoon', label: 'Honeymoon', icon: '💍' },
-      { value: 'family',    label: 'Family',    icon: '👨‍👩‍👧‍👦' },
-      { value: 'solo',      label: 'Solo',      icon: '🎒' },
-      { value: 'group',     label: 'Group',     icon: '🤝' },
-      { value: 'adventure', label: 'Adventure', icon: '🏔️' },
-      { value: 'pilgrimage',label: 'Pilgrimage',icon: '🙏' },
-      { value: 'photography',label:'Photography',icon:'📸' },
-      { value: 'luxury',    label: 'Luxury',    icon: '💎' },
-      { value: 'trekking',  label: 'Trekking',  icon: '🥾' },
-      { value: 'beach',     label: 'Beach',     icon: '🏖️' },
-      { value: 'wildlife',  label: 'Wildlife',  icon: '🐅' },
-      { value: 'cultural',  label: 'Cultural',  icon: '🏛️' },
-    ],
-    natures: ['group', 'private', 'self-drive', 'cruise', 'solo', 'honeymoon'],
-    styles: ['budget', 'standard', 'comfort', 'luxury', 'ultra-luxury'],
-    hotelCategories: [
+    hotelCategories: categoriesData.categories.hotelCategories || [
       { value: '3_star', label: '3 Star', icon: '⭐' },
       { value: '4_star', label: '4 Star', icon: '⭐⭐' },
       { value: '5_star', label: '5 Star', icon: '⭐⭐⭐' },
       { value: 'budget', label: 'Budget', icon: '💰' }
     ],
-    accommodationTypes: [
+    accommodationTypes: categoriesData.categories.accommodationTypes || [
       { value: 'hotel', label: 'Hotel', icon: '🏨' },
       { value: 'resort', label: 'Resort', icon: '🌴' },
-      { value: 'houseboat', label: 'Houseboat', icon: '🚢' },
-      { value: 'villa', label: 'Villa', icon: '🏡' },
-      { value: 'apartment', label: 'Apartment', icon: '🏢' }
+      { value: 'houseboat', label: 'Houseboat', icon: '🚢' }
     ],
-    transports: [
+    transports: categoriesData.categories.transports || [
       { value: 'mixed', label: 'Mixed', icon: '🚗' },
-      { value: 'train', label: 'Train', icon: '🚆' },
-      { value: 'flight', label: 'Flight', icon: '✈️' },
-      { value: 'bus', label: 'Bus', icon: '🚌' }
+      { value: 'train', label: 'Train', icon: '🚆' }
     ]
   });
 
-  // Canonical theme icon/label map — source of truth for the chip renderer
-  const THEME_MAP = {
-    honeymoon:   { label: 'Honeymoon',   icon: '💍' },
-    family:      { label: 'Family',      icon: '👨‍👩‍👧‍👦' },
-    solo:        { label: 'Solo',        icon: '🎒' },
-    group:       { label: 'Group',       icon: '🤝' },
-    adventure:   { label: 'Adventure',   icon: '🏔️' },
-    pilgrimage:  { label: 'Pilgrimage',  icon: '🙏' },
-    photography: { label: 'Photography', icon: '📸' },
-    luxury:      { label: 'Luxury',      icon: '💎' },
-    trekking:    { label: 'Trekking',    icon: '🥾' },
-    beach:       { label: 'Beach',       icon: '🏖️' },
-    wildlife:    { label: 'Wildlife',    icon: '🐅' },
-    cultural:    { label: 'Cultural',    icon: '🏛️' },
-    relaxation:  { label: 'Relaxation',  icon: '🧘' },
-    snow:        { label: 'Snow',        icon: '❄️' },
-    desert:      { label: 'Desert',      icon: '🏜️' },
-  };
+  // Derive THEME_MAP from dynamic themes + fallback defaults
+  const THEME_MAP = React.useMemo(() => {
+    const map = {};
+    categories.themes.forEach(t => {
+      map[t.value] = { label: t.label, icon: t.icon };
+    });
+    return map;
+  }, [categories.themes]);
 
   // Emoji map for state quick-picks — fallback icon for custom destinations
   const DEST_ICON_MAP = {

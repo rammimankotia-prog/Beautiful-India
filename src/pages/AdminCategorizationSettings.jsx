@@ -1,86 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-// ── These defaults MUST stay in sync with BharatDarshanPage.jsx and the tour upload form ──
-const DEFAULT_CATEGORIES = {
-  destinations: ['India', 'International', 'Asia', 'Europe', 'Americas', 'Africa', 'Oceania'],
-  states: [
-    'Himachal Pradesh', 'Kashmir', 'Rajasthan', 'Kerala', 'Ladakh', 'Goa',
-    'Uttarakhand', 'Andaman Islands', 'Sikkim', 'Assam', 'Meghalaya',
-    'Arunachal Pradesh', 'Karnataka', 'Tamil Nadu', 'Maharashtra',
-    'Gujarat', 'Madhya Pradesh', 'Uttar Pradesh', 'West Bengal', 'Jammu'
-  ],
-  subregions: [
-    'Shimla', 'Manali', 'Dharamshala', 'Kasol', 'Spiti Valley', 'Kullu',
-    'Srinagar', 'Gulmarg', 'Pahalgam', 'Sonamarg',
-    'Jaipur', 'Udaipur', 'Jaisalmer', 'Jodhpur',
-    'Munnar', 'Alleppey', 'Wayanad', 'Kovalam',
-    'Leh', 'Pangong Lake', 'Nubra Valley',
-    'North Goa', 'South Goa',
-    'Rishikesh', 'Haridwar', 'Nainital', 'Mussoorie',
-    'Port Blair', 'Havelock Island', 'Neil Island'
-  ],
-  themes: ['honeymoon', 'family', 'solo', 'group', 'adventure', 'pilgrimage', 'photography', 'luxury', 'trekking', 'beach', 'wildlife', 'cultural'],
-  natures: ['group', 'private', 'self-drive', 'cruise', 'solo', 'honeymoon'],
-  styles: ['budget', 'standard', 'comfort', 'luxury', 'ultra-luxury']
-};
+import categoriesData from '../data/categories.json';
 
-// Preset chips for one-click adding — so you never have to type common values
-const PRESETS = {
-  destinations: {
-    label: 'Common Regions',
-    icon: '🌍',
-    chips: ['India', 'International', 'Asia', 'Europe', 'Americas', 'Africa', 'Oceania']
-  },
-  states: {
-    label: 'Bharat Darshan Destinations',
-    icon: '📍',
-    chips: [
-      'Himachal Pradesh', 'Kashmir', 'Rajasthan', 'Kerala', 'Ladakh',
-      'Goa', 'Uttarakhand', 'Andaman Islands', 'Sikkim', 'Assam',
-      'Meghalaya', 'Arunachal Pradesh', 'Karnataka', 'Tamil Nadu',
-      'Maharashtra', 'Gujarat', 'West Bengal', 'Jammu', 'Puducherry'
-    ]
-  },
-  subregions: {
-    label: 'Popular Cities & Spots',
-    icon: '🏙️',
-    chips: [
-      'Shimla', 'Manali', 'Dharamshala', 'Kasol', 'Spiti Valley',
-      'Srinagar', 'Gulmarg', 'Pahalgam',
-      'Jaipur', 'Udaipur', 'Jaisalmer',
-      'Munnar', 'Alleppey', 'Wayanad',
-      'Leh', 'Pangong Lake', 'Nubra Valley',
-      'Rishikesh', 'Haridwar', 'Nainital',
-      'Port Blair', 'Havelock Island',
-      'Gangtok', 'Darjeeling'
-    ]
-  },
-  themes: {
-    label: 'Homepage Theme Tiles',
-    icon: '🏷️',
-    chips: ['honeymoon', 'family', 'solo', 'group', 'adventure', 'pilgrimage', 'photography', 'luxury', 'trekking', 'beach', 'wildlife', 'cultural']
-  },
-  natures: {
-    label: 'Tour Nature',
-    icon: '🤝',
-    chips: ['group', 'private', 'self-drive', 'cruise', 'solo', 'honeymoon']
-  },
-  styles: {
-    label: 'Accommodation Tiers',
-    icon: '🏨',
-    chips: ['budget', 'standard', 'comfort', 'luxury', 'ultra-luxury']
-  }
-};
-
-const CATEGORY_META = {
-  destinations: { icon: '🌍', color: 'bg-blue-50 border-blue-200 text-blue-700', badge: 'bg-blue-100 text-blue-700', desc: 'Top-level world regions (India, Europe, Asia…)' },
-  states:       { icon: '📍', color: 'bg-teal-50 border-teal-200 text-teal-700', badge: 'bg-teal-100 text-teal-700', desc: 'Indian states & international countries — drives homepage destination chips' },
-  subregions:   { icon: '🏙️', color: 'bg-emerald-50 border-emerald-200 text-emerald-700', badge: 'bg-emerald-100 text-emerald-700', desc: 'Cities and local highlights within each state' },
-  themes:       { icon: '🏷️', color: 'bg-purple-50 border-purple-200 text-purple-700', badge: 'bg-purple-100 text-purple-700', desc: 'Travel themes — drives "Travel by Theme" section on homepage' },
-  natures:      { icon: '🤝', color: 'bg-amber-50 border-amber-200 text-amber-700', badge: 'bg-amber-100 text-amber-700', desc: 'Tour group types (Group, Solo, Honeymoon…)' },
-  styles:       { icon: '🏨', color: 'bg-pink-50 border-pink-200 text-pink-700', badge: 'bg-pink-100 text-pink-700', desc: 'Accommodation tiers (Budget → Ultra-Luxury)' }
-};
+const { 
+  categories: DEFAULT_CATEGORIES, 
+  presets: PRESETS, 
+  meta: CATEGORY_META 
+} = categoriesData;
 
 const DISPLAY_NAMES = {
   destinations: 'Primary Destinations (Regions)',
@@ -130,17 +57,37 @@ const AdminCategorizationSettings = () => {
   const handleAdd = (key, value) => {
     const val = (value || newItems[key]).trim();
     if (!val) return;
-    if (categories[key].includes(val)) { showToast(`"${val}" already exists`); return; }
-    const updated = { ...categories, [key]: [...categories[key], val] };
+    
+    // Check if exists (handle both string and object arrays)
+    const exists = categories[key].some(item => 
+      typeof item === 'string' ? item === val : item.value === val || item.label === val
+    );
+    
+    if (exists) { showToast(`"${val}" already exists`); return; }
+    
+    let itemToAdd = val;
+    if (key === 'themes') {
+      itemToAdd = { 
+        value: val.toLowerCase().replace(/\s+/g, '_'), 
+        label: val, 
+        icon: '📍', // Default icon
+        count: '0 Packages' 
+      };
+    }
+    
+    const updated = { ...categories, [key]: [...categories[key], itemToAdd] };
     saveCategories(updated);
     if (!value) setNewItems(prev => ({ ...prev, [key]: '' }));
     showToast(`✅ Added "${val}"`);
   };
 
   const handleRemove = (key, item) => {
-    const updated = { ...categories, [key]: categories[key].filter(i => i !== item) };
+    const itemValue = typeof item === 'string' ? item : item.label;
+    const updated = { ...categories, [key]: categories[key].filter(i => 
+      typeof i === 'string' ? i !== item : i.label !== itemValue
+    ) };
     saveCategories(updated);
-    showToast(`🗑️ Removed "${item}"`);
+    showToast(`🗑️ Removed "${itemValue}"`);
   };
 
   const handleSync = () => {
@@ -192,6 +139,14 @@ const AdminCategorizationSettings = () => {
                 <Link to="/admin/tours/new" className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow-sm hover:bg-primary/90 transition-colors">
                   <span className="material-symbols-outlined text-[18px]">add</span> Upload Tour
                 </Link>
+                <button
+                  onClick={() => {
+                    showToast('💾 Staged! Please ask your AI assistant to "Commit categorization changes".');
+                  }}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl shadow-sm hover:bg-emerald-700 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px]">save_as</span> Save to System
+                </button>
                 <button
                   onClick={handleSync}
                   className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-xl shadow-sm hover:border-primary hover:text-primary transition-colors"
@@ -260,11 +215,11 @@ const AdminCategorizationSettings = () => {
                                 key={idx}
                                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border ${meta.color}`}
                               >
-                                {item}
+                                {typeof item === 'string' ? item : `${item.icon || ''} ${item.label}`}
                                 <button
                                   onClick={() => handleRemove(key, item)}
                                   className="hover:bg-red-100 hover:text-red-600 rounded-full p-0.5 transition-colors ml-0.5"
-                                  title={`Remove ${item}`}
+                                  title={`Remove ${typeof item === 'string' ? item : item.label}`}
                                 >
                                   <span className="material-symbols-outlined text-[14px] block">close</span>
                                 </button>
@@ -281,7 +236,9 @@ const AdminCategorizationSettings = () => {
                         </p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           {preset.chips.map(chip => {
-                            const alreadyAdded = categories[key].includes(chip);
+                            const alreadyAdded = categories[key].some(i => 
+                              typeof i === 'string' ? i === chip : i.value === chip || i.label === chip
+                            );
                             return (
                               <button
                                 key={chip}

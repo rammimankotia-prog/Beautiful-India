@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import categoriesData from '../data/categories.json';
 
 const destinations = [
   {
@@ -117,16 +118,6 @@ const destinations = [
   },
 ];
 
-const themes = [
-  { icon: '💍', label: 'Honeymoon', count: '1,200+ Packages' },
-  { icon: '👨‍👩‍👧‍👦', label: 'Family', count: '980+ Packages' },
-  { icon: '🎒', label: 'Solo', count: '650+ Packages' },
-  { icon: '🤝', label: 'Group', count: '430+ Packages' },
-  { icon: '🏔️', label: 'Adventure', count: '870+ Packages' },
-  { icon: '🙏', label: 'Pilgrimage', count: '540+ Packages' },
-  { icon: '📸', label: 'Photography', count: '360+ Packages' },
-  { icon: '💎', label: 'Luxury', count: '290+ Packages' },
-];
 
 const metroCitiesIndia = [
   {
@@ -171,6 +162,22 @@ const BharatDarshanPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [allTours, setAllTours] = useState([]);
   const [loadingTours, setLoadingTours] = useState(true);
+  
+  // Dynamic Categories from JSON + LocalStorage override
+  const [categories, setCategories] = useState(categoriesData.categories);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('wanderlust_admin_categories');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setCategories(prev => ({ ...prev, ...parsed }));
+      } catch (e) { console.error('Failed to load saved categories:', e); }
+    }
+  }, []);
+
+  const themes = categories.themes;
+  const filters = ['All', ...categories.states.slice(0, 7)]; // Or specific thematic filters
 
   const resultsRef = useRef(null);
 
@@ -195,7 +202,6 @@ const BharatDarshanPage = () => {
     }
   };
 
-  const filters = ['All', 'Mountains', 'Heritage', 'Beach', 'Adventure', 'Spiritual', 'Nature'];
 
   // Map filter pill label → destination names to use in URL
   const filterDestinationMap = {
@@ -209,7 +215,10 @@ const BharatDarshanPage = () => {
 
   const filteredDest = activeFilter === 'All'
     ? destinations
-    : destinations.filter(d => d.badge.includes(activeFilter));
+    : destinations.filter(d => 
+        d.badge.includes(activeFilter) || 
+        d.name.toLowerCase() === activeFilter.toLowerCase()
+      );
 
   const filteredTourPackages = activeFilter === 'All'
     ? allTours.slice(0, 8) // Show top 8 by default

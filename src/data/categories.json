@@ -1,0 +1,305 @@
+{
+  "categories": {
+    "destinations": [
+      "India",
+      "International",
+      "Asia",
+      "Europe",
+      "Americas",
+      "Africa",
+      "Oceania"
+    ],
+    "states": [
+      "Himachal Pradesh",
+      "Kashmir",
+      "Rajasthan",
+      "Kerala",
+      "Ladakh",
+      "Goa",
+      "Uttarakhand",
+      "Andaman Islands",
+      "Sikkim",
+      "Assam",
+      "Meghalaya",
+      "Arunachal Pradesh",
+      "Karnataka",
+      "Tamil Nadu",
+      "Maharashtra",
+      "Gujarat",
+      "Madhya Pradesh",
+      "Uttar Pradesh",
+      "West Bengal",
+      "Jammu"
+    ],
+    "subregions": [
+      "Shimla",
+      "Manali",
+      "Dharamshala",
+      "Kasol",
+      "Spiti Valley",
+      "Kullu",
+      "Srinagar",
+      "Gulmarg",
+      "Pahalgam",
+      "Sonamarg",
+      "Jaipur",
+      "Udaipur",
+      "Jaisalmer",
+      "Jodhpur",
+      "Munnar",
+      "Alleppey",
+      "Wayanad",
+      "Kovalam",
+      "Leh",
+      "Pangong Lake",
+      "Nubra Valley",
+      "North Goa",
+      "South Goa",
+      "Rishikesh",
+      "Haridwar",
+      "Nainital",
+      "Mussoorie",
+      "Port Blair",
+      "Havelock Island",
+      "Neil Island"
+    ],
+    "themes": [
+      {
+        "value": "honeymoon",
+        "label": "Honeymoon",
+        "icon": "💍",
+        "count": "1,200+ Packages"
+      },
+      {
+        "value": "family",
+        "label": "Family",
+        "icon": "👨‍👩‍👧‍👦",
+        "count": "980+ Packages"
+      },
+      {
+        "value": "solo",
+        "label": "Solo",
+        "icon": "🎒",
+        "count": "650+ Packages"
+      },
+      {
+        "value": "group",
+        "label": "Group",
+        "icon": "🤝",
+        "count": "430+ Packages"
+      },
+      {
+        "value": "adventure",
+        "label": "Adventure",
+        "icon": "🏔️",
+        "count": "870+ Packages"
+      },
+      {
+        "value": "pilgrimage",
+        "label": "Pilgrimage",
+        "icon": "🙏",
+        "count": "540+ Packages"
+      },
+      {
+        "value": "photography",
+        "label": "Photography",
+        "icon": "📸",
+        "count": "360+ Packages"
+      },
+      {
+        "value": "luxury",
+        "label": "Luxury",
+        "icon": "💎",
+        "count": "290+ Packages"
+      },
+      {
+        "value": "trekking",
+        "label": "Trekking",
+        "icon": "🥾",
+        "count": "210+ Packages"
+      },
+      {
+        "value": "beach",
+        "label": "Beach",
+        "icon": "🏖️",
+        "count": "340+ Packages"
+      },
+      {
+        "value": "wildlife",
+        "label": "Wildlife",
+        "icon": "🐅",
+        "count": "180+ Packages"
+      },
+      {
+        "value": "cultural",
+        "label": "Cultural",
+        "icon": "🏛️",
+        "count": "250+ Packages"
+      }
+    ],
+    "natures": [
+      "group",
+      "private",
+      "self-drive",
+      "cruise",
+      "solo",
+      "honeymoon"
+    ],
+    "styles": [
+      "budget",
+      "standard",
+      "comfort",
+      "luxury",
+      "ultra-luxury"
+    ]
+  },
+  "meta": {
+    "destinations": {
+      "icon": "🌍",
+      "color": "bg-blue-50 border-blue-200 text-blue-700",
+      "badge": "bg-blue-100 text-blue-700",
+      "desc": "Top-level world regions (India, Europe, Asia…)"
+    },
+    "states": {
+      "icon": "📍",
+      "color": "bg-teal-50 border-teal-200 text-teal-700",
+      "badge": "bg-teal-100 text-teal-700",
+      "desc": "Indian states & international countries — drives homepage destination chips"
+    },
+    "subregions": {
+      "icon": "🏙️",
+      "color": "bg-emerald-50 border-emerald-200 text-emerald-700",
+      "badge": "bg-emerald-100 text-emerald-700",
+      "desc": "Cities and local highlights within each state"
+    },
+    "themes": {
+      "icon": "🏷️",
+      "color": "bg-purple-50 border-purple-200 text-purple-700",
+      "badge": "bg-purple-100 text-purple-700",
+      "desc": "Travel themes — drives 'Travel by Theme' section on homepage"
+    },
+    "natures": {
+      "icon": "🤝",
+      "color": "bg-amber-50 border-amber-200 text-amber-700",
+      "badge": "bg-amber-100 text-amber-700",
+      "desc": "Tour group types (Group, Solo, Honeymoon…)"
+    },
+    "styles": {
+      "icon": "🏨",
+      "color": "bg-pink-50 border-pink-200 text-pink-700",
+      "badge": "bg-pink-100 text-pink-700",
+      "desc": "Accommodation tiers (Budget → Ultra-Luxury)"
+    }
+  },
+  "presets": {
+    "destinations": {
+      "label": "Common Regions",
+      "icon": "🌍",
+      "chips": [
+        "India",
+        "International",
+        "Asia",
+        "Europe",
+        "Americas",
+        "Africa",
+        "Oceania"
+      ]
+    },
+    "states": {
+      "label": "Bharat Darshan Destinations",
+      "icon": "📍",
+      "chips": [
+        "Himachal Pradesh",
+        "Kashmir",
+        "Rajasthan",
+        "Kerala",
+        "Ladakh",
+        "Goa",
+        "Uttarakhand",
+        "Andaman Islands",
+        "Sikkim",
+        "Assam",
+        "Meghalaya",
+        "Arunachal Pradesh",
+        "Karnataka",
+        "Tamil Nadu",
+        "Maharashtra",
+        "Gujarat",
+        "West Bengal",
+        "Jammu",
+        "Puducherry"
+      ]
+    },
+    "subregions": {
+      "label": "Popular Cities & Spots",
+      "icon": "🏙️",
+      "chips": [
+        "Shimla",
+        "Manali",
+        "Dharamshala",
+        "Kasol",
+        "Spiti Valley",
+        "Srinagar",
+        "Gulmarg",
+        "Pahalgam",
+        "Jaipur",
+        "Udaipur",
+        "Jaisalmer",
+        "Munnar",
+        "Alleppey",
+        "Wayanad",
+        "Leh",
+        "Pangong Lake",
+        "Nubra Valley",
+        "Rishikesh",
+        "Haridwar",
+        "Nainital",
+        "Port Blair",
+        "Havelock Island",
+        "Gangtok",
+        "Darjeeling"
+      ]
+    },
+    "themes": {
+      "label": "Homepage Theme Tiles",
+      "icon": "🏷️",
+      "chips": [
+        "honeymoon",
+        "family",
+        "solo",
+        "group",
+        "adventure",
+        "pilgrimage",
+        "photography",
+        "luxury",
+        "trekking",
+        "beach",
+        "wildlife",
+        "cultural"
+      ]
+    },
+    "natures": {
+      "label": "Tour Nature",
+      "icon": "🤝",
+      "chips": [
+        "group",
+        "private",
+        "self-drive",
+        "cruise",
+        "solo",
+        "honeymoon"
+      ]
+    },
+    "styles": {
+      "label": "Accommodation Tiers",
+      "icon": "🏨",
+      "chips": [
+        "budget",
+        "standard",
+        "comfort",
+        "luxury",
+        "ultra-luxury"
+      ]
+    }
+  }
+}
