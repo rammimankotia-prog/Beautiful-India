@@ -289,71 +289,26 @@ const BharatDarshanPage = () => {
       </section>
 
       {/* ── Travel by Theme ── */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-          <div>
-            <h2 className="text-3xl font-black text-slate-800">Travel by Theme</h2>
-            <p className="text-slate-500 mt-2">Packages crafted for your unique travel style</p>
-          </div>
-          <div className="hidden md:block">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Select a theme to filter packages</span>
-          </div>
+      <section className="max-w-7xl mx-auto px-6 py-16">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800">Travel by Theme</h2>
+          <p className="text-slate-500 mt-2 text-sm md:text-base">Find packages crafted for your unique travel style</p>
         </div>
-        
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
-          {themes.map(t => {
-            const themeImgMap = {
-              'Honeymoon': 'https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&w=400&q=60',
-              'Family': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=60',
-              'Solo': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=400&q=60',
-              'Group': 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=400&q=60',
-              'Adventure': 'https://images.unsplash.com/photo-1533130061792-64b345e4a833?auto=format&fit=crop&w=400&q=60',
-              'Pilgrimage': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=400&q=60',
-              'Photography': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=60',
-              'Luxury': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=400&q=60',
-              'Trekking': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=60',
-              'Beach': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60',
-              'Wildlife': 'https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=400&q=60',
-              'Cultural': 'https://images.unsplash.com/photo-1624555130581-1d9cca783bc0?auto=format&fit=crop&w=400&q=60'
-            };
-            const themeImage = themeImgMap[t.label] || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=400&q=60';
-
-            return (
-              <div
-                key={t.label}
-                onClick={() => {
-                  setActiveFilter(t.label);
-                  scrollToResults();
-                }}
-                className={`relative h-40 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-500 ${activeFilter === t.label ? 'ring-4 ring-[#0a6c75] ring-offset-2 scale-[1.02]' : 'hover:scale-[1.05] hover:shadow-xl'}`}
-              >
-                {/* Background Image */}
-                <img 
-                  src={themeImage} 
-                  alt={t.label} 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                {/* Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-t transition-opacity duration-500 ${activeFilter === t.label ? 'from-[#0a6c75]/90 via-[#0a6c75]/40 to-transparent opacity-100' : 'from-black/80 via-black/20 to-transparent group-hover:opacity-90'}`} />
-                
-                {/* Content */}
-                <div className="absolute inset-0 p-4 flex flex-col justify-end items-center text-center">
-                  <div className={`text-2xl mb-1 transition-transform duration-500 ${activeFilter === t.label ? 'scale-125' : 'group-hover:-translate-y-1'}`}>
-                    {t.icon}
-                  </div>
-                  <h3 className="text-white text-[13px] font-black tracking-wide uppercase">{t.label}</h3>
-                  <p className="text-white/70 text-[9px] font-bold mt-0.5">{t.count}</p>
-                </div>
-
-                {/* Active Indicator */}
-                {activeFilter === t.label && (
-                  <div className="absolute top-2 right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center text-[#0a6c75] shadow-lg animate-bounce">
-                    <span className="material-symbols-outlined text-[14px]">check</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+          {themes.map(t => (
+            <div
+              key={t.label}
+              onClick={() => {
+                setActiveFilter(t.label);
+                scrollToResults();
+              }}
+              className={`flex flex-col items-center p-4 rounded-2xl border transition-all cursor-pointer group ${activeFilter === t.label ? 'bg-teal-50 border-[#0a6c75] shadow-md ring-1 ring-[#0a6c75]' : 'bg-white border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1'}`}
+            >
+              <div className="text-2xl md:text-3xl mb-2">{t.icon}</div>
+              <div className={`text-[12px] md:text-[13px] font-bold transition-colors text-center ${activeFilter === t.label ? 'text-[#0a6c75]' : 'text-slate-700 group-hover:text-[#0a6c75]'}`}>{t.label}</div>
+              <div className="text-[10px] text-slate-400 font-medium mt-0.5 text-center">{t.count}</div>
+            </div>
+          ))}
         </div>
       </section>
 
