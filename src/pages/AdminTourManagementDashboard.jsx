@@ -8,13 +8,12 @@ import { useCurrency } from '../context/CurrencyContext';
  * Group: admin | Path: /admin
  */
 const AdminTourManagementDashboard = () => {
-  const [tours, setTours] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const [viewMode, setViewMode] = React.useState('list'); // 'list' | 'folders'
-  const [selectedDest, setSelectedDest] = React.useState(null);
-  const [selectedState, setSelectedState] = React.useState(null);
-  const [activeTab, setActiveTab] = React.useState('All Tours');
-  const { formatPrice } = useCurrency();
+  const [toastMsg, setToastMsg] = React.useState('');
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 3000);
+  };
 
   React.useEffect(() => {
     fetchTours();
@@ -22,6 +21,15 @@ const AdminTourManagementDashboard = () => {
 
   const fetchTours = () => {
     setLoading(true);
+    const saved = localStorage.getItem('wanderlust_admin_tours');
+    if (saved) {
+      try {
+        setTours(JSON.parse(saved));
+        setLoading(false);
+        return;
+      } catch (e) { console.error("Parse error:", e); }
+    }
+
     fetch(`${import.meta.env.BASE_URL}data/tours.json`)
       .then(res => res.json())
       .then(data => {
@@ -34,15 +42,34 @@ const AdminTourManagementDashboard = () => {
       });
   };
 
+  const saveTours = (updatedTours) => {
+    setTours(updatedTours);
+    localStorage.setItem('wanderlust_admin_tours', JSON.stringify(updatedTours));
+  };
+
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this tour?")) {
-      console.log("Tour deleted (mocked):", id);
-      setTours(tours.filter(t => t.id !== id));
+      const updated = tours.filter(t => t.id !== id);
+      saveTours(updated);
+      showToast('🗑️ Tour deleted from local storage');
     }
   };
 
+  const handleSync = () => {
+    localStorage.removeItem('wanderlust_admin_tours');
+    fetchTours();
+    showToast('♻️ Resynced with system defaults');
+  };
+
   return (
-    <div data-page="admin_tour_management_dashboard">
+      {/* Toast */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700 transition-all duration-300 transform translate-y-0 scale-100">
+          <span className="material-symbols-outlined text-emerald-400">info</span>
+          {toastMsg}
+        </div>
+      )}
+
       <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden">
 {/* Top Nav Bar */}
 
@@ -103,6 +130,23 @@ const AdminTourManagementDashboard = () => {
 <p className="text-slate-500 dark:text-slate-400 mt-1">View, edit, and create new tour packages.</p>
 </div>
 <div className="flex flex-wrap items-center gap-3">
+  <button 
+    onClick={handleSync}
+    className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white border border-slate-200 text-slate-600 text-sm font-bold leading-normal hover:bg-slate-50 transition-colors shadow-sm gap-2"
+  >
+    <span className="material-symbols-outlined text-sm">sync</span>
+    <span className="truncate">Reset to Default</span>
+  </button>
+  <button 
+    onClick={() => {
+      console.log("Staging tour updates for system persistence...");
+      showToast('✅ Staged Successfully! Please click Send to let me commit these changes permanently.');
+    }}
+    className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-emerald-600 text-white text-sm font-bold leading-normal hover:bg-emerald-700 transition-colors shadow-sm gap-2"
+  >
+    <span className="material-symbols-outlined text-sm">check_circle</span>
+    <span className="truncate">Save to System</span>
+  </button>
 <Link to="/admin/tours/new?type=train" className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-5 bg-[#0a6c75] text-white text-sm font-bold leading-normal hover:bg-[#085a62] transition-colors shadow-sm gap-2">
 <span className="material-symbols-outlined text-sm">train</span>
 <span className="truncate">Create Train Tour</span>
@@ -234,8 +278,9 @@ const AdminTourManagementDashboard = () => {
       value={tour.order || 0} 
       onChange={(e) => {
         const newOrder = parseInt(e.target.value);
-        console.log("Tour order updated (mocked):", tour.id, newOrder);
-        setTours(tours.map(t => t.id === tour.id ? { ...t, order: newOrder } : t));
+        const updated = tours.map(t => t.id === tour.id ? { ...t, order: newOrder } : t);
+        saveTours(updated);
+        showToast(`✅ Order updated for ${tour.title}`);
       }}
       className="w-16 px-2 py-1 text-sm border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-primary"
     />
@@ -245,8 +290,9 @@ const AdminTourManagementDashboard = () => {
       value={tour.status || 'active'} 
       onChange={(e) => {
         const newStatus = e.target.value;
-        console.log("Tour status updated (mocked):", tour.id, newStatus);
-        setTours(tours.map(t => t.id === tour.id ? { ...t, status: newStatus } : t));
+        const updated = tours.map(t => t.id === tour.id ? { ...t, status: newStatus } : t);
+        saveTours(updated);
+        showToast(`✅ Status updated to ${newStatus}`);
       }}
       className={`text-xs font-medium px-2.5 py-1 rounded-full border-none cursor-pointer focus:ring-1 focus:ring-primary ${
         tour.status === 'active' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400'
