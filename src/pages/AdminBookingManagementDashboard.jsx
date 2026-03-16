@@ -167,13 +167,9 @@ const AdminBookingManagementDashboard = () => {
 <span className="material-symbols-outlined text-[20px] text-slate-500">payments</span>
 <span className="text-[15px] font-medium">Financials</span>
 </Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/queries">
-<span className="material-symbols-outlined text-[20px] text-slate-500">contact_support</span>
-<span className="text-[15px] font-medium">Queries</span>
-</Link>
 <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/leads">
-<span className="material-symbols-outlined text-[20px] text-slate-500">smart_toy</span>
-<span className="text-[15px] font-medium">Chatbot Leads</span>
+<span className="material-symbols-outlined text-[20px] text-slate-500">leaderboard</span>
+<span className="text-[15px] font-medium">Leads & Queries</span>
 </Link>
 </nav>
           </aside>

@@ -8,6 +8,13 @@ import { useCurrency } from '../context/CurrencyContext';
  * Group: admin | Path: /admin
  */
 const AdminTourManagementDashboard = () => {
+  const [tours, setTours] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [viewMode, setViewMode] = React.useState('list'); // 'list' | 'folders'
+  const [selectedDest, setSelectedDest] = React.useState(null);
+  const [selectedState, setSelectedState] = React.useState(null);
+  const [activeTab, setActiveTab] = React.useState('All Tours');
+  const { formatPrice } = useCurrency();
   const [toastMsg, setToastMsg] = React.useState('');
 
   const showToast = (msg) => {
@@ -62,6 +69,7 @@ const AdminTourManagementDashboard = () => {
   };
 
   return (
+    <>
       {/* Toast */}
       {toastMsg && (
         <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700 transition-all duration-300 transform translate-y-0 scale-100">
@@ -85,6 +93,10 @@ const AdminTourManagementDashboard = () => {
 <span className="material-symbols-outlined text-[20px] text-[#0a6c75]">tour</span>
 <span className="text-[15px] font-medium">Manage Tours</span>
 </Link>
+<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/leads">
+<span className="material-symbols-outlined text-[20px] text-slate-500">leaderboard</span>
+<span className="text-[15px] font-medium">Leads & Queries</span>
+</Link>
 <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/bookings">
 <span className="material-symbols-outlined text-[20px] text-slate-500">group</span>
 <span className="text-[15px] font-medium">Bookings</span>
@@ -104,14 +116,6 @@ const AdminTourManagementDashboard = () => {
 <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/referral/dashboard">
 <span className="material-symbols-outlined text-[20px] text-slate-500">payments</span>
 <span className="text-[15px] font-medium">Financials</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/queries">
-<span className="material-symbols-outlined text-[20px] text-slate-500">contact_support</span>
-<span className="text-[15px] font-medium">Queries</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/leads">
-<span className="material-symbols-outlined text-[20px] text-slate-500">smart_toy</span>
-<span className="text-[15px] font-medium">Chatbot Leads</span>
 </Link>
 </nav>
 </aside>
@@ -363,7 +367,7 @@ const AdminTourManagementDashboard = () => {
 </main>
 </div>
 </div>
-    </div>
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ import TourDetailView from './pages/TourDetailView';
 import Page24HourTripDepartureCountdownEmail from './pages/Page24HourTripDepartureCountdownEmail';
 import Page404ErrorPageNotFound from './pages/Page404ErrorPageNotFound';
 import AdminBookingManagementDashboard from './pages/AdminBookingManagementDashboard';
-import AdminChatbotLeadManagement from './pages/AdminChatbotLeadManagement';
+import AdminLeadsDashboard from './pages/AdminLeadsDashboard';
 import AdminChatbotFlow from './pages/AdminChatbotFlow';
 import AdminNewTourUploadForm from './pages/AdminNewTourUploadForm';
 import AdminTourManagementDashboard from './pages/AdminTourManagementDashboard';
@@ -91,13 +91,13 @@ export const routes = [
   { path: '/emails/countdown', element: <Page24HourTripDepartureCountdownEmail /> },
   { path: '/404', element: <Page404ErrorPageNotFound /> },
   { path: '/admin/bookings', element: <AdminBookingManagementDashboard /> },
-  { path: '/admin/leads', element: <AdminChatbotLeadManagement /> },
+  { path: '/admin/leads', element: <AdminLeadsDashboard /> },
+  { path: '/admin/queries', element: <AdminLeadsDashboard /> },
   { path: '/admin/tours/new', element: <AdminNewTourUploadForm /> },
   { path: '/admin/tours/edit/:id', element: <AdminNewTourUploadForm /> },
   { path: '/admin/tours', element: <AdminTourManagementDashboard /> },
   { path: '/admin/overview', element: <AdminOverviewDashboard /> },
   { path: '/admin', element: <AdminTourManagementDashboard /> },
-  { path: '/admin/queries', element: <AdminQueryManagement /> },
   { path: '/admin/guides', element: <AdminArticleManagementDashboard /> },
   { path: '/admin/guides/new', element: <AdminNewArticleUploadForm /> },
   { path: '/admin/guides/edit/:id', element: <AdminNewArticleUploadForm /> },

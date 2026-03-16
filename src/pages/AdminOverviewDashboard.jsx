@@ -103,9 +103,9 @@ const AdminOverviewDashboard = () => {
                         <span className="material-symbols-outlined">group</span>
                         <span>Bookings</span>
                     </Link>
-                    <Link className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-bold transition-all" to="/admin/queries">
-                        <span className="material-symbols-outlined">contact_support</span>
-                        <span>Queries</span>
+                    <Link className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-bold transition-all" to="/admin/leads">
+                        <span className="material-symbols-outlined">leaderboard</span>
+                        <span>Leads & Queries</span>
                     </Link>
                     <Link className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-bold transition-all" to="/admin/tours">
                          <span className="material-symbols-outlined">tour</span>
