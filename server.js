@@ -63,6 +63,37 @@ app.post('/api/chatflow', (req, res) => { saveData('chatflow.json', req.body); r
 app.get('/api/chatbot-manual-qa', (req, res) => res.json(getData('manual-qa.json')));
 app.post('/api/chatbot-manual-qa', (req, res) => { saveData('manual-qa.json', req.body); res.json({ success: true }); });
 
+// Custom route for categorization settings to keep meta and presets unmutated
+app.post('/api/save-categories', (req, res) => {
+    try {
+        const srcPath = path.join(__dirname, 'src/data/categories.json');
+        const publicPath = path.join(__dirname, 'public/data/categories.json');
+        
+        // Read current to keep meta and presets
+        let currentObj = { meta: {}, presets: {} };
+        if (fs.existsSync(srcPath)) {
+            currentObj = JSON.parse(fs.readFileSync(srcPath, 'utf8'));
+        }
+        
+        const finalData = {
+            categories: req.body,
+            meta: currentObj.meta,
+            presets: currentObj.presets
+        };
+        
+        const jsonStr = JSON.stringify(finalData, null, 2);
+        fs.writeFileSync(srcPath, jsonStr, 'utf8');
+        
+        if (fs.existsSync(publicPath)) {
+            fs.writeFileSync(publicPath, jsonStr, 'utf8');
+        }
+        res.json({ success: true, message: 'Categories saved successfully' });
+    } catch (error) {
+        console.error('Save Categories Error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Serve static files from the React app build directory
 // Health check
 app.get('/api/health', (req, res) => {

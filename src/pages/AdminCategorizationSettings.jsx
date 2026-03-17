@@ -174,7 +174,7 @@ const AdminCategorizationSettings = () => {
                           console.error('Save error:', result.error);
                         }
                       } catch (err) {
-                        showToast('❌ Error connecting to development server');
+                        showToast('❌ Error connecting to the server');
                         console.error('Fetch error:', err);
                       }
                     }}
@@ -183,7 +183,7 @@ const AdminCategorizationSettings = () => {
                     <span className="material-symbols-outlined text-[20px]">check_circle</span> Save to System
                   </button>
                 </div>
-                <p className="text-[10px] text-slate-400 font-medium italic">Saves permanently to categories.json (requires dev server)</p>
+                <p className="text-[10px] text-slate-400 font-medium italic">Saves permanently to categories.json</p>
               </div>
             </div>
 
