@@ -133,7 +133,6 @@ const AdminNewTourUploadForm = () => {
 
   React.useEffect(() => {
     if (id) {
-      setIsEdit(true);
       // First check localStorage for session changes
       const savedTours = localStorage.getItem('wanderlust_admin_tours');
       if (savedTours) {
@@ -219,7 +218,7 @@ const AdminNewTourUploadForm = () => {
     setFormData(prev => ({ ...prev, faq: newFaq }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setLoading(true);
 
@@ -230,6 +229,13 @@ const AdminNewTourUploadForm = () => {
         tours = JSON.parse(savedTours);
       } catch (err) {
         console.error("Error parsing tours:", err);
+      }
+    } else {
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
+        tours = await res.json();
+      } catch (err) {
+        console.error("Error fetching base tours:", err);
       }
     }
 
