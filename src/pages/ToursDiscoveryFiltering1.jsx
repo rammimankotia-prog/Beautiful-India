@@ -229,15 +229,19 @@ const ToursDiscoveryFiltering1 = () => {
             try {
                 let allToursList = [];
                 const saved = localStorage.getItem('wanderlust_admin_tours');
-                if (saved) {
+                if (saved !== null) {
                     try {
                         const parsed = JSON.parse(saved);
                         if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
                     } catch(e) {}
-                }
-                if (allToursList.length === 0) {
-                    const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
-                    allToursList = await res.json();
+                } else {
+                    const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+                    if (res.ok) {
+                        allToursList = await res.json();
+                        if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
+                            localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                        }
+                    }
                 }
                 
                 const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');

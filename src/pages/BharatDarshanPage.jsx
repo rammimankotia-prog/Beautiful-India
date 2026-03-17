@@ -186,16 +186,19 @@ const BharatDarshanPage = () => {
       try {
         let allToursList = [];
         const saved = localStorage.getItem('wanderlust_admin_tours');
-        
         if (saved !== null) {
             try {
                 const parsed = JSON.parse(saved);
                 if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
             } catch(e) {}
         } else {
-            // Only fetch from server if never saved locally
-            const response = await fetch('/data/tours.json?t=' + Date.now());
-            allToursList = await response.json();
+            const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
+            if (res.ok) {
+                allToursList = await res.json();
+                if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
+                    localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                }
+            }
         }
         
         // Only show active or undefined (legacy) status tours on frontend

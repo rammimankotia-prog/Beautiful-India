@@ -130,15 +130,19 @@ const ToursByTrain = () => {
             try {
                 let allTours = [];
                 const saved = localStorage.getItem('wanderlust_admin_tours');
-                if (saved) {
+                if (saved !== null) {
                     try {
                         const parsed = JSON.parse(saved);
                         if (Array.isArray(parsed)) allTours = parsed.filter(Boolean);
                     } catch(e) {}
-                }
-                if (allTours.length === 0) {
-                    const res = await fetch('/data/tours.json');
-                    allTours = await res.json();
+                } else {
+                    const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
+                    if (res.ok) {
+                        allTours = await res.json();
+                        if (allTours && Array.isArray(allTours) && allTours.length > 0) {
+                            localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allTours));
+                        }
+                    }
                 }
                 const trainTours = allTours.filter(t => t.transport === 'train' && t.status !== 'paused');
                 setTours(trainTours);

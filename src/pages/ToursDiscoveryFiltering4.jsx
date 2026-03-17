@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 /**
@@ -7,6 +6,37 @@ import { Link } from 'react-router-dom';
  * Group: tours | Path: /tours/filter/4
  */
 const ToursDiscoveryFiltering4 = () => {
+    const [tours, setTours] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTours = async () => {
+            try {
+                let allToursList = [];
+                const saved = localStorage.getItem('wanderlust_admin_tours');
+                if (saved !== null) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+                    } catch(e) {}
+                } else {
+                    const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+                    if (res.ok) {
+                        allToursList = await res.json();
+                        if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
+                            localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                        }
+                    }
+                }
+                setTours(allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft').slice(0, 4));
+                setLoading(false);
+            } catch (err) {
+                console.error("Fetch tours error:", err);
+                setLoading(false);
+            }
+        };
+        fetchTours();
+    }, []);
   return (
     <div data-page="tours_discovery_filtering_4">
       <main className="  px-6 lg:px-12 py-12">
@@ -50,42 +80,39 @@ const ToursDiscoveryFiltering4 = () => {
 <button className="text-neutral-400"><span className="material-symbols-outlined">view_list</span></button>
 </div>
 </div>
-<div className="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-10">
-<article className="group">
-<div className="relative aspect-[4/3] overflow-hidden mb-6 rounded-sm">
-<img alt="Paris" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuLPtDSCXKNAqZFgYgt6nxXLGxR2-9qpjjDOAN2g6h_DifaIPiCRkKEZREoz_5IxOOhvY3a0sIuOyW1yku1KvXbU7kZHfzR0qfUjvPFDHuJt5iyuThuR4YKQ7r7YRLAxpA066Aian3Ni8Fuo0ewOoUswj5yTGD3PBunGNoAJeifjVqgTN_JY2wx2TmfjE2a5qyfqWRFLUCXx4EuCs05qT_XTgUNfRU443cdWf8429H2BzOBJlkPNpo_FHFERGSyMBipB4qxa_C8NON"/>
-<div className="absolute top-4 left-4">
-<span className="bg-white/90 backdrop-blur-sm text-[10px] font-black uppercase tracking-widest px-3 py-1.5 text-neutral-900">Culture</span>
-</div>
-</div>
-<div className="space-y-3">
-<p className="text-[10px] font-bold text-primary uppercase tracking-[0.15em]">Travel Guide</p>
-<Link to="/tours/2" className="font-serif text-2xl text-neutral-900 dark:text-neutral-100 leading-snug hover:text-primary transition-colors cursor-pointer block">The Art of Slow Living in the Heart of Paris</Link>
-<p className="text-neutral-500 dark:text-neutral-400 text-sm leading-relaxed line-clamp-2">How to skip the queues and find the authentic Parisian lifestyle in the hidden arrondissements.</p>
-<div className="pt-4 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800">
-<span className="text-[10px] font-bold text-neutral-400 uppercase tracking-tighter">By Marcus Thorne</span>
-<Link className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-100 hover:text-primary transition-colors" to="/tours/2">Read More</Link>
-</div>
-</div>
-</article>
-<article className="group">
-<div className="relative aspect-[4/3] overflow-hidden mb-6 rounded-sm">
-<img alt="Bali" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIcovQFfOLPdlxNn6R-8pyzC0H6qe0Be-k0tuboj9ZRB7GXZREF1A4tTGLQ1uSD9lb2bifrtI6mEndWLQyPShLPkixteIMm0oCkqCe0ydqokg_EWwwjcWQv0teX74sGAEhNPRrVCfNZrO_Y6KLj0Ow6DdoiAvUQnU-lM4M3vPj1vrKtSxQP2aPPaWW3QiJ1fhziWciEBdvKi92GsYFWg_59GMYK_chyIhAMQKY1rRME0Mh4xQrf8Q3mhDag4pKGaaru3NvE_9OBOzM"/>
-<div className="absolute top-4 left-4">
-<span className="bg-white/90 backdrop-blur-sm text-[10px] font-black uppercase tracking-widest px-3 py-1.5 text-neutral-900">Wellness</span>
-</div>
-</div>
-<div className="space-y-3">
-<p className="text-[10px] font-bold text-primary uppercase tracking-[0.15em]">Retreat</p>
-<h3 className="font-serif text-2xl text-neutral-900 dark:text-neutral-100 leading-snug group-hover:text-primary transition-colors cursor-pointer">Island Sanctuaries: A Guide to Bali's Sacred Water Temples</h3>
-<p className="text-neutral-500 dark:text-neutral-400 text-sm leading-relaxed line-clamp-2">Discovering the spiritual connection between Balinese culture and the island's eternal water springs.</p>
-<div className="pt-4 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800">
-<span className="text-[10px] font-bold text-neutral-400 uppercase tracking-tighter">By Sarah Jenkins</span>
-<a className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-100 hover:text-primary transition-colors" href="#">Read More</a>
-</div>
-</div>
-</article>
-</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-10">
+        {loading ? (
+            [1, 2].map(i => <div key={i} className="h-64 bg-gray-100 animate-pulse rounded-sm"></div>)
+        ) : (
+            tours.map(tour => {
+                const tourDestSegment = encodeURIComponent((tour.destination || 'global').toLowerCase().replace(/\s+/g, '-'));
+                const tourStateSegment = encodeURIComponent((tour.stateRegion || 'state').toLowerCase().replace(/\s+/g, '-'));
+                const tourSubSegment = encodeURIComponent((tour.subregion || 'subregion').toLowerCase().replace(/\s+/g, '-'));
+                const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
+                const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
+
+                return (
+                    <article key={tour.id} className="group">
+                      <div className="relative aspect-[4/3] overflow-hidden mb-6 rounded-sm">
+                        <img alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={tour.image}/>
+                        <div className="absolute top-4 left-4">
+                          <span className="bg-white/90 backdrop-blur-sm text-[10px] font-black uppercase tracking-widest px-3 py-1.5 text-neutral-900">{tour.category || 'Travel'}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-[0.15em]">{tour.duration} Package</p>
+                        <Link to={detailUrl} className="font-serif text-2xl text-neutral-900 dark:text-neutral-100 leading-snug hover:text-primary transition-colors cursor-pointer block">{tour.title}</Link>
+                        <p className="text-neutral-500 dark:text-neutral-400 text-sm leading-relaxed line-clamp-2">{tour.description}</p>
+                        <div className="pt-4 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800">
+                          <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-tighter">By Bharat Darshan</span>
+                          <Link className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-100 hover:text-primary transition-colors" to={detailUrl}>Read More</Link>
+                        </div>
+                      </div>
+                    </article>
+                );
+            })
+        )}
+      </div>
 <div className="mt-16 flex justify-center">
 <button className="group flex flex-col items-center gap-4">
 <span className="h-12 w-[1px] bg-neutral-200 dark:bg-neutral-800 group-hover:bg-primary transition-colors"></span>
