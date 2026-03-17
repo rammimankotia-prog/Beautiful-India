@@ -95,12 +95,29 @@ app.post('/api/save-categories', (req, res) => {
 });
 
 // Serve static files from the React app build directory
-// Health check
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'Dynamic Backend is live' });
-});
+const distPath = path.join(__dirname, 'dist');
+if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+    
+    // Handle SPA routing - serve index.html for any unknown routes
+    app.get('*', (req, res) => {
+        // If it starts with /api, we should have already handled it or it's a 404
+        if (req.url.startsWith('/api')) {
+            return res.status(404).json({ error: 'API route not found' });
+        }
+        res.sendFile(path.join(distPath, 'index.html'));
+    });
+} else {
+    // Health check for dev mode if dist doesn't exist
+    app.get('/api/health', (req, res) => {
+        res.json({ status: 'Dynamic Backend is live (Dev Mode - dist not found)' });
+    });
+}
 
 app.listen(PORT, () => {
     console.log(`Backend server running at http://localhost:${PORT}`);
+    if (fs.existsSync(distPath)) {
+        console.log(`Serving frontend from: ${distPath}`);
+    }
 });
 
