@@ -127,8 +127,7 @@ const AdminCategorizationSettings = () => {
             <SidebarLink to="/admin/overview" icon="space_dashboard" label="Overview" />
             <SidebarLink to="/admin/tours" icon="tour" label="Manage Tours" />
             <SidebarLink to="/admin/bookings" icon="group" label="Bookings" />
-            <SidebarLink to="/admin/guides" icon="map" label="Guides" />
-            <SidebarLink to="/admin/guides/new" icon="edit_document" label="Write a Blog" />
+            <SidebarLink to="/admin/guides" icon="menu_book" label="Guides & Blogs" />
             <SidebarLink to="/admin/categorization" icon="category" label="Categorization" active />
             <SidebarLink to="/referral/dashboard" icon="payments" label="Financials" />
             <SidebarLink to="/admin/queries" icon="contact_support" label="Queries" />

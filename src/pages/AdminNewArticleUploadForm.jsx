@@ -124,14 +124,10 @@ const AdminNewArticleUploadForm = () => {
                 <span className="material-symbols-outlined text-[20px] text-slate-500">tour</span>
                 <span className="text-[15px] font-medium">Manage Tours</span>
               </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/guides">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">map</span>
-                <span className="text-[15px] font-medium">Guides</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] bg-[#eefaf9] text-[#0a6c75] transition-colors" to="/admin/guides/new">
-                <span className="material-symbols-outlined text-[20px] text-[#0a6c75]">edit_document</span>
-                <span className="text-[15px] font-medium">Write a Blog</span>
-              </Link>
+              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] bg-[#eefaf9] text-[#0a6c75] transition-colors" to="/admin/guides">
+<span className="material-symbols-outlined text-[20px] text-[#0a6c75]">menu_book</span>
+<span className="text-[15px] font-medium">Guides & Blogs</span>
+</Link>
               <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/categorization">
                 <span className="material-symbols-outlined text-[20px] text-slate-500">category</span>
                 <span className="text-[15px] font-medium">Categorization</span>

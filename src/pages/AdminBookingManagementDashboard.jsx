@@ -199,12 +199,8 @@ const AdminBookingManagementDashboard = () => {
 <span className="text-[15px] font-medium">Bookings</span>
 </Link>
 <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/guides">
-<span className="material-symbols-outlined text-[20px] text-slate-500">map</span>
-<span className="text-[15px] font-medium">Guides</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/guides/new">
-<span className="material-symbols-outlined text-[20px] text-slate-500">edit_document</span>
-<span className="text-[15px] font-medium">Write a Blog</span>
+<span className="material-symbols-outlined text-[20px] text-slate-500">menu_book</span>
+<span className="text-[15px] font-medium">Guides & Blogs</span>
 </Link>
 <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/categorization">
 <span className="material-symbols-outlined text-[20px] text-slate-500">category</span>

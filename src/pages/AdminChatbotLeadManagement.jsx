@@ -170,7 +170,7 @@ const AdminChatbotLeadManagement = () => {
             <Link to="/admin" className="text-slate-500 text-[13px] font-bold tracking-wide hover:text-slate-800 h-full flex items-center pt-0.5">Tours</Link>
             <Link to="/admin/bookings" className="text-slate-500 text-[13px] font-bold tracking-wide hover:text-slate-800 h-full flex items-center pt-0.5">Bookings</Link>
             <Link to="/admin/queries" className="text-slate-500 text-[13px] font-bold tracking-wide hover:text-slate-800 h-full flex items-center pt-0.5">Queries</Link>
-            <Link to="/admin/guides/new" className="text-slate-500 text-[13px] font-bold tracking-wide hover:text-slate-800 h-full flex items-center pt-0.5">Write a Blog</Link>
+            <Link to="/admin/guides" className="text-slate-500 text-[13px] font-bold tracking-wide hover:text-slate-800 h-full flex items-center pt-0.5">Guides & Blogs</Link>
             <Link to="/admin/categorization" className="text-slate-500 text-[13px] font-bold tracking-wide hover:text-slate-800 h-full flex items-center pt-0.5">Categorization</Link>
           </nav>
         </div>
