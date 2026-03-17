@@ -8,7 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+# dist folder removed from ignore to allow deployment via git pull when npm is missing on server
+# dist
 dist-ssr
 *.local
 
