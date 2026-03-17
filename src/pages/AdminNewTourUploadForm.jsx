@@ -45,7 +45,8 @@ const AdminNewTourUploadForm = () => {
     cityPath: '',
     hotelCategory: [], 
     accommodationType: [],
-    transport: typeParam === 'train' ? 'train' : 'mixed'
+    transport: typeParam === 'train' ? 'train' : 'mixed',
+    homePagePlacements: []
   });
 
   const [categories, setCategories] = React.useState({
@@ -802,25 +803,32 @@ const AdminNewTourUploadForm = () => {
 </label>
 </div>
 
-{/* Show on Home Page */}
-<div className="flex items-center">
-  <label className="flex items-center gap-3 cursor-pointer group">
-    <div className="relative flex items-center justify-center">
-      <input 
-        type="checkbox"
-        name="showOnHome"
-        // Default to true if undefined so existing tours still show
-        checked={formData.showOnHome !== false}
-        onChange={(e) => setFormData(prev => ({ ...prev, showOnHome: e.target.checked }))}
-        className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded cursor-pointer checked:bg-primary checked:border-primary transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none"
-      />
-      <span className="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">check</span>
-    </div>
-    <div className="flex flex-col">
-      <span className="text-slate-800 dark:text-slate-200 text-sm font-bold group-hover:text-primary transition-colors">Show on Home Page</span>
-      <span className="text-xs text-slate-500 max-w-[200px]">Check this to display this tour in the matching sections on the Home Page</span>
-    </div>
-  </label>
+{/* Dynamic Home Page Placements */}
+<div className="col-span-1 md:col-span-2 space-y-3">
+  <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2 block">Show this tour on the Home Page in the following sections:</span>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    {['Popular Destinations', 'Recommended Tour Packages', 'Top 4 Metro Cities of India', 'Travel by Train'].map(section => (
+      <label key={section} className="flex items-center gap-3 cursor-pointer group bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
+        <div className="relative flex items-center justify-center">
+          <input 
+            type="checkbox"
+            name="homePagePlacements"
+            checked={(formData.homePagePlacements || []).includes(section)}
+            onChange={(e) => {
+              const currentPlacements = formData.homePagePlacements || [];
+              const newPlacements = e.target.checked 
+                ? [...currentPlacements, section]
+                : currentPlacements.filter(p => p !== section);
+              setFormData(prev => ({ ...prev, homePagePlacements: newPlacements }));
+            }}
+            className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded cursor-pointer checked:bg-primary checked:border-primary transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none"
+          />
+          <span className="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">check</span>
+        </div>
+        <span className="text-slate-800 dark:text-slate-200 text-sm font-semibold group-hover:text-primary transition-colors">{section}</span>
+      </label>
+    ))}
+  </div>
 </div>
 {/* Display Order */}
 <div>

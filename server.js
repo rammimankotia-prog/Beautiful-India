@@ -2,12 +2,21 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import connectDB from './src/config/db.js';
+
+import tourRoutes from './src/routes/tourRoutes.js';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Connect to MongoDB
+connectDB();
 
 // Enable CORS for all routes BEFORE JSON parsing to handle large payloads nicely
 app.use((req, res, next) => {
@@ -28,8 +37,7 @@ const getData = (filename) => JSON.parse(fs.readFileSync(path.join(__dirname, 's
 const saveData = (filename, data) => fs.writeFileSync(path.join(__dirname, 'src/data', filename), JSON.stringify(data, null, 2));
 
 // API Routes
-app.get('/api/tours', (req, res) => res.json(getData('tours.json')));
-app.post('/api/tours', (req, res) => { saveData('tours.json', req.body); res.json({ success: true }); });
+app.use('/api/v1/tours', tourRoutes);
 
 app.get('/api/bookings', (req, res) => res.json(getData('bookings.json')));
 app.post('/api/bookings', (req, res) => { saveData('bookings.json', req.body); res.json({ success: true }); });
