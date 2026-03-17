@@ -25,6 +25,13 @@ jobs:
       - name: Build Site
         run: npm run build
 
+      - name: "Post-Build: Prepare PHP Fallback"
+        run: |
+          echo "Copying PHP fallback and .htaccess to dist..."
+          cp api-save-categories.php dist/
+          cp .htaccess dist/
+          ls -la dist/
+
       - name: Validate Configuration
         run: |
           echo "Scanning for FTP_SERVER..."
