@@ -161,7 +161,8 @@ const AdminCategorizationSettings = () => {
                   <button
                     onClick={async () => {
                       try {
-                        const res = await fetch('/api/save-categories', {
+                        const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-categories' : `${import.meta.env.BASE_URL}api-save-categories.php`;
+                        const res = await fetch(targetUrl, {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify(categories)

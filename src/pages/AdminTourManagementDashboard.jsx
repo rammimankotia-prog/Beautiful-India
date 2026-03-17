@@ -142,7 +142,8 @@ const AdminTourManagementDashboard = () => {
     onClick={async () => {
       try {
         console.log("Saving tours to system...");
-        const response = await fetch('/api/save-tours', {
+        const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-tours' : `${import.meta.env.BASE_URL}api-save-tours.php`;
+        const response = await fetch(targetUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(tours)
