@@ -783,8 +783,8 @@ const AdminNewTourUploadForm = () => {
 {/* Section: Visibility & Ordering */}
 <div className="space-y-6">
 <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Visibility & Ordering</h2>
+{/* Status and Visibility */}
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-{/* Status */}
 <div>
 <label className="flex flex-col flex-1">
 <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Status</span>
@@ -798,6 +798,27 @@ const AdminNewTourUploadForm = () => {
 <option value="paused">Paused</option>
 </select>
 </label>
+</div>
+
+{/* Show on Home Page */}
+<div className="flex items-center">
+  <label className="flex items-center gap-3 cursor-pointer group">
+    <div className="relative flex items-center justify-center">
+      <input 
+        type="checkbox"
+        name="showOnHome"
+        // Default to true if undefined so existing tours still show
+        checked={formData.showOnHome !== false}
+        onChange={(e) => setFormData(prev => ({ ...prev, showOnHome: e.target.checked }))}
+        className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded cursor-pointer checked:bg-primary checked:border-primary transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none"
+      />
+      <span className="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">check</span>
+    </div>
+    <div className="flex flex-col">
+      <span className="text-slate-800 dark:text-slate-200 text-sm font-bold group-hover:text-primary transition-colors">Show on Home Page</span>
+      <span className="text-xs text-slate-500 max-w-[200px]">Check this to display this tour in the matching sections on the Home Page</span>
+    </div>
+  </label>
 </div>
 {/* Display Order */}
 <div>
