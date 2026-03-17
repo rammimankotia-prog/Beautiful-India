@@ -160,6 +160,12 @@ const WanderlustExplorerProHome = () => {
                                 <div style={{ padding:'18px 20px', display:'flex', flexDirection:'column', gap:8, flex: 1 }}>
                                     <div style={{ display:'flex', alignItems:'center', gap:4, color:'#7F8C8D', fontSize:12, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>
                                         <span className="material-symbols-outlined" style={{ fontSize:14 }}>schedule</span> {tour.duration}
+                                        {tour.bestTimeToVisit && (
+                                            <>
+                                                <span style={{ margin: '0 4px', color: '#cbd5e1' }}>|</span>
+                                                <span className="material-symbols-outlined" style={{ fontSize:14 }}>sunny</span> {tour.bestTimeToVisit}
+                                            </>
+                                        )}
                                     </div>
                                     <h3 style={{ margin:0, fontSize:17, fontWeight:800, color:'#2C3E50' }}>{tour.title}</h3>
                                     <p style={{ margin:0, color:'#7F8C8D', fontSize:13, lineHeight:1.5 }}>{tour.description}</p>

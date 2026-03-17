@@ -22,6 +22,7 @@ const AdminNewTourUploadForm = () => {
     stateRegion: '',
     subregion: '',
     duration: '',
+    bestTimeToVisit: '',
     price: '',
     priceBasis: 'per_person', // 'per_person', 'per_package'
     minPersons: 1,
@@ -582,6 +583,20 @@ const AdminNewTourUploadForm = () => {
   className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
   placeholder="Enjoy a trekking trip to Vaishno Devi Temple&#10;Enjoy skiing at Gulmarg"
 ></textarea>
+</label>
+</div>
+{/* Best Time to Visit */}
+<div className="col-span-1 md:col-span-2 mt-4">
+<label className="flex flex-col flex-1">
+<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Best Time to Visit</span>
+<input 
+  name="bestTimeToVisit"
+  value={formData.bestTimeToVisit || ''}
+  onChange={handleChange}
+  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
+  placeholder="e.g. Mar - Jun & Oct - Nov" 
+  type="text"
+/>
 </label>
 </div>
 </div>

@@ -555,6 +555,13 @@ const ToursDiscoveryFiltering1 = () => {
                                                             {tour.duration}
                                                         </div>
                                                     )}
+                                                    {/* Best Time badge */}
+                                                    {tour.bestTimeToVisit && (
+                                                        <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-primary/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-md">
+                                                            <span className="material-symbols-outlined text-[12px]">sunny</span>
+                                                            {tour.bestTimeToVisit}
+                                                        </div>
+                                                    )}
                                                 </div>
 
                                                 {/* Compare toggle */}

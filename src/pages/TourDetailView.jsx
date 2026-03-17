@@ -543,6 +543,20 @@ const TourDetailView = () => {
                             <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">{tour.duration}</h4>
                           </div>
                         </div>
+                        {tour.bestTimeToVisit && (
+                          <>
+                            <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
+                            <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">sunny</span>
+                              </div>
+                              <div>
+                                <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Best Time To Visit</p>
+                                <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">{tour.bestTimeToVisit}</h4>
+                              </div>
+                            </div>
+                          </>
+                        )}
                         <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
