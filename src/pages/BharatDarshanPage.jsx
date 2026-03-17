@@ -184,9 +184,21 @@ const BharatDarshanPage = () => {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const response = await fetch('/data/tours.json');
-        const data = await response.json();
-        setAllTours(data);
+        let allToursList = [];
+        const saved = localStorage.getItem('wanderlust_admin_tours');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+            } catch(e) {}
+        }
+        if (allToursList.length === 0) {
+            const response = await fetch('/data/tours.json');
+            allToursList = await response.json();
+        }
+        
+        // Only show active or undefined (legacy) status tours on frontend
+        setAllTours(allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft'));
       } catch (err) {
         console.error('Failed to fetch tours:', err);
       } finally {

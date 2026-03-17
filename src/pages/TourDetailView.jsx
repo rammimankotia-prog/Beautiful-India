@@ -102,14 +102,26 @@ const TourDetailView = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${import.meta.env.BASE_URL}data/tours.json`)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch tours');
-        return res.json();
-      })
-      .then(data => {
+    const fetchTourData = async () => {
+      try {
+        let allToursList = [];
+        const saved = localStorage.getItem('wanderlust_admin_tours');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+            } catch(e) {}
+        }
+        if (allToursList.length === 0) {
+            const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
+            if (!res.ok) throw new Error('Failed to fetch tours');
+            allToursList = await res.json();
+        }
+
+        const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
+        
         // Find the tour whose encoded title matches the :title parameter
-        const matchedTour = data.find(t => {
+        const matchedTour = activeTours.find(t => {
           const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
           return tSlug === title;
         });
@@ -118,16 +130,17 @@ const TourDetailView = () => {
           setTour(matchedTour);
         } else {
           // If no match found by title, try ID 1 as fallback or trigger error
-          if (!title) setTour(data[0]); 
+          if (!title) setTour(activeTours[0]); 
           else throw new Error('Tour not found by title');
         }
-        setAllTours(data);
+        setAllTours(activeTours);
         setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         setError(err.message);
         setLoading(false);
-      });
+      }
+    };
+    fetchTourData();
     // Fetch reviews
     fetch(`${import.meta.env.BASE_URL}data/reviews.json`)
       .then(res => res.json())

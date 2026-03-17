@@ -9,15 +9,32 @@ const WanderlustExplorerProHome = () => {
     const [themes, setThemes] = useState([]);
 
     useEffect(() => {
-        fetch(`${import.meta.env.BASE_URL}data/tours.json`)
-            .then(res => res.json())
-            .then(data => setTours(data))
-            .catch(() => setTours([
+        const fetchTours = async () => {
+          try {
+            let allToursList = [];
+            const saved = localStorage.getItem('wanderlust_admin_tours');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+                } catch(e) {}
+            }
+            if (allToursList.length === 0) {
+                const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
+                if (!res.ok) throw new Error('Failed to fetch tours');
+                allToursList = await res.json();
+            }
+            setTours(allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft'));
+          } catch (err) {
+            setTours([
                 { id:'1', title:'Swiss Alps Trek',       duration:'7 Days',  rating:4.9, price:1299, image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80', description:'Experience the breathtaking beauty of the Swiss Alps on a guided trekking adventure.' },
                 { id:'2', title:'Bali Wellness Retreat', duration:'5 Days',  rating:4.8, price:899,  image:'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=crop&w=800&q=80', description:'Rejuvenate your mind, body, and soul in the lush jungles of Ubud.' },
                 { id:'3', title:'Patagonia Expedition',  duration:'10 Days', rating:4.7, price:2499, image:'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=800&q=80', description:'Journey to the end of the world and witness spectacular glaciers.' },
                 { id:'4', title:'Santorini Getaway',     duration:'6 Days',  rating:4.9, price:1499, image:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80', description:'Relax in iconic white-washed villas overlooking the Aegean Sea.' },
-            ]));
+            ]);
+          }
+        };
+        fetchTours();
 
         fetch(`${import.meta.env.BASE_URL}data/themes.json`)
             .then(res => res.json())

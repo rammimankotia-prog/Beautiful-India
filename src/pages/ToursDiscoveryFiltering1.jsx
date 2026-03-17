@@ -225,20 +225,37 @@ const ToursDiscoveryFiltering1 = () => {
     }, []);
 
     useEffect(() => {
-        fetch(`${import.meta.env.BASE_URL}data/tours.json`)
-            .then(res => res.json())
-            .then(data => {
-                setTours(data);
+        const fetchTours = async () => {
+            try {
+                let allToursList = [];
+                const saved = localStorage.getItem('wanderlust_admin_tours');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+                    } catch(e) {}
+                }
+                if (allToursList.length === 0) {
+                    const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
+                    allToursList = await res.json();
+                }
+                
+                const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
+                setTours(activeTours);
                 if (regionSlug) {
-                    const matchedTour = findTourBySlug(data, regionSlug);
+                    const matchedTour = findTourBySlug(activeTours, regionSlug);
                     if (matchedTour) {
                         setDestination(matchedTour.destination || 'Any Destination');
                         setStateRegion(matchedTour.stateRegion);
                     }
                 }
                 setLoading(false);
-            })
-            .catch(err => { console.error('Failed to fetch tours:', err); setLoading(false); });
+            } catch (err) {
+                console.error('Failed to fetch tours:', err);
+                setLoading(false);
+            }
+        };
+        fetchTours();
     }, []);
 
     useEffect(() => {

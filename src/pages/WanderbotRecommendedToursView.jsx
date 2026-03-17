@@ -15,23 +15,39 @@ const WanderbotRecommendedToursView = () => {
     const { formatPrice } = useCurrency();
 
     useEffect(() => {
-        fetch(`${import.meta.env.BASE_URL}data/tours.json`)
-            .then(res => res.json())
-            .then(data => {
+        const fetchRecommendedTours = async () => {
+            try {
+                let allToursList = [];
+                const saved = localStorage.getItem('wanderlust_admin_tours');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+                    } catch(e) {}
+                }
+                if (allToursList.length === 0) {
+                    const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
+                    allToursList = await res.json();
+                }
+
+                // Filter out paused/draft
+                const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
+
                 // Find tours that match the interest (case-insensitive) or just take first 3 if none match
-                const matches = data.filter(t =>
+                const matches = activeTours.filter(t =>
                     t.nature?.toLowerCase().includes(userInterest.toLowerCase()) ||
                     t.theme?.toLowerCase().includes(userInterest.toLowerCase()) ||
                     t.title?.toLowerCase().includes(userInterest.toLowerCase())
                 );
 
-                setRecommendedTours(matches.length > 0 ? matches : data.slice(0, 3));
+                setRecommendedTours(matches.length > 0 ? matches : activeTours.slice(0, 3));
                 setLoading(false);
-            })
-            .catch(err => {
+            } catch (err) {
                 console.error("Fetch tours error:", err);
                 setLoading(false);
-            });
+            }
+        };
+        fetchRecommendedTours();
     }, [userInterest]);
 
     return (

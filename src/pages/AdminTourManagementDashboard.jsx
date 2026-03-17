@@ -31,7 +31,8 @@ const AdminTourManagementDashboard = () => {
     const saved = localStorage.getItem('wanderlust_admin_tours');
     if (saved) {
       try {
-        setTours(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        setTours(Array.isArray(parsed) ? parsed.filter(Boolean) : []);
         setLoading(false);
         return;
       } catch (e) { console.error("Parse error:", e); }

@@ -126,14 +126,29 @@ const ToursByTrain = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     useEffect(() => {
-        fetch('/data/tours.json')
-            .then(res => res.json())
-            .then(data => {
-                const trainTours = data.filter(t => t.transport === 'train');
+        const fetchTours = async () => {
+            try {
+                let allTours = [];
+                const saved = localStorage.getItem('wanderlust_admin_tours');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) allTours = parsed.filter(Boolean);
+                    } catch(e) {}
+                }
+                if (allTours.length === 0) {
+                    const res = await fetch('/data/tours.json');
+                    allTours = await res.json();
+                }
+                const trainTours = allTours.filter(t => t.transport === 'train' && t.status !== 'paused');
                 setTours(trainTours);
                 setLoading(false);
-            })
-            .catch(err => { console.error('Failed to fetch tours:', err); setLoading(false); });
+            } catch (err) {
+                console.error('Failed to fetch tours:', err);
+                setLoading(false);
+            }
+        };
+        fetchTours();
     }, []);
 
     // Lock scroll when drawer is open

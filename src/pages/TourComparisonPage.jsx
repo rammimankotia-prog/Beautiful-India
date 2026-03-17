@@ -18,19 +18,33 @@ const TourComparisonPage = () => {
 
     const ids = idsParam.split(',');
     
-    fetch(`${import.meta.env.BASE_URL}data/tours.json`)
-      .then(res => res.json())
-      .then(data => {
-        const filtered = data.filter(t => ids.includes(t.id.toString()));
+    const fetchComparisonTours = async () => {
+      try {
+        let allToursList = [];
+        const saved = localStorage.getItem('wanderlust_admin_tours');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+            } catch(e) {}
+        }
+        if (allToursList.length === 0) {
+            const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
+            allToursList = await res.json();
+        }
+
+        const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
+        const filtered = activeTours.filter(t => ids.includes(t.id.toString()));
         // Keep order as requested in URL
         const ordered = ids.map(id => filtered.find(t => t.id.toString() === id)).filter(Boolean);
         setToursToCompare(ordered);
         setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         console.error("Failed to fetch tours for comparison:", err);
         setLoading(false);
-      });
+      }
+    };
+    fetchComparisonTours();
   }, [idsParam]);
 
   const removeTour = (idToRemove) => {
