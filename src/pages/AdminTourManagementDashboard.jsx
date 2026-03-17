@@ -139,9 +139,24 @@ const AdminTourManagementDashboard = () => {
     <span className="truncate">Reset to Default</span>
   </button>
   <button 
-    onClick={() => {
-      console.log("Staging tour updates for system persistence...");
-      showToast('✅ Staged Successfully! Please click Send to let me commit these changes permanently.');
+    onClick={async () => {
+      try {
+        console.log("Saving tours to system...");
+        const response = await fetch('/api/save-tours', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(tours)
+        });
+        const result = await response.json();
+        if (result.success) {
+          showToast('✅ Tours Saved Permanently to System!');
+        } else {
+          throw new Error(result.error || 'Failed to save');
+        }
+      } catch (err) {
+        console.error("Save error:", err);
+        showToast('❌ Error saving to system. Check console.');
+      }
     }}
     className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-emerald-600 text-white text-sm font-bold leading-normal hover:bg-emerald-700 transition-colors shadow-sm gap-2"
   >

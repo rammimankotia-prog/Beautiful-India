@@ -1,9 +1,10 @@
+# Apache Configuration for React SPA with PHP API Fallbacks
 RewriteEngine On
-
-# Route categorization save request to PHP fallback for environments without Node.js
+RewriteBase /
 RewriteRule ^api/save-categories$ api-save-categories.php [L]
-
-# For React Router SPA support if serving via Apache
+RewriteRule ^api/save-tours$ api-save-tours.php [L]
+RewriteRule ^index\.html$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [L]
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteRule . /index.html [L]

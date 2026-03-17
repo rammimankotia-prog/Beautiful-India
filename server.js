@@ -94,6 +94,23 @@ app.post('/api/save-categories', (req, res) => {
     }
 });
 
+// New endpoint for saving tours permanently
+app.post('/api/save-tours', (req, res) => {
+    try {
+        const srcPath = path.join(__dirname, 'src/data/tours.json');
+        const publicPath = path.join(__dirname, 'public/data/tours.json');
+        const jsonStr = JSON.stringify(req.body, null, 2);
+        fs.writeFileSync(srcPath, jsonStr, 'utf8');
+        if (fs.existsSync(publicPath)) {
+            fs.writeFileSync(publicPath, jsonStr, 'utf8');
+        }
+        res.json({ success: true, message: 'Tours saved successfully' });
+    } catch (error) {
+        console.error('Save Tours Error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Serve static files from the React app build directory
 const distPath = path.join(__dirname, 'dist');
 if (fs.existsSync(distPath)) {
@@ -120,4 +137,3 @@ app.listen(PORT, () => {
         console.log(`Serving frontend from: ${distPath}`);
     }
 });
-
