@@ -38,7 +38,7 @@ const AdminTourManagementDashboard = () => {
       } catch (e) { console.error("Parse error:", e); }
     }
 
-    fetch(`${import.meta.env.BASE_URL}data/tours.json`)
+    fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         setTours(data);

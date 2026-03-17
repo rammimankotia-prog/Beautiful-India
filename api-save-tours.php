@@ -24,11 +24,10 @@ try {
         throw new Exception('Invalid JSON data');
     }
 
-    // Adjust paths based on your installation directory
-    // Inside 'dist', data is usually in 'data/tours.json'
-    $srcPath = __DIR__ . '/../src/data/tours.json';
+    // Adjust paths for production (dist)
+    // Both script and data/ folder are in the root after deployment
+    $srcPath = __DIR__ . '/data/tours.json';
     
-    // In production (dist), the folder structure might be different
     if (!file_exists(dirname($srcPath))) {
         mkdir(dirname($srcPath), 0777, true);
     }

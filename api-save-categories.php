@@ -1,6 +1,6 @@
 <?php
 // PHP Fallback for Hostinger Shared Hosting (No Node.js Support)
-// Place this at: /api/save-categories.php or similar
+// Place this at: /api/save-categories.php
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -24,8 +24,9 @@ try {
         throw new Exception('Invalid JSON data');
     }
 
-    // Adjust paths based on your installation directory
-    $srcPath = __DIR__ . '/../src/data/categories.json';
+    // Adjust paths for production (dist)
+    // Both script and data/ folder are in the root after deployment
+    $srcPath = __DIR__ . '/data/categories.json';
     
     // Ensure we preserve meta and presets
     $currentObj = ['meta' => [], 'presets' => []];

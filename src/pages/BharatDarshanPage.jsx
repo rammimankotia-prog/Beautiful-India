@@ -186,14 +186,15 @@ const BharatDarshanPage = () => {
       try {
         let allToursList = [];
         const saved = localStorage.getItem('wanderlust_admin_tours');
-        if (saved) {
+        
+        if (saved !== null) {
             try {
                 const parsed = JSON.parse(saved);
                 if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
             } catch(e) {}
-        }
-        if (allToursList.length === 0) {
-            const response = await fetch('/data/tours.json');
+        } else {
+            // Only fetch from server if never saved locally
+            const response = await fetch('/data/tours.json?t=' + Date.now());
             allToursList = await response.json();
         }
         
