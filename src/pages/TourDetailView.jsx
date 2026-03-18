@@ -7,7 +7,7 @@ import { useCurrency } from '../context/CurrencyContext';
  * Group: tours | Path: /tours/detail
  */
 const TourDetailView = () => {
-  const { title } = useParams();
+  const { title, id } = useParams();
   const navigate = useNavigate();
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -125,18 +125,30 @@ const TourDetailView = () => {
 
         const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
         
-        // Find the tour whose encoded title matches the :title parameter
-        const matchedTour = activeTours.find(t => {
-          const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-          return tSlug === title;
-        });
+        // Find the tour - try by ID first, then by title slug
+        const identifier = id || title;
+        let matchedTour = null;
+
+        // 1. Try matching by ID
+        if (identifier) {
+          matchedTour = activeTours.find(t => String(t.id) === String(identifier));
+        }
+
+        // 2. If no ID match, try matching by title slug
+        if (!matchedTour && identifier) {
+          matchedTour = activeTours.find(t => {
+            const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
+            return tSlug === identifier;
+          });
+        }
 
         if (matchedTour) {
           setTour(matchedTour);
+        } else if (!identifier) {
+          // No identifier at all, show first tour
+          setTour(activeTours[0]);
         } else {
-          // If no match found by title, try ID 1 as fallback or trigger error
-          if (!title) setTour(activeTours[0]); 
-          else throw new Error('Tour not found by title');
+          throw new Error('Tour not found');
         }
         setAllTours(activeTours);
         setLoading(false);
@@ -151,7 +163,7 @@ const TourDetailView = () => {
       .then(res => res.json())
       .then(data => setReviews(data))
       .catch(err => console.error("Reviews fetch error:", err));
-  }, [title]);
+  }, [title, id]);
 
   const handleLeadSubmit = async () => {
     const leadData = {
@@ -287,7 +299,7 @@ const TourDetailView = () => {
            <div className="flex items-center gap-6">
               <div className="text-right">
                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Special Price</p>
-                 <p className="text-xl font-black text-primary leading-none">{formatPrice(tour.price, true)}</p>
+                 <p className="text-xl font-black text-primary leading-none">{formatPrice(tour.pricePerPerson || tour.price, true)}</p>
               </div>
               <button 
                 onClick={() => setIsQuoteModalOpen(true)}
@@ -346,8 +358,14 @@ const TourDetailView = () => {
                 <div className="flex flex-col items-start md:items-end gap-3 shrink-0 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
                   <div className="text-left md:text-right">
                     <p className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase tracking-widest">Starting from</p>
-                    <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.price, true)}</p>
-                    <p className="text-[10px] md:text-xs text-slate-400 font-bold mt-0.5 uppercase">{tour.priceBasis === 'per_package' ? 'Per Package' : 'Per Person'}</p>
+                    <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.pricePerPerson || tour.price, true)}</p>
+                    <p className="text-[10px] md:text-xs text-slate-400 font-bold mt-0.5 uppercase">{tour.pricePerPerson ? 'Per Person' : (tour.priceBasis === 'per_package' ? 'Per Package' : 'Per Person')}</p>
+                    {tour.pricePerCouple && (
+                      <p className="text-xs text-pink-500 font-bold mt-1">{formatPrice(tour.pricePerCouple, true)} / Couple</p>
+                    )}
+                    {tour.pricePerGroup && (
+                      <p className="text-xs text-emerald-500 font-bold">{formatPrice(tour.pricePerGroup, true)} / Group of {tour.groupSize || 10}</p>
+                    )}
                   </div>
                   {(tour.nature === 'group' || tour.nature === 'private') && tour.minPersons > 1 && (
                     <span className="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wide">
@@ -533,7 +551,7 @@ const TourDetailView = () => {
                           <div>
                             <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estimated Price Guide</p>
                             <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">
-                              {formatPrice(tour.price, true)} - {formatPrice(tour.price + 10000, true)}
+                              {formatPrice(tour.pricePerPerson || tour.price, true)} - {formatPrice((tour.pricePerPerson || tour.price) + 10000, true)}
                               <span className="text-sm font-medium text-slate-400 ml-2">/ per person</span>
                             </h4>
                           </div>
@@ -865,10 +883,10 @@ const TourDetailView = () => {
                           <div className="w-full min-[400px]:w-auto">
                             <p className="text-[10px] md:text-[11px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Starting from:</p>
                             <div className="flex items-baseline gap-2">
-                               <span className="text-2xl font-black text-emerald-600 dark:text-emerald-500">{formatPrice(tour.price, true)}/-</span>
-                               <span className="text-sm text-slate-400 line-through font-medium">{formatPrice(Math.round(tour.price * 1.15), true)}/-</span>
+                               <span className="text-2xl font-black text-emerald-600 dark:text-emerald-500">{formatPrice(tour.pricePerPerson || tour.price, true)}/-</span>
+                               <span className="text-sm text-slate-400 line-through font-medium">{formatPrice(Math.round((tour.pricePerPerson || tour.price) * 1.15), true)}/-</span>
                             </div>
-                            <p className="text-[11px] text-slate-500 font-bold mt-1">Per {tour.priceBasis === 'per_package' ? 'Package' : 'Person on twin sharing'}.</p>
+                            <p className="text-[11px] text-slate-500 font-bold mt-1">Per {tour.pricePerPerson ? 'Person on twin sharing' : (tour.priceBasis === 'per_package' ? 'Package' : 'Person on twin sharing')}.</p>
                             <p className="text-[10px] text-orange-600 dark:text-orange-400 font-black mt-1 uppercase italic">Hotel cost may vary - submit details for rates!</p>
                           </div>
                           <div className="w-full min-[400px]:w-auto flex flex-row min-[400px]:flex-col justify-between items-center min-[400px]:items-end gap-2">
