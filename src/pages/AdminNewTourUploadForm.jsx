@@ -423,7 +423,7 @@ const AdminNewTourUploadForm = () => {
             </div>
 {/* Form Container */}
 <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-<form className="p-6 md:p-8 space-y-8" onSubmit={handleSubmit}>
+<form className="p-6 md:p-8 space-y-8" onSubmit={(e)=>e.preventDefault()}>
 {/* Section 1: Basic Info */}
 <div className="space-y-6">
 <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Basic Information</h2>
