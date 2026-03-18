@@ -1,9 +1,8 @@
-RewriteEngine On
-
-# Route categorization save request to PHP fallback for environments without Node.js
-RewriteRule ^api/save-categories$ api-save-categories.php [L]
-
-# For React Router SPA support if serving via Apache
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [L]
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

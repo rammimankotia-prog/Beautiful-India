@@ -1085,9 +1085,15 @@ const AdminNewTourUploadForm = () => {
     </span>
   </div>
 
-  {/* Drop Zone */}
-  <label
-    htmlFor="file-upload"
+  {/* Drop Zone - Using div + ref to avoid form submission interference */}
+  <div
+    onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      // Programmatically trigger the hidden file input
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput) fileInput.click();
+    }}
     onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
     onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
     onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); }}
@@ -1099,21 +1105,25 @@ const AdminNewTourUploadForm = () => {
       }
     }}
     className="flex flex-col items-center justify-center w-full rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 px-6 py-10 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-primary/50 transition-all group"
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('file-upload')?.click(); } }}
   >
     <span className="material-symbols-outlined text-5xl text-slate-400 group-hover:text-primary transition-colors mb-3">add_photo_alternate</span>
     <p className="text-sm font-semibold text-primary">Click to upload photos</p>
     <p className="text-xs text-slate-400 mt-1">Select multiple photos at once · JPG, PNG, WEBP</p>
     <p className="text-xs text-slate-400">Photos are auto-compressed to WebP for fast loading</p>
-    <input
-      onChange={handleImageUpload}
-      accept="image/*"
-      className="sr-only"
-      id="file-upload"
-      multiple
-      name="file-upload"
-      type="file"
-    />
-  </label>
+  </div>
+  {/* Hidden file input - placed outside the clickable div to prevent event conflicts */}
+  <input
+    onChange={handleImageUpload}
+    accept="image/*"
+    className="sr-only"
+    id="file-upload"
+    multiple
+    name="file-upload"
+    type="file"
+  />
 
   {/* Photo Grid with captions */}
   {normalizeImages(formData.images && formData.images.length > 0 ? formData.images : (formData.image ? [formData.image] : [])).length > 0 && (
