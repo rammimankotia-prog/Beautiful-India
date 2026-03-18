@@ -114,11 +114,11 @@ const BharatBotTourMatchmakerChatbot = () => {
         }
 
         // Navigate with state
-        navigate('/wanderbot/recommendations', { state: capturedData });
+        navigate('/bharatbot/recommendations', { state: capturedData });
     };
 
     return (
-        <div data-page="wanderbot_tour_matchmaker_chatbot">
+        <div data-page="bharatbot_tour_matchmaker_chatbot">
             <div className="layout- flex h-full grow flex-col">
                 <main className="flex-1 flex justify-center py-10 px-4 bg-sand-50 dark:bg-slate-900/50">
                     <div className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-primary/10 h-[700px]">

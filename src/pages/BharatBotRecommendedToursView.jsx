@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 
 /**
- * Auto-generated from: wanderbot_recommended_tours_view/code.html
- * Group: ai | Path: /wanderbot/recommendations
+ * Auto-generated from: bharatbot_recommended_tours_view/code.html
+ * Group: ai | Path: /bharatbot/recommendations
  */
 const BharatBotRecommendedToursView = () => {
     const location = useLocation();
@@ -55,7 +55,7 @@ const BharatBotRecommendedToursView = () => {
     }, [userInterest]);
 
     return (
-        <div data-page="wanderbot_recommended_tours_view">
+        <div data-page="bharatbot_recommended_tours_view">
             <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
                 <div className="layout- flex h-full grow flex-col">
                     {/* Navigation Bar */}
