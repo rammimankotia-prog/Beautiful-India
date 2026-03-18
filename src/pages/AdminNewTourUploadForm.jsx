@@ -15,6 +15,7 @@ const AdminNewTourUploadForm = () => {
   const [searchParams] = useSearchParams();
   const isEdit = Boolean(id);
   const typeParam = searchParams.get('type');
+  const [loading, setLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({
     title: '',
     description: '',
@@ -33,6 +34,7 @@ const AdminNewTourUploadForm = () => {
     style: '',
     priceCategory: '',
     image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200',
+    images: [],
     inclusions: '',
     exclusions: '',
     highlights: '',
@@ -423,7 +425,7 @@ const AdminNewTourUploadForm = () => {
             </div>
 {/* Form Container */}
 <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-<form className="p-6 md:p-8 space-y-8" onSubmit={(e)=>e.preventDefault()}>
+<form className="p-6 md:p-8 space-y-8" onSubmit={handleSubmit}>
 {/* Section 1: Basic Info */}
 <div className="space-y-6">
 <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Basic Information</h2>
