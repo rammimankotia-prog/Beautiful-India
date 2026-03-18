@@ -70,7 +70,7 @@ const CustomTripQuoteRequestEmail = () => {
 <div className="flex flex-col items-center space-y-6">
 <div className="flex items-center gap-2 text-primary font-display font-bold">
 <span className="material-symbols-outlined">call</span>
-<a className="hover:underline" href="tel:+1234567890">Talk to a Travel Expert</a>
+<a className="hover:underline" href="tel:+916005159433">Talk to a Travel Expert</a>
 </div>
 <div className="flex gap-6">
 <a className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" href="#">

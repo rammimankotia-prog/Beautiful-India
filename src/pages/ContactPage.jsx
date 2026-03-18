@@ -20,10 +20,10 @@ const ContactPage = () => {
     {
       icon: 'call',
       label: 'Call Us',
-      value: '+91 0000 0000 00',
+      value: '+916005159433',
       sub: 'Mon – Sat, 9 AM – 7 PM IST',
       color: 'bg-primary/10 text-primary',
-      href: 'tel:+910000000000'
+      href: 'tel:+916005159433'
     },
     {
       icon: 'mail',

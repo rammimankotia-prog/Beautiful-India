@@ -280,7 +280,7 @@ const Header = () => {
                         <div className="text-slate-500 text-xs font-bold uppercase tracking-widest">Connect With Us</div>
                         <div className="flex gap-4">
                             <span className="material-symbols-outlined text-slate-400">call</span>
-                            <span className="text-slate-300 text-sm">0000 0000 00</span>
+                            <span className="text-slate-300 text-sm">+916005159433</span>
                         </div>
                         <div className="flex gap-4">
                             <span className="material-symbols-outlined text-slate-400">mail</span>

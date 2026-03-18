@@ -115,7 +115,7 @@ const Footer = () => {
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-6 w-full lg:w-1/3 lg:items-end">
                         <div className="flex items-center gap-3 font-bold text-lg">
                             <span className="material-symbols-outlined text-[#ff3d31]">call</span>
-                            <span>0000 0000 00</span>
+                            <span>+916005159433</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm">
                             <span className="material-symbols-outlined text-gray-400">mail</span>

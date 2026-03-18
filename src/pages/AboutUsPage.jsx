@@ -537,7 +537,7 @@ const AboutUsPage = () => {
               </p>
               <div className="flex flex-col gap-4">
                 {[
-                  { icon: 'call', label: '+91 0000 0000 00', sub: 'Mon–Sat, 9 AM – 7 PM IST' },
+                  { icon: 'call', label: '+916005159433', sub: 'Mon–Sat, 9 AM – 7 PM IST' },
                   { icon: 'mail', label: 'customercare@beautifulindia.com', sub: 'Reply within 24 hours' },
                   { icon: 'location_on', label: 'New Delhi, India', sub: '123 India Gate Road, 110001' },
                 ].map((c, i) => (

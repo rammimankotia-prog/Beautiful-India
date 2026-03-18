@@ -1181,7 +1181,7 @@ const TourDetailView = () => {
                 <p className="text-slate-400 text-[10px] font-black uppercase flex items-center justify-center gap-2 mb-2 tracking-widest">
                   <span className="material-symbols-outlined text-xs">call</span> Help & Support
                 </p>
-                <p className="text-xl font-black text-[#006D77] text-center tracking-tight">0000 0000 00</p>
+                <p className="text-xl font-black text-[#006D77] text-center tracking-tight">+916005159433</p>
               </div>
             </div>
 
