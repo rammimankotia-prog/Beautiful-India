@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import BharatDarshanBanner from '../components/BharatDarshanBanner';
 
-const WanderlustExplorerProHome = () => {
+const BeautifulIndiaHome = () => {
     const { formatPrice } = useCurrency();
     const [tours, setTours] = useState([]);
     const [themes, setThemes] = useState([]);
@@ -12,7 +12,7 @@ const WanderlustExplorerProHome = () => {
         const fetchTours = async () => {
           try {
             let allToursList = [];
-            const saved = localStorage.getItem('wanderlust_admin_tours');
+            const saved = localStorage.getItem('beautifulindia_admin_tours');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -26,16 +26,19 @@ const WanderlustExplorerProHome = () => {
                 
                 // If local storage was empty, but server has data, save it to local storage to keep them in sync
                 if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-                    localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
                 }
             }
             setTours(allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft'));
           } catch (err) {
             setTours([
-                { id:'1', title:'Swiss Alps Trek',       duration:'7 Days',  rating:4.9, price:1299, image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80', description:'Experience the breathtaking beauty of the Swiss Alps on a guided trekking adventure.' },
-                { id:'2', title:'Bali Wellness Retreat', duration:'5 Days',  rating:4.8, price:899,  image:'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=crop&w=800&q=80', description:'Rejuvenate your mind, body, and soul in the lush jungles of Ubud.' },
-                { id:'3', title:'Patagonia Expedition',  duration:'10 Days', rating:4.7, price:2499, image:'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=800&q=80', description:'Journey to the end of the world and witness spectacular glaciers.' },
-                { id:'4', title:'Santorini Getaway',     duration:'6 Days',  rating:4.9, price:1499, image:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80', description:'Relax in iconic white-washed villas overlooking the Aegean Sea.' },
+                { id:'1', title:'Kashmir Great Lakes Trek',       duration:'7 Days',  rating:4.9, price:1299, image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80', description:'Experience the breathtaking beauty of the Himalayas on a guided trekking adventure.' },
+...
+                { id:'2', title:'Varkala Wellness Retreat', duration:'5 Days',  rating:4.8, price:899,  image:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80', description:'Rejuvenate your mind, body, and soul on the golden cliffs of Kerala.' },
+...
+                { id:'3', title:'Spiti Valley Expedition',  duration:'10 Days', rating:4.7, price:2499, image:'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80', description:'Journey to the cold desert and witness spectacular monasteries and landscapes.' },
+...
+                { id:'4', title:'Andaman Islands Getaway',     duration:'6 Days',  rating:4.9, price:1499, image:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80', description:'Relax on pristine beaches overlooking the emerald waters of the Bay of Bengal.' },
             ]);
           }
         };
@@ -197,7 +200,7 @@ const WanderlustExplorerProHome = () => {
                     <h2 style={{ color:'#2C3E50', fontSize:26, fontWeight:800, margin:0 }}>Explore destinations by theme</h2>
                     <div style={{ display:'flex', alignItems:'center', gap:8, color:'#7F8C8D', fontSize:15, fontWeight:600 }}>
                         <span className="material-symbols-outlined" style={{ fontSize:20 }}>call</span>
-                        For best packages, call us at <span style={{ color:'#006D77', fontWeight:700 }}>0000-0000-00</span>
+                        For best packages, call us at <span style={{ color:'#006D77', fontWeight:700 }}>+916005159433</span>
                     </div>
                 </div>
 
@@ -224,7 +227,7 @@ const WanderlustExplorerProHome = () => {
             <section style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20, marginBottom:60 }}>
                 {[
                     { icon:'travel_explore', label:'Browse All Tours',   sub:'500+ worldwide adventures', to:'/tours',      bg:'#006D77' },
-                    { icon:'smart_toy',      label:'WanderBot AI',        sub:'AI-powered trip matching',  to:'/wanderbot',  bg:'#7b2d8b' },
+                    { icon:'smart_toy',      label:'Bharat Bot AI',        sub:'AI-powered trip matching',  to:'/wanderbot',  bg:'#7b2d8b' },
                     { icon:'card_giftcard',  label:'Gift Cards',          sub:'Give the gift of travel',   to:'/gift-cards', bg:'#457b9d' },
                 ].map(card => (
                     <Link key={card.to} to={card.to} style={{ textDecoration:'none' }}>
@@ -246,4 +249,4 @@ const WanderlustExplorerProHome = () => {
     );
 };
 
-export default WanderlustExplorerProHome;
+export default BeautifulIndiaHome;

@@ -31,7 +31,7 @@ const SeasonalReferralCampaignLandingPage = () => {
                                         Share the Gift of Travel this Winter
                                     </h1>
 <p className="text-white/90 text-lg lg:text-xl font-medium   leading-relaxed">
-                                        Winter Wanderlust Special: Give $75, Get $75 for a limited time. Spread the joy of discovery with those you love!
+                                        Winter Special: Give $75, Get $75 for a limited time. Spread the joy of discovery with those you love!
                                     </p>
 </div>
 <button className="z-10 flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-white text-primary text-lg font-bold shadow-2xl hover:scale-105 transition-transform">
@@ -88,7 +88,7 @@ const SeasonalReferralCampaignLandingPage = () => {
                                 Copy and share your unique link via email, message, or social media. Earn $75 credit for every friend who books their first winter expedition.
                             </p>
 <div className="flex w-full  items-stretch rounded-xl h-16 bg-white shadow-sm border border-primary/10 overflow-hidden mt-4">
-<input className="form-input flex-1 border-none bg-transparent focus:ring-0 px-6 text-slate-700 font-medium" readonly="" value="wanderlust.com/ref/winter-user123"/>
+<input className="form-input flex-1 border-none bg-transparent focus:ring-0 px-6 text-slate-700 font-medium" readonly="" value="beautifulindia.com/ref/winter-user123"/>
 <button className="flex items-center justify-center bg-primary text-white px-8 font-bold hover:bg-primary/90 transition-all">
 <span>Copy Link</span>
 </button>

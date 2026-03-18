@@ -199,7 +199,7 @@ const AdminOverviewDashboard = () => {
                             </div>
 
                             <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm">
-                                <h3 className="text-lg font-black text-slate-800 mb-6 px-2">Quick Commands</h3>
+                                <h3 className="text-lg font-black text-slate-800">Bharat Bot</h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     <Link to="/admin/tours/new" className="flex flex-col items-center justify-center p-6 rounded-3xl border border-slate-50 hover:border-primary hover:bg-primary/5 transition-all gap-3 group">
                                         <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add_location</span>

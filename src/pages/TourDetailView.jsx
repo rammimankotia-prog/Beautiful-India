@@ -105,7 +105,7 @@ const TourDetailView = () => {
     const fetchTourData = async () => {
       try {
         let allToursList = [];
-        const saved = localStorage.getItem('wanderlust_admin_tours');
+        const saved = localStorage.getItem('beautifulindia_admin_tours');
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
@@ -119,7 +119,7 @@ const TourDetailView = () => {
             
             // If local storage was empty, but server has data, save it to local storage to keep them in sync
             if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-                localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
             }
         }
 
@@ -173,7 +173,7 @@ const TourDetailView = () => {
 
     try {
     // Mocked for static site
-    console.log(`[ADMIN NOTIFICATION] New Query from ${leadData.name} for ${leadData.to}. Email sent to admin@wanderlust.com (MOCKED)`);
+    console.log(`[ADMIN NOTIFICATION] New Query from ${leadData.name} for ${leadData.to}. Email sent to admin@beautifulindia.com (MOCKED)`);
     
     setIsQuoteModalOpen(false);
     setModalStep(1);

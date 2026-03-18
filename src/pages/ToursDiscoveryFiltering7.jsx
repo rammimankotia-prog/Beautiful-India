@@ -28,7 +28,7 @@ const ToursDiscoveryFiltering7 = () => {
 </div>
 <div className="flex flex-col gap-2">
 <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100" htmlFor="email">Email Address</label>
-<input className="h-12 px-4 w-full" id="email" name="email" placeholder="john@example.com" type="email"/>
+<input className="h-12 px-4 w-full" id="email" name="email" placeholder="john@beautifulindia.com" type="email"/>
 </div>
 </div>
 <div className="flex flex-col gap-2">
@@ -62,7 +62,7 @@ const ToursDiscoveryFiltering7 = () => {
 </div>
 <div>
 <p className="font-bold text-neutral-900 dark:text-neutral-100">Our Office</p>
-<p className="text-neutral-600 dark:text-neutral-200">123 Adventure Way, Suite 400<br/>Travel District, New York, NY 10001</p>
+<p className="text-neutral-600 dark:text-neutral-200">123 Bharat Marg, Suite 400<br/>Travel District, New Delhi, DL 110001</p>
 </div>
 </div>
 <div className="flex gap-4">
@@ -71,7 +71,7 @@ const ToursDiscoveryFiltering7 = () => {
 </div>
 <div>
 <p className="font-bold text-neutral-900 dark:text-neutral-100">Phone</p>
-<p className="text-neutral-600 dark:text-neutral-200">+1 (555) 987-6543<br/>Mon-Fri: 9am - 6pm EST</p>
+<p className="text-neutral-600 dark:text-neutral-200">+916005159433<br/>Mon-Fri: 9am - 6pm IST</p>
 </div>
 </div>
 <div className="flex gap-4">
@@ -80,7 +80,7 @@ const ToursDiscoveryFiltering7 = () => {
 </div>
 <div>
 <p className="font-bold text-neutral-900 dark:text-neutral-100">Email Address</p>
-<p className="text-neutral-600 dark:text-neutral-200">experts@travelagency.com<br/>support@travelagency.com</p>
+<p className="text-neutral-600 dark:text-neutral-200">customercare@beautifulindia.com<br/>info@beautifulindia.com</p>
 </div>
 </div>
 </div>

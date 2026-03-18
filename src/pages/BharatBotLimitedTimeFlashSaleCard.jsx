@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
  * Auto-generated from: wanderbot_limited_time_flash_sale_card/code.html
  * Group: ai | Path: /wanderbot/flash-sale
  */
-const WanderbotLimitedTimeFlashSaleCard = () => {
+const BharatBotLimitedTimeFlashSaleCard = () => {
   return (
     <div data-page="wanderbot_limited_time_flash_sale_card">
       <div className="layout- flex h-full grow flex-col">
@@ -21,7 +21,7 @@ const WanderbotLimitedTimeFlashSaleCard = () => {
 <span className="material-symbols-outlined">smart_toy</span>
 </div>
 <div className="bg-sand dark:bg-slate-800 p-4 rounded-xl rounded-tl-none shadow-sm text-slate-800 dark:text-slate-200 border border-teal-accent/10">
-<p className="font-medium">Found something special for your next trip! Check out this exclusive flash sale for WanderBot members.</p>
+<p className="font-medium">Found something special for your next trip! Check out this exclusive flash sale for Beautiful India members.</p>
 </div>
 </div>
 {/* FLASH SALE CARD */}
@@ -93,4 +93,4 @@ const WanderbotLimitedTimeFlashSaleCard = () => {
   );
 };
 
-export default WanderbotLimitedTimeFlashSaleCard;
+export default BharatBotLimitedTimeFlashSaleCard;

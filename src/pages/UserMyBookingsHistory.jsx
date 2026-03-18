@@ -18,8 +18,8 @@ const UserMyBookingsHistory = () => {
 <span className="material-symbols-outlined">explore</span>
 </div>
 <div>
-<h1 className="text-primary font-bold text-lg leading-tight">Wanderlust</h1>
-<p className="text-slate-500 dark:text-slate-400 text-xs font-medium">Explorer Pro</p>
+<h1 className="text-primary font-bold text-lg leading-tight">Beautiful India</h1>
+<p className="text-slate-500 dark:text-slate-400 text-xs font-medium">Bespoke Journeys</p>
 </div>
 </div>
 <nav className="flex flex-col gap-2">

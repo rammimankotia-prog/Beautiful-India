@@ -32,7 +32,7 @@ const TripAnniversaryMilestoneEmail = () => {
 {/* Personalized Message */}
 <div className="px-8 py-10 text-center">
 <h2 className="text-3xl font-bold font-display text-slate-900 dark:text-white mb-4">
-                            One year ago today, you were exploring Paris!
+                           The Beautiful India Team
                         </h2>
 <p className="text-slate-600 dark:text-slate-400 text-lg   leading-relaxed">
                             Relive the magic of your <span className="text-accent-teal font-semibold">European Highlights</span> adventure. It's been a whole year since your unforgettable journey through the City of Light. We hope these memories still bring a smile to your face.
@@ -42,6 +42,7 @@ const TripAnniversaryMilestoneEmail = () => {
 <div className="px-8 pb-10">
 <div className="bg-sand dark:bg-zinc-800 rounded-2xl p-8 border border-primary/30 flex flex-col md:flex-row items-center gap-8">
 <div className="flex-1">
+            <div className="text-xl font-bold bg-[#0a6c75] text-white px-5 py-2 rounded-full">Beautiful India</div>
 <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Return to Paradise</h3>
 <p className="text-slate-600 dark:text-slate-400 mb-6">
                                     We miss having you on the road! As an anniversary gift, enjoy a <span className="font-bold text-slate-900 dark:text-white">15% discount</span> for a return trip or your next grand adventure.

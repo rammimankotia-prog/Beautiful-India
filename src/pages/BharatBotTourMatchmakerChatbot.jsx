@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const WanderbotTourMatchmakerChatbot = () => {
+const BharatBotTourMatchmakerChatbot = () => {
     const navigate = useNavigate();
     const [flowSteps, setFlowSteps] = useState([]);
     const [manualQs, setManualQs] = useState([]);
@@ -106,7 +106,7 @@ const WanderbotTourMatchmakerChatbot = () => {
             // Mocked for static site
             console.log('Lead submitted (mock):', {
                 ...capturedData,
-                source: 'Wanderbot',
+                source: 'Bharat Bot',
                 timestamp: new Date().toISOString()
             });
         } catch (error) {
@@ -129,7 +129,7 @@ const WanderbotTourMatchmakerChatbot = () => {
                                     <span className="material-symbols-outlined text-3xl">smart_toy</span>
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-bold tracking-tight">WanderBot</h2>
+                                    <h2 className="text-xl font-bold tracking-tight">Bharat Bot</h2>
                                     <p className="text-white/80 text-[10px] flex items-center gap-1 uppercase font-black tracking-widest">
                                         <span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block animate-pulse"></span> Online
                                     </p>
@@ -157,7 +157,7 @@ const WanderbotTourMatchmakerChatbot = () => {
                                     </div>
                                     <div className={`flex flex-col gap-1 max-w-[80%]`}>
                                         <span className={`text-[9px] font-black text-slate-400 uppercase tracking-widest ${msg.sender === 'user' ? 'text-right' : 'ml-1'}`}>
-                                            {msg.sender === 'bot' ? 'Wanderbot' : 'You'}
+                                            {msg.sender === 'bot' ? 'Bharat Bot' : 'You'}
                                         </span>
                                         <div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm border border-primary/5 ${
                                             msg.sender === 'bot' 
@@ -248,4 +248,4 @@ const WanderbotTourMatchmakerChatbot = () => {
     );
 };
 
-export default WanderbotTourMatchmakerChatbot;
+export default BharatBotTourMatchmakerChatbot;

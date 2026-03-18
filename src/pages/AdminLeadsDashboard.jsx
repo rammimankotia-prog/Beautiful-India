@@ -21,7 +21,7 @@ const AdminLeadsDashboard = () => {
 
     const fetchLeads = () => {
         setLoading(true);
-        const saved = localStorage.getItem('wanderlust_admin_leads');
+        const saved = localStorage.getItem('beautifulindia_admin_leads');
         if (saved) {
             try {
                 setLeads(JSON.parse(saved));
@@ -48,7 +48,7 @@ const AdminLeadsDashboard = () => {
 
     const saveLeadsLocally = (updatedLeads) => {
         setLeads(updatedLeads);
-        localStorage.setItem('wanderlust_admin_leads', JSON.stringify(updatedLeads));
+        localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(updatedLeads));
     };
 
     const handleStatusUpdate = (id, newStatus) => {
@@ -83,7 +83,7 @@ const AdminLeadsDashboard = () => {
     };
 
     const getSourceLabel = (lead) => {
-        if (lead.source === 'Wanderbot') return { label: 'Chatbot', icon: 'smart_toy', color: 'text-teal-600', bg: 'bg-teal-50' };
+        if (lead.source === 'Bharat Bot') return { label: 'Chatbot', icon: 'smart_toy', color: 'text-teal-600', bg: 'bg-teal-50' };
         if (lead.source === 'Bharat Darshan Page') return { label: 'Tour Inquiry', icon: 'explore', color: 'text-blue-600', bg: 'bg-blue-50' };
         if (lead.departureType) return { label: 'Quote Request', icon: 'request_quote', color: 'text-purple-600', bg: 'bg-purple-50' };
         return { label: 'Contact Form', icon: 'mail', color: 'text-slate-600', bg: 'bg-slate-50' };
@@ -341,7 +341,7 @@ const AdminLeadsDashboard = () => {
                                     <span className="material-symbols-outlined">smart_toy</span>
                                 </div>
                                 <div>
-                                    <h3 className="font-black text-lg leading-tight uppercase tracking-tight">WanderBot History</h3>
+                                    <h3 className="font-black text-lg leading-tight uppercase tracking-tight">Bharat Bot History</h3>
                                     <p className="text-[12px] font-bold text-teal-100 opacity-80">{viewChatLead.name}</p>
                                 </div>
                             </div>
@@ -360,7 +360,7 @@ const AdminLeadsDashboard = () => {
                                         }
                                     `}>
                                         <div className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${msg.sender === 'user' ? 'text-teal-200' : 'text-slate-400'}`}>
-                                            {msg.sender === 'user' ? 'Visitor' : 'WanderBot'}
+                                            {msg.sender === 'user' ? 'Visitor' : 'Bharat Bot'}
                                         </div>
                                         {msg.text}
                                     </div>

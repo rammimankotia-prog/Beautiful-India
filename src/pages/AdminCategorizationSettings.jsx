@@ -43,7 +43,7 @@ const AdminCategorizationSettings = () => {
   const [expandedKey, setExpandedKey] = useState('states'); // open states by default
 
   useEffect(() => {
-    const saved = localStorage.getItem('wanderlust_admin_categories');
+    const saved = localStorage.getItem('beautifulindia_admin_categories');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -54,7 +54,7 @@ const AdminCategorizationSettings = () => {
 
   const saveCategories = (newCats) => {
     setCategories(newCats);
-    localStorage.setItem('wanderlust_admin_categories', JSON.stringify(newCats));
+    localStorage.setItem('beautifulindia_admin_categories', JSON.stringify(newCats));
   };
 
   const showToast = (msg) => {

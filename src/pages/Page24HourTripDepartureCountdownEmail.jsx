@@ -71,7 +71,7 @@ const Page24HourTripDepartureCountdownEmail = () => {
 <span className="material-symbols-outlined text-accent-teal">emergency_share</span>
 <div>
 <p className="text-xs text-slate-500 font-semibold uppercase">Emergency Contact</p>
-<p className="text-sm font-bold">+1 (555) 012-3456</p>
+<p className="text-sm font-bold">+916005159433</p>
 </div>
 <a className="text-xs text-accent-teal font-bold hover:underline" href="#">Contact Support</a>
 </div>

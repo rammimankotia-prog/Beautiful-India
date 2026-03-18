@@ -19,7 +19,7 @@ const SecurePasswordResetEmail = () => {
                 Reset Your Password
             </h1>
 <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-10 ">
-                We received a request to reset the password for your <span className="font-semibold text-brand-teal">Wanderlust Explorer Pro</span> account. Click the secure button below to choose a new password.
+                We received a request to reset the password for your <h2 className="text-slate-900 text-xl font-bold tracking-tight">Beautiful India</h2> account. Click the secure button below to choose a new password.
             </p>
 <a className="inline-flex items-center justify-center px-10 py-4 bg-primary hover:bg-primary/90 text-brand-teal font-bold text-lg rounded-lg transition-colors shadow-sm tracking-wide" href="#">
                 Set New Password

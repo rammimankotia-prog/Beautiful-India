@@ -20,7 +20,7 @@ const ReferAFriendRewards = () => {
 <div className=" flex flex-col gap-4">
 <span className="text-primary font-bold tracking-widest uppercase text-sm">Limited Time Reward</span>
 <h1 className="text-white text-4xl md:text-6xl font-black leading-tight tracking-tight">
-                            Share the Wanderlust, Get Rewarded
+                            Share Beautiful India, Get Rewarded
                         </h1>
 <p className="text-white/90 text-lg md:text-xl font-medium leading-relaxed">
                             Give <span className="text-primary font-bold">$50</span>, Get <span className="text-primary font-bold">$50</span>. Invite your friends to explore the world and earn travel credits for your next journey.
@@ -37,7 +37,7 @@ const ReferAFriendRewards = () => {
 <h2 className="text-deep-teal dark:text-primary text-2xl font-bold mb-4">Your Referral Link</h2>
 <p className="text-slate-600 dark:text-slate-400 mb-6 font-medium">Copy and share this unique link with your friends through text or messaging apps.</p>
 <div className="flex items-stretch gap-2">
-<input className="flex-1 bg-background-light dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-deep-teal font-mono text-sm focus:ring-0" readonly="" value="wanderlust.pro/ref/alex_8829"/>
+<input className="flex-1 bg-background-light dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-deep-teal font-mono text-sm focus:ring-0" readonly="" value="beautifulindia.com/ref/alex_8829"/>
 <button className="bg-deep-teal text-white px-6 rounded-lg font-bold flex items-center gap-2 hover:bg-deep-teal/90 transition-colors">
 <span className="material-symbols-outlined text-xl">content_copy</span>
                             Copy

@@ -6,7 +6,7 @@ import { useCurrency } from '../context/CurrencyContext';
  * Auto-generated from: wanderbot_recommended_tours_view/code.html
  * Group: ai | Path: /wanderbot/recommendations
  */
-const WanderbotRecommendedToursView = () => {
+const BharatBotRecommendedToursView = () => {
     const location = useLocation();
     const capturedData = location.state || {};
     const { userName = 'Explorer', userInterest = 'Adventure', budget = 'Standard', travelers = '2' } = capturedData;
@@ -18,7 +18,7 @@ const WanderbotRecommendedToursView = () => {
         const fetchRecommendedTours = async () => {
             try {
                 let allToursList = [];
-                const saved = localStorage.getItem('wanderlust_admin_tours');
+                const saved = localStorage.getItem('beautifulindia_admin_tours');
                 if (saved !== null) {
                     try {
                         const parsed = JSON.parse(saved);
@@ -29,7 +29,7 @@ const WanderbotRecommendedToursView = () => {
                     if (res.ok) {
                         allToursList = await res.json();
                         if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-                            localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
                         }
                     }
                 }
@@ -65,7 +65,7 @@ const WanderbotRecommendedToursView = () => {
                         <div className="flex flex-col gap-8">
                             {/* Chat Header */}
                             <div className="text-center space-y-2">
-                                <h1 className="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-extrabold tracking-tight">WanderBot: Your Personalized Recommendations</h1>
+                                <h1 className="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-extrabold tracking-tight">Bharat Bot: Your Personalized Recommendations</h1>
                                 <p className="text-slate-500 dark:text-slate-400">Based on your recent travel survey and interests</p>
                             </div>
                             {/* Bot Message */}
@@ -79,12 +79,12 @@ const WanderbotRecommendedToursView = () => {
                                             Great to meet you, <strong>{userName}</strong>! Based on your preference for <strong>{userInterest}</strong> and your budget for a <strong>{budget}</strong> experience for <strong>{travelers}</strong> traveler(s), I've curated these exclusive tour packages just for you. Which one sparks your wanderlust?
                                         </p>
                                     </div>
-                                    <span className="text-xs text-slate-400 font-medium ml-1">WanderBot • Just now</span>
+                                    <span className="text-xs text-slate-400 font-medium ml-1">Bharat Bot • Just now</span>
                                 </div>
                             </div>
 
                             {loading ? (
-                                <div className="text-center py-20 text-slate-400 font-bold">WanderBot is curating your matches...</div>
+                                <div className="text-center py-20 text-slate-400 font-bold">Bharat Bot is curating your matches...</div>
                             ) : (
                                 /* Horizontal Carousel */
                                 <div className="relative w-full overflow-hidden">
@@ -149,4 +149,4 @@ const WanderbotRecommendedToursView = () => {
     );
 };
 
-export default WanderbotRecommendedToursView;
+export default BharatBotRecommendedToursView;

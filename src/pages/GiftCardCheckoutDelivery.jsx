@@ -55,7 +55,7 @@ const GiftCardCheckoutDelivery = () => {
 <div className="flex flex-col gap-4 rounded-xl bg-primary/5 p-6 border border-primary/10">
 <div className="flex flex-col gap-2">
 <label className="text-sm font-semibold">Recipient Email Address</label>
-<input className="w-full rounded-lg border-slate-200 bg-white px-4 py-2.5 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800" placeholder="john.doe@example.com" type="email"/>
+<input className="w-full rounded-lg border-slate-200 bg-white px-4 py-2.5 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800" placeholder="john.doe@beautifulindia.com" type="email"/>
 </div>
 <div className="flex flex-col gap-2">
 <label className="text-sm font-semibold">Delivery Date</label>
@@ -93,7 +93,7 @@ const GiftCardCheckoutDelivery = () => {
 <div className="col-span-2 flex flex-col gap-2">
 <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Card Number</label>
 <div className="relative">
-<input className="w-full rounded-lg border-slate-200 bg-white px-4 py-3 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800" placeholder="0000 0000 0000 0000" type="text"/>
+<input className="w-full rounded-lg border-slate-200 bg-white px-4 py-3 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800" placeholder="+916005159433000 0000" type="text"/>
 <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">lock</span>
 </div>
 </div>

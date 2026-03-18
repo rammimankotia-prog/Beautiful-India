@@ -99,7 +99,7 @@ const ReferralRewardsDashboard = () => {
 <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">EM</div>
 <div>
 <p className="font-bold text-slate-900 dark:text-slate-100">Elena Martinez</p>
-<p className="text-xs text-slate-400">elena.m@example.com</p>
+<p className="text-xs text-slate-400">elena.m@beautifulindia.com</p>
 </div>
 </div>
 </td>
@@ -117,7 +117,7 @@ const ReferralRewardsDashboard = () => {
 <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">JD</div>
 <div>
 <p className="font-bold text-slate-900 dark:text-slate-100">Julian David</p>
-<p className="text-xs text-slate-400">julian.d@example.com</p>
+<p className="text-xs text-slate-400">julian.d@beautifulindia.com</p>
 </div>
 </div>
 </td>
@@ -135,7 +135,7 @@ const ReferralRewardsDashboard = () => {
 <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">SC</div>
 <div>
 <p className="font-bold text-slate-900 dark:text-slate-100">Sarah Chen</p>
-<p className="text-xs text-slate-400">schen@example.com</p>
+<p className="text-xs text-slate-400">schen@beautifulindia.com</p>
 </div>
 </div>
 </td>
@@ -163,7 +163,7 @@ const ReferralRewardsDashboard = () => {
 <div className="bg-white/10 rounded-xl p-4 border border-white/20">
 <p className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Your Referral Link</p>
 <div className="flex items-center justify-between gap-2">
-<span className="truncate font-mono text-sm">wanderlust.pro/ref/explorer_99</span>
+<span className="truncate font-mono text-sm">beautifulindia.com/ref/explorer_99</span>
 <button className="text-white hover:text-accent transition-colors">
 <span className="material-symbols-outlined text-xl">content_copy</span>
 </button>

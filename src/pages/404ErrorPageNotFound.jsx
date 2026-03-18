@@ -2,13 +2,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const 404ErrorPageNotFound = () => {
+const ErrorPageNotFound = () => {
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark">
             
 <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
 <div className="layout-container flex h-full grow flex-col">
-<!-- Header -->
+{/* Header */}
 <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/20 px-6 md:px-20 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
 <div className="flex items-center gap-8">
 <div className="flex items-center gap-3 text-accent-teal dark:text-primary">
@@ -18,7 +18,7 @@ const 404ErrorPageNotFound = () => {
 <path clipRule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fillRule="evenodd"></path>
 </svg>
 </div>
-<h2 className="text-slate-900 dark:text-slate-100 text-xl font-brand font-bold leading-tight tracking-tight">Wanderlust Explorer Pro</h2>
+<h2 className="text-slate-900 dark:text-slate-100 text-xl font-brand font-bold leading-tight tracking-tight">Beautiful India</h2>
 </div>
 <nav className="hidden lg:flex items-center gap-9">
 <a className="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-accent-teal transition-colors" href="#">Tours</a>
@@ -39,20 +39,20 @@ const 404ErrorPageNotFound = () => {
 <button className="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-slate-900 text-sm font-bold transition-transform active:scale-95">
 <span>Login</span>
 </button>
-<div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="User profile picture of a traveler" style={{ backgroundImage: "url("https://lh3.googleusercontent.com/aida-public/AB6AXuAU_z7J5KUHGYpvgwHMfcLCZPMKUrQ4SVeGlfpXzVAMacX4HcqeTp8Qb255eF2BrbASdp1VR3k0IFUgCA9egv2oC1tV5NLK0nHzlOoIu62IZmiKQ47h8kyCKPwfkSs_2IG7LnX8fQTq1M2ddOC2gcDTiYx-wGpBq5nos-JvCPlwpunddg3-nM7DTvUfzQDBFbFP-vjgwMpZvpEpnqzyienDu9FSsdkQnnghuWJQ2rk-xC8FgPcVjxVkreh3VEf3PDhGBqKr2OZIfuOU")" }}></div>
+<div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="User profile picture of a traveler" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAU_z7J5KUHGYpvgwHMfcLCZPMKUrQ4SVeGlfpXzVAMacX4HcqeTp8Qb255eF2BrbASdp1VR3k0IFUgCA9egv2oC1tV5NLK0nHzlOoIu62IZmiKQ47h8kyCKPwfkSs_2IG7LnX8fQTq1M2ddOC2gcDTiYx-wGpBq5nos-JvCPlwpunddg3-nM7DTvUfzQDBFbFP-vjgwMpZvpEpnqzyienDu9FSsdkQnnghuWJQ2rk-xC8FgPcVjxVkreh3VEf3PDhGBqKr2OZIfuOU')" }}></div>
 </div>
 </header>
-<!-- Main Content: 404 Hero Area -->
+{/* Main Content: 404 Hero Area */}
 <main className="flex-1 flex flex-col items-center justify-center relative min-h-[calc(100vh-80px)] px-6 text-center">
-<!-- Background Image with Fade Overlay -->
+{/* Background Image with Fade Overlay */}
 <div className="absolute inset-0 z-0">
-<div className="w-full h-full bg-cover bg-center opacity-40 grayscale-[0.3]" data-alt="Person looking at a physical map in a remote foggy mountain location" style={{ backgroundImage: "url("https://lh3.googleusercontent.com/aida-public/AB6AXuCpt39Rg5RNnwXSbgLkXmlsDaE-GzTm3M11IXDUz1O1iZ9Pnuu4BLV7rWjVA-B5Ib_DaI4GkaGt52h3cdlaxgK4MeDL6H6J2BErIdyDPeiPQF46l-zLJ_CuU3vXgrIDe2jooxMo70x7O9MZl6ECTlR1UTzFhpXx-2PqEPgGSKnNpwile9AKQzR5f9O-iakurbVvcTHak_fe6-70CpvGEHUiK6VpMRc8k1tnx7suwVkqHUL3A4WCKbnnAe7o6kucb6YZBpBY62J973zP")" }}>
+<div className="w-full h-full bg-cover bg-center opacity-40 grayscale-[0.3]" data-alt="Person looking at a physical map in a remote foggy mountain location" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCpt39Rg5RNnwXSbgLkXmlsDaE-GzTm3M11IXDUz1O1iZ9Pnuu4BLV7rWjVA-B5Ib_DaI4GkaGt52h3cdlaxgK4MeDL6H6J2BErIdyDPeiPQF46l-zLJ_CuU3vXgrIDe2jooxMo70x7O9MZl6ECTlR1UTzFhpXx-2PqEPgGSKnNpwile9AKQzR5f9O-iakurbVvcTHak_fe6-70CpvGEHUiK6VpMRc8k1tnx7suwVkqHUL3A4WCKbnnAe7o6kucb6YZBpBY62J973zP')" }}>
 </div>
-<!-- Radial gradient for text legibility -->
+{/* Radial gradient for text legibility */}
 <div className="absolute inset-0 bg-gradient-to-b from-background-light/60 via-background-light/20 to-background-light dark:from-background-dark/80 dark:via-background-dark/40 dark:to-background-dark"></div>
 </div>
 <div className="relative z-10 max-w-3xl flex flex-col items-center">
-<!-- Error Code Accents -->
+{/* Error Code Accents */}
 <span className="text-accent-teal font-brand font-black text-8xl md:text-9xl opacity-20 select-none">404</span>
 <h1 className="text-slate-900 dark:text-white font-brand font-extrabold text-4xl md:text-6xl tracking-tight mt-[-40px] mb-6">
                         Looks Like You're <span className="text-accent-teal dark:text-primary italic">Lost in the Wild</span>
@@ -70,22 +70,22 @@ const 404ErrorPageNotFound = () => {
                             Contact Support
                         </a>
 </div>
-<!-- Helpful Links -->
+{/* Helpful Links */}
 <div className="mt-16 pt-8 border-t border-slate-200/30 dark:border-slate-700/30 w-full">
 <p className="text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6">Popular Destinations</p>
 <div className="flex flex-wrap justify-center gap-4 text-sm font-medium">
-<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Swiss Alps</a>
-<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Bali Coast</a>
-<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Patagonia Trek</a>
-<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Tokyo Cityscapes</a>
+<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Kashmir Great Lakes</a>
+<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Varkala Beach</a>
+<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Spiti Expedition</a>
+<a className="px-4 py-2 rounded-full bg-accent-teal/10 dark:bg-accent-teal/20 text-accent-teal dark:text-primary hover:bg-primary hover:text-slate-900 transition-all" href="#">Varanasi Ghats</a>
 </div>
 </div>
 </div>
 </main>
-<!-- Footer Small -->
+{/* Footer Small */}
 <footer className="py-8 px-6 text-center border-t border-slate-100 dark:border-slate-800">
 <p className="text-slate-400 text-xs font-medium uppercase tracking-tighter">
-                    © 2024 Wanderlust Explorer Pro. All rights reserved. Registered Travel Agency #404-LOST.
+                    © 2024 Beautiful India. All rights reserved. Registered Travel Agency #404-LOST.
                 </p>
 </footer>
 </div>
@@ -95,4 +95,4 @@ const 404ErrorPageNotFound = () => {
     );
 };
 
-export default 404ErrorPageNotFound;
+export default ErrorPageNotFound;

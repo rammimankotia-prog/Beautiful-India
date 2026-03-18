@@ -35,7 +35,7 @@ const AdminNewArticleUploadForm = () => {
   useEffect(() => {
     if (id) {
       // First check localStorage
-      const savedGuides = localStorage.getItem('wanderlust_admin_guides');
+      const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
       if (savedGuides) {
         try {
           const guides = JSON.parse(savedGuides);
@@ -102,7 +102,7 @@ const AdminNewArticleUploadForm = () => {
       updatedGuides = [...guides, guideToSave];
     }
 
-    localStorage.setItem('wanderlust_admin_guides', JSON.stringify(updatedGuides));
+    localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updatedGuides));
     alert(`Article ${id ? 'Updated' : 'Created'} Successfully! (Stored in Local Storage)`);
     
     setLoading(false);

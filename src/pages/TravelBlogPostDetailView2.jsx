@@ -50,7 +50,7 @@ const TravelBlogPostDetailView2 = () => {
 <form className="space-y-8">
 <div className="flex flex-col md:flex-row items-center gap-8">
 <div className="relative group">
-<img alt="Current profile picture" className="size-28 rounded-full object-cover border-4 border-sand shadow-inner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgzAdvjJjmM4bKST1DuKXWK_W9QpkBRvvNmMzQ1AFdZT6bCOBAVCr6RLGeJnkrTdX2AekF_fc17R0PKW97_mziyzVj7Fn-L-0FT7bdX25_ZkBe4llU_QUFPm7NuLp_ps6MDBYCHN_i181fQ5Rtvz4SjVBlNVg1Wzvsk0RGsEzO4uFXEogXItgrVClGOCoZVoI7YA5L_TDzcoDRGsZQHY7HNdhNExkT0tLXPLu6OA-nGs61NGOqwaDcZbcX1JgazF1LUUpzekjpCMzJ"/>
+<img alt="Current profile picture" className="size-28 rounded-full object-cover border-4 border-sand shadow-inner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgzAdvjJjmM4bKST1DuKXWK_W9QpkBRvvNmMzQ1AFdZT6bCOBAVCr6RLGeJnkrTdX2AekF_fc17R0PKW97_mziyzVj7Fn-L-0FT7bdX25_ZkBe4llU_QUFPm7NuLp_ps6MDBYCHN_i181fQ5Rtvz4SjVBlNVg1Wzvsk0RGsEzO4uFXEogXItgrCClGOCoZVoI7YA5L_TDzcoDRGsZQHY7HNdhNExkT0tLXPLu6OA-nGs61NGOqwaDcZbcX1JgazF1LUUpzekjpCMzJ"/>
 <button className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" type="button">
 <span className="material-symbols-outlined text-white">photo_camera</span>
 </button>
@@ -71,11 +71,11 @@ const TravelBlogPostDetailView2 = () => {
 </div>
 <div className="space-y-2">
 <label className="text-sm font-bold text-slate-700">Email Address</label>
-<input className="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="e.g. alex@wanderlust.com" type="email" value="alex.thompson@example.com"/>
+<input className="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="e.g. alex@beautifulindia.com" type="email" value="customercare@beautifulindia.com"/>
 </div>
 <div className="space-y-2">
 <label className="text-sm font-bold text-slate-700">Phone Number</label>
-<input className="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="+1 (555) 000-0000" type="tel" value="+1 (555) 000-0000"/>
+<input className="w-full rounded-lg border-slate-200 bg-sand/50 text-sm focus:border-deep-teal focus:ring-deep-teal" placeholder="+91 00000 00000" type="tel" value="+916005159433"/>
 </div>
 <div className="space-y-2">
 <label className="text-sm font-bold text-slate-700">Location</label>

@@ -90,11 +90,11 @@ const CheckoutTravelerDetails = () => {
 <>
 <label className="flex flex-col gap-2">
 <span className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Email Address</span>
-<input value={t.email} onChange={(e) => handleTravelerChange(i, 'email', e.target.value)} className="form-input rounded-lg border-primary/20 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4" placeholder="john@example.com" type="email"/>
+<input value={t.email} onChange={(e) => handleTravelerChange(i, 'email', e.target.value)} className="form-input rounded-lg border-primary/20 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4" placeholder="john@beautifulindia.com" type="email"/>
 </label>
 <label className="flex flex-col gap-2">
 <span className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Phone Number</span>
-<input value={t.phone} onChange={(e) => handleTravelerChange(i, 'phone', e.target.value)} className="form-input rounded-lg border-primary/20 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4" placeholder="+1 (555) 000-0000" type="tel"/>
+<input value={t.phone} onChange={(e) => handleTravelerChange(i, 'phone', e.target.value)} className="form-input rounded-lg border-primary/20 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4" placeholder="+91 60051 59433" type="tel"/>
 </label>
 </>
 )}

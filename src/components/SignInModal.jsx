@@ -95,7 +95,7 @@ const SignInModal = ({ isOpen, onClose }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3.5 pl-10 transition-all shadow-sm outline-none placeholder:text-slate-400"
-                  placeholder="traveler@example.com"
+                  placeholder="traveler@beautifulindia.com"
                   required
                 />
               </div>

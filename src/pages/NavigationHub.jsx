@@ -9,11 +9,12 @@ const GROUP_META = [
     "color": "#006D77",
     "routes": [
       {
-        "name": "WanderlustExplorerProHome",
+        "name": "BeautifulIndiaHome",
         "path": "/",
         "label": "Home",
         "group": "main",
-        "folder": "wanderlust_explorer_pro_home"
+        "tags": ["cms", "home"],
+        "folder": "beautiful_india_home"
       }
     ]
   },
@@ -443,32 +444,36 @@ const GROUP_META = [
     "color": "#7b2d8b",
     "routes": [
       {
-        "name": "WanderbotConsultationSuccessScreen",
+        "name": "BharatBotConsultationSuccessScreen",
         "path": "/wanderbot/success",
-        "label": "WanderBot Success",
+        "label": "Bharat Bot Success",
         "group": "ai",
-        "folder": "wanderbot_consultation_success_screen"
+        "tags": ["ai", "success"],
+        "folder": "bharatbot_consultation_success_screen"
       },
       {
-        "name": "WanderbotLimitedTimeFlashSaleCard",
+        "name": "BharatBotLimitedTimeFlashSaleCard",
         "path": "/wanderbot/flash-sale",
         "label": "Flash Sale",
         "group": "ai",
-        "folder": "wanderbot_limited_time_flash_sale_card"
+        "tags": ["ai", "promo"],
+        "folder": "bharatbot_limited_time_flash_sale_card"
       },
       {
-        "name": "WanderbotRecommendedToursView",
+        "name": "BharatBotRecommendedToursView",
         "path": "/wanderbot/recommendations",
-        "label": "WanderBot Picks",
+        "label": "Bharat Bot Picks",
         "group": "ai",
-        "folder": "wanderbot_recommended_tours_view"
+        "tags": ["ai", "recommendations"],
+        "folder": "bharatbot_recommended_tours_view"
       },
       {
-        "name": "WanderbotTourMatchmakerChatbot",
+        "name": "BharatBotTourMatchmakerChatbot",
         "path": "/wanderbot",
-        "label": "WanderBot AI",
+        "label": "Bharat Bot AI",
         "group": "ai",
-        "folder": "wanderbot_tour_matchmaker_chatbot"
+        "tags": ["ai", "chatbot"],
+        "folder": "bharatbot_tour_matchmaker_chatbot"
       }
     ]
   }
@@ -479,7 +484,7 @@ const NavigationHub = () => (
     <div style={{ maxWidth:1100, margin:'0 auto' }}>
       <div style={{ display:'flex', alignItems:'center', gap:16, marginBottom:8 }}>
         <span className="material-symbols-outlined" style={{ fontSize:40, color:'#006D77' }}>explore</span>
-        <h1 style={{ fontSize:36, fontWeight:900, color:'#006D77', margin:0 }}>Wanderlust Explorer Pro</h1>
+        <h1 style={{ fontSize:36, fontWeight:900, color:'#006D77', margin:0 }}>Beautiful India</h1>
       </div>
       <p style={{ color:'#7F8C8D', marginBottom:48, fontWeight:500 }}>
         56 pages · Full site map · Click any card to navigate

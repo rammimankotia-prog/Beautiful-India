@@ -26,7 +26,7 @@ const GiftCardPurchaseConfirmed = () => {
                                     Gift Sent! <br/>Your adventure is on its way.
                                 </h1>
 <p className="text-slate-600 dark:text-slate-400 text-lg font-normal leading-relaxed ">
-                                    A confirmation email has been sent to the recipient with instructions on how to redeem their Wanderlust Explorer Pro gift card.
+                                    A confirmation email has been sent to the recipient with instructions on how to redeem their Beautiful India gift card.
                                 </p>
 </div>
 <div className="w-full  flex justify-center">
@@ -58,7 +58,7 @@ const GiftCardPurchaseConfirmed = () => {
 <span className="material-symbols-outlined text-9xl">travel_explore</span>
 </div>
 <div className="flex justify-between items-start z-10">
-<span className="font-black italic text-xl">Wanderlust</span>
+<span className="font-black italic text-xl">Beautiful India</span>
 <span className="material-symbols-outlined">wifi_tethering</span>
 </div>
 <div className="z-10">
@@ -87,7 +87,7 @@ const GiftCardPurchaseConfirmed = () => {
 </div>
 <div className="pt-2">
 <p className="text-slate-400 text-xs uppercase font-bold tracking-tight">Recipient Email</p>
-<p className="font-semibold text-sm text-primary">adventure.seeker@example.com</p>
+<p className="font-semibold text-sm text-primary">adventure.seeker@beautifulindia.com</p>
 </div>
 </div>
 </div>
@@ -122,18 +122,18 @@ const GiftCardPurchaseConfirmed = () => {
 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 <div className="group cursor-pointer">
 <div className="aspect-video w-full rounded-lg bg-cover bg-center mb-3 group-hover:scale-[1.02] transition-transform" data-alt="Snowy mountain peaks at sunrise" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgQjor1b0w5EBZnvdH5XcqazJvvp4dezJx3OBvg3BGHT7EOcALrJqFmjUQZAE3sBAZY58HZgKyWZYUZetLcCpxurN_ITYEQzTdsw4a4AIXqegoTS3v2LVsHNERxOP-p0mjPnYGyM3GM6pw8Cm_pa9p6blk5cd805mXEpZZSW9CC7Ok7OCmsPQPWcg2zPgQlccPJYGLtYSGc6wrwqroSeuDc2hT7IwEMPPRiB3zGkrV4mNFYiN62POH2YLwe-RUK1TcuHMdSjwKMqr2')" }}></div>
-<h5 className="font-bold text-base">Swiss Alps Heli-Skiing</h5>
-<p className="text-sm text-slate-500 dark:text-slate-400">Zermatt, Switzerland</p>
+<h5 className="font-bold text-base">Himalayan Heli-Skiing</h5>
+<p className="text-sm text-slate-500 dark:text-slate-400">Gulmarg, Kashmir, India</p>
 </div>
 <div className="group cursor-pointer">
 <div className="aspect-video w-full rounded-lg bg-cover bg-center mb-3 group-hover:scale-[1.02] transition-transform" data-alt="Tropical beach with turquoise water" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBDeyfXLd-Z44kHjQwbQkeiHmtjuprIsUunRWYw7nqh2SMaMPDs2wATEzK8Hk6Yxc_8qePQAv0eebIm6vv1FryELbVjUzn7AEv2X8-hebZzR4p9F00UPqNk_2tVzqJibdY1IJrIn_7UOAAgYhXKrNzqJ6BpPPJdz7JXPIr7OU0fiOmF5pYH4cwW0M-0tqSBioAqSx2IElS7KmL9qgTqLahH0xlKnWWhikMDGC7kEJ0ZDF_liqDCttmJcnv6qofZNtohOrc18Gxeldve')" }}></div>
 <h5 className="font-bold text-base">Private Island Hopping</h5>
-<p className="text-sm text-slate-500 dark:text-slate-400">Palawan, Philippines</p>
+<p className="text-sm text-slate-500 dark:text-slate-400">Havelock Island, Andaman, India</p>
 </div>
 <div className="group cursor-pointer">
 <div className="aspect-video w-full rounded-lg bg-cover bg-center mb-3 group-hover:scale-[1.02] transition-transform" data-alt="Desert dunes at dusk" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAfzxb9b8lblxU9c8c2Hwtdhz6_vv8t9FFvqLux8iGjFxbzQRYtQG1ph3IdYN57zJFLAOTJrS-Clcgi8ikCBu_qq0mT_TlkhUBqJcA-w--s4Z7R_Ocpni9YMtxXFzO829gbKw-TIr8ISrTz2LR7FkmEd7OhtFkOnFr_1fiSp4ot6D94h54FcFwfkFbm-5Gi-LYkg-Tn-KWElN31lftCQYrB1xRYHpneR1EGRCqT-sDRcLnxcDWq9PqpNW4IRBGOFeH9diWZd8mf1fk5')" }}></div>
-<h5 className="font-bold text-base">Luxury Sahara Glamping</h5>
-<p className="text-sm text-slate-500 dark:text-slate-400">Merzouga, Morocco</p>
+<h5 className="font-bold text-base">Luxury Thar Desert Glamping</h5>
+<p className="text-sm text-slate-500 dark:text-slate-400">Jaisalmer, Rajasthan, India</p>
 </div>
 </div>
 </div>

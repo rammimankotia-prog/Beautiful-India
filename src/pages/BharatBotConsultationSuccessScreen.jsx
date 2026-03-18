@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 
 /**
  * Auto-generated from: wanderbot_consultation_success_screen/code.html
- * Group: ai | Path: /wanderbot/success
+ * Group:      "label": "Bharat Bot Success",
  */
-const WanderbotConsultationSuccessScreen = () => {
+const BharatBotConsultationSuccessScreen = () => {
   return (
     <div data-page="wanderbot_consultation_success_screen">
       <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
@@ -20,12 +20,12 @@ const WanderbotConsultationSuccessScreen = () => {
 <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
 <div className="p-8 flex flex-col items-center text-center">
 {/* Celebratory Icon */}
-<div className="size-20 bg-accent-orange rounded-full flex items-center justify-center mb-6">
+<div className="size-16 bg-white rounded-full flex items-center justify-center text-primary shadow-lg border-4 border-white/20">
 <span className="material-symbols-outlined text-white text-5xl font-bold">check</span>
 </div>
 <h1 className="text-slate-900 tracking-light text-[32px] font-bold leading-tight pb-3 font-display">You're All Set!</h1>
 <p className="text-slate-600 text-base font-normal leading-relaxed pb-8 ">
-                            A travel expert will reach out to you shortly at your provided contact number to help you finalize your <span className="font-semibold text-deep-teal">Wanderlust Explorer Pro</span> experience.
+                            A travel expert will reach out to you shortly at your provided contact number to help you finalize your <span className="font-semibold text-deep-teal">Beautiful India</span> experience.
                         </p>
 {/* Timeline Section */}
 <div className="w-full text-left bg-slate-50 rounded-xl p-6 mb-8">
@@ -79,7 +79,7 @@ const WanderbotConsultationSuccessScreen = () => {
 {/* Footer Help */}
 <div className="bg-slate-50 border-t border-slate-100 p-4 text-center">
 <p className="text-slate-500 text-xs">
-                            Need immediate assistance? Call us at <span className="text-primary font-semibold">+1 (800) WANDER-BOT</span>
+                            Need immediate assistance? Call us at <span className="text-primary font-semibold">+916005159433</span>
 </p>
 </div>
 </div>
@@ -91,7 +91,7 @@ const WanderbotConsultationSuccessScreen = () => {
 <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/20 transition-all z-10"></div>
 <div className="absolute inset-0 bg-cover bg-center" data-alt="Scenic view of Venice canals at sunset" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuByZ8wCrBYd30DzTPsX90Dh_8flz-UUT_MhaMlLDpoMRA2ELmXyzzNEm7CCnRLCnDQYHGnUaiIxAFlQbm70JC1Ehsx3ry4CAXUe73RV9HKaypgI_1n8NGJAFtkwY71oSykCQ1OUefTLF2FOvT1FKrfITRVCIDVTY8Dd59I8xlF1qE_0U8zRW7vQZfGxdK9UbYnR_59DjpEK5lZ2BY6zJrgeSl5Qts-_1uPvv9h4ADDthNDLvX1_tNbsV7QCMBPIibWYylD5DICXtWig')" }}></div>
 <div className="absolute bottom-4 left-4 z-20">
-<p className="text-white font-bold text-lg">Italian Riviera</p>
+<p className="text-white font-bold text-lg">Munnar Tea Gardens</p>
 <p className="text-white/80 text-sm">Explorer Exclusive</p>
 </div>
 </div>
@@ -99,7 +99,7 @@ const WanderbotConsultationSuccessScreen = () => {
 <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/20 transition-all z-10"></div>
 <div className="absolute inset-0 bg-cover bg-center" data-alt="Lush green mountains and valleys in Switzerland" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBuHKd8s1NcZg9s6Pa6kkbfU3baSCus78lQOLkwo_7jTBZG2BzkyHWlFa1B-hXP0F8WT8E8VHe2FIUrKHHxU_CJa3VaP81pzp-cosVsdw7hrUq1KCksOv-1UnxyiU_ixCUf5hEKVa0zllxkdMWRaTh3uMhHumor09YJ3GpKwIQ7mRZ7XIcTLeS30kpU5IYzOfVxaGUcz-IoE3_8SGY0gq8byMI4l27f-e1jCP7m9KGor_TBmQrXn5fFo4B7Bf4POcU2MzaHp5YrLbPL')" }}></div>
 <div className="absolute bottom-4 left-4 z-20">
-<p className="text-white font-bold text-lg">Swiss Alp Treks</p>
+<p className="text-white font-bold text-lg">Alleppey Backwaters</p>
 <p className="text-white/80 text-sm">Luxury Trekking</p>
 </div>
 </div>
@@ -115,4 +115,4 @@ const WanderbotConsultationSuccessScreen = () => {
   );
 };
 
-export default WanderbotConsultationSuccessScreen;
+export default BharatBotConsultationSuccessScreen;

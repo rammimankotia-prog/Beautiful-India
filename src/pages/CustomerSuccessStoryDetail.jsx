@@ -160,13 +160,13 @@ const CustomerSuccessStoryDetail = () => {
 <div className="space-y-4">
 <h4 className="font-bold text-lg">Contact Us</h4>
 <ul className="space-y-2 text-slate-400">
-<li className="flex items-center gap-2"><span className="material-symbols-outlined text-sm">mail</span> hello@wanderlust.pro</li>
-<li className="flex items-center gap-2"><span className="material-symbols-outlined text-sm">call</span> +1 (800) WANDER-LU</li>
+<li className="flex items-center gap-2"><span className="material-symbols-outlined text-sm">mail</span> customercare@beautifulindia.com</li>
+<li className="flex items-center gap-2"><span className="material-symbols-outlined text-sm">call</span> +916005159433</li>
 </ul>
 </div>
 </div>
 <div className="  mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-6 text-slate-500 text-sm">
-<p>© 2024 Wanderlust Explorer Pro. All rights reserved.</p>
+<p className="text-slate-400 text-xs">© 2024 Beautiful India. All rights reserved.</p>
 <div className="flex gap-8">
 <a href="#">Privacy Policy</a>
 <a href="#">Terms of Service</a>

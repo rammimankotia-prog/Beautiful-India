@@ -295,7 +295,7 @@ const AdminQueryManagement = () => {
                           >
                                {/* Sender Label */}
                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${msg.sender === 'user' ? 'text-teal-200' : 'text-slate-400'}`}>
-                                   {msg.sender === 'user' ? 'Guest' : 'WanderBot'}
+                                   {msg.sender === 'user' ? 'Guest' : 'Bharat Bot'}
                                </div>
                               {msg.text}
                           </div>

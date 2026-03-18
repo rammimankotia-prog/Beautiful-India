@@ -64,15 +64,15 @@ const TermsOfServiceLayout = () => {
   <span className="bg-[#eefaf9] text-[#0f766e] w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span> 
   Introduction
 </h2>
-<p>Welcome to Wanderlust Explorer Pro. These Terms of Service ("Terms") govern your access to and use of our platform, including our website, mobile applications, and tour management services (collectively, the "Services").</p>
-<p>By accessing or using our Services, you agree to be bound by these Terms. If you do not agree to these Terms, please do not use our Services. Wanderlust Explorer Pro acts as an intermediary between travelers and tour operators, providing a centralized discovery and booking engine.</p>
+<p>Welcome to Beautiful India Explorer Pro. These Terms of Service ("Terms") govern your access to and use of our platform, including our website, mobile applications, and tour management services (collectively, the "Services").</p>
+<p>By accessing or using our Services, you agree to be bound by these Terms. If you do not agree to these Terms, please do not use our Services. Beautiful India Explorer Pro acts as an intermediary between travelers and tour operators, providing a centralized discovery and booking engine.</p>
 </section>
 <section id="booking-conditions" className="mb-12">
 <h2 className="text-2xl font-extrabold text-[#0a6c75] mb-4 pb-2 border-b border-slate-100 flex items-center gap-3">
   <span className="bg-[#eefaf9] text-[#0f766e] w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span> 
   Booking Conditions
 </h2>
-<p>All bookings made through Wanderlust Explorer Pro are subject to availability and the specific terms provided by the tour operator. When you make a booking, you are entering into a direct contract with the service provider.</p>
+<p>All bookings made through Beautiful India are subject to availability and the specific terms provided by the tour operator. When you make a booking, you are entering into a direct contract with the service provider.</p>
 <ul className="space-y-3 text-slate-600 dark:text-slate-300 mb-6">
 <li className="flex items-start gap-3"><span className="material-symbols-outlined text-[#0a6c75] mt-0.5 text-[20px]">check_circle</span> <span>Users must be at least <strong className="text-slate-800">18 years old</strong> to make a booking.</span></li>
 <li className="flex items-start gap-3"><span className="material-symbols-outlined text-[#0a6c75] mt-0.5 text-[20px]">check_circle</span> <span>Full payment or a deposit is required at the time of booking, depending on the tour specific policy.</span></li>
@@ -90,7 +90,7 @@ const TermsOfServiceLayout = () => {
 <p className="font-extrabold text-orange-800 mb-2 flex items-center gap-2"><span className="material-symbols-outlined">warning</span> Standard Cancellation Window:</p>
 <p className="text-sm text-orange-900 leading-relaxed mb-0">Cancellations made <strong className="bg-orange-100 px-1 rounded">7 days prior</strong> to departure qualify for a <strong className="bg-orange-100 px-1 rounded">90% refund</strong>. Cancellations made within <strong className="bg-orange-100 px-1 rounded">48 hours</strong> are non-refundable unless specified otherwise by the operator.</p>
 </div>
-<p>Refunds will be processed through the original payment method within 5-10 business days. Wanderlust Explorer Pro reserves the right to charge a processing fee for certain cancellation types.</p>
+<p>Refunds will be processed through the original payment method within 5-10 business days. Beautiful India reserves the right to charge a processing fee for certain cancellation types.</p>
 </section>
 <section id="user-conduct" className="mb-12">
 <h2 className="text-2xl font-extrabold text-[#0a6c75] mb-4 pb-2 border-b border-slate-100 flex items-center gap-3">
@@ -114,7 +114,7 @@ const TermsOfServiceLayout = () => {
 <p>We implement industry-standard encryption and security measures to protect your sensitive data, including payment information and identity documents required for international travel bookings.</p>
 </section>
 <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-700">
-<p className="text-slate-500 text-sm">If you have any questions regarding these terms, please contact our legal department at <a className="text-primary font-medium hover:underline" href="mailto:legal@wanderlustpro.com">legal@wanderlustpro.com</a>.</p>
+<p className="text-slate-500 text-sm">If you have any questions regarding these terms, please contact our legal department at <a className="text-primary font-medium hover:underline" href="mailto:legal@beautifulindia.com">legal@beautifulindia.com</a>.</p>
 </div>
 </div>
 </div>

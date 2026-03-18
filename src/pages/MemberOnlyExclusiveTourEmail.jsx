@@ -28,7 +28,7 @@ const MemberOnlyExclusiveTourEmail = () => {
 </div>
 <h2 className="text-3xl font-display font-bold text-slate-900">Secrets of the Amalfi Coast: Private Yacht Expedition</h2>
 <p className="text-slate-600 leading-relaxed text-lg">
-                    As a valued member of Wanderlust Explorer Pro, you've been selected for this unlisted private experience. Sail the coast in absolute privacy with amenities reserved only for our elite circle. This expedition is not available to the public and offers access to hidden grottoes and private coves.
+                    As a valued member of Beautiful India, you've been selected for this unlisted private experience. Sail the coast in absolute privacy with amenities reserved only for our elite circle. This expedition is not available to the public and offers access to hidden grottoes and private coves.
                 </p>
 </div>
 {/* Perks Grid */}
@@ -111,6 +111,7 @@ const MemberOnlyExclusiveTourEmail = () => {
 {/* Pricing & Action */}
 <div className="text-center py-6">
 <div className="mb-8 inline-block">
+<h2 className="text-slate-900 text-xl font-bold tracking-tight">Beautiful India</h2>
 <p className="text-slate-500 text-sm line-through">Standard Value: $12,500</p>
 <p className="text-4xl font-display font-extrabold text-primary">
                         $8,950 <span className="text-base font-normal text-slate-500">/ per person</span>

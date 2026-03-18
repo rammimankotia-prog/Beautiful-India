@@ -38,7 +38,7 @@ const ReferralCreditAppliedNotification = () => {
 </div>
 <div className="">
 <p className="text-slate-700 dark:text-slate-300 text-lg font-montserrat leading-relaxed mb-10">
-                                Your friend <span className="font-bold text-primary">Alex Johnson</span> just completed their trip! As a thank you for referring them to Wanderlust Explorer Pro, we've added <span className="font-bold">$50</span> to your account for your next adventure.
+                                Your friend <span className="font-bold text-primary">Alex Johnson</span> just completed their trip! As a thank you for referring them to Beautiful India Explorer Pro, we've added <span className="font-bold">$50</span> to your account for your next adventure.
                             </p>
 </div>
 <div className="flex flex-col sm:flex-row gap-4 w-full justify-center mb-12">
@@ -79,7 +79,7 @@ const ReferralCreditAppliedNotification = () => {
 </div>
 <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800 text-center">
 <p className="text-slate-400 dark:text-slate-500 text-xs">
-                                © 2024 Wanderlust Explorer Pro. All rights reserved.<br/>
+                                © 2024 Beautiful India. All rights reserved.<br/>
                                 You received this email because you're a member of our referral program.
                             </p>
 </div>

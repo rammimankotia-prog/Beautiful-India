@@ -126,7 +126,7 @@ const GiftCardPersonalizeYourGift = () => {
 </div>
 <div className="space-y-2">
 <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Recipient Email</label>
-<input className="w-full p-4 rounded-xl bg-white dark:bg-slate-800 border border-primary/10 focus:border-primary focus:ring-0" placeholder="alex@example.com" type="email"/>
+<input className="w-full p-4 rounded-xl bg-white dark:bg-slate-800 border border-primary/10 focus:border-primary focus:ring-0" placeholder="alex@beautifulindia.com" type="email"/>
 </div>
 </div>
 {/* Message Field */}
@@ -163,7 +163,7 @@ const GiftCardPersonalizeYourGift = () => {
 <div className="size-8 bg-white text-primary rounded flex items-center justify-center">
 <span className="material-symbols-outlined text-sm">explore</span>
 </div>
-<span className="text-white text-sm font-bold tracking-tight">Wanderlust Pro</span>
+<span className="text-white text-sm font-bold tracking-tight">Beautiful India</span>
 </div>
 </div>
 <div className="p-8">

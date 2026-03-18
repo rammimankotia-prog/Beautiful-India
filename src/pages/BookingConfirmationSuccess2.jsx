@@ -32,7 +32,7 @@ const BookingConfirmationSuccess2 = () => {
 <h2 className="text-slate-900 dark:text-slate-100 tracking-tight text-3xl font-bold leading-tight">Booking Confirmed!</h2>
 <div className="mt-2 inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full">
 <span className="text-primary text-sm font-semibold uppercase tracking-wider">Booking Reference:</span>
-<span className="text-primary text-base font-bold">#WEP-98234710</span>
+<span className="text-primary text-base font-bold">#BI-98234710</span>
 </div>
 </div>
 {/* Trip Summary Card */}
@@ -42,7 +42,7 @@ const BookingConfirmationSuccess2 = () => {
 <div className="p-6 flex-1 flex flex-col justify-center">
 <div className="flex flex-col gap-2">
 <p className="text-primary text-sm font-bold uppercase tracking-widest">Selected Tour</p>
-<h3 className="text-slate-900 dark:text-slate-100 text-2xl font-bold leading-tight">Alpine Wonders &amp; Glacier Trek</h3>
+<h3 className="text-slate-900 dark:text-slate-100 text-2xl font-bold leading-tight">Himalayan Peaks &amp; Stok Kangri Trek</h3>
 <div className="flex items-center gap-4 mt-2">
 <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400 text-sm">
 <span className="material-symbols-outlined text-base">calendar_today</span>
@@ -50,11 +50,11 @@ const BookingConfirmationSuccess2 = () => {
 </div>
 <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400 text-sm">
 <span className="material-symbols-outlined text-base">location_on</span>
-<span>Swiss Alps</span>
+<span>Ladakh, India</span>
 </div>
 </div>
 <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 leading-relaxed">
-                                        A 12-day professional guided expedition through the heart of the Swiss Alps, including glacier walking, peak summits, and luxury lodge stays.
+                                        A 12-day professional guided expedition through the heart of the Indian Himalayas, including glacier walking, peak summits, and luxury lodge stays.
                                     </p>
 </div>
 <div className="mt-6 flex flex-wrap gap-3">
@@ -82,7 +82,7 @@ const BookingConfirmationSuccess2 = () => {
 <div className="flex-shrink-0 size-6 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-xs font-bold">1</div>
 <div>
 <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Check Visa Requirements</p>
-<p className="text-xs text-slate-500 mt-1">Make sure your travel documents are valid for Switzerland.</p>
+<p className="text-xs text-slate-500 mt-1">Make sure your travel documents are valid for Ladakh region.</p>
 </div>
 </li>
 <li className="flex gap-3">
@@ -121,7 +121,7 @@ const BookingConfirmationSuccess2 = () => {
 {/* Footer Help */}
 <div className="text-center py-6 border-t border-slate-200 dark:border-slate-800">
 <p className="text-slate-500 dark:text-slate-400 text-sm">A confirmation email has been sent to adventurer@explorer.com</p>
-<p className="text-slate-500 dark:text-slate-400 text-xs mt-2">© 2024 Wanderlust Explorer Pro. Licensed Tour Operator #88219-CH</p>
+<p className="text-slate-500 dark:text-slate-400 text-xs mt-2">© 2024 Beautiful India. Licensed Tour Operator #88219-IN</p>
 </div>
 </div>
 </main>

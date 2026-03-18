@@ -11,7 +11,7 @@ const BookingConfirmationSuccess1 = () => {
   const { formatPrice } = useCurrency();
   const { booking, tour } = location.state || {
     booking: { id: "BK-" + Math.floor(Math.random() * 100000), amount: 1260 },
-    tour: { title: "Swiss Alps Adventure", image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&q=80&w=800" }
+    tour: { title: "Spiti Valley Expedition", image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&q=80&w=800" }
   };
 
   return (
@@ -36,7 +36,7 @@ const BookingConfirmationSuccess1 = () => {
               </h1>
 
               <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg">
-                Thank you for choosing Wanderlust. Your adventure to <span className="font-bold text-primary">{tour.title}</span> is now reserved.
+                Thank you for choosing Beautiful India. Your adventure to <span className="font-bold text-primary">{tour.title}</span> is now reserved.
               </p>
 
               <div className="w-full space-y-4 mb-10 p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800">

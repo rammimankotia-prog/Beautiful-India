@@ -13,7 +13,7 @@ const ToursDiscoveryFiltering4 = () => {
         const fetchTours = async () => {
             try {
                 let allToursList = [];
-                const saved = localStorage.getItem('wanderlust_admin_tours');
+                const saved = localStorage.getItem('beautifulindia_admin_tours');
                 if (saved !== null) {
                     try {
                         const parsed = JSON.parse(saved);
@@ -24,7 +24,7 @@ const ToursDiscoveryFiltering4 = () => {
                     if (res.ok) {
                         allToursList = await res.json();
                         if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-                            localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
                         }
                     }
                 }

@@ -28,7 +28,7 @@ const AdminTourManagementDashboard = () => {
 
   const fetchTours = () => {
     setLoading(true);
-    const saved = localStorage.getItem('wanderlust_admin_tours');
+    const saved = localStorage.getItem('beautifulindia_admin_tours');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -52,7 +52,7 @@ const AdminTourManagementDashboard = () => {
 
   const saveTours = (updatedTours) => {
     setTours(updatedTours);
-    localStorage.setItem('wanderlust_admin_tours', JSON.stringify(updatedTours));
+    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(updatedTours));
   };
 
   const handleDelete = (id) => {
@@ -64,7 +64,7 @@ const AdminTourManagementDashboard = () => {
   };
 
   const handleSync = () => {
-    localStorage.removeItem('wanderlust_admin_tours');
+    localStorage.removeItem('beautifulindia_admin_tours');
     fetchTours();
     showToast('♻️ Resynced with system defaults');
   };

@@ -15,7 +15,7 @@ const ToursDiscoveryFiltering3 = () => {
         const fetchTours = async () => {
             try {
                 let allToursList = [];
-                const saved = localStorage.getItem('wanderlust_admin_tours');
+                const saved = localStorage.getItem('beautifulindia_admin_tours');
                 if (saved !== null) {
                     try {
                         const parsed = JSON.parse(saved);
@@ -26,7 +26,7 @@ const ToursDiscoveryFiltering3 = () => {
                     if (res.ok) {
                         allToursList = await res.json();
                         if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-                            localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+                            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
                         }
                     }
                 }
@@ -104,6 +104,7 @@ const ToursDiscoveryFiltering3 = () => {
                                         <span className="material-symbols-outlined text-[16px]">location_on</span>
                                         <span>{tour.stateRegion}, {tour.destination}</span>
                                     </div>
+                                    <p className="text-slate-500 font-bold mb-6 italic">Hand-picked by Beautiful India experts</p>
                                     <h3 className="text-xl font-bold mb-3 text-neutral-900 group-hover:text-primary transition-colors">{tour.title}</h3>
                                     <div className="flex items-center gap-6 text-sm text-neutral-600 mb-6">
                                         <div className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[18px]">schedule</span> {tour.duration}</div>

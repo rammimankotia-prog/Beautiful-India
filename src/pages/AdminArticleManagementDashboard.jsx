@@ -17,7 +17,7 @@ const AdminArticleManagementDashboard = () => {
 
   const fetchGuides = () => {
     setLoading(true);
-    const saved = localStorage.getItem('wanderlust_admin_guides');
+    const saved = localStorage.getItem('beautifulindia_admin_guides');
     if (saved) {
       try {
         setGuides(JSON.parse(saved));
@@ -42,7 +42,7 @@ const AdminArticleManagementDashboard = () => {
 
   const saveGuides = (updated) => {
     setGuides(updated);
-    localStorage.setItem('wanderlust_admin_guides', JSON.stringify(updated));
+    localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updated));
   };
 
   const handleDelete = (id) => {

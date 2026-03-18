@@ -105,7 +105,7 @@ const AdminNewTourUploadForm = () => {
   };
 
   React.useEffect(() => {
-    const saved = localStorage.getItem('wanderlust_admin_categories');
+    const saved = localStorage.getItem('beautifulindia_admin_categories');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -136,7 +136,7 @@ const AdminNewTourUploadForm = () => {
   React.useEffect(() => {
     if (id) {
       // First check localStorage for session changes
-      const savedTours = localStorage.getItem('wanderlust_admin_tours');
+      const savedTours = localStorage.getItem('beautifulindia_admin_tours');
       if (savedTours) {
         try {
           const tours = JSON.parse(savedTours);
@@ -224,7 +224,7 @@ const AdminNewTourUploadForm = () => {
     if (e && e.preventDefault) e.preventDefault();
     setLoading(true);
 
-    const savedTours = localStorage.getItem('wanderlust_admin_tours');
+    const savedTours = localStorage.getItem('beautifulindia_admin_tours');
     let tours = [];
     if (savedTours) {
       try {
@@ -269,7 +269,7 @@ const AdminNewTourUploadForm = () => {
       updatedTours = [...tours, tourToSave];
     }
 
-    localStorage.setItem('wanderlust_admin_tours', JSON.stringify(updatedTours));
+    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(updatedTours));
     
     const statusMsg = tourToSave.status === 'draft' ? 'Draft Saved' : (isEdit ? 'Tour Updated' : 'Tour Published');
     alert(`${statusMsg} Successfully! (Stored in Local Storage)`);

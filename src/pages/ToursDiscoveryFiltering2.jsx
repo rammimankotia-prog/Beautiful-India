@@ -15,7 +15,7 @@ const ToursDiscoveryFiltering2 = () => {
     const fetchTours = async () => {
       try {
         let allToursList = [];
-        const saved = localStorage.getItem('wanderlust_admin_tours');
+        const saved = localStorage.getItem('beautifulindia_admin_tours');
         if (saved !== null) {
           try {
             const parsed = JSON.parse(saved);
@@ -26,7 +26,7 @@ const ToursDiscoveryFiltering2 = () => {
           if (res.ok) {
             allToursList = await res.json();
             if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-              localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allToursList));
+              localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
             }
           }
         }
@@ -181,7 +181,7 @@ const ToursDiscoveryFiltering2 = () => {
 <span className="material-symbols-outlined testimonial-star text-sunset">star</span>
 </div>
 <blockquote className="text-primary italic text-lg font-medium mb-8 flex-grow">
-                        "The most peaceful week of my life. Wanderlust truly understands how to curate a relaxing escape without missing the local culture of Bali."
+                        "The most peaceful week of my life. Beautiful India truly understands how to curate a relaxing escape without missing the local culture of Bali."
                     </blockquote>
 <div className="flex items-center gap-4 mt-auto">
 <img alt="Elena R." className="w-14 h-14 rounded-full object-cover border-2 border-sunset shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1ixX6051O4uBBkzuUVzpPDYVpGdbV3JHfsxBBeqNXhQ_SmfD4tvZcF7ndaJHBZUXGNP4PSGS05OKUgoWZ2bFAe1eUQV_oNEQgvcgIDzUQuYRvMLLVMEpsqUI2nRsyFcNLqpp9KIBmau3dNXuTu89HdUOD6y3fH2HB9DZWhxmiLRHYjgCm52LJHtxp-bfTczylXbalxvZ-38xJ8hHymczcHBJ05Q81ZM86_zCiWMidM4npjU6lT0PlpIcMc2T1pTCzEdX8aPv4qkJ5"/>
@@ -251,7 +251,7 @@ const ToursDiscoveryFiltering2 = () => {
 <span className="material-symbols-outlined">support_agent</span>
 </div>
 <div>
-<h3 className="font-black text-primary text-sm uppercase tracking-tight">Wanderlust Assistant</h3>
+<h3 className="font-black text-primary text-sm uppercase tracking-tight">Bharat Bot Assistant</h3>
 <div className="flex items-center gap-1.5">
 <span className="w-2 h-2 bg-green-500 rounded-full"></span>
 <span className="text-xs text-primary/70 font-bold">Online</span>
@@ -260,7 +260,7 @@ const ToursDiscoveryFiltering2 = () => {
 </div>
 <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-sand/30">
 <div className="bg-white p-4 rounded-xl rounded-tl-none shadow-sm border border-neutral-100 ">
-<p className="text-sm text-neutral-600 leading-relaxed">Hello! I'm your Wanderlust Assistant. How can I help you discover your next journey today?</p>
+<p className="text-sm text-neutral-600 leading-relaxed">Hello! I'm your Bharat Bot Assistant. How can I help you discover your next journey today?</p>
 </div>
 <div className="flex flex-col gap-2 mt-4">
 <button className="w-full text-left px-4 py-2.5 bg-white border border-primary/20 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all">Track Booking</button>

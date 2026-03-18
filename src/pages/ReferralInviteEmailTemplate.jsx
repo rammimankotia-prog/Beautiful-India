@@ -24,9 +24,11 @@ const ReferralInviteEmailTemplate = () => {
 </div>
 </div>
 <div className="py-12 px-4 text-center">
-<h1 className="text-slate-900 dark:text-slate-100 tracking-tight text-[48px] font-bold leading-tight pb-4">Give $50, Get $50</h1>
+<h1 className="text-white text-4xl font-extrabold leading-tight mb-2">Beautiful India</h1>
+<p className="text-slate-500 font-medium">Beautiful India</p>
+<h2 className="text-3xl font-black text-slate-900 tracking-tight">Explore the World with Beautiful India</h2>
 <p className="text-slate-600 dark:text-slate-400 text-lg font-normal leading-relaxed  ">
-                            Share the joy of travel with your inner circle. When your friends book their first adventure, you both get a $50 credit toward your next world exploration with Wanderlust Explorer Pro.
+                            Share the joy of travel with your inner circle. When your friends book their first adventure, you both get a $50 credit toward your next world exploration with Beautiful India Explorer Pro.
                         </p>
 </div>
 <div className="p-4 @">

@@ -62,6 +62,7 @@ const TourReviewConfirmationEmail = () => {
 <div className="px-6 lg:px-10 pb-12">
 <div className="flex items-center justify-between mb-6">
 <h2 className="text-accent-teal dark:text-primary text-2xl font-bold leading-tight font-serif-alt">Where to Next?</h2>
+<div className="text-2xl font-black text-[#0a6c75]">Beautiful India</div>
 <a className="text-sm font-bold text-slate-500 hover:text-accent-teal flex items-center gap-1" href="#">View all <span className="material-symbols-outlined text-sm">arrow_forward</span></a>
 </div>
 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -74,7 +75,7 @@ const TourReviewConfirmationEmail = () => {
 </div>
 <div>
 <h3 className="text-slate-900 dark:text-slate-100 font-bold text-base group-hover:text-accent-teal transition-colors">Italian Coastal Escape</h3>
-<p className="text-slate-500 text-xs mt-1">7 Days • Amalfi Coast</p>
+<p className="text-slate-500 text-sm italic">Copyright © 2024 Beautiful India Travel. All rights reserved.</p>
 </div>
 </div>
 {/* Card 2 */}

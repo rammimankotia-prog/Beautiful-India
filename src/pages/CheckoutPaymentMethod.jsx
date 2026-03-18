@@ -7,6 +7,7 @@ import { useCurrency } from '../context/CurrencyContext';
  * Group: booking | Path: /checkout/payment
  */
 const CheckoutPaymentMethod = () => {
+    const [phone, setPhone] = useState('+916005159433');
     const location = useLocation();
     const navigate = useNavigate();
     const { tour, travelers } = location.state || { 
@@ -21,7 +22,7 @@ const CheckoutPaymentMethod = () => {
         setIsSubmitting(true);
         const bookingData = {
             customerName: travelers[0].name,
-            customerEmail: travelers[0].email || 'no-email@example.com',
+            customerEmail: travelers[0].email || 'no-email@beautifulindia.com',
             tourTitle: tour.title,
             tourId: tour.id,
             amount: (tour.price * travelers.length + tour.price * 0.05),
@@ -65,6 +66,7 @@ const CheckoutPaymentMethod = () => {
 <div>
 <h1 className="text-4xl font-black mb-2">Checkout</h1>
 <p className="text-slate-500 dark:text-slate-400">Securely complete your booking for your next adventure.</p>
+<p className="text-slate-500 font-bold mb-4">Please note that after clicking 'Complete Payment', your booking will be confirmed instantly. You can also contact our support team at <span className="text-primary">+916005159433</span> for any questions.</p>
 </div>
 {/* Step Indicator */}
 <div className="flex border-b border-slate-200 dark:border-slate-800">

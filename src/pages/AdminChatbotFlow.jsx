@@ -114,7 +114,7 @@ const AdminChatbotFlow = () => {
                     <div>
                         <h1 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
                            <span className="material-symbols-outlined text-3xl text-[#0a6c75]">smart_toy</span>
-                           Wanderbot Intelligence Center
+                           Bharat Bot Intelligence Center
                         </h1>
                         <p className="text-slate-500 font-medium mt-1">Configure automated flows and manual Q&A knowledge base.</p>
                     </div>

@@ -25,7 +25,7 @@ const WelcomeEmailTemplate = () => {
 <div className="space-y-4">
 <h3 className="text-deep-teal text-2xl font-bold">Hello, Adventurer!</h3>
 <p className="text-slate-700 leading-relaxed text-lg">
-                            We're thrilled to have you as part of <strong>Wanderlust Explorer Pro</strong>. You’ve just unlocked a world of premium travel experiences and curated discoveries.
+                            We're thrilled to have you as part of <strong>Beautiful India</strong>. You’ve just unlocked a world of premium travel experiences and curated discoveries.
                         </p>
 <p className="text-slate-600 leading-relaxed">
                             As a member of the Explorer Club, you now have exclusive early access to our boutique tours, hand-picked travel tips from local experts, and special perks reserved only for our subscribers.

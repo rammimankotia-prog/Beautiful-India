@@ -81,6 +81,7 @@ const ContactPage = () => {
               Let's Plan Your<br />
               <span className="text-primary">Dream Trip</span>
             </h1>
+            <p className="text-slate-500 font-bold mb-4">Chat with Bharat Bot, our AI travel expert.</p>
             <p className="text-slate-300 text-lg leading-relaxed">
               Have a question or need help booking? Our travel experts are ready to assist you — by phone, email, or live chat.
             </p>

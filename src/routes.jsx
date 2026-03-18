@@ -1,12 +1,12 @@
 
 import React from 'react';
 import NavigationHub from './pages/NavigationHub';
-import WanderlustExplorerProHome from './pages/WanderlustExplorerProHome';
+import BeautifulIndiaHome from './pages/BeautifulIndiaHome';
 import PrivacyPolicyLayout from './pages/PrivacyPolicyLayout';
 import TermsOfServiceLayout from './pages/TermsOfServiceLayout';
 import TourDetailView from './pages/TourDetailView';
-import Page24HourTripDepartureCountdownEmail from './pages/Page24HourTripDepartureCountdownEmail';
-import Page404ErrorPageNotFound from './pages/Page404ErrorPageNotFound';
+import TripDepartureCountdownEmail from './pages/24HourTripDepartureCountdownEmail';
+import ErrorPageNotFound from './pages/404ErrorPageNotFound';
 import AdminBookingManagementDashboard from './pages/AdminBookingManagementDashboard';
 import AdminLeadsDashboard from './pages/AdminLeadsDashboard';
 import AdminChatbotFlow from './pages/AdminChatbotFlow';
@@ -60,10 +60,10 @@ import TripAnniversaryMilestoneEmail from './pages/TripAnniversaryMilestoneEmail
 import UpcomingTripBookingReminderEmail from './pages/UpcomingTripBookingReminderEmail';
 import UserMyBookingsHistory from './pages/UserMyBookingsHistory';
 import WaitlistJoinConfirmationEmail from './pages/WaitlistJoinConfirmationEmail';
-import WanderbotConsultationSuccessScreen from './pages/WanderbotConsultationSuccessScreen';
-import WanderbotLimitedTimeFlashSaleCard from './pages/WanderbotLimitedTimeFlashSaleCard';
-import WanderbotRecommendedToursView from './pages/WanderbotRecommendedToursView';
-import WanderbotTourMatchmakerChatbot from './pages/WanderbotTourMatchmakerChatbot';
+import BharatBotConsultationSuccessScreen from './pages/BharatBotConsultationSuccessScreen';
+import BharatBotLimitedTimeFlashSaleCard from './pages/BharatBotLimitedTimeFlashSaleCard';
+import BharatBotRecommendedToursView from './pages/BharatBotRecommendedToursView';
+import BharatBotTourMatchmakerChatbot from './pages/BharatBotTourMatchmakerChatbot';
 import WelcomeEmailTemplate from './pages/WelcomeEmailTemplate';
 import BharatDarshanPage from './pages/BharatDarshanPage';
 import ContactPage from './pages/ContactPage';
@@ -82,14 +82,14 @@ export const routes = [
   { path: '/about', element: <AboutUsPage /> },
   { path: '/festivals', element: <FestivalsPage /> },
   { path: '/', element: <BharatDarshanPage /> },
-  { path: '/home', element: <WanderlustExplorerProHome /> },
+  { path: '/', element: <BeautifulIndiaHome /> },
   { path: '/privacy', element: <PrivacyPolicyLayout /> },
   { path: '/terms', element: <TermsOfServiceLayout /> },
   { path: '/tours/detail', element: <TourDetailView /> },
   { path: '/tours/:id', element: <TourDetailView /> },
   { path: '/tours/:destination/:stateRegion/:subregion/:title', element: <TourDetailView /> },
-  { path: '/emails/countdown', element: <Page24HourTripDepartureCountdownEmail /> },
-  { path: '/404', element: <Page404ErrorPageNotFound /> },
+  { path: '/emails/countdown', element: <TripDepartureCountdownEmail /> },
+  { path: '/404', element: <ErrorPageNotFound /> },
   { path: '/admin/bookings', element: <AdminBookingManagementDashboard /> },
   { path: '/admin/leads', element: <AdminLeadsDashboard /> },
   { path: '/admin/queries', element: <AdminLeadsDashboard /> },
@@ -146,10 +146,10 @@ export const routes = [
   { path: '/emails/trip-reminder', element: <UpcomingTripBookingReminderEmail /> },
   { path: '/account/bookings', element: <UserMyBookingsHistory /> },
   { path: '/emails/waitlist', element: <WaitlistJoinConfirmationEmail /> },
-  { path: '/wanderbot/success', element: <WanderbotConsultationSuccessScreen /> },
-  { path: '/wanderbot/flash-sale', element: <WanderbotLimitedTimeFlashSaleCard /> },
-  { path: '/wanderbot/recommendations', element: <WanderbotRecommendedToursView /> },
-  { path: '/wanderbot', element: <WanderbotTourMatchmakerChatbot /> },
+  { path: '/wanderbot/success', element: <BharatBotConsultationSuccessScreen /> },
+  { path: '/wanderbot/flash-sale', element: <BharatBotLimitedTimeFlashSaleCard /> },
+  { path: '/wanderbot/recommendations', element: <BharatBotRecommendedToursView /> },
+  { path: '/wanderbot', element: <BharatBotTourMatchmakerChatbot /> },
   { path: '/emails/welcome', element: <WelcomeEmailTemplate /> },
   { path: '/bharat-darshan', element: <BharatDarshanPage /> },
   { path: '/tours/tours-by-train', element: <ToursByTrain /> },

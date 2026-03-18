@@ -84,7 +84,8 @@ const CustomTripQuoteRequestEmail = () => {
 </a>
 </div>
 <div className="text-center space-y-2">
-<p className="text-slate-400 text-xs">© 2024 Wanderlust Explorer Pro. All rights reserved.</p>
+<div className="text-2xl font-black text-[#0a6c75]">Beautiful India</div>
+<p className="text-slate-400 text-xs">© 2024 . All rights reserved.</p>
 <div className="flex justify-center gap-4 text-xs font-medium text-slate-500">
 <a className="hover:text-primary" href="#">Privacy Policy</a>
 <a className="hover:text-primary" href="#">Unsubscribe</a>

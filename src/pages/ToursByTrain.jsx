@@ -129,7 +129,7 @@ const ToursByTrain = () => {
         const fetchTours = async () => {
             try {
                 let allTours = [];
-                const saved = localStorage.getItem('wanderlust_admin_tours');
+                const saved = localStorage.getItem('beautifulindia_admin_tours');
                 if (saved !== null) {
                     try {
                         const parsed = JSON.parse(saved);
@@ -140,7 +140,7 @@ const ToursByTrain = () => {
                     if (res.ok) {
                         allTours = await res.json();
                         if (allTours && Array.isArray(allTours) && allTours.length > 0) {
-                            localStorage.setItem('wanderlust_admin_tours', JSON.stringify(allTours));
+                            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allTours));
                         }
                     }
                 }

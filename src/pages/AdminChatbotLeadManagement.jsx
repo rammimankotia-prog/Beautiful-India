@@ -103,7 +103,7 @@ const AdminChatbotLeadManagement = () => {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `wanderlust_leads_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `beautifulindia_leads_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 
@@ -160,7 +160,7 @@ const AdminChatbotLeadManagement = () => {
             <div className="w-8 h-8 bg-[#0a6c75] rounded flex items-center justify-center">
               <span className="material-symbols-outlined text-white text-[20px]">smart_toy</span>
             </div>
-            <span className="text-[#0a6c75] font-extrabold text-[17px] tracking-tight">WanderBot Admin</span>
+            <span className="text-[#0a6c75] font-extrabold text-[17px] tracking-tight">Beautiful India Admin</span>
           </Link>
 
           {/* Nav Links */}
@@ -203,7 +203,7 @@ const AdminChatbotLeadManagement = () => {
         <div className="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-extrabold text-[#0a6c75] tracking-tight">Chatbot Lead Management</h1>
-            <p className="text-slate-500 text-[15px] font-medium mt-1.5">Real-time performance metrics and lead distribution for WanderBot conversions.</p>
+            <p className="text-slate-500 text-[15px] font-medium mt-1.5">Real-time performance metrics and lead distribution for Beautiful India conversions.</p>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={handleExportCSV} className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#eefaf9] text-[#0f766e] font-bold hover:bg-teal-50 transition-colors text-[13px]">
@@ -453,7 +453,7 @@ const AdminChatbotLeadManagement = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-slate-400 text-[13px] gap-4 font-medium">
-          <p>&copy; 2024 Wanderlust Travel Agency. All rights reserved.</p>
+          <p>&copy; 2024 Beautiful India Travel Agency. All rights reserved.</p>
           <div className="flex gap-8">
             <a href="#" className="hover:text-slate-600 transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-slate-600 transition-colors">Terms of Service</a>
@@ -563,7 +563,7 @@ const AdminChatbotLeadManagement = () => {
                 <div className="grid grid-cols-2 gap-4">
                    <div>
                      <label className="block text-[13px] font-bold text-slate-700 mb-1.5">Email</label>
-                     <input type="email" placeholder="john@example.com" value={manualEntryForm.email} onChange={e => setManualEntryForm({...manualEntryForm, email: e.target.value})} className="w-full border border-slate-200 rounded-[8px] px-3.5 py-2 text-[13px] focus:border-[#0a6c75] outline-none transition-colors" />
+                     <input type="email" placeholder="john@beautifulindia.com" value={manualEntryForm.email} onChange={e => setManualEntryForm({...manualEntryForm, email: e.target.value})} className="w-full border border-slate-200 rounded-[8px] px-3.5 py-2 text-[13px] focus:border-[#0a6c75] outline-none transition-colors" />
                    </div>
                    <div>
                      <label className="block text-[13px] font-bold text-slate-700 mb-1.5">Phone Details</label>

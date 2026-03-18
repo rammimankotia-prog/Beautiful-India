@@ -27,7 +27,7 @@ const AdminBookingManagementDashboard = () => {
 
   const fetchBookings = () => {
     setLoading(true);
-    const saved = localStorage.getItem('wanderlust_admin_bookings');
+    const saved = localStorage.getItem('beautifulindia_admin_bookings');
     if (saved) {
       try {
         setBookings(JSON.parse(saved));
@@ -52,7 +52,7 @@ const AdminBookingManagementDashboard = () => {
 
   const saveBookings = (updated) => {
     setBookings(updated);
-    localStorage.setItem('wanderlust_admin_bookings', JSON.stringify(updated));
+    localStorage.setItem('beautifulindia_admin_bookings', JSON.stringify(updated));
   };
 
   React.useEffect(() => {

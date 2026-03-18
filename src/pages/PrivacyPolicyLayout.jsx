@@ -76,7 +76,7 @@ const PrivacyPolicyLayout = () => {
 <h2 className="text-2xl font-bold text-primary">1. Introduction</h2>
 </div>
 <div className="prose prose-slate dark:prose-invert  space-y-4">
-<p>Welcome to Wanderlust Explorer Pro. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at <a className="text-primary font-bold decoration-accent underline decoration-2 underline-offset-4" href="mailto:privacy@wanderlust.com">privacy@wanderlust.com</a>.</p>
+<p>Welcome to Beautiful India Explorer Pro. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at <a className="text-primary font-bold decoration-accent underline decoration-2 underline-offset-4" href="mailto:privacy@beautifulindia.com">privacy@beautifulindia.com</a>.</p>
 <p>When you visit our website and use our services, you trust us with your personal information. In this privacy notice, we describe our privacy policy. We seek to explain to you in the clearest way possible what information we collect, how we use it, and what rights you have in relation to it.</p>
 </div>
 </section>
