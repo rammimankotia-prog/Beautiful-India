@@ -28,24 +28,25 @@ const AdminTourManagementDashboard = () => {
 
   const fetchTours = () => {
     setLoading(true);
-    const saved = localStorage.getItem('beautifulindia_admin_tours');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setTours(Array.isArray(parsed) ? parsed.filter(Boolean) : []);
-        setLoading(false);
-        return;
-      } catch (e) { console.error("Parse error:", e); }
-    }
-
+    // Always fetch from server first — server is the source of truth
     fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         setTours(data);
+        // Update localStorage cache
+        localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(data));
         setLoading(false);
       })
       .catch(err => {
-        console.error("Fetch error:", err);
+        console.error("Server fetch error, falling back to localStorage:", err);
+        // Fallback to localStorage if server is unreachable
+        const saved = localStorage.getItem('beautifulindia_admin_tours');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            setTours(Array.isArray(parsed) ? parsed.filter(Boolean) : []);
+          } catch (e) { console.error("Parse error:", e); }
+        }
         setLoading(false);
       });
   };

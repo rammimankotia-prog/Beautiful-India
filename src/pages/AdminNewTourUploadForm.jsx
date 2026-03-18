@@ -232,75 +232,105 @@ const AdminNewTourUploadForm = () => {
     if (e && e.preventDefault) e.preventDefault();
     setLoading(true);
 
-    const savedTours = localStorage.getItem('beautifulindia_admin_tours');
-    let tours = [];
-    if (savedTours) {
+    try {
+      // Always fetch the latest tours from the server
+      let tours = [];
       try {
-        tours = JSON.parse(savedTours);
+        const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+        if (res.ok) tours = await res.json();
       } catch (err) {
-        console.error("Error parsing tours:", err);
+        console.error("Error fetching tours from server:", err);
       }
-    } else {
-      try {
-        const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json`);
-        tours = await res.json();
-      } catch (err) {
-        console.error("Error fetching base tours:", err);
+
+      const tourToSave = { ...formData };
+      
+      // Process itinerary tags: convert string to array
+      if (tourToSave.itinerary) {
+        tourToSave.itinerary = tourToSave.itinerary.map(day => ({
+          ...day,
+          tags: typeof day.tags === 'string' 
+            ? day.tags.split(',').map(t => t.trim()).filter(Boolean) 
+            : (Array.isArray(day.tags) ? day.tags : [])
+        }));
       }
-    }
 
-    const tourToSave = { ...formData };
-    
-    // Process itinerary tags: convert string to array
-    if (tourToSave.itinerary) {
-      tourToSave.itinerary = tourToSave.itinerary.map(day => ({
-        ...day,
-        tags: typeof day.tags === 'string' 
-          ? day.tags.split(',').map(t => t.trim()).filter(Boolean) 
-          : (Array.isArray(day.tags) ? day.tags : [])
-      }));
-    }
+      // Generate ID from title slug (e.g. "Golden Triangle Tour" → "golden-triangle-tour")
+      if (!tourToSave.id || !isEdit) {
+        const titleSlug = (tourToSave.title || 'untitled-tour')
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '')  // Remove special chars
+          .replace(/\s+/g, '-')           // Spaces → hyphens
+          .replace(/-+/g, '-')            // Collapse multiple hyphens
+          .replace(/^-|-$/g, '');         // Trim leading/trailing hyphens
+        
+        // Ensure uniqueness: if slug already exists (and not editing this tour), append a number
+        let finalSlug = titleSlug;
+        let counter = 2;
+        while (tours.some(t => String(t.id) === finalSlug && (!isEdit || String(t.id) !== String(id)))) {
+          finalSlug = `${titleSlug}-${counter}`;
+          counter++;
+        }
+        tourToSave.id = finalSlug;
+      }
 
-    // Ensure ID exists
-    if (!tourToSave.id) {
-      tourToSave.id = Date.now().toString(); // Simple ID generation
-    }
+      // Sync new pricing fields to legacy 'price' field for backward compatibility
+      if (tourToSave.pricePerPerson) {
+        tourToSave.price = tourToSave.pricePerPerson;
+      } else if (tourToSave.pricePerCouple) {
+        tourToSave.price = tourToSave.pricePerCouple;
+      } else if (tourToSave.pricePerGroup) {
+        tourToSave.price = tourToSave.pricePerGroup;
+      }
 
-    // Sync new pricing fields to legacy 'price' field for backward compatibility
-    if (tourToSave.pricePerPerson) {
-      tourToSave.price = tourToSave.pricePerPerson;
-    } else if (tourToSave.pricePerCouple) {
-      tourToSave.price = tourToSave.pricePerCouple;
-    } else if (tourToSave.pricePerGroup) {
-      tourToSave.price = tourToSave.pricePerGroup;
-    }
+      // Handle 'No end date' flags
+      if (tourToSave.noBookingEnd) {
+        tourToSave.bookingEnd = '';
+      }
+      if (tourToSave.noAvailableTo) {
+        tourToSave.availableTo = '';
+      }
 
-    // Handle 'No end date' flags
-    if (tourToSave.noBookingEnd) {
-      tourToSave.bookingEnd = '';
-    }
-    if (tourToSave.noAvailableTo) {
-      tourToSave.availableTo = '';
-    }
-
-    let updatedTours;
-    if (isEdit) {
-      updatedTours = tours.map(t => String(t.id) === String(id) ? tourToSave : t);
-      // If it wasn't in localStorage yet (first time editing defaults), add it
-      if (!tours.find(t => String(t.id) === String(id))) {
+      let updatedTours;
+      if (isEdit) {
+        updatedTours = tours.map(t => String(t.id) === String(id) ? tourToSave : t);
+        // If it wasn't found (first time editing), add it
+        if (!tours.find(t => String(t.id) === String(id))) {
+          updatedTours = [...tours, tourToSave];
+        }
+      } else {
         updatedTours = [...tours, tourToSave];
       }
-    } else {
-      updatedTours = [...tours, tourToSave];
-    }
 
-    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(updatedTours));
-    
-    const statusMsg = tourToSave.status === 'draft' ? 'Draft Saved' : (isEdit ? 'Tour Updated' : 'Tour Published');
-    alert(`${statusMsg} Successfully! (Stored in Local Storage)`);
-    
-    setLoading(false);
-    navigate('/admin/tours');
+      // Save to server via PHP API
+      const targetUrl = import.meta.env.MODE === 'development' 
+        ? '/api/save-tours' 
+        : `${import.meta.env.BASE_URL}api-save-tours.php`;
+      
+      const response = await fetch(targetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTours)
+      });
+      
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save to server');
+      }
+
+      // Also update localStorage as a cache for faster page loads
+      localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(updatedTours));
+      
+      const statusMsg = tourToSave.status === 'draft' ? 'Draft Saved' : (isEdit ? 'Tour Updated' : 'Tour Published');
+      alert(`${statusMsg} Successfully!`);
+      
+      setLoading(false);
+      navigate('/admin/tours');
+    } catch (err) {
+      console.error("Save error:", err);
+      alert(`Error saving tour: ${err.message}. Please try again.`);
+      setLoading(false);
+    }
   };
 
   // ── Image helpers — images are stored as { url, caption } objects ──
