@@ -26,6 +26,10 @@ const AdminNewTourUploadForm = () => {
     bestTimeToVisit: '',
     price: '',
     priceBasis: 'per_person', // 'per_person', 'per_package'
+    pricePerPerson: '',
+    pricePerCouple: '',
+    pricePerGroup: '',
+    groupSize: 10,
     minPersons: 1,
     status: 'active',
     order: 0,
@@ -604,6 +608,176 @@ const AdminNewTourUploadForm = () => {
 </div>
 </div>
 
+{/* Section: Pricing & Duration */}
+<div className="space-y-6">
+<h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+  <span className="material-symbols-outlined text-primary text-[20px]">payments</span>
+  Pricing & Duration
+</h2>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+{/* Duration */}
+<div>
+<label className="flex flex-col flex-1">
+<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Duration <span className="text-red-500">*</span></span>
+<input 
+  name="duration"
+  value={formData.duration || ''}
+  onChange={handleChange}
+  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
+  placeholder="e.g. 5 Days / 4 Nights" 
+  type="text"
+/>
+</label>
+</div>
+{/* Price Category */}
+<div>
+<label className="flex flex-col flex-1">
+<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Price Category</span>
+<select 
+  name="priceCategory"
+  value={formData.priceCategory || ''}
+  onChange={handleChange}
+  className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+>
+<option value="">Select category</option>
+<option value="budget">💰 Budget</option>
+<option value="standard">⭐ Standard</option>
+<option value="premium">💎 Premium</option>
+<option value="luxury">👑 Luxury</option>
+</select>
+</label>
+</div>
+</div>
+
+{/* Pricing Cards */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+  {/* Per Person Price */}
+  <div className={`relative rounded-2xl border-2 p-5 transition-all ${
+    formData.pricePerPerson ? 'border-primary/40 bg-primary/5 shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30'
+  }`}>
+    <div className="flex items-center gap-2 mb-3">
+      <span className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+        <span className="material-symbols-outlined text-blue-600 text-[18px]">person</span>
+      </span>
+      <span className="text-sm font-bold text-slate-800 dark:text-slate-200">Per Person</span>
+    </div>
+    <div className="relative">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
+      <input 
+        name="pricePerPerson"
+        value={formData.pricePerPerson || ''}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 transition-colors font-semibold" 
+        placeholder="e.g. 15000" 
+        type="number"
+        min="0"
+      />
+    </div>
+    <p className="text-[11px] text-slate-400 mt-2">Standard price for one traveler</p>
+  </div>
+
+  {/* Per Couple Price */}
+  <div className={`relative rounded-2xl border-2 p-5 transition-all ${
+    formData.pricePerCouple ? 'border-pink-400/40 bg-pink-50/50 dark:bg-pink-900/10 shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30'
+  }`}>
+    <div className="flex items-center gap-2 mb-3">
+      <span className="w-8 h-8 rounded-lg bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
+        <span className="material-symbols-outlined text-pink-600 text-[18px]">favorite</span>
+      </span>
+      <span className="text-sm font-bold text-slate-800 dark:text-slate-200">Per Couple</span>
+      {formData.pricePerPerson && formData.pricePerCouple && Number(formData.pricePerCouple) < Number(formData.pricePerPerson) * 2 && (
+        <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-auto">SAVE {Math.round(100 - (Number(formData.pricePerCouple) / (Number(formData.pricePerPerson) * 2)) * 100)}%</span>
+      )}
+    </div>
+    <div className="relative">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
+      <input 
+        name="pricePerCouple"
+        value={formData.pricePerCouple || ''}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 transition-colors font-semibold" 
+        placeholder="e.g. 25000" 
+        type="number"
+        min="0"
+      />
+    </div>
+    <p className="text-[11px] text-slate-400 mt-2">Discounted price for 2 travelers together</p>
+  </div>
+
+  {/* Per Group Price */}
+  <div className={`relative rounded-2xl border-2 p-5 transition-all ${
+    formData.pricePerGroup ? 'border-emerald-400/40 bg-emerald-50/50 dark:bg-emerald-900/10 shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30'
+  }`}>
+    <div className="flex items-center gap-2 mb-3">
+      <span className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+        <span className="material-symbols-outlined text-emerald-600 text-[18px]">groups</span>
+      </span>
+      <span className="text-sm font-bold text-slate-800 dark:text-slate-200">Per Group</span>
+      {formData.pricePerPerson && formData.pricePerGroup && formData.groupSize && Number(formData.pricePerGroup) < Number(formData.pricePerPerson) * Number(formData.groupSize) && (
+        <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-auto">SAVE {Math.round(100 - (Number(formData.pricePerGroup) / (Number(formData.pricePerPerson) * Number(formData.groupSize))) * 100)}%</span>
+      )}
+    </div>
+    <div className="relative">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
+      <input 
+        name="pricePerGroup"
+        value={formData.pricePerGroup || ''}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 transition-colors font-semibold" 
+        placeholder="e.g. 100000" 
+        type="number"
+        min="0"
+      />
+    </div>
+    <div className="mt-2 flex items-center gap-2">
+      <span className="text-[11px] text-slate-400">Group size:</span>
+      <input 
+        name="groupSize"
+        value={formData.groupSize || ''}
+        onChange={(e) => setFormData(prev => ({ ...prev, groupSize: parseInt(e.target.value) || '' }))}
+        className="w-16 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-2 py-1 text-xs text-center focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" 
+        placeholder="10" 
+        type="number"
+        min="2"
+      />
+      <span className="text-[11px] text-slate-400">persons</span>
+    </div>
+  </div>
+</div>
+
+{/* Pricing Preview */}
+{(formData.pricePerPerson || formData.pricePerCouple || formData.pricePerGroup) && (
+  <div className="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl px-5 py-4">
+    <div className="flex items-center gap-2 mb-2">
+      <span className="material-symbols-outlined text-primary text-[18px]">receipt_long</span>
+      <span className="text-sm font-bold text-teal-800 dark:text-teal-300">Price Preview (as seen by visitors)</span>
+    </div>
+    <div className="flex flex-wrap gap-4 text-sm">
+      {formData.pricePerPerson && (
+        <span className="inline-flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-teal-200 dark:border-teal-800">
+          <span className="material-symbols-outlined text-blue-500 text-[16px]">person</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200">₹{Number(formData.pricePerPerson).toLocaleString('en-IN')}</span>
+          <span className="text-slate-400 text-xs">/person</span>
+        </span>
+      )}
+      {formData.pricePerCouple && (
+        <span className="inline-flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-pink-200 dark:border-pink-800">
+          <span className="material-symbols-outlined text-pink-500 text-[16px]">favorite</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200">₹{Number(formData.pricePerCouple).toLocaleString('en-IN')}</span>
+          <span className="text-slate-400 text-xs">/couple</span>
+        </span>
+      )}
+      {formData.pricePerGroup && (
+        <span className="inline-flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800">
+          <span className="material-symbols-outlined text-emerald-500 text-[16px]">groups</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200">₹{Number(formData.pricePerGroup).toLocaleString('en-IN')}</span>
+          <span className="text-slate-400 text-xs">/group of {formData.groupSize || '?'}</span>
+        </span>
+      )}
+    </div>
+  </div>
+)}
+</div>
 
 {/* Section 2: Categorization */}
 <div className="space-y-8">
