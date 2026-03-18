@@ -87,6 +87,7 @@ export const routes = [
   { path: '/terms', element: <TermsOfServiceLayout /> },
   { path: '/tours/detail', element: <TourDetailView /> },
   { path: '/tours/:id', element: <TourDetailView /> },
+  { path: '/tour/:id', element: <TourDetailView /> },
   { path: '/tours/:destination/:stateRegion/:subregion/:title', element: <TourDetailView /> },
   { path: '/emails/countdown', element: <TripDepartureCountdownEmail /> },
   { path: '/404', element: <ErrorPageNotFound /> },

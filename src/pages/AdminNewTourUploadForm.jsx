@@ -53,7 +53,9 @@ const AdminNewTourUploadForm = () => {
     hotelCategory: [], 
     accommodationType: [],
     transport: typeParam === 'train' ? 'train' : 'mixed',
-    homePagePlacements: []
+    homePagePlacements: [],
+    noBookingEnd: false,
+    noAvailableTo: false
   });
 
   const [categories, setCategories] = React.useState({
@@ -262,6 +264,23 @@ const AdminNewTourUploadForm = () => {
     // Ensure ID exists
     if (!tourToSave.id) {
       tourToSave.id = Date.now().toString(); // Simple ID generation
+    }
+
+    // Sync new pricing fields to legacy 'price' field for backward compatibility
+    if (tourToSave.pricePerPerson) {
+      tourToSave.price = tourToSave.pricePerPerson;
+    } else if (tourToSave.pricePerCouple) {
+      tourToSave.price = tourToSave.pricePerCouple;
+    } else if (tourToSave.pricePerGroup) {
+      tourToSave.price = tourToSave.pricePerGroup;
+    }
+
+    // Handle 'No end date' flags
+    if (tourToSave.noBookingEnd) {
+      tourToSave.bookingEnd = '';
+    }
+    if (tourToSave.noAvailableTo) {
+      tourToSave.availableTo = '';
     }
 
     let updatedTours;
@@ -1398,10 +1417,20 @@ const AdminNewTourUploadForm = () => {
         <input 
           type="date" 
           name="bookingEnd"
-          value={formData.bookingEnd || ''}
+          value={formData.noBookingEnd ? '' : (formData.bookingEnd || '')}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
+          disabled={formData.noBookingEnd}
+          className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm ${formData.noBookingEnd ? 'opacity-40 cursor-not-allowed' : ''}`}
         />
+      </label>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input 
+          type="checkbox" 
+          checked={formData.noBookingEnd || false}
+          onChange={(e) => setFormData(prev => ({ ...prev, noBookingEnd: e.target.checked, bookingEnd: e.target.checked ? '' : prev.bookingEnd }))}
+          className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+        />
+        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">No end date (open-ended)</span>
       </label>
     </div>
 
@@ -1429,10 +1458,20 @@ const AdminNewTourUploadForm = () => {
         <input 
           type="date" 
           name="availableTo"
-          value={formData.availableTo || ''}
+          value={formData.noAvailableTo ? '' : (formData.availableTo || '')}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
+          disabled={formData.noAvailableTo}
+          className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm ${formData.noAvailableTo ? 'opacity-40 cursor-not-allowed' : ''}`}
         />
+      </label>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input 
+          type="checkbox" 
+          checked={formData.noAvailableTo || false}
+          onChange={(e) => setFormData(prev => ({ ...prev, noAvailableTo: e.target.checked, availableTo: e.target.checked ? '' : prev.availableTo }))}
+          className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+        />
+        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">No end date (ongoing)</span>
       </label>
     </div>
   </div>

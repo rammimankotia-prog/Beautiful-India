@@ -288,7 +288,12 @@ const AdminTourManagementDashboard = () => {
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">{tour.duration}</td>
-    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-slate-100">{formatPrice(tour.price, true)}</td>
+    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-slate-100">
+  <div className="flex flex-col">
+    <span>{formatPrice(tour.pricePerPerson || tour.price, true)}</span>
+    {tour.pricePerCouple && <span className="text-xs text-pink-500 font-normal">{formatPrice(tour.pricePerCouple, true)} /couple</span>}
+  </div>
+</td>
     <td className="px-6 py-4 whitespace-nowrap">
     <input 
       type="number" 
