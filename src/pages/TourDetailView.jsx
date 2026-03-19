@@ -636,8 +636,8 @@ const TourDetailView = () => {
                       </div>
                       
                       {/* Price Guide Card */}
-                      <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div className="flex items-center gap-4">
+                      <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center gap-6">
+                        <div className="flex-1 flex items-center gap-4 md:justify-center">
                           <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
                             <span className="material-symbols-outlined text-orange-600 dark:text-orange-400">payments</span>
                           </div>
@@ -650,7 +650,7 @@ const TourDetailView = () => {
                           </div>
                         </div>
                         <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
-                        <div className="flex items-center gap-4">
+                        <div className="flex-1 flex items-center gap-4 md:justify-center">
                           <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                             <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">calendar_month</span>
                           </div>
@@ -662,7 +662,7 @@ const TourDetailView = () => {
                         {tour.bestTimeToVisit && (
                           <>
                             <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
-                            <div className="flex items-center gap-4">
+                            <div className="flex-1 flex items-center gap-4 md:justify-center">
                               <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
                                 <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">sunny</span>
                               </div>
@@ -673,44 +673,6 @@ const TourDetailView = () => {
                             </div>
                           </>
                         )}
-                        <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
-                            <div className="flex -space-x-2">
-                              {(() => {
-                                const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : ['hotel']);
-                                const typeIcons = {
-                                  hotel: 'hotel',
-                                  resort: 'nature_people',
-                                  houseboat: 'sailing',
-                                  villa: 'house',
-                                  apartment: 'apartment'
-                                };
-                                return types.map((t, idx) => (
-                                  <span key={idx} title={t.charAt(0).toUpperCase() + t.slice(1)} className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/50 rounded-full p-1 border border-white dark:border-slate-800 text-[18px]">
-                                    {typeIcons[t] || 'apartment'}
-                                  </span>
-                                ));
-                              })()}
-                            </div>
-                          </div>
-                          <div>
-                            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Accommodation</p>
-                            <h4 className="text-xl font-black text-slate-800 dark:text-slate-100 flex flex-wrap items-center gap-2">
-                              {(() => {
-                                const cats = Array.isArray(tour.hotelCategory) ? tour.hotelCategory : (tour.hotelCategory ? [tour.hotelCategory] : []);
-                                if (cats.length === 0) return 'Accommodation';
-                                return cats.map(c => c === 'budget' ? 'Budget' : c.replace('_star', '') + '⭐').join(' / ');
-                              })()}
-                              <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 ml-1">
-                                {(() => {
-                                  const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : []);
-                                  return types.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(' & ');
-                                })()}
-                              </span>
-                            </h4>
-                          </div>
-                        </div>
                       </div>
 
                       <div className="prose prose-lg dark:prose-invert max-w-none">
