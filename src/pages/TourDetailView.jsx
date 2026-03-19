@@ -226,6 +226,28 @@ const TourDetailView = () => {
     return result.slice(0, 4);
   })();
 
+  // Helper to get the primary price figure and its label
+  const getDisplayPriceData = () => {
+    if (!tour) return { amount: 0, label: 'Per Person' };
+    
+    // Priority: Per Person -> Per Couple -> Per Group -> Base Price
+    if (tour.pricePerPerson && tour.pricePerPerson != 0) {
+      return { amount: tour.pricePerPerson, label: 'Per Person' };
+    }
+    if (tour.pricePerCouple && tour.pricePerCouple != 0) {
+      return { amount: tour.pricePerCouple, label: 'Per Couple' };
+    }
+    if (tour.pricePerGroup && tour.pricePerGroup != 0) {
+      return { amount: tour.pricePerGroup, label: `Per Group (of ${tour.groupSize || 10})` };
+    }
+    
+    // Fallback to base price
+    const fallbackLabel = tour.priceBasis === 'per_package' ? 'Per Package' : 'Per Person';
+    return { amount: tour.price || 0, label: fallbackLabel };
+  };
+
+  const displayPrice = getDisplayPriceData();
+
   if (loading) return <div className="p-20 text-center font-bold text-2xl animate-pulse text-primary">Loading your adventure...</div>;
   if (error) return <div className="p-20 text-center text-red-500 font-bold text-2xl">Error: {error}</div>;
   if (!tour || (tour.status === 'paused')) return <div className="p-20 text-center font-bold text-2xl">Tour not found or currently unavailable</div>;
@@ -305,7 +327,7 @@ const TourDetailView = () => {
            <div className="flex items-center gap-6">
               <div className="text-right">
                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Special Price</p>
-                 <p className="text-xl font-black text-primary leading-none">{formatPrice(tour.pricePerPerson || tour.price, true)}</p>
+                 <p className="text-xl font-black text-primary leading-none">{formatPrice(displayPrice.amount, true)}</p>
               </div>
               <button 
                 onClick={() => setIsQuoteModalOpen(true)}
@@ -364,14 +386,8 @@ const TourDetailView = () => {
                 <div className="flex flex-col items-start md:items-end gap-3 shrink-0 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
                   <div className="text-left md:text-right">
                     <p className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase tracking-widest">Starting from</p>
-                    <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.pricePerPerson || tour.price, true)}</p>
-                    <p className="text-[10px] md:text-xs text-slate-400 font-bold mt-0.5 uppercase">{tour.pricePerPerson ? 'Per Person' : (tour.priceBasis === 'per_package' ? 'Per Package' : 'Per Person')}</p>
-                    {tour.pricePerCouple && (
-                      <p className="text-xs text-pink-500 font-bold mt-1">{formatPrice(tour.pricePerCouple, true)} / Couple</p>
-                    )}
-                    {tour.pricePerGroup && (
-                      <p className="text-xs text-emerald-500 font-bold">{formatPrice(tour.pricePerGroup, true)} / Group of {tour.groupSize || 10}</p>
-                    )}
+                    <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(displayPrice.amount, true)}</p>
+                    <p className="text-[10px] md:text-xs text-slate-400 font-bold mt-0.5 uppercase">{displayPrice.label}</p>
                   </div>
                   {(tour.nature === 'group' || tour.nature === 'private') && tour.minPersons > 1 && (
                     <span className="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wide">
@@ -557,8 +573,8 @@ const TourDetailView = () => {
                           <div>
                             <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estimated Price Guide</p>
                             <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">
-                              {formatPrice(tour.pricePerPerson || tour.price, true)}
-                              <span className="text-sm font-medium text-slate-400 ml-2">/ per person</span>
+                              {formatPrice(displayPrice.amount, true)}
+                              <span className="text-sm font-medium text-slate-400 ml-2">/ {displayPrice.label.toLowerCase()}</span>
                             </h4>
                           </div>
                         </div>
