@@ -557,7 +557,7 @@ const TourDetailView = () => {
                           <div>
                             <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estimated Price Guide</p>
                             <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">
-                              {formatPrice(tour.pricePerPerson || tour.price, true)} - {formatPrice((tour.pricePerPerson || tour.price) + 10000, true)}
+                              {formatPrice(tour.pricePerPerson || tour.price, true)}
                               <span className="text-sm font-medium text-slate-400 ml-2">/ per person</span>
                             </h4>
                           </div>
