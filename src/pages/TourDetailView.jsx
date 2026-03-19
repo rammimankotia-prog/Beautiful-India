@@ -605,9 +605,9 @@ const TourDetailView = () => {
               {/* Content Section */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 mt-4">
                 {/* Main Content (Left Column) */}
-                <div className="lg:col-span-2 flex flex-col gap-8">
+                <div className="lg:col-span-2 flex flex-col gap-4">
                   {/* Tags */}
-                  <div className="flex gap-2 min-[400px]:gap-3 flex-wrap mb-2">
+                  <div className="flex gap-2 min-[400px]:gap-3 flex-wrap mb-1">
                     <div className="flex h-8 items-center justify-center gap-x-2 rounded-full bg-primary/10 px-4">
                       <span className="material-symbols-outlined text-primary text-sm">explore</span>
                       <p className="text-primary text-sm font-semibold leading-normal">{tour.nature || 'Adventure'}</p>
@@ -625,10 +625,10 @@ const TourDetailView = () => {
                   </div>
                   {/* Description */}
                   {/* ── Overview & Highlights ── */}
-                  <div id="overview" className="flex flex-col gap-8">
+                  <div id="overview" className="flex flex-col gap-5">
                     {/* Overview */}
                     <div className="relative">
-                      <div className="flex items-center gap-3 mb-4 md:mb-6">
+                      <div className="flex items-center gap-3 mb-2 md:mb-3">
                         <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
                           <span className="material-symbols-outlined text-[14px]">info</span>
                           Tour Overview
@@ -636,7 +636,7 @@ const TourDetailView = () => {
                       </div>
                       
                       {/* Price Guide Card */}
-                      <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center gap-6">
+                      <div className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center gap-6">
                         <div className="flex-1 flex items-center gap-4 md:justify-center">
                           <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
                             <span className="material-symbols-outlined text-orange-600 dark:text-orange-400">payments</span>
