@@ -117,7 +117,7 @@ if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));
     
     // Handle SPA routing - serve index.html for any unknown routes
-    app.get('*', (req, res) => {
+    app.use((req, res) => {
         // If it starts with /api, we should have already handled it or it's a 404
         if (req.url.startsWith('/api')) {
             return res.status(404).json({ error: 'API route not found' });

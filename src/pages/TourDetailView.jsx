@@ -248,6 +248,77 @@ const TourDetailView = () => {
 
   const displayPrice = getDisplayPriceData();
 
+  const renderRichText = (text) => {
+    if (!text) return null;
+    
+    // Split into lines
+    const lines = text.split('\n');
+    const elements = [];
+    let currentBulletList = [];
+
+    const processFormattedText = (content) => {
+      let processed = content;
+      // Bold: **text** -> <strong>text</strong>
+      processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      // Links: [label](url) -> <a href="url" ...>label</a>
+      processed = processed.replace(/\[(.*?)\]\((.*?)\)/g, (match, label, url) => {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline font-bold">${label}</a>`;
+      });
+      return processed;
+    };
+
+    lines.forEach((line, idx) => {
+      const trimmedLine = line.trim();
+      const isBullet = trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ');
+
+      if (isBullet) {
+        const bulletContent = trimmedLine.substring(2);
+        currentBulletList.push(processFormattedText(bulletContent));
+      } else {
+        // If we were collecting bullets, flush them now
+        if (currentBulletList.length > 0) {
+          elements.push(
+            <ul key={`list-${idx}`} className="space-y-2 mb-4 ml-2">
+              {currentBulletList.map((item, i) => (
+                <li key={i} className="flex gap-3 items-start">
+                  <span className="text-primary mt-2 shrink-0 w-1.5 h-1.5 rounded-full bg-primary" />
+                  <span className="flex-1 leading-relaxed" dangerouslySetInnerHTML={{ __html: item }} />
+                </li>
+              ))}
+            </ul>
+          );
+          currentBulletList = [];
+        }
+
+        // Add regular line if not empty
+        if (trimmedLine) {
+          elements.push(
+            <div key={idx} className="mb-4 last:mb-0 leading-relaxed" dangerouslySetInnerHTML={{ __html: processFormattedText(line) || '&nbsp;' }} />
+          );
+        } else if (idx < lines.length - 1) {
+          // Add a spacer for intentional double newlines
+          elements.push(<div key={idx} className="h-2" />);
+        }
+      }
+    });
+
+    // Final flush for bullets at the end
+    if (currentBulletList.length > 0) {
+      elements.push(
+        <ul key="final-list" className="space-y-2 mb-4 ml-2">
+          {currentBulletList.map((item, i) => (
+            <li key={i} className="flex gap-3 items-start">
+              <span className="text-primary mt-2 shrink-0 w-1.5 h-1.5 rounded-full bg-primary" />
+              <span className="flex-1 leading-relaxed" dangerouslySetInnerHTML={{ __html: item }} />
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    return elements;
+  };
+
   if (loading) return <div className="p-20 text-center font-bold text-2xl animate-pulse text-primary">Loading your adventure...</div>;
   if (error) return <div className="p-20 text-center text-red-500 font-bold text-2xl">Error: {error}</div>;
   if (!tour || (tour.status === 'paused')) return <div className="p-20 text-center font-bold text-2xl">Tour not found or currently unavailable</div>;
@@ -643,14 +714,8 @@ const TourDetailView = () => {
                       </div>
 
                       <div className="prose prose-lg dark:prose-invert max-w-none">
-
-                        <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-[17px] space-y-4">
-                          <p>
-                            Embark on an unforgettable journey specifically designed for the discerning traveler. Our <span className="font-bold text-slate-800 dark:text-slate-200">{tour.duration} {tour.title}</span> combines thrilling activities with hand-picked premium accommodations.
-                          </p>
-                          <p>
-                            From the moment you arrive, every detail is taken care of by our professional guides, ensuring a seamless and enriching travel experience that captures the true essence of <span className="text-primary font-semibold">{tour.stateRegion || tour.destination || 'the destination'}</span>.
-                          </p>
+                        <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-[17px]">
+                          {renderRichText(tour.description || "No description available for this tour.")}
                         </div>
                       </div>
                     </div>
@@ -747,7 +812,9 @@ const TourDetailView = () => {
                                       })}
                                     </div>
                                   )}
-                                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{item.description}</p>
+                                    <div className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                      {renderRichText(item.description)}
+                                    </div>
                                 </div>
                               )}
                             </div>

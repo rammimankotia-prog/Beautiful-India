@@ -195,6 +195,34 @@ const AdminNewTourUploadForm = () => {
     setFormData(prev => ({ ...prev, itinerary: newItinerary }));
   };
 
+  const insertFormatting = (index, prefix, suffix = "", isMain = false) => {
+    const textarea = isMain ? document.getElementById('main-description') : document.getElementById(`day-desc-${index}`);
+    if (!textarea) return;
+
+    textarea.focus();
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const before = text.substring(0, start);
+    const selection = text.substring(start, end);
+    const after = text.substring(end);
+
+    const newValue = before + prefix + selection + suffix + after;
+    
+    if (isMain) {
+      setFormData(prev => ({ ...prev, description: newValue }));
+    } else {
+      handleItineraryChange(index, "description", newValue);
+    }
+
+    // Use a small delay to allow React to update the state before setting focus/cursor
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = start + prefix.length + (selection ? selection.length + suffix.length : 0);
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 10);
+  };
+
   const handleAddDay = () => {
     const newItinerary = [...(formData.itinerary || [])];
     const nextDay = newItinerary.length > 0 ? newItinerary[newItinerary.length - 1].day + 1 : 1;
@@ -608,22 +636,41 @@ const AdminNewTourUploadForm = () => {
 <label className="flex flex-col flex-1">
 <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Description</span>
 <div className="border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors">
-{/* Toolbar Mock */}
-<div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 px-3 py-2 flex gap-2 text-slate-500 dark:text-slate-400">
-<button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span className="material-symbols-outlined text-sm">format_bold</span></button>
-<button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span className="material-symbols-outlined text-sm">format_italic</span></button>
-<button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span className="material-symbols-outlined text-sm">format_underlined</span></button>
-<div className="w-px h-5 bg-slate-300 dark:bg-slate-700 mx-1 self-center"></div>
-<button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span className="material-symbols-outlined text-sm">format_list_bulleted</span></button>
-<button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span className="material-symbols-outlined text-sm">link</span></button>
-</div>
-<textarea 
-  name="description"
-  value={formData.description}
-  onChange={handleChange}
-  className="w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 text-sm border-0 focus:ring-0 min-h-[160px] resize-y placeholder-slate-400" 
-  placeholder="Write a compelling description of the tour..."
-></textarea>
+      {/* Toolbar */}
+      <div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 px-3 py-2 flex gap-2 text-slate-500 dark:text-slate-400">
+        <button 
+          className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" 
+          type="button" 
+          onClick={() => insertFormatting(null, '**', '**', true)}
+          title="Bold"
+        >
+          <span className="material-symbols-outlined text-sm">format_bold</span>
+        </button>
+        <button 
+          className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" 
+          type="button" 
+          onClick={() => insertFormatting(null, '- ', '', true)}
+          title="Bullet List"
+        >
+          <span className="material-symbols-outlined text-sm">format_list_bulleted</span>
+        </button>
+        <button 
+          className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" 
+          type="button" 
+          onClick={() => insertFormatting(null, '[', '](https://)', true)}
+          title="Insert Link"
+        >
+          <span className="material-symbols-outlined text-sm">link</span>
+        </button>
+      </div>
+      <textarea 
+        id="main-description"
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        className="w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 text-sm border-0 focus:ring-0 min-h-[160px] resize-y placeholder-slate-400" 
+        placeholder="Write a compelling description of the tour..."
+      ></textarea>
 </div>
 </label>
 </div>
@@ -1143,12 +1190,43 @@ const AdminNewTourUploadForm = () => {
             />
           </label>
           <label className="flex flex-col">
-            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-1">Day Description</span>
+            <div className="flex items-center justify-between pb-1">
+              <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Day Description</span>
+              <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700/50">
+                <button 
+                  type="button" 
+                  onClick={() => insertFormatting(index, '**', '**')} 
+                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5" 
+                  title="Bold"
+                >
+                  <span className="material-symbols-outlined text-[18px]">format_bold</span>
+                </button>
+                <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
+                <button 
+                  type="button" 
+                  onClick={() => insertFormatting(index, '- ')} 
+                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5" 
+                  title="Bullet List"
+                >
+                  <span className="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+                </button>
+                <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
+                <button 
+                  type="button" 
+                  onClick={() => insertFormatting(index, '[', '](https://)')} 
+                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5" 
+                  title="Insert Link"
+                >
+                  <span className="material-symbols-outlined text-[18px]">link</span>
+                </button>
+              </div>
+            </div>
             <textarea 
+              id={`day-desc-${index}`}
               value={day.description || ''}
               onChange={(e) => handleItineraryChange(index, 'description', e.target.value)}
-              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary min-h-[80px] resize-y" 
-              placeholder="Describe the activities for this day..."
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary min-h-[120px] resize-y" 
+              placeholder="Describe the activities for this day... (Use toolbar to format)"
             ></textarea>
           </label>
           {/* Highlight Tags */}
