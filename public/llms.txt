@@ -1,0 +1,29 @@
+# Beautiful India - Bharat Darshan
+
+> Discover the incredible beauty of India with curated tour packages.
+
+Beautiful India (Bharat Darshan) is a premier travel platform offering curated tour packages across India's most iconic destinations. From the snow-capped mountains of Kashmir and Himachal to the royal palaces of Rajasthan and the serene backwaters of Kerala, we provide comprehensive travel experiences including itineraries, pricing, and expert guides.
+
+## Core Pages
+- [Home](https://bhaktikishakti.com/) - Explore India's wonders and featured tours.
+- [Tours](https://bhaktikishakti.com/tours) - Comprehensive list of all tour packages.
+- [About Us](https://bhaktikishakti.com/about) - Learn about our mission and expertise.
+- [Contact](https://bhaktikishakti.com/contact) - Get in touch for custom bookings.
+- [Festivals](https://bhaktikishakti.com/festivals) - Discover India's vibrant cultural celebrations.
+- [Privacy Policy](https://bhaktikishakti.com/privacy) - How we handle your data.
+- [Terms of Service](https://bhaktikishakti.com/terms) - Usage guidelines and booking terms.
+
+## Featured Tours
+- [Kashmir Tour](https://bhaktikishakti.com/tours/1) - 7-day experience in Srinagar, Gulmarg, and Pahalgam.
+- [Himachal Wonders](https://bhaktikishakti.com/tours/2) - Scenic mountain escapes in Shimla and Manali.
+- [Golden Triangle](https://bhaktikishakti.com/tours/3) - The classic Delhi, Agra, and Jaipur circuit.
+- [Kerala Backwaters](https://bhaktikishakti.com/tours/4) - Tranquil houseboat stays and lush landscapes.
+
+## Travel Resources
+- [Travel Guides](https://bhaktikishakti.com/guides) - Expert tips and destination reviews.
+- [Safety Advisory](https://bhaktikishakti.com/guides/safety) - Essential safety tips for travelers in India.
+
+## Data Feeds for Agents
+- [Sitemap](https://bhaktikishakti.com/sitemap.xml) - Full site structure.
+- [Tours RSS](https://bhaktikishakti.com/rss-tours.xml) - Latest tour updates.
+- [Guides RSS](https://bhaktikishakti.com/rss-guides.xml) - Latest travel articles.

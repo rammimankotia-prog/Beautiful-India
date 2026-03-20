@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Beautiful India - Latest Tours</title>
+    <link>https://bhaktikishakti.com/tours</link>
+    <description>The latest tour packages to explore India's wonders.</description>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Mar 2026 11:25:00 +0530</lastBuildDate>
+    
+    <item>
+      <title>Kashmir Tour Package </title>
+      <link>https://bhaktikishakti.com/tours/1</link>
+      <description>Starting Price: ₹22,000 – ₹30,000 per person (7 days)</description>
+      <pubDate>Fri, 20 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Himachal Wonders </title>
+      <link>https://bhaktikishakti.com/tours/2</link>
+      <description>Explore Shimla and Manali (6 days)</description>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Golden Triangle Tour </title>
+      <link>https://bhaktikishakti.com/tours/3</link>
+      <description>Delhi, Agra, Jaipur special (5 days)</description>
+      <pubDate>Wed, 18 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Kerala Backwaters </title>
+      <link>https://bhaktikishakti.com/tours/4</link>
+      <description>Serene stay in houseboats (5 days)</description>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Rajasthan Royal Adventure </title>
+      <link>https://bhaktikishakti.com/tours/5</link>
+      <description>Desert safari and palaces (8 days)</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+  </channel>
+</rss>

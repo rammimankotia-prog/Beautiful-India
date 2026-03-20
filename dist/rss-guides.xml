@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Beautiful India - Travel Guides</title>
+    <link>https://bhaktikishakti.com/guides</link>
+    <description>Travel tips, safety guides, and inspiration for exploring India.</description>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Mar 2026 11:25:00 +0530</lastBuildDate>
+
+    <item>
+      <title>Exploring the Swiss Alps</title>
+      <link>https://bhaktikishakti.com/guides/1</link>
+      <description>Discover the hidden valleys and peak experiences that make Switzerland the crown jewel of Europe's mountains.</description>
+      <pubDate>Thu, 12 Oct 2023 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Tokyo Nightlife Guide</title>
+      <link>https://bhaktikishakti.com/guides/2</link>
+      <description>From Shinjuku's neon alleys to Roppongi's high-end bars, explore the world's most vibrant city after dark.</description>
+      <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>10 Safest Destinations for Solo Female Travelers</title>
+      <link>https://bhaktikishakti.com/guides/4</link>
+      <description>Empowering insights for women exploring the globe independently.</description>
+      <pubDate>Wed, 20 Sep 2023 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
