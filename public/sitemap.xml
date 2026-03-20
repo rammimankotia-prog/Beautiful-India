@@ -66,16 +66,16 @@
     <priority>0.8</priority>
   </url>
   <!-- Dynamic Tour Pages -->
-  <url><loc>https://bhaktikishakti.com/tours/1</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/2</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/3</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/4</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/5</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/6</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/7</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/8</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/9</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/10</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/11</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bhaktikishakti.com/tours/12</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/kashmir-tour-package</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/kerala-tour-package</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/golden-triangle-train-tour</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/south-india-temple-run-by-train</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/romantic-maldives-escape</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/goa-family-vacation</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/ladakh-bike-expedition</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/ranthambore-jungle-safari</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/varanasi-photography-tour</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/andaman-beach-retreat</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/rajasthan-heritage-tour</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bhaktikishakti.com/tours/himalayan-trekking-expedition</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 </urlset>

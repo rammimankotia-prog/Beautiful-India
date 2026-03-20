@@ -1,7 +1,7 @@
 [
   {
-    "id": "1",
-    "title": "Kashmir Tour Package ",
+    "id": "kashmir-tour-package",
+    "title": "Kashmir Tour Package",
     "description": "Starting Price: \u20b922,000 \u2013 \u20b930,000 per person (approx.) depending on hotel category and season.",
     "destination": "Asia",
     "stateRegion": "Kashmir",
@@ -89,7 +89,7 @@
     "subregion": "Sonmarg"
   },
   {
-    "id": "2",
+    "id": "kerala-tour-package",
     "title": "Kerala Tour Package",
     "description": "A Kerala tour offers beautiful backwaters, hill stations, beaches, and wildlife. Popular destinations include Munnar, Alleppey, Thekkady, and Kochi",
     "destination": "Asia",
@@ -143,7 +143,7 @@
     "transport": "train"
   },
   {
-    "id": "3",
+    "id": "golden-triangle-train-tour",
     "title": "Golden Triangle Train Tour",
     "description": "Explore Delhi, Agra, and Jaipur by the luxurious Gatimaan Express and Shatabdi.",
     "destination": "Asia",
@@ -199,7 +199,7 @@
     ]
   },
   {
-    "id": "4",
+    "id": "south-india-temple-run-by-train",
     "title": "South India Temple Run by Train",
     "description": "A spiritual journey through Tamil Nadu and Karnataka via Indian Railways.",
     "destination": "Asia",
@@ -255,7 +255,7 @@
     ]
   },
   {
-    "id": "5",
+    "id": "romantic-maldives-escape",
     "title": "Romantic Maldives Escape",
     "description": "Experience the ultimate romantic getaway with crystal clear waters and overwater villas.",
     "destination": "International",
@@ -291,7 +291,7 @@
     ]
   },
   {
-    "id": "6",
+    "id": "goa-family-vacation",
     "title": "Goa Family Vacation",
     "description": "A fun-filled family holiday exploring the beaches, forts, and culture of Goa.",
     "destination": "India",
@@ -327,7 +327,7 @@
     ]
   },
   {
-    "id": "7",
+    "id": "ladakh-bike-expedition",
     "title": "Ladakh Bike Expedition",
     "description": "A thrilling biking adventure through the rugged terrains of Leh and Ladakh.",
     "destination": "India",
@@ -363,7 +363,7 @@
     ]
   },
   {
-    "id": "8",
+    "id": "ranthambore-jungle-safari",
     "title": "Ranthambore Jungle Safari",
     "description": "Encounter majestic Bengal tigers and diverse wildlife in Ranthambore.",
     "destination": "India",
@@ -399,7 +399,7 @@
     ]
   },
   {
-    "id": "9",
+    "id": "varanasi-photography-tour",
     "title": "Varanasi Photography Tour",
     "description": "Capture the soul of India along the sacred ghats of the Ganges.",
     "destination": "India",
@@ -435,7 +435,7 @@
     ]
   },
   {
-    "id": "10",
+    "id": "andaman-beach-retreat",
     "title": "Andaman Beach Retreat",
     "description": "A relaxing escape to the pristine beaches and cerulean waters of the Andaman Islands.",
     "destination": "India",
@@ -471,7 +471,7 @@
     ]
   },
   {
-    "id": "11",
+    "id": "rajasthan-heritage-tour",
     "title": "Rajasthan Heritage Tour",
     "description": "Immerse yourself in the rich culture, grand forts, and royal history of Rajasthan.",
     "destination": "India",
@@ -507,7 +507,7 @@
     ]
   },
   {
-    "id": "12",
+    "id": "himalayan-trekking-expedition",
     "title": "Himalayan Trekking Expedition",
     "description": "Conquer the trails of Himachal Pradesh with this guided trekking experience.",
     "destination": "India",

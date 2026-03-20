@@ -34,7 +34,7 @@
     "customerName": "Raman",
     "customerEmail": "Mankotia",
     "tourTitle": "Kashmir Tour Package",
-    "tourId": "6",
+    "tourId": "kashmir-tour-package",
     "amount": 25200
   },
   {
@@ -44,7 +44,7 @@
     "customerName": "Raman",
     "customerEmail": "raman@testting.com",
     "tourTitle": "Kashmir Tour Package",
-    "tourId": "6",
+    "tourId": "kashmir-tour-package",
     "amount": 49200
   }
 ]

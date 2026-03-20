@@ -14,10 +14,10 @@ Beautiful India (Bharat Darshan) is a premier travel platform offering curated t
 - [Terms of Service](https://bhaktikishakti.com/terms) - Usage guidelines and booking terms.
 
 ## Featured Tours
-- [Kashmir Tour](https://bhaktikishakti.com/tours/1) - 7-day experience in Srinagar, Gulmarg, and Pahalgam.
-- [Himachal Wonders](https://bhaktikishakti.com/tours/2) - Scenic mountain escapes in Shimla and Manali.
-- [Golden Triangle](https://bhaktikishakti.com/tours/3) - The classic Delhi, Agra, and Jaipur circuit.
-- [Kerala Backwaters](https://bhaktikishakti.com/tours/4) - Tranquil houseboat stays and lush landscapes.
+- [Kashmir Tour Package](https://bhaktikishakti.com/tours/kashmir-tour-package) - 7-day experience in Srinagar, Gulmarg, and Pahalgam.
+- [Kerala Tour Package](https://bhaktikishakti.com/tours/kerala-tour-package) - Scenic escapes in the backwaters of Kerala.
+- [Golden Triangle Train Tour](https://bhaktikishakti.com/tours/golden-triangle-train-tour) - The classic Delhi, Agra, and Jaipur circuit by train.
+- [South India Temple Run](https://bhaktikishakti.com/tours/south-india-temple-run-by-train) - Tranquil temple visits and lush landscapes.
 
 ## Travel Resources
 - [Travel Guides](https://bhaktikishakti.com/guides) - Expert tips and destination reviews.
