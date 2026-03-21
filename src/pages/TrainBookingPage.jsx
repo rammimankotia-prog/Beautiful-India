@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { sortedCodes } from '../data/countryCodes';
 
 const TrainBookingPage = () => {
   const navigate = useNavigate();
@@ -10,9 +11,20 @@ const TrainBookingPage = () => {
     seatPref: '',
     timePref: ''
   });
+
+  const [hasOnwardJourney, setHasOnwardJourney] = useState(false);
+  const [onwardDetails, setOnwardDetails] = useState({
+    date: '',
+    trainPref: '',
+    seatPref: '',
+    timePref: ''
+  });
   
   const [passengers, setPassengers] = useState([
-    { firstName: '', lastName: '', age: '', idType: '', idNumber: '', foodPref: '', nationality: 'Indian', passport: '', mobile: '', email: '' }
+    { 
+      firstName: '', lastName: '', age: '', idType: '', idNumber: '', foodPref: '', nationality: 'Indian', passport: '', 
+      mobile: '', countryCode: '+91', email: '', whatsappConsent: false 
+    }
   ]);
   
   const [declarationAccepted, setDeclarationAccepted] = useState(false);
@@ -27,8 +39,12 @@ const TrainBookingPage = () => {
     }
   };
 
-  const handleJourneyChange = (field, value) => {
-    setJourneyDetails(prev => ({ ...prev, [field]: value }));
+  const handleJourneyChange = (type, field, value) => {
+    if (type === 'onward') {
+      setOnwardDetails(prev => ({ ...prev, [field]: value }));
+    } else {
+      setJourneyDetails(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   const handlePassengerChange = (index, field, value) => {
@@ -104,17 +120,17 @@ const TrainBookingPage = () => {
                     type="date" 
                     required
                     value={journeyDetails.date}
-                    onChange={(e) => handleJourneyChange('date', e.target.value)}
+                    onChange={(e) => handleJourneyChange('outward', 'date', e.target.value)}
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Train Preference</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Train Preference / Number</label>
                   <input 
                     type="text" 
-                    placeholder="e.g. Rajdhani, Shatabdi"
+                    placeholder="e.g. 12001, Rajdhani"
                     value={journeyDetails.trainPref}
-                    onChange={(e) => handleJourneyChange('trainPref', e.target.value)}
+                    onChange={(e) => handleJourneyChange('outward', 'trainPref', e.target.value)}
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                   />
                 </div>
@@ -122,7 +138,7 @@ const TrainBookingPage = () => {
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
                   <select 
                     value={journeyDetails.seatPref}
-                    onChange={(e) => handleJourneyChange('seatPref', e.target.value)}
+                    onChange={(e) => handleJourneyChange('outward', 'seatPref', e.target.value)}
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
                   >
                     <option value="">No Preference</option>
@@ -138,7 +154,7 @@ const TrainBookingPage = () => {
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Time Preference</label>
                   <select 
                     value={journeyDetails.timePref}
-                    onChange={(e) => handleJourneyChange('timePref', e.target.value)}
+                    onChange={(e) => handleJourneyChange('outward', 'timePref', e.target.value)}
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
                   >
                     <option value="">Any Time</option>
@@ -149,6 +165,82 @@ const TrainBookingPage = () => {
                   </select>
                 </div>
               </div>
+
+              {/* Onward Journey Toggle */}
+              <div className="mt-8 flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 w-fit">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className="relative flex items-center">
+                    <input 
+                      type="checkbox" 
+                      checked={hasOnwardJourney}
+                      onChange={(e) => setHasOnwardJourney(e.target.checked)}
+                      className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-slate-200 transition-all checked:border-[#006D77] checked:bg-[#006D77]"
+                    />
+                    <span className="material-symbols-outlined absolute left-0 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none text-sm w-full text-center font-bold">check</span>
+                  </div>
+                  <span className="text-sm font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Add Same Details for Onward Journey / Return Trip</span>
+                </label>
+              </div>
+
+              {/* Section 1.5: Onward Journey Details */}
+              {hasOnwardJourney && (
+                <div className="mt-10 pt-8 border-t-2 border-dashed border-slate-100 animate-in fade-in slide-in-from-top-4 duration-300">
+                  <h3 className="text-sm font-black text-[#006D77] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-base">forward</span>
+                    Onward / Return Journey Details
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Date of Journey</label>
+                      <input 
+                        type="date" required
+                        value={onwardDetails.date}
+                        onChange={(e) => handleJourneyChange('onward', 'date', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Train Preference / Number</label>
+                      <input 
+                        type="text" placeholder="e.g. 12002, Rajdhani"
+                        value={onwardDetails.trainPref}
+                        onChange={(e) => handleJourneyChange('onward', 'trainPref', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
+                      <select 
+                        value={onwardDetails.seatPref}
+                        onChange={(e) => handleJourneyChange('onward', 'seatPref', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                      >
+                        <option value="">No Preference</option>
+                        <option value="lower">Lower Berth</option>
+                        <option value="middle">Middle Berth</option>
+                        <option value="upper">Upper Berth</option>
+                        <option value="side_lower">Side Lower</option>
+                        <option value="side_upper">Side Upper</option>
+                        <option value="window">Window Seat (CC)</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Time Preference</label>
+                      <select 
+                        value={onwardDetails.timePref}
+                        onChange={(e) => handleJourneyChange('onward', 'timePref', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                      >
+                        <option value="">Any Time</option>
+                        <option value="morning">Morning (6 AM - 12 PM)</option>
+                        <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
+                        <option value="evening">Evening (6 PM - 12 AM)</option>
+                        <option value="night">Night (12 AM - 6 AM)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* Section 2: Passenger Details */}
@@ -278,12 +370,37 @@ const TrainBookingPage = () => {
                         <>
                           <div className="flex flex-col gap-2 md:col-span-1 lg:col-span-2">
                             <label className="text-[10px] font-bold text-[#006D77] uppercase tracking-widest">Mobile Number (Primary) *</label>
-                            <input 
-                              type="tel" required
-                              value={p.mobile} onChange={(e) => handlePassengerChange(i, 'mobile', e.target.value)}
-                              className="h-11 px-4 rounded-xl border border-[#006D77]/30 outline-none focus:border-[#006D77] transition-all text-sm font-bold text-[#006D77]"
-                              placeholder="+91 XXXXX XXXXX"
-                            />
+                            <div className="relative flex gap-2">
+                              {/* Searchable Country Code Picker */}
+                              <div className="relative group/cc">
+                                <CountryCodeSelector 
+                                  value={p.countryCode} 
+                                  onChange={(val) => handlePassengerChange(i, 'countryCode', val)} 
+                                />
+                              </div>
+                              <input 
+                                type="tel" required
+                                value={p.mobile} onChange={(e) => handlePassengerChange(i, 'mobile', e.target.value)}
+                                className="flex-1 h-11 px-4 rounded-xl border border-[#006D77]/30 outline-none focus:border-[#006D77] transition-all text-sm font-bold text-[#006D77]"
+                                placeholder="XXXXX XXXXX"
+                              />
+                            </div>
+                            
+                            {/* WhatsApp Consent */}
+                            <label className="flex items-center gap-2 mt-2 cursor-pointer group/wa">
+                              <div className="relative flex items-center">
+                                <input 
+                                  type="checkbox" 
+                                  checked={p.whatsappConsent}
+                                  onChange={(e) => handlePassengerChange(i, 'whatsappConsent', e.target.checked)}
+                                  className="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 transition-all checked:border-[#25D366] checked:bg-[#25D366]"
+                                />
+                                <span className="material-symbols-outlined absolute left-0 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none text-[10px] w-full text-center">check</span>
+                              </div>
+                              <span className="text-[10px] font-bold text-slate-500 group-hover/wa:text-[#25D366] transition-colors">
+                                we can contact you on whatsapp on given number
+                              </span>
+                            </label>
                           </div>
                           <div className="flex flex-col gap-2 md:col-span-1 lg:col-span-2">
                             <label className="text-[10px] font-bold text-[#006D77] uppercase tracking-widest">Email ID (For Ticket Delivery) *</label>
@@ -383,6 +500,89 @@ const TrainBookingPage = () => {
         </div>
 
       </div>
+    </div>
+  );
+};
+
+/**
+ * Searchable Country Code Selector Component
+ */
+const CountryCodeSelector = ({ value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const containerRef = useRef(null);
+
+  const selected = sortedCodes.find(c => c.code === value) || sortedCodes[0];
+
+  const filtered = sortedCodes.filter(c => 
+    c.country.toLowerCase().includes(search.toLowerCase()) || 
+    c.code.includes(search)
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative h-full" ref={containerRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="h-11 px-3 rounded-xl border border-[#006D77]/30 bg-white flex items-center gap-2 hover:border-[#006D77] transition-all min-w-[90px]"
+      >
+        <span className="text-lg">{selected.flag}</span>
+        <span className="text-xs font-bold text-[#006D77]">{selected.code}</span>
+        <span className="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-100 shadow-2xl rounded-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="p-3 border-b border-slate-50 sticky top-0 bg-white">
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+              <input 
+                autoFocus
+                type="text"
+                placeholder="Search country..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full h-9 pl-9 pr-3 text-xs bg-slate-50 rounded-lg border-none focus:ring-1 focus:ring-[#006D77]/20 outline-none"
+              />
+            </div>
+          </div>
+          <div className="max-h-60 overflow-y-auto py-2">
+            {filtered.length > 0 ? (
+              filtered.map((c, idx) => (
+                <button
+                  key={`${c.code}-${idx}`}
+                  type="button"
+                  onClick={() => {
+                    onChange(c.code);
+                    setIsOpen(false);
+                    setSearch('');
+                  }}
+                  className={`w-full px-4 py-2.5 flex items-center gap-3 hover:bg-slate-50 transition-colors text-left ${value === c.code ? 'bg-[#006D77]/5' : ''}`}
+                >
+                  <span className="text-lg">{c.flag}</span>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-slate-900 leading-none">{c.country}</span>
+                    <span className="text-[10px] text-slate-400 mt-1">{c.code}</span>
+                  </div>
+                  {value === c.code && <span className="material-symbols-outlined text-[#006D77] text-sm ml-auto">check</span>}
+                </button>
+              ))
+            ) : (
+              <div className="px-4 py-8 text-center text-slate-400 text-xs italic">No results found</div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
