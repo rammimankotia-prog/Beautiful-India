@@ -45,6 +45,27 @@ app.post('/api/bookings', (req, res) => { saveData('bookings.json', req.body); r
 app.get('/api/leads', (req, res) => res.json(getData('leads.json')));
 app.post('/api/leads', (req, res) => { saveData('leads.json', req.body); res.json({ success: true }); });
 
+app.get('/api/train-queries', (req, res) => {
+    if (!fs.existsSync(path.join(__dirname, 'src/data', 'train_queries.json'))) {
+        saveData('train_queries.json', []);
+    }
+    res.json(getData('train_queries.json'));
+});
+app.post('/api/train-queries', (req, res) => {
+    const queries = fs.existsSync(path.join(__dirname, 'src/data', 'train_queries.json')) 
+        ? getData('train_queries.json') 
+        : [];
+    const newQuery = {
+        ...req.body,
+        id: 'TQ-' + Date.now(),
+        timestamp: new Date().toISOString(),
+        status: 'New'
+    };
+    queries.push(newQuery);
+    saveData('train_queries.json', queries);
+    res.json({ success: true, query: newQuery });
+});
+
 app.get('/api/agents', (req, res) => res.json(getData('agents.json')));
 app.post('/api/agents', (req, res) => { saveData('agents.json', req.body); res.json({ success: true }); });
 

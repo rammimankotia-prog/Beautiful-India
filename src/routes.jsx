@@ -18,6 +18,7 @@ import AdminArticleManagementDashboard from './pages/AdminArticleManagementDashb
 import AdminNewArticleUploadForm from './pages/AdminNewArticleUploadForm';
 import AdminCategorizationSettings from './pages/AdminCategorizationSettings';
 import AdminThemeManagement from './pages/AdminThemeManagement';
+import AdminTrainQueries from './pages/AdminTrainQueries';
 import BookingCancellationConfirmationEmail from './pages/BookingCancellationConfirmationEmail';
 import BookingCancellationRequestForm from './pages/BookingCancellationRequestForm';
 import BookingConfirmationSuccess1 from './pages/BookingConfirmationSuccess1';
@@ -105,6 +106,7 @@ export const routes = [
   { path: '/admin/guides/edit/:id', element: <AdminNewArticleUploadForm /> },
   { path: '/admin/categorization', element: <AdminCategorizationSettings /> },
   { path: '/admin/chatbot-flow', element: <AdminChatbotFlow /> },
+  { path: '/admin/train-queries', element: <AdminTrainQueries /> },
   { path: '/admin/themes', element: <AdminThemeManagement /> },
   { path: '/emails/cancel-confirm', element: <BookingCancellationConfirmationEmail /> },
   { path: '/booking/cancel', element: <BookingCancellationRequestForm /> },

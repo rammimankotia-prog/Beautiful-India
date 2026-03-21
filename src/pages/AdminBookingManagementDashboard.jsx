@@ -214,6 +214,10 @@ const AdminBookingManagementDashboard = () => {
 <span className="material-symbols-outlined text-[20px] text-slate-500">leaderboard</span>
 <span className="text-[15px] font-medium">Leads & Queries</span>
 </Link>
+<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/train-queries">
+<span className="material-symbols-outlined text-[20px] text-slate-500">train</span>
+<span className="text-[15px] font-medium">Train Queries</span>
+</Link>
 </nav>
           </aside>
 
