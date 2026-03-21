@@ -283,41 +283,38 @@ const BharatDarshanPage = () => {
 
       {/* ── Hero ── */}
       <section
-        className="relative min-h-[500px] lg:min-h-[650px] flex flex-col items-center justify-center text-center overflow-hidden"
-        style={{ 
-          backgroundImage: 'url("/assets/images/bharat-darshan-hero.jpg")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
+        className="relative min-h-[520px] lg:min-h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #0d9488 50%, #065f46 100%)' }}
       >
-        {/* Invisible Overlay Link for "Discover India" button in the image */}
-        <Link 
-          to="/tours" 
-          className="absolute"
-          style={{ 
-            bottom: '22%', 
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '240px', 
-            height: '60px', 
-            cursor: 'pointer',
-            backgroundColor: 'transparent',
-            zIndex: 20
-          }}
-          aria-label="Discover India"
-        />
+        {/* Decorative circles */}
+        <div className="absolute top-0 left-0 w-96 h-96 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(-30%, -30%)' }} />
+        <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(30%, 30%)' }} />
 
-        {/* Categories Overlay Links at the bottom of the image */}
-        <div className="absolute bottom-0 left-0 right-0 h-[80px] flex items-center justify-around z-20 px-4">
-          {['Hills', 'Cities', 'Temples', 'Heritage', 'Beaches', 'Backwaters', 'Wildlife', 'Adventure'].map(cat => (
-            <Link 
-              key={cat} 
-              to={`/tours?theme=${cat}`} 
-              className="flex-1 h-full cursor-pointer"
-              title={cat}
-            />
-          ))}
+        <div className="relative z-10 max-w-4xl px-6 py-20">
+          <span className="inline-block bg-white/20 text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">🇮🇳 Bharat Darshan</span>
+          <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight mb-4" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
+            Discover the Soul of India
+          </h1>
+          <p className="text-base md:text-lg text-white/85 font-medium max-w-2xl mx-auto mb-10">
+            From the mighty Himalayas to palm-fringed beaches, from royal palaces to serene backwaters – explore Bharat in all its glory with expertly curated packages.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#destinations" className="px-8 py-3.5 bg-white text-[#0a6c75] font-black rounded-full hover:bg-teal-50 transition-all shadow-xl text-[14px] md:text-[15px]">
+              Explore Destinations
+            </a>
+            <a href="#get-quote" className="px-8 py-3.5 bg-white/20 text-white border-2 border-white/50 font-black rounded-full hover:bg-white/30 transition-all text-[14px] md:text-[15px] backdrop-blur-sm">
+              Get Free Quote
+            </a>
+          </div>
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 mt-14 text-white">
+            {[['2,500+', 'Packages'], ['50+', 'Destinations'], ['1 Lakh+', 'Happy Travelers'], ['100%', 'Customizable']].map(([num, lab]) => (
+              <div key={lab} className="text-center">
+                <div className="text-xl md:text-2xl font-black">{num}</div>
+                <div className="text-[10px] md:text-xs text-white/70 font-bold uppercase tracking-wider">{lab}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

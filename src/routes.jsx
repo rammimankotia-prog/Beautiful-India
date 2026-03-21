@@ -81,6 +81,7 @@ export const routes = [
   { path: '/contact', element: <ContactPage /> },
   { path: '/about', element: <AboutUsPage /> },
   { path: '/festivals', element: <FestivalsPage /> },
+  { path: '/', element: <BharatDarshanPage /> },
   { path: '/', element: <BeautifulIndiaHome /> },
   { path: '/privacy', element: <PrivacyPolicyLayout /> },
   { path: '/terms', element: <TermsOfServiceLayout /> },

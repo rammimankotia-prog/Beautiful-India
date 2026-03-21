@@ -66,54 +66,66 @@ const BeautifulIndiaHome = () => {
 
             {/* ── Hero ─────────────────────────────────────────────────── */}
             <div style={{
-                position:'relative', 
-                minHeight: 'calc(100vh - 80px)', // Making it full-frame height
-                width: 'calc(100% + 160px)', // Compensating for the parent 80px padding
-                marginLeft: '-80px',
-                backgroundImage: 'url("/assets/images/bharat-darshan-hero.jpg")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                overflow:'hidden',
-                marginBottom: 56,
-                boxShadow:'0 20px 60px rgba(0,0,0,0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                position:'relative', minHeight:580, display:'flex', flexDirection:'column',
+                alignItems:'center', justifyContent:'center', borderRadius:20, overflow:'hidden',
+                marginBottom:56, boxShadow:'0 20px 60px rgba(0,109,119,0.25)',
+                background:'#006D77'
             }}>
-                {/* Interactive Hotspot for "Discover India" button area in image */}
-                <Link 
-                  to="/tours" 
-                  style={{
-                    position: 'absolute',
-                    bottom: '22%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '300px',
-                    height: '80px',
-                    cursor: 'pointer',
-                    zIndex: 20
-                  }}
-                  aria-label="Discover India"
-                />
-
-                {/* Categories Overlay Links at the bottom of the image */}
+                <video 
+                    autoPlay 
+                    muted 
+                    loop 
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 0
+                    }}
+                >
+                    <source src="https://player.vimeo.com/external/370338532.hd.mp4?s=349c7198a639d6d37ee3d93706037da50499e469&profile_id=170" type="video/mp4" />
+                </video>
                 <div style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: '100px',
-                  display: 'flex',
-                  zIndex: 20
-                }}>
-                  {['Hills', 'Cities', 'Temples', 'Heritage', 'Beaches', 'Backwaters', 'Wildlife', 'Adventure'].map(cat => (
-                    <Link 
-                      key={cat} 
-                      to={`/tours?theme=${cat}`} 
-                      style={{ flex: 1, cursor: 'pointer' }}
-                      title={cat}
-                    />
-                  ))}
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(rgba(0,109,119,0.3) 0%, rgba(11,26,28,0.8) 100%)',
+                    zIndex: 1
+                }}></div>
+                <div style={{ zIndex:10, display:'flex', flexDirection:'column', gap:16, textAlign:'center', maxWidth:700, padding:'0 24px' }}>
+                    <h1 style={{ color:'#fff', fontSize:58, fontWeight:900, lineHeight:1.1, margin:0, textShadow:'0 4px 20px rgba(0,0,0,0.5)' }}>
+                        Discover Your Next Adventure
+                    </h1>
+                    <p style={{ color:'rgba(255,255,255,0.82)', fontSize:18, fontWeight:500, margin:0 }}>
+                        Explore the world's most breathtaking destinations curated for the modern traveler.
+                    </p>
+
+                    {/* Search bar */}
+                    <div style={{ display:'flex', alignItems:'center', background:'#fff', borderRadius:50, padding:'6px 6px 6px 20px', boxShadow:'0 8px 32px rgba(0,0,0,0.25)', marginTop:12 }}>
+                        <span className="material-symbols-outlined" style={{ color:'#7F8C8D', marginRight:8, fontSize:22 }}>search</span>
+                        <input
+                            style={{ flex:1, border:'none', outline:'none', fontSize:16, fontFamily:'Montserrat,sans-serif', fontWeight:500, color:'#2C3E50', background:'transparent', padding:'10px 4px' }}
+                            placeholder="Where do you want to go?"
+                            type="text"
+                        />
+                        <Link to="/tours">
+                            <button style={{ background:'#006D77', color:'#fff', border:'none', borderRadius:50, padding:'12px 28px', fontFamily:'Montserrat,sans-serif', fontWeight:700, fontSize:14, cursor:'pointer', whiteSpace:'nowrap' }}>
+                                Search Tours
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Stats bar */}
+                <div style={{ position:'absolute', bottom:0, left:0, right:0, background:'rgba(0,0,0,0.38)', backdropFilter:'blur(6px)', display:'flex', justifyContent:'center', gap:72, padding:'16px 0' }}>
+                    {[['500+','Destinations'],['50,000+','Happy Travelers'],['98%','Satisfaction Rate'],['24/7','Expert Support']].map(([n,l]) => (
+                        <div key={l} style={{ textAlign:'center' }}>
+                            <div style={{ color:'#FFDDD2', fontWeight:900, fontSize:22 }}>{n}</div>
+                            <div style={{ color:'rgba(255,255,255,0.7)', fontSize:12, fontWeight:600 }}>{l}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
             
