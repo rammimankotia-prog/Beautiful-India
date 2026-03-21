@@ -185,7 +185,7 @@ const TrainBookingPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                       <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">First Name</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">First Name <span className="text-red-500">*</span></label>
                         <input 
                           type="text" required
                           value={p.firstName} onChange={(e) => handlePassengerChange(i, 'firstName', e.target.value)}
@@ -194,7 +194,7 @@ const TrainBookingPage = () => {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Last Name</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Last Name <span className="text-red-500">*</span></label>
                         <input 
                           type="text" required
                           value={p.lastName} onChange={(e) => handlePassengerChange(i, 'lastName', e.target.value)}
@@ -203,7 +203,7 @@ const TrainBookingPage = () => {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Age</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Age <span className="text-red-500">*</span></label>
                         <input 
                           type="number" required min="1" max="120"
                           value={p.age} onChange={(e) => handlePassengerChange(i, 'age', e.target.value)}
@@ -247,7 +247,7 @@ const TrainBookingPage = () => {
                         </select>
                       </div>
                       <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nationality</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nationality <span className="text-red-500">*</span></label>
                         <input 
                           type="text" required
                           value={p.nationality} onChange={(e) => handlePassengerChange(i, 'nationality', e.target.value)}
@@ -256,13 +256,22 @@ const TrainBookingPage = () => {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <label className={`text-[10px] font-bold uppercase tracking-widest ${p.nationality !== 'Indian' ? 'text-orange-500' : 'text-slate-400'}`}>Passport Number {p.nationality !== 'Indian' && '*'}</label>
-                        <input 
-                          type="text" required={p.nationality !== 'Indian'}
-                          value={p.passport} onChange={(e) => handlePassengerChange(i, 'passport', e.target.value)}
-                          className={`h-11 px-4 rounded-xl border outline-none transition-all text-sm font-medium ${p.nationality !== 'Indian' ? 'border-orange-200 bg-orange-50/30' : 'border-slate-200'}`}
-                          placeholder="A00000000"
-                        />
+                        {(() => {
+                          const isNonIndian = p.nationality && p.nationality.toLowerCase().trim() !== 'indian';
+                          return (
+                            <>
+                              <label className={`text-[10px] font-bold uppercase tracking-widest ${isNonIndian ? 'text-orange-500' : 'text-slate-400'}`}>
+                                Passport Number {isNonIndian && <span className="text-red-500">*</span>}
+                              </label>
+                              <input 
+                                type="text" required={isNonIndian}
+                                value={p.passport} onChange={(e) => handlePassengerChange(i, 'passport', e.target.value)}
+                                className={`h-11 px-4 rounded-xl border outline-none transition-all text-sm font-medium ${isNonIndian ? 'border-orange-200 bg-orange-50/30' : 'border-slate-200'}`}
+                                placeholder="A00000000"
+                              />
+                            </>
+                          );
+                        })()}
                       </div>
 
                       {i === 0 && (
