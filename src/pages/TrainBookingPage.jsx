@@ -160,6 +160,36 @@ const TrainBookingPage = () => {
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                   />
                 </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
+                  <select 
+                    value={journeyDetails.seatPref}
+                    onChange={(e) => handleJourneyChange('outward', 'seatPref', e.target.value)}
+                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                  >
+                    <option value="">No Preference</option>
+                    <option value="lower">Lower Berth</option>
+                    <option value="middle">Middle Berth</option>
+                    <option value="upper">Upper Berth</option>
+                    <option value="side_lower">Side Lower</option>
+                    <option value="side_upper">Side Upper</option>
+                    <option value="window">Window Seat (CC)</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Time Preference</label>
+                  <select 
+                    value={journeyDetails.timePref}
+                    onChange={(e) => handleJourneyChange('outward', 'timePref', e.target.value)}
+                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                  >
+                    <option value="">Any Time</option>
+                    <option value="morning">Morning (6 AM - 12 PM)</option>
+                    <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
+                    <option value="evening">Evening (6 PM - 12 AM)</option>
+                    <option value="night">Night (12 AM - 6 AM)</option>
+                  </select>
+                </div>
               </div>
 
               {/* Onward Journey Toggle */}
@@ -223,6 +253,36 @@ const TrainBookingPage = () => {
                         onChange={(e) => handleJourneyChange('onward', 'trainPref', e.target.value)}
                         className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                       />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
+                      <select 
+                        value={onwardDetails.seatPref}
+                        onChange={(e) => handleJourneyChange('onward', 'seatPref', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                      >
+                        <option value="">No Preference</option>
+                        <option value="lower">Lower Berth</option>
+                        <option value="middle">Middle Berth</option>
+                        <option value="upper">Upper Berth</option>
+                        <option value="side_lower">Side Lower</option>
+                        <option value="side_upper">Side Upper</option>
+                        <option value="window">Window Seat (CC)</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Time Preference</label>
+                      <select 
+                        value={onwardDetails.timePref}
+                        onChange={(e) => handleJourneyChange('onward', 'timePref', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                      >
+                        <option value="">Any Time</option>
+                        <option value="morning">Morning (6 AM - 12 PM)</option>
+                        <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
+                        <option value="evening">Evening (6 PM - 12 AM)</option>
+                        <option value="night">Night (12 AM - 6 AM)</option>
+                      </select>
                     </div>
                   </div>
                 </div>
