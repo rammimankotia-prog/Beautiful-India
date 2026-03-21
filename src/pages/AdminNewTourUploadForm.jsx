@@ -283,7 +283,8 @@ const AdminNewTourUploadForm = () => {
       }
 
       // Generate ID from title slug (e.g. "Golden Triangle Tour" → "golden-triangle-tour")
-      if (!tourToSave.id || !isEdit) {
+      const isNumericId = tourToSave.id && /^\d+$/.test(String(tourToSave.id));
+      if (!tourToSave.id || !isEdit || isNumericId) {
         const titleSlug = (tourToSave.title || 'untitled-tour')
           .toLowerCase()
           .replace(/[^a-z0-9\s-]/g, '')  // Remove special chars
@@ -300,6 +301,7 @@ const AdminNewTourUploadForm = () => {
         }
         tourToSave.id = finalSlug;
       }
+
 
       // Sync new pricing fields to legacy 'price' field for backward compatibility
       if (tourToSave.pricePerPerson) {
