@@ -7,6 +7,8 @@ const TrainBookingPage = () => {
   const [bookingType, setBookingType] = useState('individual'); // 'individual' or 'group'
   const [journeyDetails, setJourneyDetails] = useState({
     date: '',
+    fromStation: '',
+    toStation: '',
     trainPref: '',
     seatPref: '',
     timePref: ''
@@ -15,6 +17,8 @@ const TrainBookingPage = () => {
   const [hasOnwardJourney, setHasOnwardJourney] = useState(false);
   const [onwardDetails, setOnwardDetails] = useState({
     date: '',
+    fromStation: '',
+    toStation: '',
     trainPref: '',
     seatPref: '',
     timePref: ''
@@ -115,12 +119,34 @@ const TrainBookingPage = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Date of Journey</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Date of Journey <span className="text-red-500">*</span></label>
                   <input 
                     type="date" 
                     required
                     value={journeyDetails.date}
                     onChange={(e) => handleJourneyChange('outward', 'date', e.target.value)}
+                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Travel From <span className="text-red-500">*</span></label>
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="Departure Station"
+                    value={journeyDetails.fromStation}
+                    onChange={(e) => handleJourneyChange('outward', 'fromStation', e.target.value)}
+                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Travel To <span className="text-red-500">*</span></label>
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="Destination Station"
+                    value={journeyDetails.toStation}
+                    onChange={(e) => handleJourneyChange('outward', 'toStation', e.target.value)}
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                   />
                 </div>
@@ -133,36 +159,6 @@ const TrainBookingPage = () => {
                     onChange={(e) => handleJourneyChange('outward', 'trainPref', e.target.value)}
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                   />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
-                  <select 
-                    value={journeyDetails.seatPref}
-                    onChange={(e) => handleJourneyChange('outward', 'seatPref', e.target.value)}
-                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                  >
-                    <option value="">No Preference</option>
-                    <option value="lower">Lower Berth</option>
-                    <option value="middle">Middle Berth</option>
-                    <option value="upper">Upper Berth</option>
-                    <option value="side_lower">Side Lower</option>
-                    <option value="side_upper">Side Upper</option>
-                    <option value="window">Window Seat (CC)</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Time Preference</label>
-                  <select 
-                    value={journeyDetails.timePref}
-                    onChange={(e) => handleJourneyChange('outward', 'timePref', e.target.value)}
-                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                  >
-                    <option value="">Any Time</option>
-                    <option value="morning">Morning (6 AM - 12 PM)</option>
-                    <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
-                    <option value="evening">Evening (6 PM - 12 AM)</option>
-                    <option value="night">Night (12 AM - 6 AM)</option>
-                  </select>
                 </div>
               </div>
 
@@ -191,11 +187,31 @@ const TrainBookingPage = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Date of Journey</label>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Date of Journey <span className="text-red-500">*</span></label>
                       <input 
                         type="date" required
                         value={onwardDetails.date}
                         onChange={(e) => handleJourneyChange('onward', 'date', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Travel From <span className="text-red-500">*</span></label>
+                      <input 
+                        type="text" required
+                        placeholder="Departure Station"
+                        value={onwardDetails.fromStation}
+                        onChange={(e) => handleJourneyChange('onward', 'fromStation', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Travel To <span className="text-red-500">*</span></label>
+                      <input 
+                        type="text" required
+                        placeholder="Destination Station"
+                        value={onwardDetails.toStation}
+                        onChange={(e) => handleJourneyChange('onward', 'toStation', e.target.value)}
                         className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                       />
                     </div>
@@ -207,36 +223,6 @@ const TrainBookingPage = () => {
                         onChange={(e) => handleJourneyChange('onward', 'trainPref', e.target.value)}
                         className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                       />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
-                      <select 
-                        value={onwardDetails.seatPref}
-                        onChange={(e) => handleJourneyChange('onward', 'seatPref', e.target.value)}
-                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                      >
-                        <option value="">No Preference</option>
-                        <option value="lower">Lower Berth</option>
-                        <option value="middle">Middle Berth</option>
-                        <option value="upper">Upper Berth</option>
-                        <option value="side_lower">Side Lower</option>
-                        <option value="side_upper">Side Upper</option>
-                        <option value="window">Window Seat (CC)</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Time Preference</label>
-                      <select 
-                        value={onwardDetails.timePref}
-                        onChange={(e) => handleJourneyChange('onward', 'timePref', e.target.value)}
-                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                      >
-                        <option value="">Any Time</option>
-                        <option value="morning">Morning (6 AM - 12 PM)</option>
-                        <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
-                        <option value="evening">Evening (6 PM - 12 AM)</option>
-                        <option value="night">Night (12 AM - 6 AM)</option>
-                      </select>
                     </div>
                   </div>
                 </div>
