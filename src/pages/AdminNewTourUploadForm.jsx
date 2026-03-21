@@ -17,6 +17,7 @@ const AdminNewTourUploadForm = () => {
   const typeParam = searchParams.get('type');
   const [loading, setLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({
+    slug: '',
     title: '',
     description: '',
     destination: '',
@@ -150,7 +151,7 @@ const AdminNewTourUploadForm = () => {
           const tours = JSON.parse(savedTours);
           const matched = tours.find(t => String(t.id) === String(id));
           if (matched) {
-            setFormData(prev => ({ ...prev, ...matched }));
+            setFormData(prev => ({ ...prev, ...matched, slug: matched.slug || matched.id || '' }));
             console.log("Loaded tour from localStorage session");
             return;
           }
@@ -163,13 +164,31 @@ const AdminNewTourUploadForm = () => {
         .then(res => res.json())
         .then(data => {
           const matched = data.find(t => String(t.id) === String(id));
-          if (matched) setFormData(prev => ({ ...prev, ...matched }));
+          if (matched) setFormData(prev => ({ ...prev, ...matched, slug: matched.slug || matched.id || '' }));
         })
         .catch(err => {
           console.error("Failed to load tour:", err);
         });
     }
   }, [id]);
+
+  // Handle auto-slug generation
+  React.useEffect(() => {
+    if (!isEdit && formData.title) {
+      const generatedSlug = formData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+      
+      // Only auto-update if the user hasn't manually edited the slug yet
+      // or if the slug is currently empty
+      if (!formData.slug || formData.slug === (formData._lastAutoSlug || '')) {
+        setFormData(prev => ({ ...prev, slug: generatedSlug, _lastAutoSlug: generatedSlug }));
+      }
+    }
+  }, [formData.title, isEdit]);
 
   // Get states filtered by selected destination
   const availableStates = React.useMemo(() => {
@@ -285,21 +304,30 @@ const AdminNewTourUploadForm = () => {
       // Generate ID from title slug (e.g. "Golden Triangle Tour" → "golden-triangle-tour")
       const isNumericId = tourToSave.id && /^\d+$/.test(String(tourToSave.id));
       if (!tourToSave.id || !isEdit || isNumericId) {
-        const titleSlug = (tourToSave.title || 'untitled-tour')
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')  // Remove special chars
-          .replace(/\s+/g, '-')           // Spaces → hyphens
-          .replace(/-+/g, '-')            // Collapse multiple hyphens
-          .replace(/^-|-$/g, '');         // Trim leading/trailing hyphens
+      // Generate ID from slug (or title if slug is empty)
+      const baseSlug = (tourToSave.slug || tourToSave.title || 'untitled-tour')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')  // Remove special chars
+        .replace(/\s+/g, '-')           // Spaces → hyphens
+        .replace(/-+/g, '-')            // Collapse multiple hyphens
+        .replace(/^-|-$/g, '');         // Trim leading/trailing hyphens
+      
+      // If editing AND the slug hasn't changed from the original ID, keep the original ID
+      if (isEdit && !isNumericId && tourToSave.slug === id) {
+        tourToSave.id = id;
+      } else {
+        // Ensure uniqueness: if slug already exists (and not this tour), append a number
+        let finalSlug = baseSlug;
+        let counter = 1; // User said "if the slug is already added... automatically add single numeric value"
         
-        // Ensure uniqueness: if slug already exists (and not editing this tour), append a number
-        let finalSlug = titleSlug;
-        let counter = 2;
+        // Loop to find an available slug
         while (tours.some(t => String(t.id) === finalSlug && (!isEdit || String(t.id) !== String(id)))) {
-          finalSlug = `${titleSlug}-${counter}`;
+          finalSlug = `${baseSlug}-${counter}`;
           counter++;
         }
         tourToSave.id = finalSlug;
+        tourToSave.slug = finalSlug; // Sync record as well
+      }
       }
 
 
@@ -514,19 +542,47 @@ const AdminNewTourUploadForm = () => {
 <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Basic Information</h2>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 {/* Title */}
-<div className="col-span-1 md:col-span-2">
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Title <span className="text-red-500">*</span></span>
-<input 
-  name="title"
-  value={formData.title}
-  onChange={handleChange}
-  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
-  placeholder="e.g. 7-Day Majestic Alps Adventure" 
-  required="" 
-  type="text"
-/>
-</label>
+<div className="col-span-1 md:col-span-2 space-y-4">
+  <label className="flex flex-col flex-1">
+    <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Title <span className="text-red-500">*</span></span>
+    <input 
+      name="title"
+      value={formData.title}
+      onChange={handleChange}
+      className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
+      placeholder="e.g. 7-Day Majestic Alps Adventure" 
+      required="" 
+      type="text"
+    />
+  </label>
+  
+  <label className="flex flex-col flex-1">
+    <div className="flex items-center justify-between pb-2">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Tour Slug <span className="text-[10px] text-slate-400 ml-2">(Used in URL)</span></span>
+      <button 
+        type="button" 
+        onClick={() => {
+          const s = (formData.title || '').toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+          setFormData(prev => ({ ...prev, slug: s }));
+        }}
+        className="text-[10px] text-primary hover:underline"
+      >
+        Regenerate from Title
+      </button>
+    </div>
+    <div className="relative">
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs">/tours/dest/state/sub/</span>
+      <input 
+        name="slug"
+        value={formData.slug}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-36 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors font-mono" 
+        placeholder="majestic-alps-adventure" 
+        type="text"
+      />
+    </div>
+    <p className="text-[10px] text-slate-400 mt-1">Leave empty to auto-generate from title. If the slug exists, a number will be appended automatically.</p>
+  </label>
 </div>
 
 {/* ── HOTEL & ACCOMMODATION (Shifted here - Multi-select) ── */}
