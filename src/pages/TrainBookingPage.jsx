@@ -7,11 +7,7 @@ const TrainBookingPage = () => {
   const [bookingType, setBookingType] = useState('individual'); // 'individual' or 'group'
   const [journeyDetails, setJourneyDetails] = useState({
     date: '',
-    fromStation: '',
-    toStation: '',
     trainPref: '',
-    journeyClass: '',
-    quota: '',
     seatPref: '',
     timePref: ''
   });
@@ -19,11 +15,7 @@ const TrainBookingPage = () => {
   const [hasOnwardJourney, setHasOnwardJourney] = useState(false);
   const [onwardDetails, setOnwardDetails] = useState({
     date: '',
-    fromStation: '',
-    toStation: '',
     trainPref: '',
-    journeyClass: '',
-    quota: '',
     seatPref: '',
     timePref: ''
   });
@@ -133,26 +125,6 @@ const TrainBookingPage = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">From Station</label>
-                  <input 
-                    type="text" 
-                    placeholder="Departure Station"
-                    value={journeyDetails.fromStation}
-                    onChange={(e) => handleJourneyChange('outward', 'fromStation', e.target.value)}
-                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">To Station</label>
-                  <input 
-                    type="text" 
-                    placeholder="Destination Station"
-                    value={journeyDetails.toStation}
-                    onChange={(e) => handleJourneyChange('outward', 'toStation', e.target.value)}
-                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Train Preference / Number</label>
                   <input 
                     type="text" 
@@ -161,38 +133,6 @@ const TrainBookingPage = () => {
                     onChange={(e) => handleJourneyChange('outward', 'trainPref', e.target.value)}
                     className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                   />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Journey Class</label>
-                  <select 
-                    value={journeyDetails.journeyClass}
-                    onChange={(e) => handleJourneyChange('outward', 'journeyClass', e.target.value)}
-                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                  >
-                    <option value="">Select Class</option>
-                    <option value="1A">AC First Class (1A)</option>
-                    <option value="2A">AC 2 Tier (2A)</option>
-                    <option value="3A">AC 3 Tier (3A)</option>
-                    <option value="3E">AC 3 Economy (3E)</option>
-                    <option value="CC">AC Chair Car (CC)</option>
-                    <option value="EC">Exec. Chair Car (EC)</option>
-                    <option value="SL">Sleeper (SL)</option>
-                    <option value="2S">Second Sitting (2S)</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Travel Quota</label>
-                  <select 
-                    value={journeyDetails.quota}
-                    onChange={(e) => handleJourneyChange('outward', 'quota', e.target.value)}
-                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                  >
-                    <option value="GN">General (GN)</option>
-                    <option value="TQ">Tatkal (TQ)</option>
-                    <option value="LD">Ladies (LD)</option>
-                    <option value="SS">Sr. Citizen (SS)</option>
-                    <option value="HP">Physically Handicapped (HP)</option>
-                  </select>
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
@@ -260,24 +200,6 @@ const TrainBookingPage = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">From Station</label>
-                      <input 
-                        type="text" placeholder="Departure Station"
-                        value={onwardDetails.fromStation}
-                        onChange={(e) => handleJourneyChange('onward', 'fromStation', e.target.value)}
-                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">To Station</label>
-                      <input 
-                        type="text" placeholder="Destination Station"
-                        value={onwardDetails.toStation}
-                        onChange={(e) => handleJourneyChange('onward', 'toStation', e.target.value)}
-                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Train Preference / Number</label>
                       <input 
                         type="text" placeholder="e.g. 12002, Rajdhani"
@@ -285,38 +207,6 @@ const TrainBookingPage = () => {
                         onChange={(e) => handleJourneyChange('onward', 'trainPref', e.target.value)}
                         className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                       />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Journey Class</label>
-                      <select 
-                        value={onwardDetails.journeyClass}
-                        onChange={(e) => handleJourneyChange('onward', 'journeyClass', e.target.value)}
-                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                      >
-                        <option value="">Select Class</option>
-                        <option value="1A">AC First Class (1A)</option>
-                        <option value="2A">AC 2 Tier (2A)</option>
-                        <option value="3A">AC 3 Tier (3A)</option>
-                        <option value="3E">AC 3 Economy (3E)</option>
-                        <option value="CC">AC Chair Car (CC)</option>
-                        <option value="EC">Exec. Chair Car (EC)</option>
-                        <option value="SL">Sleeper (SL)</option>
-                        <option value="2S">Second Sitting (2S)</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Travel Quota</label>
-                      <select 
-                        value={onwardDetails.quota}
-                        onChange={(e) => handleJourneyChange('onward', 'quota', e.target.value)}
-                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
-                      >
-                        <option value="GN">General (GN)</option>
-                        <option value="TQ">Tatkal (TQ)</option>
-                        <option value="LD">Ladies (LD)</option>
-                        <option value="SS">Sr. Citizen (SS)</option>
-                        <option value="HP">Physically Handicapped (HP)</option>
-                      </select>
                     </div>
                     <div className="flex flex-col gap-2">
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
