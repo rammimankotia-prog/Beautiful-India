@@ -1,5 +1,14 @@
 [
   {
+    "tourId": "1",
+    "userName": "Antigravity Traveler",
+    "userImage": "https://i.pravatar.cc/150?u=0.7597988125220264",
+    "rating": 5,
+    "comment": "Amazing tour, highly recommended!",
+    "createdAt": "2026-03-22T09:48:56.769Z",
+    "id": "REV-1774172936852"
+  },
+  {
     "id": "1",
     "tourId": "1",
     "userName": "Rahul Sharma",

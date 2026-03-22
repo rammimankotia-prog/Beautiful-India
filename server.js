@@ -75,6 +75,35 @@ app.post('/api/guides', (req, res) => { saveData('guides.json', req.body); res.j
 app.get('/api/reviews', (req, res) => res.json(getData('reviews.json')));
 app.post('/api/reviews', (req, res) => { saveData('reviews.json', req.body); res.json({ success: true }); });
 
+// Custom route for saving a single review
+app.post('/api/save-review', (req, res) => {
+    try {
+        const srcPath = path.join(__dirname, 'src/data/reviews.json');
+        const publicPath = path.join(__dirname, 'public/data/reviews.json');
+        
+        let reviews = [];
+        if (fs.existsSync(srcPath)) {
+            reviews = JSON.parse(fs.readFileSync(srcPath, 'utf8'));
+        }
+        
+        const newReview = req.body;
+        if (!newReview.id) newReview.id = 'REV-' + Date.now();
+        if (!newReview.createdAt) newReview.createdAt = new Date().toISOString();
+        
+        reviews.unshift(newReview);
+        
+        fs.writeFileSync(srcPath, JSON.stringify(reviews, null, 2));
+        if (fs.existsSync(path.dirname(publicPath))) {
+            fs.writeFileSync(publicPath, JSON.stringify(reviews, null, 2));
+        }
+        
+        res.json({ success: true, message: 'Review saved locally', review: newReview });
+    } catch (err) {
+        console.error("Save Review Error:", err);
+        res.status(500).json({ error: 'Failed to write review data' });
+    }
+});
+
 app.get('/api/themes', (req, res) => res.json(getData('themes.json')));
 app.post('/api/themes', (req, res) => { saveData('themes.json', req.body); res.json({ success: true }); });
 

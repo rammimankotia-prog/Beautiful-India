@@ -23,6 +23,7 @@ jobs:
           cp api-save-categories.php dist/
           cp api-save-tours.php dist/
           cp api-train-queries.php dist/
+          cp api-save-review.php dist/
           cp .htaccess dist/
           ls -la dist/
       - name: Validate Configuration

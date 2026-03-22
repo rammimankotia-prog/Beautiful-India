@@ -53,6 +53,7 @@ import ToursDiscoveryFiltering7 from './pages/ToursDiscoveryFiltering7';
 import ToursDiscoveryFiltering8 from './pages/ToursDiscoveryFiltering8';
 import TourReviewConfirmationEmail from './pages/TourReviewConfirmationEmail';
 import TourReviewSubmissionForm from './pages/TourReviewSubmissionForm';
+import ReviewSuccessPage from './pages/ReviewSuccessPage';
 import TravelAdvisorySafetyGuide from './pages/TravelAdvisorySafetyGuide';
 import TravelBlogPostDetailView1 from './pages/TravelBlogPostDetailView1';
 import TravelBlogPostDetailView2 from './pages/TravelBlogPostDetailView2';
@@ -143,6 +144,7 @@ export const routes = [
   { path: '/tours/filter/8', element: <ToursDiscoveryFiltering8 /> },
   { path: '/emails/review-confirm', element: <TourReviewConfirmationEmail /> },
   { path: '/account/review', element: <TourReviewSubmissionForm /> },
+  { path: '/account/review-success', element: <ReviewSuccessPage /> },
   { path: '/guides/safety', element: <TravelAdvisorySafetyGuide /> },
   { path: '/blog/post-1', element: <TravelBlogPostDetailView1 /> },
   { path: '/blog/post-2', element: <TravelBlogPostDetailView2 /> },

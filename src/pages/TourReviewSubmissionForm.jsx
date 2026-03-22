@@ -33,12 +33,22 @@ const TourReviewSubmissionForm = () => {
     };
 
     try {
-      // Mocked for static site
-      console.log("Review submitted (mocked):", reviewData);
-      alert("Thank you for your review!");
-      navigate(-1); // Go back to tour page
+      const response = await fetch(`${import.meta.env.BASE_URL}api/save-review`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+      
+      navigate('/account/review-success');
     } catch (err) {
       console.error("Review submit error:", err);
+      alert("There was an error submitting your review. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -115,7 +125,7 @@ const TourReviewSubmissionForm = () => {
                   <button 
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 md:px-12 py-4 bg-teal-dark dark:bg-primary text-white font-bold rounded-xl shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                    className="flex-1 md:px-12 py-4 bg-primary text-white font-black uppercase tracking-wider rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all disabled:opacity-50"
                   >
                     {submitting ? 'Submitting...' : 'Submit Review'}
                   </button>
