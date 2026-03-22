@@ -55,5 +55,44 @@
     "timestamp": "2026-03-21T12:03:55.701Z",
     "status": "New",
     "id": "TQ-1774094635701"
+  },
+  {
+    "bookingType": "individual",
+    "journeyDetails": {
+      "date": "2026-04-22",
+      "fromStation": "Delhi",
+      "toStation": "Mumbai",
+      "trainPref": "Rajdhani",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "hasOnwardJourney": false,
+    "onwardDetails": {
+      "date": "",
+      "fromStation": "",
+      "toStation": "",
+      "trainPref": "",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "passengers": [
+      {
+        "firstName": "John",
+        "lastName": "Doe",
+        "age": "30",
+        "idType": "aadhaar",
+        "idNumber": "1234567890",
+        "foodPref": "",
+        "nationality": "Indian",
+        "passport": "",
+        "mobile": "9876543210",
+        "countryCode": "+91",
+        "email": "john.doe@example.com",
+        "whatsappConsent": false
+      }
+    ],
+    "timestamp": "2026-03-22T08:15:32.246Z",
+    "status": "New",
+    "id": "TQ-1774167332246"
   }
 ]

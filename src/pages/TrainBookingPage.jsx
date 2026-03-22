@@ -95,7 +95,6 @@ const TrainBookingPage = () => {
       });
 
       if (response.ok) {
-        console.log("Booking Request Saved:", payload);
         alert("Booking request submitted successfully! Our team will contact you shortly.");
         navigate('/booking/success');
       } else {
@@ -103,20 +102,6 @@ const TrainBookingPage = () => {
       }
     } catch (error) {
       console.error("Submission error details:", error);
-      // Fallback for production if server.js isn't the primary endpoint
-      try {
-        const phpResponse = await fetch(`${import.meta.env.BASE_URL}api-save-train-query.php`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (phpResponse.ok) {
-          alert("Booking request submitted successfully! Our team will contact you shortly.");
-          navigate('/booking/success');
-          return;
-        }
-      } catch (e) {}
-      
       alert("There was an error submitting your request. Please try again or contact us directly.");
     }
   };

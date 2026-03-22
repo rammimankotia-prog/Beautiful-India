@@ -3,6 +3,7 @@ RewriteEngine On
 RewriteBase /
 RewriteRule ^api/save-categories$ api-save-categories.php [L]
 RewriteRule ^api/save-tours$ api-save-tours.php [L]
+RewriteRule ^api/train-queries$ api-train-queries.php [L]
 RewriteRule ^index\.html$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
