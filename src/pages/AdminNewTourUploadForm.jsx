@@ -66,6 +66,7 @@ const AdminNewTourUploadForm = () => {
   });
 
   const [destSearchQuery, setDestSearchQuery] = React.useState("");
+  const [subreqSearchQuery, setSubreqSearchQuery] = React.useState("");
   const [categories, setCategories] = React.useState({
     ...categoriesData.categories,
     destinationStates: categoriesData.categories.destinationStates || {
@@ -1628,7 +1629,6 @@ const AdminNewTourUploadForm = () => {
                                   ...prev,
                                   destination: "India",
                                   stateRegion: newStates,
-                                  subregion: "",
                                 }));
                               }}
                               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
@@ -1639,6 +1639,66 @@ const AdminNewTourUploadForm = () => {
                             >
                               <span>{DEST_ICON_MAP[stateName] || "📍"}</span>{" "}
                               {stateName}
+                            </button>
+                          );
+                        })}
+                    </div>
+                  </div>
+
+                  {/* ── POPULAR SUBREGIONS / CITIES ── */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2 mt-4">
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        🌆 Subregions & Cities
+                        <span className="font-normal text-slate-400 ml-1">
+                          (Specify key cities for this tour)
+                        </span>
+                      </p>
+                    </div>
+                    <div className="mb-3 relative max-w-sm mt-2">
+                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+                      <input 
+                        type="search" 
+                        value={subreqSearchQuery} 
+                        onChange={(e) => setSubreqSearchQuery(e.target.value)} 
+                        placeholder="Search & filter cities..." 
+                        className="w-full text-sm py-2 pl-9 pr-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-4 max-h-60 overflow-y-auto p-1 custom-scrollbar">
+                      {(
+                        categories.subregions || 
+                        Object.values(categories.subregionsByState || {}).flat() ||
+                        []
+                      )
+                        .filter(s => s.toLowerCase().includes(subreqSearchQuery.toLowerCase()))
+                        .map((city) => {
+                          const currentCities = Array.isArray(formData.subregion)
+                            ? formData.subregion
+                            : formData.subregion
+                              ? [formData.subregion]
+                              : [];
+                          const isSelected = currentCities.includes(city);
+                          return (
+                            <button
+                              key={city}
+                              type="button"
+                              onClick={() => {
+                                const newCities = isSelected
+                                  ? currentCities.filter((s) => s !== city)
+                                  : [...currentCities, city];
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  subregion: newCities,
+                                }));
+                              }}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+                                isSelected
+                                  ? "bg-primary text-white border-primary shadow-sm transform scale-105"
+                                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary"
+                              }`}
+                            >
+                              <span>🌆</span> {city}
                             </button>
                           );
                         })}
