@@ -1270,8 +1270,8 @@ const TourDetailView = () => {
               <span className="material-symbols-outlined text-xl">close</span>
             </button>
 
-            {/* Left Pane: Instructions & Trust */}
-            <div className="w-full md:w-[35%] bg-[#f8fcfb] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100">
+            {/* Left Pane: Instructions & Trust — desktop only */}
+            <div className="hidden md:flex w-full md:w-[35%] bg-[#f8fcfb] p-6 md:p-8 flex-col border-b md:border-b-0 md:border-r border-slate-100">
               <h2 className="text-[28px] font-black text-[#006D77] mb-8">How It Works</h2>
               <div className="space-y-8">
                 <div className="flex gap-4 items-start">
