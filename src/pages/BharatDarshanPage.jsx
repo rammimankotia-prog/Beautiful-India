@@ -281,7 +281,38 @@ const BharatDarshanPage = () => {
         <link rel="canonical" href="https://rammimankotia-prog.github.io/Beautiful-India" />
       </Helmet>
 
-      {/* ── Hero (TravelTriangle-style) ── */}
+      {/* ── Hero (TravelTriangle-style with Animations) ── */}
+      <style>{`
+        @keyframes gentleFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-12px); }
+        }
+        @keyframes floatDelayed {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+        }
+        @keyframes flyBird {
+          0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+          10% { opacity: 0.8; }
+          90% { opacity: 0.8; }
+          100% { transform: translate(-800px, -150px) scale(0.8); opacity: 0; }
+        }
+        @keyframes flyBirdRight {
+          0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+          10% { opacity: 0.7; }
+          90% { opacity: 0.7; }
+          100% { transform: translate(900px, -100px) scale(0.7); opacity: 0; }
+        }
+        @keyframes driftClouds {
+          0% { background-position: 0 0; }
+          100% { background-position: -2000px 0; }
+        }
+        @keyframes pulseGlow {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.1); }
+        }
+      `}</style>
+      
       <section
         className="relative overflow-hidden flex items-center justify-center"
         style={{
@@ -289,34 +320,58 @@ const BharatDarshanPage = () => {
           background: 'linear-gradient(135deg, #f0fdf9 0%, #e6f7f5 55%, #fef9f0 100%)',
         }}
       >
-        {/* Decorative circles */}
-        <div className="absolute top-0 left-0 w-80 h-80 rounded-full opacity-10" style={{ background: '#006D77', transform: 'translate(-30%, -30%)' }} />
-        <div className="absolute bottom-0 right-0 w-72 h-72 rounded-full opacity-10" style={{ background: '#ff9933', transform: 'translate(30%, 30%)' }} />
+        {/* Animated Background Clouds */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-40 z-0"
+          style={{
+            backgroundImage: 'url("https://www.transparenttextures.com/patterns/clouds.png")',
+            animation: 'driftClouds 80s linear infinite'
+          }}
+        />
 
-        {/* Couple illustration — left */}
+        {/* Pulsing Sun/Moon Glow Details */}
+        <div className="absolute top-[10%] left-[10%] w-[400px] h-[400px] rounded-full z-0 pointer-events-none" 
+             style={{ background: 'radial-gradient(circle, rgba(255,193,7,0.15) 0%, rgba(255,193,7,0) 70%)', animation: 'pulseGlow 6s ease-in-out infinite' }} />
+        <div className="absolute top-[20%] right-[15%] w-[350px] h-[350px] rounded-full z-0 pointer-events-none" 
+             style={{ background: 'radial-gradient(circle, rgba(0,109,119,0.1) 0%, rgba(0,109,119,0) 70%)', animation: 'pulseGlow 8s ease-in-out infinite 2s' }} />
+
+        {/* Animated SVG Birds - Flying Left */}
+        <svg className="absolute top-[15%] right-[20%] w-[40px] h-[40px] z-10 opacity-0" style={{ animation: 'flyBird 18s linear infinite 1s' }} viewBox="0 0 24 24" fill="#5a7a7d">
+          <path d="M22 6c-2.5 1-4.5 3-6.5 4.5C14 11.5 12.5 12 12 12s-2-.5-3.5-1.5C6.5 9 4.5 7 2 6c1.5 1.5 3 3.5 5 5 1.5 1 3 2 5 2s3.5-1 5-2c2-1.5 3.5-3.5 5-5z" />
+        </svg>
+        <svg className="absolute top-[22%] right-[12%] w-[30px] h-[30px] z-10 opacity-0" style={{ animation: 'flyBird 18s linear infinite 2.5s' }} viewBox="0 0 24 24" fill="#5a7a7d">
+          <path d="M22 6c-2.5 1-4.5 3-6.5 4.5C14 11.5 12.5 12 12 12s-2-.5-3.5-1.5C6.5 9 4.5 7 2 6c1.5 1.5 3 3.5 5 5 1.5 1 3 2 5 2s3.5-1 5-2c2-1.5 3.5-3.5 5-5z" />
+        </svg>
+
+        {/* Animated SVG Birds - Flying Right */}
+        <svg className="absolute top-[25%] left-[10%] w-[35px] h-[35px] z-10 opacity-0" style={{ animation: 'flyBirdRight 22s linear infinite 5s' }} viewBox="0 0 24 24" fill="#7ba0a4">
+          <path d="M22 6c-2.5 1-4.5 3-6.5 4.5C14 11.5 12.5 12 12 12s-2-.5-3.5-1.5C6.5 9 4.5 7 2 6c1.5 1.5 3 3.5 5 5 1.5 1 3 2 5 2s3.5-1 5-2c2-1.5 3.5-3.5 5-5z" />
+        </svg>
+
+        {/* Couple illustration — left (Animated Floating) */}
         <img
           src="/india_couple_hero.png"
           alt="Indian couple at Taj Mahal"
           className="absolute bottom-0 left-0 h-full w-auto object-contain object-bottom pointer-events-none select-none"
-          style={{ zIndex: 1 }}
+          style={{ zIndex: 1, animation: 'gentleFloat 6s ease-in-out infinite', transformOrigin: 'bottom center' }}
         />
 
-        {/* Family illustration — right */}
+        {/* Family illustration — right (Animated Floating Delayed) */}
         <img
           src="/india_family_hero.png"
           alt="Indian family at temple"
           className="absolute bottom-0 right-0 h-full w-auto object-contain object-bottom pointer-events-none select-none"
-          style={{ zIndex: 1 }}
+          style={{ zIndex: 1, animation: 'floatDelayed 7s ease-in-out infinite 1s', transformOrigin: 'bottom center' }}
         />
 
         {/* Centre content */}
         <div className="relative z-10 text-center max-w-xl px-8 py-20 pb-28">
           {/* Brand pill */}
-          <span className="inline-block bg-[#006D77]/10 text-[#006D77] font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full border border-[#006D77]/20 mb-5">
+          <span className="inline-block bg-[#006D77]/10 text-[#006D77] font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full border border-[#006D77]/20 mb-5 shadow-sm">
             🇮🇳 Bharat Darshan
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight mb-4 drop-shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             Customize &amp; Book<br />
             <span style={{ color: '#006D77' }}>Amazing Holiday Packages</span>
           </h1>
@@ -326,7 +381,7 @@ const BharatDarshanPage = () => {
           </p>
 
           {/* Search bar */}
-          <div className="flex items-center bg-white rounded-full shadow-xl border border-[#006D77]/10 px-5 py-2 mb-3" style={{ boxShadow: '0 8px 32px rgba(0,109,119,0.18)' }}>
+          <div className="flex items-center bg-white rounded-full shadow-xl border border-[#006D77]/10 px-5 py-2 mb-3 transform hover:scale-[1.02] transition-transform duration-300" style={{ boxShadow: '0 12px 35px rgba(0,109,119,0.15)' }}>
             <span className="material-symbols-outlined text-[#006D77] mr-2 text-[20px]">location_on</span>
             <input
               className="flex-1 border-none outline-none text-[15px] font-semibold text-slate-800 bg-transparent"
@@ -336,7 +391,7 @@ const BharatDarshanPage = () => {
             />
             <a href="#destinations">
               <button
-                className="bg-[#006D77] text-white font-black text-[14px] rounded-full border-none cursor-pointer whitespace-nowrap transition-all hover:bg-[#004d55]"
+                className="bg-[#006D77] text-white font-black text-[14px] rounded-full border-none cursor-pointer whitespace-nowrap transition-all hover:bg-[#004d55] shadow-md"
                 style={{ padding: '12px 28px', fontFamily: 'Montserrat, sans-serif' }}
               >
                 Explore
