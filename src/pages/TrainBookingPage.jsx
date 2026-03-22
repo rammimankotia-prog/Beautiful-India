@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { sortedCodes } from '../data/countryCodes';
 
 const TrainBookingPage = () => {
@@ -120,21 +121,98 @@ const TrainBookingPage = () => {
     }
   };
 
+  const schemaData = {
+    "@context": "https://schema.org/",
+    "@type": "Service",
+    "name": "Train Ticket Booking Service",
+    "provider": {
+      "@type": "Organization",
+      "name": "The Beautiful India - Bharat Darshan",
+      "url": "https://bhaktikishakti.com"
+    },
+    "description": "Professional IRCTC train ticket booking service for individuals and groups. Transparent service fees and reliable support.",
+    "areaServed": "IN",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Train Booking Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Individual Train Booking (Max 6 Passengers)"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Group Train Booking (Max 10 Passengers)"
+          }
+        }
+      ]
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://bhaktikishakti.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Booking",
+        "item": "https://bhaktikishakti.com/booking"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Train Booking",
+        "item": "https://bhaktikishakti.com/booking/train"
+      }
+    ]
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 md:px-10 font-sans text-slate-900">
+    <main className="min-h-screen bg-slate-50 py-12 px-4 md:px-10 font-sans text-slate-900">
+      <Helmet>
+        <title>Book Train Tickets in India | Individual & Group Bookings - Beautiful India</title>
+        <meta name="description" content="Hassle-free IRCTC train ticket booking service. We handle individual and group bookings with transparent service fees. Book your next journey through Bharat Darshan." />
+        <meta name="keywords" content="train booking, IRCTC tickets, India railway booking, group train booking, Bharat Darshan train booking" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Book Train Tickets in India | Beautiful India" />
+        <meta property="og:description" content="Reliable train ticket booking service for your travels across India. Individual and group options available." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bhaktikishakti.com/booking/train" />
+        
+        {/* Schema Markup */}
+        <script type="application/ld+json">
+          {JSON.stringify(schemaData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbSchema)}
+        </script>
+      </Helmet>
       <div className="max-w-5xl mx-auto">
         
         {/* Header */}
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-black text-[#006D77] mb-3">Train Tour Booking Form</h1>
-          <p className="text-slate-500 font-medium">Please provide accurate passenger details as per official government IDs.</p>
+          <h1 className="text-3xl md:text-4xl font-black text-[#006D77] mb-3">IRCTC Train Ticket Booking Service</h1>
+          <p className="text-slate-500 font-medium">Please provide accurate passenger details as per official government IDs for seamless ticket issuance.</p>
         </div>
 
         {/* Main Form Card */}
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 overflow-hidden border border-slate-100">
           
           {/* Tabs */}
-          <div className="flex bg-slate-100 p-2 m-6 rounded-2xl">
+          <div className="flex bg-slate-100 p-2 m-4 md:m-6 rounded-2xl">
             <button 
               onClick={() => handleBookingTypeChange('individual')}
               className={`flex-1 py-4 text-sm font-bold rounded-xl transition-all ${bookingType === 'individual' ? 'bg-[#006D77] text-white shadow-lg' : 'text-slate-500 hover:text-slate-700'}`}
@@ -586,7 +664,7 @@ const TrainBookingPage = () => {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 };
 
