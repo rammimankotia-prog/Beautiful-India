@@ -1,7 +1,16 @@
 [
   {
     "tourId": "1",
-    "userName": "Antigravity Traveler",
+    "userName": "Verified Traveler",
+    "userImage": "https://i.pravatar.cc/150?u=0.1805517773378471",
+    "rating": 5,
+    "comment": "Thanks",
+    "createdAt": "2026-03-22T09:52:30.536Z",
+    "id": "REV-1774173150677"
+  },
+  {
+    "tourId": "1",
+    "userName": "Verified Traveler",
     "userImage": "https://i.pravatar.cc/150?u=0.7597988125220264",
     "rating": 5,
     "comment": "Amazing tour, highly recommended!",

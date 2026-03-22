@@ -79,7 +79,7 @@ const TripPlannerWidget = () => {
             
             // Post to backend
             // Mock submission for static site
-            console.log("Lead submitted via Bharat Darshan Mitra (mocked):", {
+            console.log("Lead submitted via Customer Support (mocked):", {
                 name: updatedData.name,
                 to: updatedData.destination,
                 departureDate: updatedData.date,
@@ -120,7 +120,7 @@ const TripPlannerWidget = () => {
                     <div className="bg-[#0a6c75] text-white p-4 flex items-center justify-between shadow-sm z-10 transition-all">
                         <div className="flex items-center gap-2">
                             <img src={`${import.meta.env.BASE_URL}vite.svg`} alt="Logo" className="w-8 h-8 object-contain" />
-                            <span className="font-extrabold tracking-wide text-[16px]">Bharat Darshan Mitra</span>
+                            <span className="font-extrabold tracking-wide text-[16px]">Customer Support</span>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="hover:text-slate-200 transition-colors">
                             <span className="material-symbols-outlined text-[20px]">close</span>

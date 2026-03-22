@@ -25,7 +25,7 @@ const TourReviewSubmissionForm = () => {
     setSubmitting(true);
     const reviewData = {
       tourId,
-      userName: 'Antigravity Traveler', // Simulated logged in user
+      userName: 'Verified Traveler', // Simulated logged in user
       userImage: `https://i.pravatar.cc/150?u=${Math.random()}`,
       rating,
       comment,
