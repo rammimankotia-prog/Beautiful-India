@@ -52,7 +52,8 @@ const AdminNewTourUploadForm = () => {
     availableTo: '',
     cityPath: '',
     hotelCategory: [], 
-    accommodationType: [],
+    accommodationType: 'mixed',
+    mixedAccommodations: [],
     transport: typeParam === 'train' ? 'train' : 'mixed',
     mixedTransports: [],
     homePagePlacements: [],
@@ -588,68 +589,112 @@ const AdminNewTourUploadForm = () => {
 
 {/* ── HOTEL & ACCOMMODATION (Shifted here - Multi-select) ── */}
 <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50 dark:bg-slate-800/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
-  <div>
-    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-      <span className="material-symbols-outlined text-[18px]">star</span> Hotel Category
-      <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Multi-select</span>
-    </p>
-    <div className="flex flex-wrap gap-2">
-      {categories.hotelCategories.map(cat => {
-        const isSelected = (formData.hotelCategory || []).includes(cat.value);
-        return (
-          <button
-            key={cat.value}
-            type="button"
-            onClick={() => {
-              const current = formData.hotelCategory || [];
-              const updated = current.includes(cat.value)
-                ? current.filter(v => v !== cat.value)
-                : [...current, cat.value];
-              setFormData(prev => ({ ...prev, hotelCategory: updated }));
-            }}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-              isSelected
-                ? 'bg-primary text-white border-primary shadow-md transform scale-105'
-                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/50'
-            }`}
-          >
-            <span>{cat.icon}</span> {cat.label}
-          </button>
-        );
-      })}
-    </div>
-  </div>
-  <div>
-    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-      <span className="material-symbols-outlined text-[18px]">apartment</span> Accommodation Type
-      <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Multi-select</span>
-    </p>
-    <div className="flex flex-wrap gap-2">
-      {categories.accommodationTypes.map(type => {
-        const isSelected = (formData.accommodationType || []).includes(type.value);
-        return (
-          <button
-            key={type.value}
-            type="button"
-            onClick={() => {
-              const current = formData.accommodationType || [];
-              const updated = current.includes(type.value)
-                ? current.filter(v => v !== type.value)
-                : [...current, type.value];
-              setFormData(prev => ({ ...prev, accommodationType: updated }));
-            }}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-              isSelected
-                ? 'bg-primary text-white border-primary shadow-md transform scale-105'
-                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/50'
-            }`}
-          >
-            <span>{type.icon}</span> {type.label}
-          </button>
-        );
-      })}
-    </div>
-  </div>
+  
+  {(() => {
+    const isSameDayTour = (formData.duration || '').toLowerCase().includes('same day') || (formData.duration || '').toLowerCase().includes('1 day');
+    
+    return (
+      <>
+        {!isSameDayTour && (
+          <>
+            <div>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px]">star</span> Hotel Category
+                <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Multi-select</span>
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {categories.hotelCategories.map(cat => {
+                  const isSelected = (formData.hotelCategory || []).includes(cat.value);
+                  return (
+                    <button
+                      key={cat.value}
+                      type="button"
+                      onClick={() => {
+                        const current = formData.hotelCategory || [];
+                        const updated = current.includes(cat.value)
+                          ? current.filter(v => v !== cat.value)
+                          : [...current, cat.value];
+                        setFormData(prev => ({ ...prev, hotelCategory: updated }));
+                      }}
+                      className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
+                        isSelected
+                          ? 'bg-primary text-white border-primary shadow-md transform scale-105'
+                          : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/50'
+                      }`}
+                    >
+                      <span>{cat.icon}</span> {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px]">apartment</span> Accommodation Type
+                <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Single-select</span>
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {categories.accommodationTypes.map(type => {
+                  const isSelected = formData.accommodationType === type.value;
+                  return (
+                    <button
+                      key={type.value}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, accommodationType: type.value }))}
+                      className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
+                        isSelected
+                          ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105'
+                          : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50'
+                      }`}
+                    >
+                      <span>{type.icon}</span> {type.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {formData.accommodationType === 'mixed' && (
+                <div className="bg-slate-100 dark:bg-slate-800/80 p-4 rounded-xl mt-4 border border-slate-200 dark:border-slate-700 w-full">
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px]">account_tree</span> Specific Mixed Stays
+                    <span className="text-[10px] font-normal text-slate-400 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Multi-select</span>
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.accommodationTypes.filter(t => t.value !== 'mixed').map(type => {
+                      const isSelected = (formData.mixedAccommodations || []).includes(type.value);
+                      return (
+                        <button
+                          key={`mixed-${type.value}`}
+                          type="button"
+                          onClick={() => {
+                            const current = formData.mixedAccommodations || [];
+                            const updated = current.includes(type.value)
+                              ? current.filter(v => v !== type.value)
+                              : [...current, type.value];
+                            setFormData(prev => ({ ...prev, mixedAccommodations: updated }));
+                          }}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
+                            isSelected
+                              ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105'
+                              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50'
+                          }`}
+                        >
+                          <span>{type.icon}</span> {type.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-xs text-slate-400 mt-3 italic">Select all modes of stay involved in this tour.</p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </>
+    );
+  })()}
+
   <div className="col-span-1 md:col-span-2">
     <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2 border-t border-slate-100 dark:border-slate-800 pt-5 mt-2">
       <span className="material-symbols-outlined text-[18px]">directions_transit</span> Transport Type
@@ -1088,42 +1133,50 @@ const AdminNewTourUploadForm = () => {
 </div>
 
 {/* ── ACCOMMODATION STYLE CHIPS ── */}
-<div>
-  <div className="flex items-center justify-between mb-2">
-    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-      🏨 Accommodation Style
-      <span className="font-normal text-slate-400 ml-1">(Budget vs Luxury tier)</span>
-    </p>
-    <Link
-      to="/admin/categorization"
-      target="_blank"
-      className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
-    >
-      <span className="material-symbols-outlined text-[14px]">edit</span>
-      Manage styles ↗
-    </Link>
-  </div>
-  <div className="flex flex-wrap gap-2 mb-4">
-    {(categories.styles || []).map(s => {
-      const val = typeof s === 'string' ? s : s.value;
-      const lab = typeof s === 'string' ? s.charAt(0).toUpperCase() + s.slice(1) : s.label;
-      return (
-        <button
-          key={val}
-          type="button"
-          onClick={() => setFormData(prev => ({ ...prev, style: val }))}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-            formData.style === val
-              ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-sm'
-              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75] hover:text-[#0a6c75]'
-          }`}
+{(() => {
+  const isSameDayTour = (formData.duration || '').toLowerCase().includes('same day') || (formData.duration || '').toLowerCase().includes('1 day');
+  if (isSameDayTour) return null;
+  
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          🏨 Accommodation Style
+          <span className="font-normal text-slate-400 ml-1">(Budget vs Luxury tier)</span>
+        </p>
+        <Link
+          to="/admin/categorization"
+          target="_blank"
+          className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
         >
-          <span>{formData.style === val ? '✨' : '🏨'}</span> {lab}
-        </button>
-      );
-    })}
-  </div>
-</div>
+          <span className="material-symbols-outlined text-[14px]">edit</span>
+          Manage styles ↗
+        </Link>
+      </div>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {(categories.styles || []).map(s => {
+          const val = typeof s === 'string' ? s : s.value;
+          const lab = typeof s === 'string' ? s.charAt(0).toUpperCase() + s.slice(1) : s.label;
+          return (
+            <button
+              key={val}
+              type="button"
+              onClick={() => setFormData(prev => ({ ...prev, style: val }))}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+                formData.style === val
+                  ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-md'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75] hover:text-[#0a6c75]'
+              }`}
+            >
+              <span>{formData.style === val ? '✨' : '🏨'}</span> {lab}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+})()}
+
 
 
 {/* Live Preview Badge */}
