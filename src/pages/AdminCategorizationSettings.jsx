@@ -11,7 +11,7 @@ const {
 
 const DISPLAY_NAMES = {
   destinations: 'Primary Destinations (Regions)',
-  states: 'States & Countries',
+  states: 'Indian States & Union Territories',
   subregions: 'Subregions & Cities',
   themes: 'Travel Themes',
   natures: 'Tour Nature',
