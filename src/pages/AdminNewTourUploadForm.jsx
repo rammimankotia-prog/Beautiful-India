@@ -1198,89 +1198,98 @@ const AdminNewTourUploadForm = () => {
 )}
 
 
-{/* Conditional: Min Persons for Group/Private Tours */}
-{(formData.nature === 'group' || formData.nature === 'private') && (
-  <div>
-    <label className="flex flex-col flex-1">
-      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Minimum Persons Required</span>
-      <input 
-        name="minPersons"
-        value={formData.minPersons}
-        onChange={(e) => setFormData(prev => ({ ...prev, minPersons: parseInt(e.target.value) }))}
-        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400" 
-        min="1" 
-        type="number"
-      />
-      <p className="text-xs text-slate-500 mt-1">Specify for "Group" or "Private" pricing tiers.</p>
-    </label>
-  </div>
-)}
 </div>{/* end Section 2 */}
 
-{/* Section: Visibility & Ordering */}
-<div className="space-y-6">
-<h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">Visibility & Ordering</h2>
-{/* Status and Visibility */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Status</span>
-<select 
-  name="status"
-  value={formData.status}
-  onChange={handleChange}
-  className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
->
-<option value="active">Active</option>
-<option value="paused">Paused</option>
-</select>
-</label>
-</div>
+{/* Section: Visibility, Requirements & Ordering */}
+<div className="space-y-6 mt-8">
+  <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+    <span className="material-symbols-outlined text-primary text-[20px]">tune</span>
+    Visibility, Requirements & Ordering
+  </h2>
 
-{/* Dynamic Home Page Placements */}
-<div className="col-span-1 md:col-span-2 space-y-3">
-  <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2 block">Show this tour on the Home Page in the following sections:</span>
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-    {['Popular Destinations', 'Recommended Tour Packages', 'Top 4 Metro Cities of India', 'Travel by Train'].map(section => (
-      <label key={section} className="flex items-center gap-3 cursor-pointer group bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
-        <div className="relative flex items-center justify-center">
+  {/* Row: Min Persons, Status, Order */}
+  <div className="flex flex-col md:flex-row gap-6 w-full">
+    {/* Conditional: Min Persons for Group/Private Tours */}
+    {(formData.nature === 'group' || formData.nature === 'private') && (
+      <div className="flex-1">
+        <label className="flex flex-col h-full">
+          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Minimum Persons Required</span>
           <input 
-            type="checkbox"
-            name="homePagePlacements"
-            checked={(formData.homePagePlacements || []).includes(section)}
-            onChange={(e) => {
-              const currentPlacements = formData.homePagePlacements || [];
-              const newPlacements = e.target.checked 
-                ? [...currentPlacements, section]
-                : currentPlacements.filter(p => p !== section);
-              setFormData(prev => ({ ...prev, homePagePlacements: newPlacements }));
-            }}
-            className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded cursor-pointer checked:bg-primary checked:border-primary transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none"
+            name="minPersons"
+            value={formData.minPersons}
+            onChange={(e) => setFormData(prev => ({ ...prev, minPersons: parseInt(e.target.value) }))}
+            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400" 
+            min="1" 
+            type="number"
           />
-          <span className="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">check</span>
-        </div>
-        <span className="text-slate-800 dark:text-slate-200 text-sm font-semibold group-hover:text-primary transition-colors">{section}</span>
+          <p className="text-xs text-slate-500 mt-1">Required for "Group" or "Private"</p>
+        </label>
+      </div>
+    )}
+
+    {/* Status */}
+    <div className="flex-1">
+      <label className="flex flex-col h-full">
+        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Status</span>
+        <select 
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+        >
+          <option value="active">Active</option>
+          <option value="paused">Paused</option>
+        </select>
+        <p className="text-xs text-slate-500 mt-1">Controls public visibility</p>
       </label>
-    ))}
+    </div>
+
+    {/* Display Order */}
+    <div className="flex-1">
+      <label className="flex flex-col h-full">
+        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Display Hierarchy (Order)</span>
+        <input 
+          name="order"
+          value={formData.order}
+          onChange={(e) => setFormData(prev => ({ ...prev, order: parseInt(e.target.value) }))}
+          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400" 
+          min="0" 
+          placeholder="e.g. 1" 
+          type="number"
+        />
+        <p className="text-xs text-slate-500 mt-1">Lower numbers appear first</p>
+      </label>
+    </div>
   </div>
-</div>
-{/* Display Order */}
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Display Hierarchy (Order)</span>
-<input 
-  name="order"
-  value={formData.order}
-  onChange={(e) => setFormData(prev => ({ ...prev, order: parseInt(e.target.value) }))}
-  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400" 
-  min="0" 
-  placeholder="e.g. 1" 
-  type="number"
-/>
-<p className="text-xs text-slate-500 mt-1">Lower numbers appear first on the website.</p>
-</label>
-</div>
-</div>
+
+  {/* Dynamic Home Page Placements */}
+  <div className="space-y-3 mt-4">
+    <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2 block">Show this tour on the Home Page in the following sections:</span>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {['Popular Destinations', 'Recommended Tour Packages', 'Top 4 Metro Cities of India', 'Travel by Train'].map(section => (
+        <label key={section} className="flex items-center gap-3 cursor-pointer group bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
+          <div className="relative flex items-center justify-center">
+            <input 
+              type="checkbox"
+              name="homePagePlacements"
+              checked={(formData.homePagePlacements || []).includes(section)}
+              onChange={(e) => {
+                const currentPlacements = formData.homePagePlacements || [];
+                const newPlacements = e.target.checked 
+                  ? [...currentPlacements, section]
+                  : currentPlacements.filter(p => p !== section);
+                setFormData(prev => ({ ...prev, homePagePlacements: newPlacements }));
+              }}
+              className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded cursor-pointer checked:bg-primary checked:border-primary transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none"
+            />
+            <span className="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">check</span>
+          </div>
+          <span className="text-slate-800 dark:text-slate-200 text-sm font-semibold group-hover:text-primary transition-colors">{section}</span>
+        </label>
+      ))}
+    </div>
+  </div>
+
 {/* Is Featured */}
 <div className="mt-6 flex items-center">
 <label className="flex items-center cursor-pointer">
