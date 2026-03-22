@@ -51,6 +51,8 @@ const AdminNewTourUploadForm = () => {
     availableFrom: '',
     availableTo: '',
     cityPath: '',
+    duration: '',
+    isDayTour: false,
     hotelCategory: [], 
     accommodationType: 'mixed',
     mixedAccommodations: [],
@@ -545,18 +547,44 @@ const AdminNewTourUploadForm = () => {
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 {/* Title */}
 <div className="col-span-1 md:col-span-2 space-y-4">
-  <label className="flex flex-col flex-1">
-    <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Title <span className="text-red-500">*</span></span>
-    <input 
-      name="title"
-      value={formData.title}
-      onChange={handleChange}
-      className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
-      placeholder="e.g. 7-Day Majestic Alps Adventure" 
-      required="" 
-      type="text"
-    />
-  </label>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <label className="flex flex-col md:col-span-2">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Title <span className="text-red-500">*</span></span>
+      <input 
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
+        placeholder="e.g. 7-Day Majestic Alps Adventure" 
+        required="" 
+        type="text"
+      />
+    </label>
+    
+    <div className="flex flex-col">
+      <div className="flex items-center justify-between pb-2">
+        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">Tour Duration <span className="text-red-500">*</span></span>
+        <label className="flex items-center gap-1.5 cursor-pointer group">
+          <input 
+            type="checkbox" 
+            name="isDayTour" 
+            checked={formData.isDayTour}
+            onChange={(e) => setFormData(prev => ({ ...prev, isDayTour: e.target.checked }))}
+            className="w-3.5 h-3.5 rounded border-slate-300 text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
+          />
+          <span className="text-[10px] font-bold text-primary uppercase tracking-tighter group-hover:text-primary/80 transition-colors">Day Use Tour</span>
+        </label>
+      </div>
+      <input 
+        name="duration"
+        value={formData.duration || ''}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
+        placeholder="e.g. 5 Days / 4 Nights" 
+        type="text"
+      />
+    </div>
+  </div>
   
   <label className="flex flex-col flex-1">
     <div className="flex items-center justify-between pb-2">
@@ -591,11 +619,9 @@ const AdminNewTourUploadForm = () => {
 <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50 dark:bg-slate-800/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
   
   {(() => {
-    const isSameDayTour = (formData.duration || '').toLowerCase().includes('same day') || (formData.duration || '').toLowerCase().includes('1 day');
-    
     return (
       <>
-        {!isSameDayTour && (
+        {!formData.isDayTour && (
           <>
             <div>
               <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
@@ -850,38 +876,24 @@ const AdminNewTourUploadForm = () => {
   Pricing & Duration
 </h2>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-{/* Duration */}
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Tour Duration <span className="text-red-500">*</span></span>
-<input 
-  name="duration"
-  value={formData.duration || ''}
-  onChange={handleChange}
-  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors" 
-  placeholder="e.g. 5 Days / 4 Nights" 
-  type="text"
-/>
-</label>
-</div>
-{/* Price Category */}
-<div>
-<label className="flex flex-col flex-1">
-<span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Price Category</span>
-<select 
-  name="priceCategory"
-  value={formData.priceCategory || ''}
-  onChange={handleChange}
-  className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
->
-<option value="">Select category</option>
-<option value="budget">💰 Budget</option>
-<option value="standard">⭐ Standard</option>
-<option value="premium">💎 Premium</option>
-<option value="luxury">👑 Luxury</option>
-</select>
-</label>
-</div>
+  {/* Price Category */}
+  <div className="md:col-span-2">
+    <label className="flex flex-col flex-1">
+      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">Price Category</span>
+      <select 
+        name="priceCategory"
+        value={formData.priceCategory || ''}
+        onChange={handleChange}
+        className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+      >
+        <option value="">Select category</option>
+        <option value="budget">💰 Budget</option>
+        <option value="standard">⭐ Standard</option>
+        <option value="premium">💎 Premium</option>
+        <option value="luxury">👑 Luxury</option>
+      </select>
+    </label>
+  </div>
 </div>
 
 {/* Pricing Cards */}
@@ -1134,8 +1146,7 @@ const AdminNewTourUploadForm = () => {
 
 {/* ── ACCOMMODATION STYLE CHIPS ── */}
 {(() => {
-  const isSameDayTour = (formData.duration || '').toLowerCase().includes('same day') || (formData.duration || '').toLowerCase().includes('1 day');
-  if (isSameDayTour) return null;
+  if (formData.isDayTour) return null;
   
   return (
     <div>
