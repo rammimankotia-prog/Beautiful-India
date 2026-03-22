@@ -283,14 +283,6 @@ const BharatDarshanPage = () => {
 
       {/* ── Hero (TravelTriangle-style with Animations) ── */}
       <style>{`
-        @keyframes gentleFloat {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-12px); }
-        }
-        @keyframes floatDelayed {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-15px); }
-        }
         @keyframes flyBird {
           0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
           10% { opacity: 0.8; }
@@ -303,14 +295,6 @@ const BharatDarshanPage = () => {
           90% { opacity: 0.7; }
           100% { transform: translate(900px, -100px) scale(0.7); opacity: 0; }
         }
-        @keyframes driftClouds {
-          0% { background-position: 0 0; }
-          100% { background-position: -2000px 0; }
-        }
-        @keyframes pulseGlow {
-          0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.1); }
-        }
       `}</style>
       
       <section
@@ -320,20 +304,11 @@ const BharatDarshanPage = () => {
           background: 'linear-gradient(135deg, #f0fdf9 0%, #e6f7f5 55%, #fef9f0 100%)',
         }}
       >
-        {/* Animated Background Clouds */}
-        <div 
-          className="absolute inset-0 pointer-events-none opacity-40 z-0"
-          style={{
-            backgroundImage: 'url("https://www.transparenttextures.com/patterns/clouds.png")',
-            animation: 'driftClouds 80s linear infinite'
-          }}
-        />
-
-        {/* Pulsing Sun/Moon Glow Details */}
+        {/* Decorative Background Elements */}
         <div className="absolute top-[10%] left-[10%] w-[400px] h-[400px] rounded-full z-0 pointer-events-none" 
-             style={{ background: 'radial-gradient(circle, rgba(255,193,7,0.15) 0%, rgba(255,193,7,0) 70%)', animation: 'pulseGlow 6s ease-in-out infinite' }} />
+             style={{ background: 'radial-gradient(circle, rgba(255,193,7,0.15) 0%, rgba(255,193,7,0) 70%)' }} />
         <div className="absolute top-[20%] right-[15%] w-[350px] h-[350px] rounded-full z-0 pointer-events-none" 
-             style={{ background: 'radial-gradient(circle, rgba(0,109,119,0.1) 0%, rgba(0,109,119,0) 70%)', animation: 'pulseGlow 8s ease-in-out infinite 2s' }} />
+             style={{ background: 'radial-gradient(circle, rgba(0,109,119,0.1) 0%, rgba(0,109,119,0) 70%)' }} />
 
         {/* Animated SVG Birds - Flying Left */}
         <svg className="absolute top-[15%] right-[20%] w-[40px] h-[40px] z-10 opacity-0" style={{ animation: 'flyBird 18s linear infinite 1s' }} viewBox="0 0 24 24" fill="#5a7a7d">
@@ -348,20 +323,20 @@ const BharatDarshanPage = () => {
           <path d="M22 6c-2.5 1-4.5 3-6.5 4.5C14 11.5 12.5 12 12 12s-2-.5-3.5-1.5C6.5 9 4.5 7 2 6c1.5 1.5 3 3.5 5 5 1.5 1 3 2 5 2s3.5-1 5-2c2-1.5 3.5-3.5 5-5z" />
         </svg>
 
-        {/* Couple illustration — left (Animated Floating) */}
+        {/* Couple illustration — left (Static) */}
         <img
-          src="/india_couple_hero.png"
+          src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/india_couple_hero.png`}
           alt="Indian couple at Taj Mahal"
           className="absolute bottom-0 left-0 h-full w-auto object-contain object-bottom pointer-events-none select-none"
-          style={{ zIndex: 1, animation: 'gentleFloat 6s ease-in-out infinite', transformOrigin: 'bottom center' }}
+          style={{ zIndex: 1 }}
         />
 
-        {/* Family illustration — right (Animated Floating Delayed) */}
+        {/* Family illustration — right (Static) */}
         <img
-          src="/india_family_hero.png"
+          src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/india_family_hero.png`}
           alt="Indian family at temple"
           className="absolute bottom-0 right-0 h-full w-auto object-contain object-bottom pointer-events-none select-none"
-          style={{ zIndex: 1, animation: 'floatDelayed 7s ease-in-out infinite 1s', transformOrigin: 'bottom center' }}
+          style={{ zIndex: 1 }}
         />
 
         {/* Centre content */}
