@@ -94,5 +94,44 @@
     "timestamp": "2026-03-22T08:15:32.246Z",
     "status": "New",
     "id": "TQ-1774167332246"
+  },
+  {
+    "bookingType": "individual",
+    "journeyDetails": {
+      "date": "",
+      "fromStation": "Jaipur",
+      "toStation": "Agra",
+      "trainPref": "",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "hasOnwardJourney": false,
+    "onwardDetails": {
+      "date": "",
+      "fromStation": "",
+      "toStation": "",
+      "trainPref": "",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "passengers": [
+      {
+        "firstName": "Alice",
+        "lastName": "Smith",
+        "age": "28",
+        "idType": "aadhaar",
+        "idNumber": "123456789012",
+        "foodPref": "",
+        "nationality": "Indian",
+        "passport": "L1234567",
+        "mobile": "1234567890",
+        "countryCode": "+91",
+        "email": "alice@example.com",
+        "whatsappConsent": false
+      }
+    ],
+    "timestamp": "2026-03-22T08:41:42.853Z",
+    "status": "New",
+    "id": "TQ-1774168902853"
   }
 ]

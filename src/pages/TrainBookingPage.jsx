@@ -95,8 +95,9 @@ const TrainBookingPage = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
         alert("Booking request submitted successfully! Our team will contact you shortly.");
-        navigate('/booking/success');
+        navigate('/booking/train-success', { state: { query: data.query || payload } });
       } else {
         throw new Error('Failed to save booking request');
       }

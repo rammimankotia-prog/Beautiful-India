@@ -72,6 +72,7 @@ import AboutUsPage from './pages/AboutUsPage';
 import FestivalsPage from './pages/FestivalsPage';
 import ToursByTrain from './pages/ToursByTrain';
 import TrainBookingPage from './pages/TrainBookingPage';
+import TrainBookingSuccessPage from './pages/TrainBookingSuccessPage';
 
 /**
  * All 56 Beautiful India pages, organised by group.
@@ -158,5 +159,6 @@ export const routes = [
   { path: '/bharat-darshan', element: <BharatDarshanPage /> },
   { path: '/tours/tours-by-train', element: <ToursByTrain /> },
   { path: '/booking/train', element: <TrainBookingPage /> },
+  { path: '/booking/train-success', element: <TrainBookingSuccessPage /> },
   { path: '/:regionSlug', element: <ToursDiscoveryFiltering1 /> }
 ];
