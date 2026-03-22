@@ -169,42 +169,154 @@
       "ultra-luxury"
     ],
     "hotelCategories": [
-      { "value": "3_star", "label": "3 Star", "icon": "⭐" },
-      { "value": "4_star", "label": "4 Star", "icon": "⭐⭐" },
-      { "value": "5_star", "label": "5 Star", "icon": "⭐⭐⭐" },
-      { "value": "budget", "label": "Budget", "icon": "💰" }
+      {
+        "value": "3_star",
+        "label": "3 Star",
+        "icon": "⭐"
+      },
+      {
+        "value": "4_star",
+        "label": "4 Star",
+        "icon": "⭐⭐"
+      },
+      {
+        "value": "5_star",
+        "label": "5 Star",
+        "icon": "⭐⭐⭐"
+      },
+      {
+        "value": "budget",
+        "label": "Budget",
+        "icon": "💰"
+      }
     ],
     "accommodationTypes": [
-      { "value": "mixed", "label": "Mixed", "icon": "🏨" },
-      { "value": "hotel", "label": "Hotel", "icon": "🏨" },
-      { "value": "resort", "label": "Resort", "icon": "🌴" },
-      { "value": "houseboat", "label": "Houseboat", "icon": "🚢" },
-      { "value": "campsite", "label": "Campsite", "icon": "⛺" },
-      { "value": "villa", "label": "Villa", "icon": "🏡" },
-      { "value": "apartment", "label": "Apartment", "icon": "🏢" }
+      {
+        "value": "mixed",
+        "label": "Mixed",
+        "icon": "🏨"
+      },
+      {
+        "value": "hotel",
+        "label": "Hotel",
+        "icon": "🏨"
+      },
+      {
+        "value": "resort",
+        "label": "Resort",
+        "icon": "🌴"
+      },
+      {
+        "value": "houseboat",
+        "label": "Houseboat",
+        "icon": "🚢"
+      },
+      {
+        "value": "campsite",
+        "label": "Campsite",
+        "icon": "⛺"
+      },
+      {
+        "value": "villa",
+        "label": "Villa",
+        "icon": "🏡"
+      },
+      {
+        "value": "apartment",
+        "label": "Apartment",
+        "icon": "🏢"
+      }
     ],
     "mealPlans": [
-      { "value": "breakfast", "label": "Breakfast", "icon": "🍳" },
-      { "value": "lunch", "label": "Lunch", "icon": "🍱" },
-      { "value": "dinner", "label": "Dinner", "icon": "🍽️" }
+      {
+        "value": "breakfast",
+        "label": "Breakfast",
+        "icon": "🍳"
+      },
+      {
+        "value": "lunch",
+        "label": "Lunch",
+        "icon": "🍱"
+      },
+      {
+        "value": "dinner",
+        "label": "Dinner",
+        "icon": "🍽️"
+      }
     ],
     "tourFeatures": [
-      { "value": "accommodation", "label": "Accommodation", "icon": "🏨" },
-      { "value": "sightseeing", "label": "Sightseeing", "icon": "explore" },
-      { "value": "stay", "label": "Stay", "icon": "bed" },
-      { "value": "transfers", "label": "Transfers", "icon": "local_taxi" }
+      {
+        "value": "accommodation",
+        "label": "Accommodation",
+        "icon": "🏨"
+      },
+      {
+        "value": "sightseeing",
+        "label": "Sightseeing",
+        "icon": "explore"
+      },
+      {
+        "value": "stay",
+        "label": "Stay",
+        "icon": "bed"
+      },
+      {
+        "value": "transfers",
+        "label": "Transfers",
+        "icon": "local_taxi"
+      }
     ],
     "transports": [
-      { "value": "mixed", "label": "Mixed", "icon": "🚙" },
-      { "value": "train", "label": "Train", "icon": "🚆" },
-      { "value": "flight", "label": "Flight", "icon": "✈️" },
-      { "value": "bus", "label": "Bus", "icon": "🚌" },
-      { "value": "bike", "label": "Bike", "icon": "🏍️" },
-      { "value": "cruise", "label": "Cruise", "icon": "🚢" },
-      { "value": "car", "label": "Car", "icon": "🚗" },
-      { "value": "tempo_traveller", "label": "Tempo Traveller", "icon": "🚐" },
-      { "value": "bicycle", "label": "Bicycle", "icon": "🚲" },
-      { "value": "tuk_tuk", "label": "Tuk Tuk", "icon": "🛺" }
+      {
+        "value": "mixed",
+        "label": "Mixed",
+        "icon": "🚙"
+      },
+      {
+        "value": "train",
+        "label": "Train",
+        "icon": "🚆"
+      },
+      {
+        "value": "flight",
+        "label": "Flight",
+        "icon": "✈️"
+      },
+      {
+        "value": "bus",
+        "label": "Bus",
+        "icon": "🚌"
+      },
+      {
+        "value": "bike",
+        "label": "Bike",
+        "icon": "🏍️"
+      },
+      {
+        "value": "cruise",
+        "label": "Cruise",
+        "icon": "🚢"
+      },
+      {
+        "value": "car",
+        "label": "Car",
+        "icon": "🚗"
+      },
+      {
+        "value": "tempo_traveller",
+        "label": "Tempo Traveller",
+        "icon": "🚐"
+      },
+      {
+        "value": "bicycle",
+        "label": "Bicycle",
+        "icon": "🚲"
+      },
+      {
+        "value": "tuk_tuk",
+        "label": "Tuk Tuk",
+        "icon": "🛺"
+      }
     ]
   },
   "meta": {
@@ -393,27 +505,60 @@
     "hotelCategories": {
       "label": "Hotel Standards",
       "icon": "⭐",
-      "chips": ["3_star", "4_star", "5_star", "budget"]
+      "chips": [
+        "3_star",
+        "4_star",
+        "5_star",
+        "budget"
+      ]
     },
     "accommodationTypes": {
       "label": "Common Stays",
       "icon": "🛌",
-      "chips": ["Mixed", "Hotel", "Resort", "Houseboat", "Campsite", "Villa", "Apartment"]
+      "chips": [
+        "Mixed",
+        "Hotel",
+        "Resort",
+        "Houseboat",
+        "Campsite",
+        "Villa",
+        "Apartment"
+      ]
     },
     "mealPlans": {
       "label": "Meal Plans",
       "icon": "🍽️",
-      "chips": ["Breakfast", "Lunch", "Dinner"]
+      "chips": [
+        "Breakfast",
+        "Lunch",
+        "Dinner"
+      ]
     },
     "tourFeatures": {
       "label": "Tour Features",
       "icon": "✨",
-      "chips": ["Accommodation", "Sightseeing", "Stay", "Transfers"]
+      "chips": [
+        "Accommodation",
+        "Sightseeing",
+        "Stay",
+        "Transfers"
+      ]
     },
     "transports": {
       "label": "Travel Modes",
       "icon": "🚌",
-      "chips": ["Mixed", "Train", "Flight", "Bus", "Bike", "Cruise", "Car", "Tempo Traveller", "Bicycle", "Tuk Tuk"]
+      "chips": [
+        "Mixed",
+        "Train",
+        "Flight",
+        "Bus",
+        "Bike",
+        "Cruise",
+        "Car",
+        "Tempo Traveller",
+        "Bicycle",
+        "Tuk Tuk"
+      ]
     }
   }
 }
