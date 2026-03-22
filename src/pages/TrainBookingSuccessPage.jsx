@@ -25,7 +25,7 @@ const TrainBookingSuccessPage = () => {
                     <div 
                         className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
                         style={{ 
-                            backgroundImage: "linear-gradient(180deg, rgba(10, 108, 117, 0.4) 0%, rgba(10, 108, 117, 0.9) 100%), url('/C:/Users/raman/.gemini/antigravity/brain/bec65649-3e43-4332-84f4-989292881309/indian_luxury_train_hero_1774168414931.png')" 
+                            backgroundImage: "linear-gradient(180deg, rgba(10, 108, 117, 0.4) 0%, rgba(10, 108, 117, 0.9) 100%), url('/images/indian_luxury_train_hero.png')" 
                         }}
                     >
                         <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
