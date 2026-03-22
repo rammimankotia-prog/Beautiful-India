@@ -183,6 +183,17 @@
       { "value": "villa", "label": "Villa", "icon": "🏡" },
       { "value": "apartment", "label": "Apartment", "icon": "🏢" }
     ],
+    "mealPlans": [
+      { "value": "breakfast", "label": "Breakfast", "icon": "🍳" },
+      { "value": "lunch", "label": "Lunch", "icon": "🍱" },
+      { "value": "dinner", "label": "Dinner", "icon": "🍽️" }
+    ],
+    "tourFeatures": [
+      { "value": "accommodation", "label": "Accommodation", "icon": "🏨" },
+      { "value": "sightseeing", "label": "Sightseeing", "icon": "explore" },
+      { "value": "stay", "label": "Stay", "icon": "bed" },
+      { "value": "transfers", "label": "Transfers", "icon": "local_taxi" }
+    ],
     "transports": [
       { "value": "mixed", "label": "Mixed", "icon": "🚙" },
       { "value": "train", "label": "Train", "icon": "🚆" },
@@ -386,6 +397,16 @@
       "label": "Common Stays",
       "icon": "🛌",
       "chips": ["Mixed", "Hotel", "Resort", "Houseboat", "Campsite", "Villa", "Apartment"]
+    },
+    "mealPlans": {
+      "label": "Meal Plans",
+      "icon": "🍽️",
+      "chips": ["Breakfast", "Lunch", "Dinner"]
+    },
+    "tourFeatures": {
+      "label": "Tour Features",
+      "icon": "✨",
+      "chips": ["Accommodation", "Sightseeing", "Stay", "Transfers"]
     },
     "transports": {
       "label": "Travel Modes",

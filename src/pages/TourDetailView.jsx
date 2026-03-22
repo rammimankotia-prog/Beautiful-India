@@ -897,28 +897,53 @@ const TourDetailView = () => {
                           </p>
                         </div>
 
-                        {/* Service Icons */}
-                        <div className="grid grid-cols-5 gap-1 pt-2">
+                        {/* Service Icons (Dynamic) */}
+                        <div className={`grid gap-1 pt-2 items-start`} style={{ gridTemplateColumns: `repeat(auto-fit, minmax(60px, 1fr))` }}>
                           {(() => {
-                            const cats = Array.isArray(tour.hotelCategory) ? tour.hotelCategory : (tour.hotelCategory ? [tour.hotelCategory] : []);
                             const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : []);
-                            
+                            const meals = tour.mealPlan || (tour.isDayTour ? [] : ['breakfast']);
+                            const features = tour.tourFeatures || ['accommodation', 'sightseeing', 'stay', 'transfers'];
+
                             const typeIcons = {
                               hotel: 'hotel',
                               resort: 'nature_people',
                               houseboat: 'sailing',
                               villa: 'house',
-                              apartment: 'apartment'
+                              apartment: 'apartment',
+                              campsite: 'tent'
                             };
 
-                            return [
-                              { icon: typeIcons[types[0]] || 'apartment', label: types[0]?.charAt(0).toUpperCase() + types[0]?.slice(1) || 'Accommodation' },
-                              { icon: 'explore', label: 'Sightseeing' },
-                              { icon: 'restaurant', label: 'Breakfast' },
-                              { icon: 'bed', label: 'Stay' },
-                              { icon: 'local_taxi', label: 'Transfers' }
-                            ].map((item, idx) => (
-                              <div key={idx} className="flex flex-col items-center gap-1">
+                            const items = [];
+                            
+                            // 1. Accommodation feature
+                            if (features.includes('accommodation')) {
+                              items.push({ icon: typeIcons[types[0]] || 'hotel', label: types[0]?.charAt(0).toUpperCase() + types[0]?.slice(1) || 'Accommodation' });
+                            }
+
+                            // 2. Sightseeing feature
+                            if (features.includes('sightseeing')) {
+                              items.push({ icon: 'explore', label: 'Sightseeing' });
+                            }
+
+                            // 3. Meals (Multiple)
+                            meals.forEach(m => {
+                              const mlLabels = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' };
+                              const mlIcons = { breakfast: 'restaurant', lunch: 'restaurant_menu', dinner: 'dinner_dining' };
+                              items.push({ icon: mlIcons[m] || 'restaurant', label: mlLabels[m] || 'Meals' });
+                            });
+
+                            // 4. Stay feature
+                            if (features.includes('stay')) {
+                              items.push({ icon: 'bed', label: 'Stay' });
+                            }
+
+                            // 5. Transfers feature
+                            if (features.includes('transfers')) {
+                              items.push({ icon: 'local_taxi', label: 'Transfers' });
+                            }
+
+                            return items.map((item, idx) => (
+                              <div key={idx} className="flex flex-col items-center gap-1 min-w-[50px]">
                                 <span className="material-symbols-outlined text-slate-700 dark:text-slate-300 text-xl font-light">{item.icon}</span>
                                 <span className="text-[9px] text-slate-500 font-bold text-center uppercase leading-tight line-clamp-1">{item.label}</span>
                               </div>
