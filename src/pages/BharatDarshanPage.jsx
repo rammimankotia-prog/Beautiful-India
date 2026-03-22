@@ -352,13 +352,13 @@ const BharatDarshanPage = () => {
 
         {/* Stats strip */}
         <div
-          className="absolute bottom-0 left-0 right-0 flex justify-center gap-4 md:gap-12 py-4 z-10"
-          style={{ background: 'rgba(0, 50, 55, 0.65)', borderTop: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 flex justify-center gap-6 md:gap-14 py-3 px-8 md:px-12 rounded-full z-10 w-[92%] md:w-auto overflow-hidden"
+          style={{ background: 'rgba(0, 50, 55, 0.65)', border: '1px solid rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)', boxShadow: '0 8px 32px rgba(0,0,0,0.15)' }}
         >
           {[['2,500+', 'Packages'], ['50+', 'Destinations'], ['1 Lakh+', 'Happy Travelers'], ['100%', 'Customizable']].map(([num, lab]) => (
-            <div key={lab} className="text-center px-2">
-              <div className="text-[18px] md:text-[22px] font-black" style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>{num}</div>
-              <div className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(255,255,255,0.85)' }}>{lab}</div>
+            <div key={lab} className="text-center px-1">
+              <div className="text-[16px] md:text-[20px] font-black leading-tight" style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>{num}</div>
+              <div className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(255,255,255,0.85)' }}>{lab}</div>
             </div>
           ))}
         </div>
