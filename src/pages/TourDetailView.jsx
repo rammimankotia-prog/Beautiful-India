@@ -30,6 +30,7 @@ const TourDetailView = () => {
   const [leadName, setLeadName] = useState('');
   const [leadEmail, setLeadEmail] = useState('');
   const [leadPhone, setLeadPhone] = useState('');
+  const [whatsappConsent, setWhatsappConsent] = useState(true);
   const [originCity, setOriginCity] = useState('');
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [allTours, setAllTours] = useState([]);
@@ -172,6 +173,11 @@ const TourDetailView = () => {
   }, [title, id]);
 
   const handleLeadSubmit = async () => {
+    // Validation
+    if (!leadName.trim()) { alert('Please enter your name.'); return; }
+    if (!leadEmail.trim() || !/\S+@\S+\.\S+/.test(leadEmail)) { alert('Please enter a valid email address.'); return; }
+    if (!leadPhone.trim() || leadPhone.trim().length < 7) { alert('Please enter a valid phone number.'); return; }
+
     const leadData = {
       name: leadName,
       email: leadEmail,
@@ -185,6 +191,7 @@ const TourDetailView = () => {
       hotelRating: `${hotelRating} Star`,
       foodPreference,
       cabPreference,
+      whatsappConsent,
       timestamp: new Date().toISOString(),
       status: 'New'
     };
@@ -1603,32 +1610,64 @@ const TourDetailView = () => {
                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 w-full">
                       <h4 className="text-center text-slate-500 font-bold mb-4 italic">Almost there! Where should we send your quotes?</h4>
                       <div className="space-y-4">
-                         <input 
-                           type="text" 
-                           placeholder="Your Name" 
-                           value={leadName}
-                           onChange={(e) => setLeadName(e.target.value)}
-                           className="w-full px-4 py-4 border border-slate-200 rounded-xl font-bold focus:border-primary outline-none" 
-                         />
-                         <input 
-                           type="email" 
-                           placeholder="Email Address" 
-                           value={leadEmail}
-                           onChange={(e) => setLeadEmail(e.target.value)}
-                           className="w-full px-4 py-4 border border-slate-200 rounded-xl font-bold focus:border-primary outline-none" 
-                         />
+                         <label className="block relative">
+                           <input 
+                             type="text" 
+                             placeholder="Your Name" 
+                             required
+                             value={leadName}
+                             onChange={(e) => setLeadName(e.target.value)}
+                             className="w-full px-4 py-4 border border-slate-200 rounded-xl font-bold focus:border-primary outline-none" 
+                           />
+                           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 text-lg">*</span>
+                         </label>
+                         <label className="block relative">
+                           <input 
+                             type="email" 
+                             placeholder="Email Address" 
+                             required
+                             value={leadEmail}
+                             onChange={(e) => setLeadEmail(e.target.value)}
+                             className="w-full px-4 py-4 border border-slate-200 rounded-xl font-bold focus:border-primary outline-none" 
+                           />
+                           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 text-lg">*</span>
+                         </label>
                          <div className="flex gap-2">
                             <div className="w-20 px-4 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-center text-slate-500">+91</div>
-                            <input 
-                              type="tel" 
-                              placeholder="Phone Number" 
-                              value={leadPhone}
-                              onChange={(e) => setLeadPhone(e.target.value)}
-                              className="flex-1 px-4 py-4 border border-slate-200 rounded-xl font-bold focus:border-primary outline-none" 
-                            />
+                            <label className="flex-1 relative">
+                              <input 
+                                type="tel" 
+                                placeholder="Phone Number" 
+                                required
+                                value={leadPhone}
+                                onChange={(e) => setLeadPhone(e.target.value)}
+                                className="w-full px-4 py-4 border border-slate-200 rounded-xl font-bold focus:border-primary outline-none" 
+                              />
+                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 text-lg">*</span>
+                            </label>
                          </div>
-                      </div>
-                   </div>
+
+                          {/* WhatsApp Consent */}
+                          <label className="flex items-start gap-3 cursor-pointer group mt-2 p-3 rounded-xl bg-green-50 border border-green-200 hover:bg-green-100 transition-colors">
+                            <div className="relative flex items-center justify-center mt-0.5 shrink-0">
+                              <input
+                                type="checkbox"
+                                checked={whatsappConsent}
+                                onChange={(e) => setWhatsappConsent(e.target.checked)}
+                                className="peer appearance-none w-5 h-5 border-2 border-green-400 rounded cursor-pointer checked:bg-green-500 checked:border-green-500 transition-colors focus:outline-none"
+                              />
+                              <span className="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
+                            </div>
+                            <div>
+                              <span className="text-sm font-bold text-green-800 flex items-center gap-1.5">
+                                <svg viewBox="0 0 24 24" className="w-4 h-4 fill-green-600" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                I agree to be contacted on WhatsApp
+                              </span>
+                              <p className="text-xs text-green-700 mt-0.5">We will send your personalized quotes and travel updates via WhatsApp.</p>
+                            </div>
+                          </label>
+                       </div>
+                    </div>
                  )}
                 </form>
               </div>
