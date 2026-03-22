@@ -54,6 +54,7 @@ const AdminNewTourUploadForm = () => {
     hotelCategory: [], 
     accommodationType: [],
     transport: typeParam === 'train' ? 'train' : 'mixed',
+    mixedTransports: [],
     homePagePlacements: [],
     noBookingEnd: false,
     noAvailableTo: false
@@ -673,6 +674,41 @@ const AdminNewTourUploadForm = () => {
         );
       })}
     </div>
+
+    {formData.transport === 'mixed' && (
+      <div className="bg-slate-100 dark:bg-slate-800/80 p-4 rounded-xl mt-4 border border-slate-200 dark:border-slate-700">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+          <span className="material-symbols-outlined text-[18px]">account_tree</span> Specific Mixed Transport Types
+          <span className="text-[10px] font-normal text-slate-400 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">Multi-select</span>
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {categories.transports.filter(t => t.value !== 'mixed').map(tr => {
+            const isSelected = (formData.mixedTransports || []).includes(tr.value);
+            return (
+              <button
+                key={`mixed-${tr.value}`}
+                type="button"
+                onClick={() => {
+                  const current = formData.mixedTransports || [];
+                  const updated = current.includes(tr.value)
+                    ? current.filter(v => v !== tr.value)
+                    : [...current, tr.value];
+                  setFormData(prev => ({ ...prev, mixedTransports: updated }));
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
+                  isSelected
+                    ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50'
+                }`}
+              >
+                <span>{tr.icon}</span> {tr.label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-slate-400 mt-3 italic">Select all modes of transport involved in this multi-leg journey.</p>
+      </div>
+    )}
   </div>
 </div>
 {/* City Path */}

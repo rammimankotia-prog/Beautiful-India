@@ -164,8 +164,14 @@
       { "value": "houseboat", "label": "Houseboat", "icon": "🚢" }
     ],
     "transports": [
-      { "value": "mixed", "label": "Mixed", "icon": "🚗" },
-      { "value": "train", "label": "Train", "icon": "🚆" }
+      { "value": "mixed", "label": "Mixed", "icon": "🚙" },
+      { "value": "train", "label": "Train", "icon": "🚆" },
+      { "value": "flight", "label": "Flight", "icon": "✈️" },
+      { "value": "bus", "label": "Bus", "icon": "🚌" },
+      { "value": "bike", "label": "Bike", "icon": "🏍️" },
+      { "value": "cruise", "label": "Cruise", "icon": "🚢" },
+      { "value": "car", "label": "Car", "icon": "🚗" },
+      { "value": "tempo_traveller", "label": "Tempo Traveller", "icon": "🚐" }
     ]
   },
   "meta": {
@@ -347,7 +353,7 @@
     "transports": {
       "label": "Travel Modes",
       "icon": "🚌",
-      "chips": ["mixed", "train", "flight", "bus"]
+      "chips": ["Mixed", "Train", "Flight", "Bus", "Bike", "Cruise", "Car", "Tempo Traveller"]
     }
   }
 }
