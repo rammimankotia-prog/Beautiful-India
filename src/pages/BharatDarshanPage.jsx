@@ -281,40 +281,86 @@ const BharatDarshanPage = () => {
         <link rel="canonical" href="https://rammimankotia-prog.github.io/Beautiful-India" />
       </Helmet>
 
-      {/* ── Hero ── */}
+      {/* ── Hero (TravelTriangle-style) ── */}
       <section
-        className="relative min-h-[520px] lg:min-h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #0a6c75 0%, #0d9488 50%, #065f46 100%)' }}
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          minHeight: 540,
+          background: 'linear-gradient(135deg, #f0fdf9 0%, #e6f7f5 55%, #fef9f0 100%)',
+        }}
       >
         {/* Decorative circles */}
-        <div className="absolute top-0 left-0 w-96 h-96 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(-30%, -30%)' }} />
-        <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(30%, 30%)' }} />
+        <div className="absolute top-0 left-0 w-80 h-80 rounded-full opacity-10" style={{ background: '#006D77', transform: 'translate(-30%, -30%)' }} />
+        <div className="absolute bottom-0 right-0 w-72 h-72 rounded-full opacity-10" style={{ background: '#ff9933', transform: 'translate(30%, 30%)' }} />
 
-        <div className="relative z-10 max-w-4xl px-6 py-20">
-          <span className="inline-block bg-white/20 text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">🇮🇳 Bharat Darshan</span>
-          <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight mb-4" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
-            Discover the Soul of India
+        {/* Couple illustration — left */}
+        <img
+          src="/india_couple_hero.png"
+          alt="Indian couple at Taj Mahal"
+          className="absolute bottom-0 left-0 h-full w-auto object-contain object-bottom pointer-events-none select-none"
+          style={{ zIndex: 1 }}
+        />
+
+        {/* Family illustration — right */}
+        <img
+          src="/india_family_hero.png"
+          alt="Indian family at temple"
+          className="absolute bottom-0 right-0 h-full w-auto object-contain object-bottom pointer-events-none select-none"
+          style={{ zIndex: 1 }}
+        />
+
+        {/* Centre content */}
+        <div className="relative z-10 text-center max-w-xl px-8 py-20 pb-28">
+          {/* Brand pill */}
+          <span className="inline-block bg-[#006D77]/10 text-[#006D77] font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full border border-[#006D77]/20 mb-5">
+            🇮🇳 Bharat Darshan
+          </span>
+
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            Customize &amp; Book<br />
+            <span style={{ color: '#006D77' }}>Amazing Holiday Packages</span>
           </h1>
-          <p className="text-base md:text-lg text-white/85 font-medium max-w-2xl mx-auto mb-10">
-            From the mighty Himalayas to palm-fringed beaches, from royal palaces to serene backwaters – explore Bharat in all its glory with expertly curated packages.
+
+          <p className="text-base text-[#5a7a7d] font-medium max-w-lg mx-auto mb-8 leading-relaxed">
+            From the mighty Himalayas to palm-fringed beaches — explore Bharat in all its glory with expertly curated packages.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#destinations" className="px-8 py-3.5 bg-white text-[#0a6c75] font-black rounded-full hover:bg-teal-50 transition-all shadow-xl text-[14px] md:text-[15px]">
-              Explore Destinations
-            </a>
-            <a href="#get-quote" className="px-8 py-3.5 bg-white/20 text-white border-2 border-white/50 font-black rounded-full hover:bg-white/30 transition-all text-[14px] md:text-[15px] backdrop-blur-sm">
-              Get Free Quote
+
+          {/* Search bar */}
+          <div className="flex items-center bg-white rounded-full shadow-xl border border-[#006D77]/10 px-5 py-2 mb-3" style={{ boxShadow: '0 8px 32px rgba(0,109,119,0.18)' }}>
+            <span className="material-symbols-outlined text-[#006D77] mr-2 text-[20px]">location_on</span>
+            <input
+              className="flex-1 border-none outline-none text-[15px] font-semibold text-slate-800 bg-transparent"
+              placeholder="Type a destination..."
+              type="text"
+              style={{ fontFamily: 'Montserrat, sans-serif' }}
+            />
+            <a href="#destinations">
+              <button
+                className="bg-[#006D77] text-white font-black text-[14px] rounded-full border-none cursor-pointer whitespace-nowrap transition-all hover:bg-[#004d55]"
+                style={{ padding: '12px 28px', fontFamily: 'Montserrat, sans-serif' }}
+              >
+                Explore
+              </button>
             </a>
           </div>
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 mt-14 text-white">
-            {[['2,500+', 'Packages'], ['50+', 'Destinations'], ['1 Lakh+', 'Happy Travelers'], ['100%', 'Customizable']].map(([num, lab]) => (
-              <div key={lab} className="text-center">
-                <div className="text-xl md:text-2xl font-black">{num}</div>
-                <div className="text-[10px] md:text-xs text-white/70 font-bold uppercase tracking-wider">{lab}</div>
-              </div>
-            ))}
-          </div>
+
+          <p className="text-slate-400 text-[12px]">
+            Destination not sure?{' '}
+            <Link to="/wanderbot" className="text-[#006D77] font-bold hover:underline">Ask Bharat Bot ↗</Link>
+          </p>
+        </div>
+
+        {/* Stats strip */}
+        <div
+          className="absolute bottom-0 left-0 right-0 flex justify-center gap-4 md:gap-12 py-4 z-10"
+          style={{ background: 'rgba(0, 50, 55, 0.65)', borderTop: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}
+        >
+          {[['2,500+', 'Packages'], ['50+', 'Destinations'], ['1 Lakh+', 'Happy Travelers'], ['100%', 'Customizable']].map(([num, lab]) => (
+            <div key={lab} className="text-center px-2">
+              <div className="text-[18px] md:text-[22px] font-black" style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>{num}</div>
+              <div className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(255,255,255,0.85)' }}>{lab}</div>
+            </div>
+          ))}
         </div>
       </section>
 

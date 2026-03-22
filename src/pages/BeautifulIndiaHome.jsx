@@ -71,66 +71,147 @@ const BeautifulIndiaHome = () => {
                 <meta property="og:image" content="/beautiful_india_logo_1773142903437.png" />
             </Helmet>
 
-            {/* ── Hero ─────────────────────────────────────────────────── */}
+            {/* ── Hero (TravelTriangle-style) ──────────────────────────── */}
             <div style={{
-                position:'relative', minHeight:580, display:'flex', flexDirection:'column',
-                alignItems:'center', justifyContent:'center', borderRadius:20, overflow:'hidden',
-                marginBottom:56, boxShadow:'0 20px 60px rgba(0,109,119,0.25)',
-                background:'#006D77'
+                position: 'relative',
+                minHeight: 500,
+                borderRadius: 20,
+                overflow: 'hidden',
+                marginBottom: 56,
+                background: 'linear-gradient(135deg, #f0fdf9 0%, #e6f7f5 50%, #fef9f0 100%)',
+                boxShadow: '0 8px 40px rgba(0,109,119,0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
             }}>
-                <video 
-                    autoPlay 
-                    muted 
-                    loop 
+                {/* Couple illustration — left */}
+                <img
+                    src={`${import.meta.env.BASE_URL}india_couple_hero.png`}
+                    alt="Indian couple at Taj Mahal"
                     style={{
                         position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        transform: 'translate(-50%, -50%)',
-                        zIndex: 0
+                        left: -20,
+                        bottom: 0,
+                        height: '102%',
+                        width: 'auto',
+                        objectFit: 'contain',
+                        objectPosition: 'bottom',
+                        zIndex: 1,
+                        pointerEvents: 'none',
                     }}
-                >
-                    <source src="https://player.vimeo.com/external/370338532.hd.mp4?s=349c7198a639d6d37ee3d93706037da50499e469&profile_id=170" type="video/mp4" />
-                </video>
+                />
+
+                {/* Family illustration — right */}
+                <img
+                    src={`${import.meta.env.BASE_URL}india_family_hero.png`}
+                    alt="Indian family at temple"
+                    style={{
+                        position: 'absolute',
+                        right: -20,
+                        bottom: 0,
+                        height: '100%',
+                        width: 'auto',
+                        objectFit: 'contain',
+                        objectPosition: 'bottom',
+                        zIndex: 1,
+                        pointerEvents: 'none',
+                    }}
+                />
+
+                {/* Centre content */}
                 <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(rgba(0,109,119,0.3) 0%, rgba(11,26,28,0.8) 100%)',
-                    zIndex: 1
-                }}></div>
-                <div style={{ zIndex:10, display:'flex', flexDirection:'column', gap:16, textAlign:'center', maxWidth:700, padding:'0 24px' }}>
-                    <h1 style={{ color:'#fff', fontSize:58, fontWeight:900, lineHeight:1.1, margin:0, textShadow:'0 4px 20px rgba(0,0,0,0.5)' }}>
-                        Discover Your Next Adventure
+                    position: 'relative',
+                    zIndex: 2,
+                    textAlign: 'center',
+                    maxWidth: 620,
+                    padding: '60px 24px 100px',
+                }}>
+                    {/* Brand pill */}
+                    <span style={{
+                        display: 'inline-block',
+                        background: 'rgba(0,109,119,0.1)',
+                        color: '#006D77',
+                        fontWeight: 800,
+                        fontSize: 11,
+                        letterSpacing: 2,
+                        textTransform: 'uppercase',
+                        borderRadius: 50,
+                        padding: '5px 16px',
+                        marginBottom: 20,
+                        border: '1px solid rgba(0,109,119,0.2)',
+                    }}>IN BHARAT DARSHAN</span>
+
+                    <h1 style={{
+                        color: '#0b1a1c',
+                        fontSize: 52,
+                        fontWeight: 900,
+                        lineHeight: 1.12,
+                        margin: '0 0 16px',
+                        fontFamily: 'Montserrat, sans-serif',
+                    }}>
+                        Customize &amp; Book<br />
+                        <span style={{ color: '#006D77' }}>Amazing Holiday Packages</span>
                     </h1>
-                    <p style={{ color:'rgba(255,255,255,0.82)', fontSize:18, fontWeight:500, margin:0 }}>
-                        Explore the world's most breathtaking destinations curated for the modern traveler.
+
+                    <p style={{
+                        color: '#5a7a7d',
+                        fontSize: 16,
+                        fontWeight: 500,
+                        margin: '0 0 32px',
+                        lineHeight: 1.6,
+                    }}>
+                        From the mighty Himalayas to palm-fringed beaches — explore Bharat in all its glory with expertly curated packages.
                     </p>
 
                     {/* Search bar */}
-                    <div style={{ display:'flex', alignItems:'center', background:'#fff', borderRadius:50, padding:'6px 6px 6px 20px', boxShadow:'0 8px 32px rgba(0,0,0,0.25)', marginTop:12 }}>
-                        <span className="material-symbols-outlined" style={{ color:'#7F8C8D', marginRight:8, fontSize:22 }}>search</span>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        background: '#fff',
+                        borderRadius: 50,
+                        padding: '7px 7px 7px 22px',
+                        boxShadow: '0 8px 32px rgba(0,109,119,0.18)',
+                        border: '1.5px solid rgba(0,109,119,0.12)',
+                    }}>
+                        <span className="material-symbols-outlined" style={{ color: '#006D77', marginRight: 8, fontSize: 22 }}>location_on</span>
                         <input
-                            style={{ flex:1, border:'none', outline:'none', fontSize:16, fontFamily:'Montserrat,sans-serif', fontWeight:500, color:'#2C3E50', background:'transparent', padding:'10px 4px' }}
-                            placeholder="Where do you want to go?"
+                            style={{ flex: 1, border: 'none', outline: 'none', fontSize: 15, fontFamily: 'Montserrat,sans-serif', fontWeight: 600, color: '#2C3E50', background: 'transparent', padding: '10px 4px' }}
+                            placeholder="Type a destination..."
                             type="text"
                         />
                         <Link to="/tours">
-                            <button style={{ background:'#006D77', color:'#fff', border:'none', borderRadius:50, padding:'12px 28px', fontFamily:'Montserrat,sans-serif', fontWeight:700, fontSize:14, cursor:'pointer', whiteSpace:'nowrap' }}>
-                                Search Tours
-                            </button>
+                            <button style={{ background: '#006D77', color: '#fff', border: 'none', borderRadius: 50, padding: '13px 30px', fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap', transition: 'background .2s' }}
+                                onMouseEnter={e => e.currentTarget.style.background='#004d55'}
+                                onMouseLeave={e => e.currentTarget.style.background='#006D77'}
+                            >Explore</button>
                         </Link>
                     </div>
+
+                    <p style={{ color: '#94a3b8', fontSize: 12, marginTop: 12 }}>
+                        Destination not sure?{' '}
+                        <Link to="/wanderbot" style={{ color: '#006D77', fontWeight: 700 }}>Ask Bharat Bot ↗</Link>
+                    </p>
                 </div>
 
-                {/* Stats bar */}
-                <div style={{ position:'absolute', bottom:0, left:0, right:0, background:'rgba(0,0,0,0.38)', backdropFilter:'blur(6px)', display:'flex', justifyContent:'center', gap:72, padding:'16px 0' }}>
-                    {[['500+','Destinations'],['50,000+','Happy Travelers'],['98%','Satisfaction Rate'],['24/7','Expert Support']].map(([n,l]) => (
-                        <div key={l} style={{ textAlign:'center' }}>
-                            <div style={{ color:'#FFDDD2', fontWeight:900, fontSize:22 }}>{n}</div>
-                            <div style={{ color:'rgba(255,255,255,0.7)', fontSize:12, fontWeight:600 }}>{l}</div>
+                {/* Stats strip */}
+                <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: 'rgba(0,109,119,0.07)',
+                    backdropFilter: 'blur(4px)',
+                    borderTop: '1px solid rgba(0,109,119,0.1)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: 60,
+                    padding: '14px 0',
+                    zIndex: 2,
+                }}>
+                    {[['2,500+','Packages'],['50+','Destinations'],['1 Lakh+','Happy Travelers'],['100%','Customizable']].map(([n,l]) => (
+                        <div key={l} style={{ textAlign: 'center' }}>
+                            <div style={{ color: '#006D77', fontWeight: 900, fontSize: 20 }}>{n}</div>
+                            <div style={{ color: '#5a7a7d', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>{l}</div>
                         </div>
                     ))}
                 </div>
