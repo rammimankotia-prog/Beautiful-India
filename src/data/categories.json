@@ -202,7 +202,9 @@
       { "value": "bike", "label": "Bike", "icon": "🏍️" },
       { "value": "cruise", "label": "Cruise", "icon": "🚢" },
       { "value": "car", "label": "Car", "icon": "🚗" },
-      { "value": "tempo_traveller", "label": "Tempo Traveller", "icon": "🚐" }
+      { "value": "tempo_traveller", "label": "Tempo Traveller", "icon": "🚐" },
+      { "value": "bicycle", "label": "Bicycle", "icon": "🚲" },
+      { "value": "tuk_tuk", "label": "Tuk Tuk", "icon": "🛺" }
     ]
   },
   "meta": {
@@ -411,7 +413,7 @@
     "transports": {
       "label": "Travel Modes",
       "icon": "🚌",
-      "chips": ["Mixed", "Train", "Flight", "Bus", "Bike", "Cruise", "Car", "Tempo Traveller"]
+      "chips": ["Mixed", "Train", "Flight", "Bus", "Bike", "Cruise", "Car", "Tempo Traveller", "Bicycle", "Tuk Tuk"]
     }
   }
 }
