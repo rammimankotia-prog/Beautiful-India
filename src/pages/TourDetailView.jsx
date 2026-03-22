@@ -956,30 +956,64 @@ const TourDetailView = () => {
                       <button onClick={() => setIsQuoteModalOpen(true)} className="w-full flex cursor-pointer items-center justify-center rounded-none rounded-b-xl h-14 bg-[#ff5a5f] text-white text-lg font-black hover:brightness-110 transition-all shadow-xl uppercase tracking-wider">
                         Customize & Get Quotes
                       </button>
-                      <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-4">
-                         <h4 className="text-[13px] font-extrabold text-[#0a6c75] mb-4 uppercase tracking-tighter">Next Scheduled Departure</h4>
-                         <div className="space-y-4">
-                            <div className="flex items-center gap-3">
-                               <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
-                                  <span className="material-symbols-outlined text-primary">calendar_month</span>
-                               </div>
-                               <div>
-                                  <p className="text-[11px] text-slate-500 font-bold uppercase">Dates</p>
-                                  <p className="text-sm font-black text-slate-800 dark:text-slate-100 italic">Oct 15 - Oct 21, 2026</p>
-                               </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                               <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
-                                  <span className="material-symbols-outlined text-primary">group</span>
-                               </div>
-                               <div>
-                                  <p className="text-[11px] text-slate-500 font-bold uppercase">Group Size</p>
-                                  <p className="text-sm font-black text-slate-800 dark:text-slate-100">{tour.minPersons > 1 ? `Min ${tour.minPersons}` : 'Private'} Persons</p>
-                               </div>
-                            </div>
-                         </div>
-                         <p className="text-[10px] text-center text-slate-400 font-bold mt-4 border-t border-primary/10 pt-3 italic">Free cancellation up to 30 days before departure.</p>
-                      </div>
+                      {tour?.transport === 'train' ? (
+                        <a 
+                          href="https://bhaktikishakti.com/booking/train" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="group relative block p-5 rounded-xl border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-white to-primary/10 mt-4 overflow-hidden shadow-md hover:shadow-xl transition-all duration-500"
+                        >
+                          <div className="relative flex flex-col items-center text-center gap-2 z-10">
+                             {/* Train Icon with bounce animation on hover */}
+                             <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+                                <span className="material-symbols-outlined text-3xl">train</span>
+                             </div>
+                             
+                             <div className="space-y-1">
+                                <h4 className="text-[13px] font-black text-primary uppercase tracking-tight">Travelling by Train?</h4>
+                                <p className="text-[12px] font-bold text-slate-700 leading-snug">
+                                   Book Your Tickets Online for a Hassle-Free Journey!
+                                </p>
+                             </div>
+
+                             <div className="mt-1 px-5 py-1.5 bg-[#ff5a5f] text-white text-[10px] font-black uppercase rounded-full shadow-md group-hover:brightness-110 group-hover:scale-105 transition-all">
+                                Click to Book Now
+                             </div>
+
+                             <p className="text-[9px] text-slate-400 font-bold italic mt-1">
+                                *Fast, Secure & Easy Booking in Next Tab*
+                             </p>
+                          </div>
+                          
+                          {/* Animated Shimmer Effect */}
+                          <div className="absolute top-0 -left-[100%] w-[100%] h-full bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] transition-all duration-1000 group-hover:left-[150%]" />
+                        </a>
+                      ) : (
+                        <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-4">
+                           <h4 className="text-[13px] font-extrabold text-[#0a6c75] mb-4 uppercase tracking-tighter">Next Scheduled Departure</h4>
+                           <div className="space-y-4">
+                              <div className="flex items-center gap-3">
+                                 <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
+                                    <span className="material-symbols-outlined text-primary">calendar_month</span>
+                                 </div>
+                                 <div>
+                                    <p className="text-[11px] text-slate-500 font-bold uppercase">Dates</p>
+                                    <p className="text-sm font-black text-slate-800 dark:text-slate-100 italic">Oct 15 - Oct 21, 2026</p>
+                                 </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                 <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
+                                    <span className="material-symbols-outlined text-primary">group</span>
+                                 </div>
+                                 <div>
+                                    <p className="text-[11px] text-slate-500 font-bold uppercase">Group Size</p>
+                                    <p className="text-sm font-black text-slate-800 dark:text-slate-100">{tour.minPersons > 1 ? `Min ${tour.minPersons}` : 'Private'} Persons</p>
+                                 </div>
+                              </div>
+                           </div>
+                           <p className="text-[10px] text-center text-slate-400 font-bold mt-4 border-t border-primary/10 pt-3 italic">Free cancellation up to 30 days before departure.</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
