@@ -65,6 +65,7 @@ const AdminNewTourUploadForm = () => {
     noAvailableTo: false,
   });
 
+  const [destSearchQuery, setDestSearchQuery] = React.useState("");
   const [categories, setCategories] = React.useState({
     ...categoriesData.categories,
     destinationStates: categoriesData.categories.destinationStates || {
@@ -1591,33 +1592,56 @@ const AdminNewTourUploadForm = () => {
                         Manage destinations ↗
                       </Link>
                     </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="mb-3 relative max-w-sm mt-3">
+                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+                      <input 
+                        type="search" 
+                        value={destSearchQuery} 
+                        onChange={(e) => setDestSearchQuery(e.target.value)} 
+                        placeholder="Search & filter states..." 
+                        className="w-full text-sm py-2 pl-9 pr-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-4 max-h-60 overflow-y-auto p-1 custom-scrollbar">
                       {(
                         categories.destinationStates?.India ||
                         categories.destinationStates?.india ||
                         []
-                      ).map((stateName) => (
-                        <button
-                          key={stateName}
-                          type="button"
-                          onClick={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              destination: "India",
-                              stateRegion: stateName,
-                              subregion: "",
-                            }))
-                          }
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-                            formData.stateRegion === stateName
-                              ? "bg-primary text-white border-primary shadow-sm"
-                              : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary"
-                          }`}
-                        >
-                          <span>{DEST_ICON_MAP[stateName] || "📍"}</span>{" "}
-                          {stateName}
-                        </button>
-                      ))}
+                      )
+                        .filter(s => s.toLowerCase().includes(destSearchQuery.toLowerCase()))
+                        .map((stateName) => {
+                          const currentStates = Array.isArray(formData.stateRegion)
+                            ? formData.stateRegion
+                            : formData.stateRegion
+                              ? [formData.stateRegion]
+                              : [];
+                          const isSelected = currentStates.includes(stateName);
+                          return (
+                            <button
+                              key={stateName}
+                              type="button"
+                              onClick={() => {
+                                const newStates = isSelected
+                                  ? currentStates.filter((s) => s !== stateName)
+                                  : [...currentStates, stateName];
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  destination: "India",
+                                  stateRegion: newStates,
+                                  subregion: "",
+                                }));
+                              }}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+                                isSelected
+                                  ? "bg-primary text-white border-primary shadow-sm transform scale-105"
+                                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary"
+                              }`}
+                            >
+                              <span>{DEST_ICON_MAP[stateName] || "📍"}</span>{" "}
+                              {stateName}
+                            </button>
+                          );
+                        })}
                     </div>
                   </div>
 
@@ -1783,7 +1807,7 @@ const AdminNewTourUploadForm = () => {
                   })()}
 
                   {/* Live Preview Badge */}
-                  {(formData.stateRegion || formData.theme) && (
+                  {((formData.stateRegion && formData.stateRegion.length > 0) || formData.theme) && (
                     <div className="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl px-5 py-4 flex flex-wrap items-center gap-3">
                       <span className="material-symbols-outlined text-primary text-[20px]">
                         visibility
@@ -1791,9 +1815,9 @@ const AdminNewTourUploadForm = () => {
                       <span className="text-sm font-semibold text-teal-800 dark:text-teal-300">
                         This tour will appear when visitors:
                       </span>
-                      {formData.stateRegion && (
+                      {formData.stateRegion && formData.stateRegion.length > 0 && (
                         <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
-                          📍 Click "{formData.stateRegion}" on homepage
+                          📍 Click "{Array.isArray(formData.stateRegion) ? formData.stateRegion.join(", ") : formData.stateRegion}" on homepage
                         </span>
                       )}
                       {formData.theme && (
