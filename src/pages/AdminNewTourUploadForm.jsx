@@ -990,8 +990,7 @@ const AdminNewTourUploadForm = () => {
                               </>
                             )}
 
-                            {!formData.isDayTour && (
-                              <div className="md:col-span-2 space-y-5 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <div className="md:col-span-2 space-y-5 pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <div className="space-y-3">
                                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-[18px]">
@@ -1042,7 +1041,6 @@ const AdminNewTourUploadForm = () => {
                                   </div>
                                 </div>
                               </div>
-                            )}
 
                             <div className="md:col-span-2 space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
                               <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
