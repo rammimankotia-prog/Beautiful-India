@@ -11,6 +11,7 @@ const TrainBookingPage = () => {
     fromStation: '',
     toStation: '',
     trainPref: '',
+    coachPref: '',
     seatPref: '',
     timePref: ''
   });
@@ -21,6 +22,7 @@ const TrainBookingPage = () => {
     fromStation: '',
     toStation: '',
     trainPref: '',
+    coachPref: '',
     seatPref: '',
     timePref: ''
   });
@@ -265,6 +267,22 @@ const TrainBookingPage = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Coach Preference <span className="text-red-500">*</span></label>
+                  <select 
+                    required
+                    value={journeyDetails.coachPref}
+                    onChange={(e) => handleJourneyChange('outward', 'coachPref', e.target.value)}
+                    className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                  >
+                    <option value="">Select Coach</option>
+                    <option value="Sleeper">Sleeper (SL)</option>
+                    <option value="3rd AC">3rd AC (3A)</option>
+                    <option value="2nd AC">2nd AC (2A)</option>
+                    <option value="First Class">First Class (1A)</option>
+                    <option value="Executive Class">Executive Class (EC)</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
                   <select 
                     value={journeyDetails.seatPref}
@@ -357,6 +375,22 @@ const TrainBookingPage = () => {
                         onChange={(e) => handleJourneyChange('onward', 'trainPref', e.target.value)}
                         className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium"
                       />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Coach Preference <span className="text-red-500">*</span></label>
+                      <select 
+                        required
+                        value={onwardDetails.coachPref}
+                        onChange={(e) => handleJourneyChange('onward', 'coachPref', e.target.value)}
+                        className="h-12 px-4 rounded-xl border border-slate-200 focus:border-[#006D77] focus:ring-1 focus:ring-[#006D77] outline-none transition-all font-medium bg-white"
+                      >
+                        <option value="">Select Coach</option>
+                        <option value="Sleeper">Sleeper (SL)</option>
+                        <option value="3rd AC">3rd AC (3A)</option>
+                        <option value="2nd AC">2nd AC (2A)</option>
+                        <option value="First Class">First Class (1A)</option>
+                        <option value="Executive Class">Executive Class (EC)</option>
+                      </select>
                     </div>
                     <div className="flex flex-col gap-2">
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Seat Preference</label>
@@ -478,11 +512,14 @@ const TrainBookingPage = () => {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Food Preference</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Food Preference <span className="text-red-500">*</span></label>
                         <select 
+                          required
                           value={p.foodPref} onChange={(e) => handlePassengerChange(i, 'foodPref', e.target.value)}
                           className="h-11 px-4 rounded-xl border border-slate-200 outline-none focus:border-[#006D77] transition-all text-sm font-medium bg-white"
                         >
+                          <option value="">Select Food</option>
+                          <option value="no-food">No Food</option>
                           <option value="veg">Veg</option>
                           <option value="nonveg">Non-Veg</option>
                           <option value="jain">Jain</option>
