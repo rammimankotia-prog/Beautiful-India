@@ -189,8 +189,9 @@ const BharatDarshanPage = () => {
         // Priority: Fetch from server to ensure latest images/data
         const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
         if (res.ok) {
-            allToursList = await res.json();
-            if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
+            const data = await res.json();
+            if (data && Array.isArray(data)) {
+                allToursList = data.filter(Boolean);
                 localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
             }
         } else {

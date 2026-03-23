@@ -26,8 +26,13 @@ const AdminTourManagementDashboard = () => {
     fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
-        setTours(Array.isArray(data) ? data : []);
-        localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(data));
+        if (data && Array.isArray(data)) {
+          const validTours = data.filter(Boolean);
+          setTours(validTours);
+          localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(validTours));
+        } else {
+          setTours([]);
+        }
         setLoading(false);
       })
       .catch(err => {

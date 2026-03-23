@@ -128,13 +128,14 @@ const ToursByTrain = () => {
     useEffect(() => {
         const fetchTours = async () => {
             try {
-                let allTours = [];
-                // Always try to fetch first to ensure fresh data
+                let processedTours = [];
                 const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
                 if (res.ok) {
-                    allTours = await res.json();
-                    if (allTours && Array.isArray(allTours) && allTours.length > 0) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data)) {
+                        const allTours = data.filter(Boolean); // Filter out null/undefined entries
                         localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allTours));
+                        processedTours = allTours;
                     }
                 } else {
                     // Fallback to localStorage if fetch fails
@@ -142,11 +143,16 @@ const ToursByTrain = () => {
                     if (saved !== null) {
                         try {
                             const parsed = JSON.parse(saved);
-                            if (Array.isArray(parsed)) allTours = parsed.filter(Boolean);
-                        } catch(e) {}
+                            if (Array.isArray(parsed)) {
+                                const allTours = parsed.filter(Boolean); // Filter out null/undefined entries
+                                processedTours = allTours;
+                            }
+                        } catch(e) {
+                            console.error("Failed to parse tours from localStorage:", e);
+                        }
                     }
                 }
-                const trainTours = allTours.filter(t => t.transport === 'train' && t.status !== 'paused');
+                const trainTours = processedTours.filter(t => t.transport === 'train' && t.status !== 'paused');
                 setTours(trainTours);
                 setLoading(false);
             } catch (err) {

@@ -15,14 +15,14 @@ const ToursDiscoveryFiltering8 = () => {
         const fetchTours = async () => {
             try {
                 let allToursList = [];
-                // Always try to fetch first to ensure fresh data
-        const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
-        if (res.ok) {
-          allToursList = await res.json();
-          if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
-          }
-        } else {
+                // Always try to fetch first to ensure fresh                const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data)) {
+                        allToursList = data.filter(Boolean);
+                        localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+                    }
+                } else {
           // Fallback to localStorage if fetch fails
           const saved = localStorage.getItem('beautifulindia_admin_tours');
           if (saved !== null) {

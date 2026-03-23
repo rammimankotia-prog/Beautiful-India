@@ -16,8 +16,11 @@ const BeautifulIndiaHome = () => {
             
             const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
             if (res.ok) {
-                allToursList = await res.json();
-                localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+                const data = await res.json();
+                if (data && Array.isArray(data)) {
+                    allToursList = data.filter(Boolean);
+                    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+                }
             } else {
                 const saved = localStorage.getItem('beautifulindia_admin_tours');
                 if (saved) {
