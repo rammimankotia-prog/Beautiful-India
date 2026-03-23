@@ -129,19 +129,21 @@ const ToursByTrain = () => {
         const fetchTours = async () => {
             try {
                 let allTours = [];
-                const saved = localStorage.getItem('beautifulindia_admin_tours');
-                if (saved !== null) {
-                    try {
-                        const parsed = JSON.parse(saved);
-                        if (Array.isArray(parsed)) allTours = parsed.filter(Boolean);
-                    } catch(e) {}
+                // Always try to fetch first to ensure fresh data
+                const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
+                if (res.ok) {
+                    allTours = await res.json();
+                    if (allTours && Array.isArray(allTours) && allTours.length > 0) {
+                        localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allTours));
+                    }
                 } else {
-                    const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
-                    if (res.ok) {
-                        allTours = await res.json();
-                        if (allTours && Array.isArray(allTours) && allTours.length > 0) {
-                            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allTours));
-                        }
+                    // Fallback to localStorage if fetch fails
+                    const saved = localStorage.getItem('beautifulindia_admin_tours');
+                    if (saved !== null) {
+                        try {
+                            const parsed = JSON.parse(saved);
+                            if (Array.isArray(parsed)) allTours = parsed.filter(Boolean);
+                        } catch(e) {}
                     }
                 }
                 const trainTours = allTours.filter(t => t.transport === 'train' && t.status !== 'paused');
