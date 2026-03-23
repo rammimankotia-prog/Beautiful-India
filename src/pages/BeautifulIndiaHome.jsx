@@ -72,7 +72,7 @@ const BeautifulIndiaHome = () => {
             </Helmet>
 
             {/* ── Hero (TravelTriangle-style) ──────────────────────────── */}
-            <div style={{
+            <div className="hero-banner" style={{
                 position: 'relative',
                 minHeight: 500,
                 borderRadius: 20,

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const BharatDarshanBanner = () => {
   return (
-    <section style={{
+    <section className="hero-banner" style={{
       position: 'relative',
       width: 'calc(100% + 160px)',
       marginLeft: '-80px',
