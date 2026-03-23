@@ -29,22 +29,7 @@ const AdminTrainQueries = () => {
   const filteredQueries = queries.filter(q => filter === 'All' || q.status === filter);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-white border-b border-slate-200 h-20 flex items-center justify-between px-8 sticky top-0 z-20">
-        <div className="flex items-center gap-4">
-          <Link to="/admin/bookings" className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-            <span className="material-symbols-outlined text-slate-500">arrow_back</span>
-          </Link>
-          <h1 className="text-xl font-black text-slate-800 tracking-tight uppercase">Train Booking Queries</h1>
-        </div>
-        <div className="flex items-center gap-3">
-           <button onClick={fetchQueries} className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
-              <span className="material-symbols-outlined">refresh</span>
-           </button>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto py-10 px-8">
+    <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-500">
         
         <div className="flex justify-between items-center mb-8">
            <div>
@@ -281,8 +266,7 @@ const AdminTrainQueries = () => {
           </div>
         )}
 
-      </main>
-    </div>
+      </div>
   );
 };
 

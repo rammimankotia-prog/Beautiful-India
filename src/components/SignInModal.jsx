@@ -28,13 +28,13 @@ const SignInModal = ({ isOpen, onClose }) => {
 
     // Simulate network request
     setTimeout(() => {
-      const success = login(email, password);
-      if (success) {
+      const result = login(email, password);
+      if (result.success) {
         onClose();
         setEmail('');
         setPassword('');
       } else {
-        setError('Please enter both email and password.');
+        setError(result.message || 'Please enter both email and password.');
       }
       setIsSubmitting(false);
     }, 800);

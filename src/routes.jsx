@@ -19,6 +19,8 @@ import AdminNewArticleUploadForm from './pages/AdminNewArticleUploadForm';
 import AdminCategorizationSettings from './pages/AdminCategorizationSettings';
 import AdminThemeManagement from './pages/AdminThemeManagement';
 import AdminTrainQueries from './pages/AdminTrainQueries';
+import AdminUserManagement from './pages/AdminUserManagement';
+import AdminLayout from './components/AdminLayout';
 import BookingCancellationConfirmationEmail from './pages/BookingCancellationConfirmationEmail';
 import BookingCancellationRequestForm from './pages/BookingCancellationRequestForm';
 import BookingConfirmationSuccess1 from './pages/BookingConfirmationSuccess1';
@@ -95,21 +97,28 @@ export const routes = [
   { path: '/tours/:destination/:stateRegion/:subregion/:title', element: <TourDetailView /> },
   { path: '/emails/countdown', element: <TripDepartureCountdownEmail /> },
   { path: '/404', element: <ErrorPageNotFound /> },
-  { path: '/admin/bookings', element: <AdminBookingManagementDashboard /> },
-  { path: '/admin/leads', element: <AdminLeadsDashboard /> },
-  { path: '/admin/queries', element: <AdminLeadsDashboard /> },
-  { path: '/admin/tours/new', element: <AdminNewTourUploadForm /> },
-  { path: '/admin/tours/edit/:id', element: <AdminNewTourUploadForm /> },
-  { path: '/admin/tours', element: <AdminTourManagementDashboard /> },
-  { path: '/admin/overview', element: <AdminOverviewDashboard /> },
-  { path: '/admin', element: <AdminTourManagementDashboard /> },
-  { path: '/admin/guides', element: <AdminArticleManagementDashboard /> },
-  { path: '/admin/guides/new', element: <AdminNewArticleUploadForm /> },
-  { path: '/admin/guides/edit/:id', element: <AdminNewArticleUploadForm /> },
-  { path: '/admin/categorization', element: <AdminCategorizationSettings /> },
-  { path: '/admin/chatbot-flow', element: <AdminChatbotFlow /> },
-  { path: '/admin/train-queries', element: <AdminTrainQueries /> },
-  { path: '/admin/themes', element: <AdminThemeManagement /> },
+  {
+    path: '/admin',
+    element: <AdminLayout />,
+    children: [
+      { path: '', element: <AdminTourManagementDashboard /> },
+      { path: 'users', element: <AdminUserManagement /> },
+      { path: 'bookings', element: <AdminBookingManagementDashboard /> },
+      { path: 'leads', element: <AdminLeadsDashboard /> },
+      { path: 'queries', element: <AdminLeadsDashboard /> },
+      { path: 'tours/new', element: <AdminNewTourUploadForm /> },
+      { path: 'tours/edit/:id', element: <AdminNewTourUploadForm /> },
+      { path: 'tours', element: <AdminTourManagementDashboard /> },
+      { path: 'overview', element: <AdminOverviewDashboard /> },
+      { path: 'guides', element: <AdminArticleManagementDashboard /> },
+      { path: 'guides/new', element: <AdminNewArticleUploadForm /> },
+      { path: 'guides/edit/:id', element: <AdminNewArticleUploadForm /> },
+      { path: 'categorization', element: <AdminCategorizationSettings /> },
+      { path: 'chatbot-flow', element: <AdminChatbotFlow /> },
+      { path: 'train-queries', element: <AdminTrainQueries /> },
+      { path: 'themes', element: <AdminThemeManagement /> },
+    ]
+  },
   { path: '/emails/cancel-confirm', element: <BookingCancellationConfirmationEmail /> },
   { path: '/booking/cancel', element: <BookingCancellationRequestForm /> },
   { path: '/booking/success', element: <BookingConfirmationSuccess1 /> },

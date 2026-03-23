@@ -599,89 +599,7 @@ const AdminNewTourUploadForm = () => {
   };
 
   return (
-    <div data-page="admin_new_tour_upload_form">
-      <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden">
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar Navigation */}
-          <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex flex-col hidden md:flex">
-            <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors"
-                to="/admin"
-              >
-                <span className="material-symbols-outlined text-[20px] text-slate-500">
-                  space_dashboard
-                </span>
-                <span className="text-[15px] font-medium">Overview</span>
-              </Link>
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] bg-[#eefaf9] text-[#0a6c75] transition-colors"
-                to="/admin"
-              >
-                <span className="material-symbols-outlined text-[20px] text-[#0a6c75]">
-                  tour
-                </span>
-                <span className="text-[15px] font-medium">Manage Tours</span>
-              </Link>
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors"
-                to="/admin/bookings"
-              >
-                <span className="material-symbols-outlined text-[20px] text-slate-500">
-                  group
-                </span>
-                <span className="text-[15px] font-medium">Bookings</span>
-              </Link>
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors"
-                to="/admin/guides"
-              >
-                <span className="material-symbols-outlined text-[20px] text-slate-500">
-                  menu_book
-                </span>
-                <span className="text-[15px] font-medium">Guides & Blogs</span>
-              </Link>
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors"
-                to="/admin/categorization"
-              >
-                <span className="material-symbols-outlined text-[20px] text-slate-500">
-                  category
-                </span>
-                <span className="text-[15px] font-medium">Categorization</span>
-              </Link>
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors"
-                to="/referral/dashboard"
-              >
-                <span className="material-symbols-outlined text-[20px] text-slate-500">
-                  payments
-                </span>
-                <span className="text-[15px] font-medium">Financials</span>
-              </Link>
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors"
-                to="/admin/queries"
-              >
-                <span className="material-symbols-outlined text-[20px] text-slate-500">
-                  contact_support
-                </span>
-                <span className="text-[15px] font-medium">Queries</span>
-              </Link>
-              <Link
-                className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors"
-                to="/admin/leads"
-              >
-                <span className="material-symbols-outlined text-[20px] text-slate-500">
-                  smart_toy
-                </span>
-                <span className="text-[15px] font-medium">Chatbot Leads</span>
-              </Link>
-            </nav>
-          </aside>
-
-          {/* Main Content Area */}
-          <main className="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 lg:p-10">
+    <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-500">
             {/* Page Heading component adapted */}
             <div className="flex flex-col gap-2 mb-8">
               <nav className="flex text-xs font-medium text-slate-400 mb-2 gap-2 items-center">
@@ -2769,9 +2687,6 @@ const AdminNewTourUploadForm = () => {
                 {isEdit ? "Update Tour" : "Publish Tour"}
               </button>
             </div>
-          </main>
-        </div>
-      </div>
     </div>
   );
 };

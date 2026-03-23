@@ -46,142 +46,128 @@ const AdminArticleManagementDashboard = () => {
   };
 
   const handleDelete = (id) => {
-    const updated = guides.filter(g => g.id !== id);
+    if (window.confirm("Are you sure you want to delete this article?")) {
+      const updated = guides.filter(g => g.id !== id);
       saveGuides(updated);
-      showToast("Article deleted");
+      showToast("Article deleted locally");
+    }
   };
 
   const handleSync = async () => {
     try {
-      const response = await fetch(`${import.meta.env.BASE_URL}api/save-guides`, {
+      const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
+      const response = await fetch(targetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(guides)
       });
-      if (response.ok) {
-        showToast("System updated successfully!");
+      const result = await response.json();
+      if (result.success) {
+        showToast("✅ System updated successfully!");
       } else {
-        showToast("Changes staged for next system update.");
+        showToast("❌ Error saving to system");
       }
     } catch (error) {
-      showToast("Changes staged for next system update.");
+      showToast("❌ Connection error");
     }
   };
 
   return (
-    <div data-page="admin_article_management_dashboard">
+    <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-500">
       {/* Toast */}
       {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
-          <span className="material-symbols-outlined text-emerald-400">check_circle</span>
-          {toastMsg}
+        <div className="fixed bottom-10 right-10 z-[100] animate-in slide-in-from-bottom duration-300">
+          <div className="bg-slate-900/90 text-white px-8 py-4 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-3 border border-white/10">
+            <span className="material-symbols-outlined text-teal-400">info</span>
+            <span className="font-black text-sm tracking-widest uppercase">{toastMsg}</span>
+          </div>
         </div>
       )}
-      <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden">
-        {/* Top Nav Bar */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar Navigation */}
-          <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex flex-col hidden md:flex">
-            <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">space_dashboard</span>
-                <span className="text-[15px] font-medium">Overview</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">tour</span>
-                <span className="text-[15px] font-medium">Manage Tours</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] bg-[#eefaf9] text-[#0a6c75] transition-colors" to="/admin/guides">
-<span className="material-symbols-outlined text-[20px] text-[#0a6c75]">menu_book</span>
-<span className="text-[15px] font-medium">Guides & Blogs</span>
-</Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/categorization">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">category</span>
-                <span className="text-[15px] font-medium">Categorization</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/bookings">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">group</span>
-                <span className="text-[15px] font-medium">Bookings</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/referral/dashboard">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">payments</span>
-                <span className="text-[15px] font-medium">Financials</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/leads">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">leaderboard</span>
-                <span className="text-[15px] font-medium">Leads & Queries</span>
-              </Link>
-            </nav>
-          </aside>
-          
-          {/* Main Content Area */}
-          <main className="flex-1 overflow-y-auto bg-[#f8fafc] dark:bg-background-dark p-6 lg:p-10">
-            <div className="space-y-6">
-              {/* Page Header */}
-              <div className="flex flex-wrap justify-between items-center gap-4">
-                <div>
-                  <h1 className="text-[#0a6c75] text-3xl font-extrabold leading-tight tracking-tight">Manage Guides</h1>
-                  <p className="text-slate-500 mt-1 font-medium">View, edit, and create new guides, travel tips, and hacks.</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button 
-                    onClick={handleSync}
-                    className="flex items-center justify-center rounded-[10px] px-6 py-2.5 bg-[#0a6c75] text-white text-[13px] font-bold hover:bg-[#07565e] transition-colors shadow-lg shadow-teal-900/20 gap-2"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">cloud_upload</span>
-                    <span>Save to System</span>
-                  </button>
-                  <Link to="/admin/guides/new" className="flex items-center justify-center rounded-[10px] px-6 py-2.5 bg-white border border-slate-200 text-[#0a6c75] text-[13px] font-bold hover:bg-slate-50 transition-colors shadow-sm gap-2">
-                    <span className="material-symbols-outlined text-[18px]">add</span>
-                    <span>Create New Guide</span>
-                  </Link>
-                </div>
-              </div>
 
-              {/* Data Table */}
-              <div className="bg-white rounded-[14px] border border-slate-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="bg-white border-b border-slate-100">
-                        <th className="px-6 py-4 text-[11px] font-extrabold text-[#0a6c75] uppercase tracking-widest">Article Title</th>
-                        <th className="px-6 py-4 text-[11px] font-extrabold text-[#0a6c75] uppercase tracking-widest">Category</th>
-                        <th className="px-6 py-4 text-[11px] font-extrabold text-[#0a6c75] uppercase tracking-widest">Read Time</th>
-                        <th className="px-6 py-4 text-[11px] font-extrabold text-[#0a6c75] uppercase tracking-widest">Type</th>
-                        <th className="px-6 py-4 text-[11px] font-extrabold text-[#0a6c75] uppercase tracking-widest text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {loading ? (
-                        <tr><td colSpan="5" className="text-center py-10 font-bold text-slate-500">Loading articles...</td></tr>
-                      ) : guides.map(guide => (
-                        <tr key={guide.id} className="hover:bg-slate-50/50 transition-colors group">
-                          <td className="px-6 py-5 whitespace-nowrap">
-                            <div className="flex items-center gap-3">
-                              <div className="h-10 w-10 rounded bg-slate-200 bg-cover bg-center flex-shrink-0" style={{ backgroundImage: `url('${guide.image}')` }}></div>
-                              <span className="text-[14px] font-extrabold text-slate-900 group-hover:text-[#0a6c75] transition-colors">{guide.title}</span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-5 whitespace-nowrap text-[13px] font-bold text-slate-600">{guide.category}</td>
-                          <td className="px-6 py-5 whitespace-nowrap text-[13px] font-bold text-slate-600">{guide.readTime}</td>
-                          <td className="px-6 py-5 whitespace-nowrap">
-                            <span className="px-3 py-1 bg-[#eefaf9] text-[#0f766e] text-[11px] font-extrabold rounded-full">{guide.type}</span>
-                          </td>
-                          <td className="px-6 py-5 whitespace-nowrap text-right text-sm">
-                            <div className="flex justify-end gap-2.5">
-                              <Link to={`/admin/guides/edit/${guide.id}`} className="px-4 py-1.5 rounded-[6px] border border-slate-200 text-slate-600 bg-white text-[12px] font-extrabold hover:bg-slate-50 flex items-center justify-center transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]">Edit</Link>
-                              <button onClick={() => handleDelete(guide.id)} className="px-4 py-1.5 rounded-[6px] bg-red-50 text-red-600 text-[12px] font-extrabold hover:bg-red-100 flex items-center justify-center transition-colors shadow-sm">Delete</button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+      {/* Header */}
+      <div className="flex flex-wrap justify-between items-end gap-6">
+        <div>
+          <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Guides & Articles</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-bold italic">Manage travel tips, blogs, and destination guides.</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={handleSync}
+            className="flex items-center gap-2 px-6 py-2.5 bg-[#0a6c75] text-white rounded-xl font-black hover:bg-[#085a62] transition-all text-sm shadow-lg shadow-teal-900/20"
+          >
+            <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
+            Save to System
+          </button>
+          <Link 
+            to="/admin/guides/new"
+            className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[#0a6c75] rounded-xl font-black hover:border-teal-500 transition-all text-sm shadow-sm"
+          >
+            <span className="material-symbols-outlined text-[20px]">add</span>
+            Create New
+          </Link>
+        </div>
+      </div>
 
-            </div>
-          </main>
+      {/* Table Card */}
+      <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Article</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Category</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Stats</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
+              {loading ? (
+                <tr>
+                   <td colSpan="5" className="px-8 py-20 text-center">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-10 h-10 border-4 border-slate-100 border-t-[#0a6c75] rounded-full animate-spin"></div>
+                        <p className="text-slate-400 font-bold italic">Loading your library...</p>
+                      </div>
+                   </td>
+                </tr>
+              ) : guides.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-8 py-20 text-center text-slate-400 font-bold italic">No articles found. Start by creating one!</td>
+                </tr>
+              ) : guides.map(guide => (
+                <tr key={guide.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                  <td className="px-8 py-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 bg-cover bg-center border border-slate-200 dark:border-slate-700" style={{ backgroundImage: `url('${guide.image}')` }}></div>
+                      <div>
+                        <p className="font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0a6c75] transition-colors">{guide.title}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5">ID: {guide.id}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className="text-[11px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest">{guide.category}</span>
+                  </td>
+                  <td className="px-8 py-6">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[11px] font-bold text-slate-500">{guide.readTime || '5 min'} read</span>
+                      <span className="text-[9px] font-black text-slate-300 uppercase">{guide.type || 'Inspiration'}</span>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-full border border-emerald-100 dark:border-emerald-900/30">Published</span>
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <div className="flex justify-end gap-2">
+                      <Link to={`/admin/guides/edit/${guide.id}`} className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-lg hover:border-teal-500 transition-all">Edit</Link>
+                      <button onClick={() => handleDelete(guide.id)} className="px-4 py-2 bg-red-50 dark:bg-red-950/20 text-red-600 text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-red-100 transition-all">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

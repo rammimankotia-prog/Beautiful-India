@@ -1,12 +1,7 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 
-/**
- * Auto-generated from: admin_tour_management_dashboard/code.html
- * Group: admin | Path: /admin
- */
 const AdminTourManagementDashboard = () => {
   const [tours, setTours] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -28,18 +23,15 @@ const AdminTourManagementDashboard = () => {
 
   const fetchTours = () => {
     setLoading(true);
-    // Always fetch from server first — server is the source of truth
     fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
-        setTours(data);
-        // Update localStorage cache
+        setTours(Array.isArray(data) ? data : []);
         localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(data));
         setLoading(false);
       })
       .catch(err => {
-        console.error("Server fetch error, falling back to localStorage:", err);
-        // Fallback to localStorage if server is unreachable
+        console.error("Fetch error:", err);
         const saved = localStorage.getItem('beautifulindia_admin_tours');
         if (saved) {
           try {
@@ -64,329 +56,209 @@ const AdminTourManagementDashboard = () => {
     }
   };
 
-  const handleSync = () => {
-    localStorage.removeItem('beautifulindia_admin_tours');
-    fetchTours();
-    showToast('♻️ Resynced with system defaults');
-  };
-
   return (
-    <>
+    <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500">
       {/* Toast */}
       {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-[9999] bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700 transition-all duration-300 transform translate-y-0 scale-100">
-          <span className="material-symbols-outlined text-emerald-400">info</span>
-          {toastMsg}
+        <div className="fixed bottom-10 right-10 z-[100] animate-in slide-in-from-bottom duration-300">
+          <div className="bg-slate-900/90 text-white px-8 py-4 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-3 border border-white/10">
+            <span className="material-symbols-outlined text-teal-400">check_circle</span>
+            <span className="font-black text-sm tracking-wide uppercase tracking-widest">{toastMsg}</span>
+          </div>
         </div>
       )}
 
-      <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden">
-{/* Top Nav Bar */}
-
-<div className="flex flex-1 overflow-hidden">
-{/* Sidebar Navigation */}
-<aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex flex-col hidden md:flex">
-<nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/overview">
-<span className="material-symbols-outlined text-[20px] text-slate-500">space_dashboard</span>
-<span className="text-[15px] font-medium">Overview</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] bg-[#eefaf9] text-[#0a6c75] transition-colors" to="/admin/tours">
-<span className="material-symbols-outlined text-[20px] text-[#0a6c75]">tour</span>
-<span className="text-[15px] font-medium">Manage Tours</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/leads">
-<span className="material-symbols-outlined text-[20px] text-slate-500">leaderboard</span>
-<span className="text-[15px] font-medium">Leads & Queries</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/bookings">
-<span className="material-symbols-outlined text-[20px] text-slate-500">group</span>
-<span className="text-[15px] font-medium">Bookings</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/guides">
-<span className="material-symbols-outlined text-[20px] text-slate-500">menu_book</span>
-<span className="text-[15px] font-medium">Guides & Blogs</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/categorization">
-<span className="material-symbols-outlined text-[20px] text-slate-500">category</span>
-<span className="text-[15px] font-medium">Categorization</span>
-</Link>
-<Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/referral/dashboard">
-<span className="material-symbols-outlined text-[20px] text-slate-500">payments</span>
-<span className="text-[15px] font-medium">Financials</span>
-</Link>
-</nav>
-</aside>
-{/* Main Content Area */}
-<main className="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 lg:p-10">
-<div className="  space-y-6">
-{/* Page Header */}
-<div className="flex flex-wrap justify-between items-center gap-4">
-<div>
-<nav className="flex text-xs font-medium text-slate-400 mb-2 gap-2 items-center">
-<Link className="hover:text-primary" to="/admin">Admin</Link>
-<span className="material-symbols-outlined text-[14px]">chevron_right</span>
-<span className="text-slate-600 dark:text-slate-300">Manage Tours</span>
-</nav>
-<h1 className="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight tracking-tight">Manage Tours</h1>
-<p className="text-slate-500 dark:text-slate-400 mt-1">View, edit, and create new tour packages.</p>
-</div>
-<div className="flex flex-wrap items-center gap-3">
-  <button 
-    onClick={handleSync}
-    className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white border border-slate-200 text-slate-600 text-sm font-bold leading-normal hover:bg-slate-50 transition-colors shadow-sm gap-2"
-  >
-    <span className="material-symbols-outlined text-sm">sync</span>
-    <span className="truncate">Reset to Default</span>
-  </button>
-  <button 
-    onClick={async () => {
-      try {
-        console.log("Saving tours to system...");
-        const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-tours' : `${import.meta.env.BASE_URL}api-save-tours.php`;
-        const response = await fetch(targetUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(tours)
-        });
-        const result = await response.json();
-        if (result.success) {
-          showToast('✅ Tours Saved Permanently to System!');
-        } else {
-          throw new Error(result.error || 'Failed to save');
-        }
-      } catch (err) {
-        console.error("Save error:", err);
-        showToast('❌ Error saving to system. Check console.');
-      }
-    }}
-    className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-emerald-600 text-white text-sm font-bold leading-normal hover:bg-emerald-700 transition-colors shadow-sm gap-2"
-  >
-    <span className="material-symbols-outlined text-sm">check_circle</span>
-    <span className="truncate">Save to System</span>
-  </button>
-<Link to="/admin/tours/new?type=train" className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-5 bg-[#0a6c75] text-white text-sm font-bold leading-normal hover:bg-[#085a62] transition-colors shadow-sm gap-2">
-<span className="material-symbols-outlined text-sm">train</span>
-<span className="truncate">Create Train Tour</span>
-</Link>
-<Link to="/admin/tours/new" className="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary text-white text-sm font-medium leading-normal hover:bg-primary/90 transition-colors shadow-sm gap-2">
-<span className="material-symbols-outlined text-sm">add</span>
-<span className="truncate">Create New Tour</span>
-</Link>
-</div>
-</div>
-{/* Tabs & View Toggle */}
-<div className="border-b border-slate-200 dark:border-slate-700 mb-6 flex justify-between items-end">
-<nav aria-label="Tabs" className="flex gap-8 px-2">
-  {['All Tours', 'Active', 'Train Tours', 'Drafts', 'Archived'].map(tab => (
-    <button 
-      key={tab}
-      onClick={() => setActiveTab(tab)}
-      className={`flex flex-col items-center justify-center border-b-2 pb-3 pt-4 px-1 transition-colors ${
-        activeTab === tab 
-          ? 'border-primary text-primary font-bold' 
-          : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 font-medium'
-      }`}
-    >
-      <span className="text-sm leading-normal">{tab}</span>
-    </button>
-  ))}
-</nav>
-<div className="mb-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg flex gap-1">
-  <button onClick={() => setViewMode('list')} className={`px-4 py-1.5 rounded-md text-sm font-semibold flex items-center gap-2 transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-primary' : 'text-slate-500 hover:text-slate-700'}`}>
-    <span className="material-symbols-outlined text-[18px]">list</span> List View
-  </button>
-  <button onClick={() => { setViewMode('folders'); setSelectedDest(null); setSelectedState(null); }} className={`px-4 py-1.5 rounded-md text-sm font-semibold flex items-center gap-2 transition-colors ${viewMode === 'folders' ? 'bg-white shadow-sm text-primary' : 'text-slate-500 hover:text-slate-700'}`}>
-    <span className="material-symbols-outlined text-[18px]">folder</span> Folder View
-  </button>
-</div>
-</div>
-{/* Dynamic View Content */}
-{viewMode === 'folders' && !selectedDest && (
-  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {[...new Set(tours.map(t => t.destination || 'Uncategorized'))].map(dest => (
-      <div key={dest} onClick={() => setSelectedDest(dest)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center p-8 rounded-xl cursor-pointer hover:shadow-lg hover:border-primary transition-all group">
-          <span className="material-symbols-outlined text-[54px] text-slate-300 group-hover:text-primary transition-colors mb-3 block">folder</span>
-          <h3 className="text-lg font-bold text-slate-800 dark:text-white capitalize">{dest}</h3>
-          <p className="text-sm text-slate-500 mt-1">{tours.filter(t => (t.destination || 'Uncategorized') === dest).length} Tours</p>
-      </div>
-    ))}
-  </div>
-)}
-
-{viewMode === 'folders' && selectedDest && !selectedState && (
-  <div>
-    <button onClick={() => setSelectedDest(null)} className="mb-6 text-primary font-bold flex items-center hover:opacity-80 transition-opacity"><span className="material-symbols-outlined mr-1">arrow_back</span> Back to Destinations</button>
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {[...new Set(tours.filter(t => (t.destination || 'Uncategorized') === selectedDest).map(t => t.stateRegion || 'Unspecified'))].map(state => (
-        <div key={state} onClick={() => setSelectedState(state)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center p-8 rounded-xl cursor-pointer hover:shadow-lg hover:border-[#0a6c75] transition-all group">
-            <span className="material-symbols-outlined text-[54px] text-primary/40 group-hover:text-[#0a6c75] transition-colors mb-3 block">folder_open</span>
-            <h3 className="text-lg font-bold text-slate-800 dark:text-white capitalize">{state}</h3>
-            <p className="text-sm text-slate-500 mt-1">{tours.filter(t => (t.destination || 'Uncategorized') === selectedDest && (t.stateRegion || 'Unspecified') === state).length} Tours</p>
+      {/* Header */}
+      <div className="flex flex-wrap justify-between items-center gap-6">
+        <div>
+          <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Tour Management</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-bold italic">Create, edit and manage your beautiful India tour packages.</p>
         </div>
-      ))}
-    </div>
-  </div>
-)}
-
-{((viewMode === 'list') || (viewMode === 'folders' && selectedDest && selectedState)) && (
-  <div>
-    {viewMode === 'folders' && (
-      <div className="flex justify-between items-center mb-6">
-        <button onClick={() => setSelectedState(null)} className="text-primary font-bold flex items-center hover:opacity-80 transition-opacity"><span className="material-symbols-outlined mr-1">arrow_back</span> Back to States in {selectedDest}</button>
-        <Link to="/admin/tours/new" className="bg-primary text-white px-5 py-2.5 rounded-lg font-bold shadow-sm hover:bg-primary/90 flex items-center gap-2">
-          <span className="material-symbols-outlined text-sm">add</span> Create Tour in {selectedState}
-        </Link>
-      </div>
-    )}
-    
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-    <div className="overflow-x-auto">
-    <table className="w-full text-left border-collapse">
-    <thead>
-    <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
-    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tour Name</th>
-    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Destination / State</th>
-    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Duration</th>
-    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Price</th>
-    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Hierarchy</th>
-    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
-    </tr>
-    </thead>
-    <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-    {loading ? (
-      <tr><td colSpan="7" className="text-center py-10">Loading tours...</td></tr>
-    ) : tours
-        .filter(tour => {
-           // 1. Filter by Folder if in folder view and something is selected
-           if (viewMode === 'folders' && selectedDest && selectedState) {
-              if ((tour.destination || 'Uncategorized') !== selectedDest || (tour.stateRegion || 'Unspecified') !== selectedState) {
-                return false;
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={fetchTours}
+            className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-black text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all text-sm shadow-sm"
+          >
+            <span className="material-symbols-outlined text-[20px]">refresh</span>
+          </button>
+          
+          <button 
+            onClick={async () => {
+              try {
+                const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-tours' : `${import.meta.env.BASE_URL}api-save-tours.php`;
+                const response = await fetch(targetUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(tours)
+                });
+                const result = await response.json();
+                if (result.success) showToast('✅ Tours Saved Permanently!');
+                else throw new Error(result.error);
+              } catch (err) {
+                showToast('❌ Save Error');
               }
-           }
-           
-           // 2. Filter by Tab (Additive)
-           if (activeTab === 'Active' && tour.status !== 'active') return false;
-           if (activeTab === 'Train Tours' && tour.transport !== 'train') return false;
-           if (activeTab === 'Drafts' && tour.status !== 'draft') return false;
-           if (activeTab === 'Archived' && tour.status !== 'paused') return false;
-           
-           return true; 
-        })
-        .map(tour => (
-    <tr key={tour.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
-    <td className="px-6 py-4 whitespace-nowrap">
-    <div className="flex items-center gap-3">
-    <div className="h-10 w-10 rounded bg-slate-200 dark:bg-slate-700 bg-cover bg-center flex-shrink-0" data-alt={tour.title} style={{ backgroundImage: `url('${tour.image}')` }}></div>
-    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">{tour.title}</span>
-    </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
-      <div className="flex flex-col">
-        <span className="font-semibold text-slate-700">{tour.destination || 'Global'}</span>
-        <span className="text-xs text-slate-400">{tour.stateRegion || 'Unspecified'}</span>
+            }}
+            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-black hover:bg-emerald-700 transition-all text-sm shadow-lg"
+          >
+            <span className="material-symbols-outlined">cloud_upload</span>
+            Save to System
+          </button>
+
+          <Link to="/admin/tours/new" className="flex items-center gap-2 px-6 py-2.5 bg-[#0a6c75] text-white rounded-xl font-black hover:bg-[#085a62] transition-all text-sm shadow-lg shadow-teal-900/20">
+            <span className="material-symbols-outlined">add</span>
+            New Package
+          </Link>
+        </div>
       </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">{tour.duration}</td>
-    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-slate-100">
-  <div className="flex flex-col">
-    <span>{formatPrice(tour.pricePerPerson || tour.price, true)}</span>
-    {tour.pricePerCouple && <span className="text-xs text-pink-500 font-normal">{formatPrice(tour.pricePerCouple, true)} /couple</span>}
-  </div>
-</td>
-    <td className="px-6 py-4 whitespace-nowrap">
-    <input 
-      type="number" 
-      value={tour.order || 0} 
-      onChange={(e) => {
-        const newOrder = parseInt(e.target.value);
-        const updated = tours.map(t => t.id === tour.id ? { ...t, order: newOrder } : t);
-        saveTours(updated);
-        showToast(`✅ Order updated for ${tour.title}`);
-      }}
-      className="w-16 px-2 py-1 text-sm border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-primary"
-    />
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap">
-    <select 
-      value={tour.status || 'active'} 
-      onChange={(e) => {
-        const newStatus = e.target.value;
-        const updated = tours.map(t => t.id === tour.id ? { ...t, status: newStatus } : t);
-        saveTours(updated);
-        showToast(`✅ Status updated to ${newStatus}`);
-      }}
-      className={`text-xs font-medium px-2.5 py-1 rounded-full border-none cursor-pointer focus:ring-1 focus:ring-primary ${
-        tour.status === 'active' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400'
-      }`}
-    >
-    <option value="active">Active</option>
-    <option value="paused">Paused</option>
-    </select>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-    <Link 
-      to={`/admin/tours/edit/${tour.id}`}
-      className="text-primary hover:text-primary/80 transition-colors p-2 rounded hover:bg-primary/10">
-    <span className="material-symbols-outlined text-xl">edit</span>
-    </Link>
-    <button 
-      onClick={() => handleDelete(tour.id)}
-      className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20 ml-1">
-    <span className="material-symbols-outlined text-xl">delete</span>
-    </button>
-    </td>
-    </tr>
-    ))}
-    </tbody>
-    </table>
+
+      {/* Tabs */}
+      <div className="border-b border-slate-200 dark:border-slate-700 flex justify-between items-end">
+        <nav className="flex gap-8 px-2">
+          {['All Tours', 'Active', 'Train Tours', 'Drafts', 'Archived'].map(tab => (
+            <button 
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`pb-4 px-1 text-sm font-black uppercase tracking-widest border-b-2 transition-all ${activeTab === tab ? 'border-[#0a6c75] text-[#0a6c75]' : 'border-transparent text-slate-400 hover:text-slate-600 hover:border-slate-200'}`}
+            >
+              {tab}
+            </button>
+          ))}
+        </nav>
+        <div className="mb-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex gap-1">
+          <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-lg text-xs font-black flex items-center gap-2 transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-[#0a6c75]' : 'text-slate-500'}`}>
+            <span className="material-symbols-outlined text-[18px]">list</span> LIST
+          </button>
+          <button onClick={() => { setViewMode('folders'); setSelectedDest(null); setSelectedState(null); }} className={`px-4 py-2 rounded-lg text-xs font-black flex items-center gap-2 transition-all ${viewMode === 'folders' ? 'bg-white shadow-sm text-[#0a6c75]' : 'text-slate-500'}`}>
+            <span className="material-symbols-outlined text-[18px]">folder</span> FOLDERS
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="min-h-[400px]">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center h-64 gap-4">
+             <div className="w-10 h-10 border-4 border-slate-200 border-t-[#0a6c75] rounded-full animate-spin"></div>
+             <p className="text-slate-400 font-bold italic">Loading packages...</p>
+          </div>
+        ) : (
+          <>
+            {viewMode === 'folders' && !selectedDest && (
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {[...new Set(tours.map(t => t.destination || 'Uncategorized'))].map(dest => (
+                  <div key={dest} onClick={() => setSelectedDest(dest)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl cursor-pointer hover:shadow-xl hover:border-[#0a6c75] transition-all group text-center">
+                      <span className="material-symbols-outlined text-4xl text-slate-300 group-hover:text-[#0a6c75] transition-colors mb-2 block">folder</span>
+                      <h3 className="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest">{dest}</h3>
+                      <p className="text-[10px] font-bold text-slate-400 mt-1">{tours.filter(t => (t.destination || 'Uncategorized') === dest).length} Tours</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {viewMode === 'folders' && selectedDest && !selectedState && (
+              <div className="space-y-6">
+                <button onClick={() => setSelectedDest(null)} className="text-[#0a6c75] font-black uppercase text-xs flex items-center gap-2 hover:opacity-70 transition-opacity">
+                   <span className="material-symbols-outlined text-sm">arrow_back</span> Back to Destinations
+                </button>
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                  {[...new Set(tours.filter(t => (t.destination || 'Uncategorized') === selectedDest).map(t => t.stateRegion || 'Unspecified'))].map(state => (
+                    <div key={state} onClick={() => setSelectedState(state)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl cursor-pointer hover:shadow-xl hover:border-[#0a6c75] transition-all group text-center">
+                        <span className="material-symbols-outlined text-4xl text-primary/30 group-hover:text-[#0a6c75] transition-colors mb-2 block">folder_open</span>
+                        <h3 className="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest">{state}</h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {((viewMode === 'list') || (viewMode === 'folders' && selectedDest && selectedState)) && (
+              <div className="space-y-6">
+                {viewMode === 'folders' && (
+                  <button onClick={() => setSelectedState(null)} className="text-[#0a6c75] font-black uppercase text-xs flex items-center gap-2 hover:opacity-70 transition-opacity">
+                     <span className="material-symbols-outlined text-sm">arrow_back</span> Back to {selectedDest}
+                  </button>
+                )}
+                
+                <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Tour Package</th>
+                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Location</th>
+                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Pricing</th>
+                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                        {tours
+                          .filter(tour => {
+                             if (viewMode === 'folders' && selectedDest && selectedState) {
+                                if ((tour.destination || 'Uncategorized') !== selectedDest || (tour.stateRegion || 'Unspecified') !== selectedState) return false;
+                             }
+                             if (activeTab === 'Active' && tour.status !== 'active') return false;
+                             if (activeTab === 'Train Tours' && tour.transport !== 'train') return false;
+                             if (activeTab === 'Drafts' && tour.status !== 'draft') return false;
+                             return true; 
+                          })
+                          .map(tour => (
+                            <tr key={tour.id} className="hover:bg-slate-50/50 transition-colors group">
+                               <td className="px-8 py-6">
+                                  <div className="flex items-center gap-4">
+                                     <div className="w-12 h-10 rounded-lg bg-cover bg-center shadow-sm" style={{ backgroundImage: `url('${tour.image}')` }}></div>
+                                     <div className="flex flex-col">
+                                        <span className="text-sm font-black text-slate-800 dark:text-slate-100">{tour.title}</span>
+                                        <span className="text-[10px] font-bold text-slate-400">{tour.id}</span>
+                                     </div>
+                                  </div>
+                               </td>
+                               <td className="px-8 py-6">
+                                  <div className="flex flex-col">
+                                     <span className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-tight">{tour.destination}</span>
+                                     <span className="text-[10px] font-bold text-slate-400">{tour.stateRegion}</span>
+                                  </div>
+                               </td>
+                               <td className="px-8 py-6">
+                                  <span className="text-sm font-black text-slate-800 dark:text-slate-100">{formatPrice(tour.pricePerPerson || tour.price)}</span>
+                               </td>
+                               <td className="px-8 py-6">
+                                  <select 
+                                    value={tour.status || 'active'} 
+                                    className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-emerald-600 outline-none cursor-pointer"
+                                    onChange={(e) => {
+                                      const updated = tours.map(t => t.id === tour.id ? { ...t, status: e.target.value } : t);
+                                      saveTours(updated);
+                                    }}
+                                  >
+                                    <option value="active">Active</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="paused">Paused</option>
+                                  </select>
+                               </td>
+                               <td className="px-8 py-6 text-right">
+                                  <div className="flex justify-end gap-2 text-slate-300">
+                                     <Link to={`/admin/tours/edit/${tour.id}`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 hover:text-[#0a6c75] transition-all">
+                                        <span className="material-symbols-outlined text-[20px]">edit</span>
+                                     </Link>
+                                     <button onClick={() => handleDelete(tour.id)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all">
+                                        <span className="material-symbols-outlined text-[20px]">delete</span>
+                                     </button>
+                                  </div>
+                               </td>
+                            </tr>
+                          ))
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
-    {/* Pagination */}
-    <div className="bg-white dark:bg-slate-900 px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between sm:px-6">
-    <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-    <div>
-    <p className="text-sm text-slate-700 dark:text-slate-400">
-                                            Showing <span className="font-medium">1</span> to <span className="font-medium">{tours.length}</span> of <span className="font-medium">{tours.length}</span> results
-                                        </p>
-    </div>
-    <div>
-    <nav aria-label="Pagination" className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-    <a className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700" href="#">
-    <span className="sr-only">Previous</span>
-    <span className="material-symbols-outlined text-xl">chevron_left</span>
-    </a>
-    <a aria-current="page" className="z-10 bg-primary/10 dark:bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">
-                                                1
-                                            </a>
-    <a className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">
-                                                2
-                                            </a>
-    <a className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium" href="#">
-                                                3
-                                            </a>
-    <span className="relative inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-400">
-                                                ...
-                                            </span>
-    <a className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">
-                                                10
-                                            </a>
-    <a className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700" href="#">
-    <span className="sr-only">Next</span>
-    <span className="material-symbols-outlined text-xl">chevron_right</span>
-    </a>
-    </nav>
-    </div>
-    </div>
-    </div>
-    </div>
-  </div>
-)}
-</div>
-</main>
-</div>
-</div>
-    </>
   );
 };
 

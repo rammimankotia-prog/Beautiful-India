@@ -34,7 +34,6 @@ const AdminNewArticleUploadForm = () => {
 
   useEffect(() => {
     if (id) {
-      // First check localStorage
       const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
       if (savedGuides) {
         try {
@@ -44,9 +43,7 @@ const AdminNewArticleUploadForm = () => {
             setFormData(prev => ({ ...prev, ...matched }));
             return;
           }
-        } catch (e) {
-          console.error("Local storage error:", e);
-        }
+        } catch (e) { console.error(e); }
       }
 
       fetch(`${import.meta.env.BASE_URL}data/guides.json`)
@@ -55,9 +52,7 @@ const AdminNewArticleUploadForm = () => {
           const matched = data.find(g => String(g.id) === String(id));
           if (matched) setFormData(prev => ({ ...prev, ...matched }));
         })
-        .catch(err => {
-          console.error("Failed to load guide:", err);
-        });
+        .catch(err => console.error(err));
     }
   }, [id]);
 
@@ -72,195 +67,137 @@ const AdminNewArticleUploadForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const savedGuides = localStorage.getItem('wanderlust_admin_guides');
+    const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
     let guides = [];
     if (savedGuides) {
-      try {
-        guides = JSON.parse(savedGuides);
-      } catch (err) {
-        console.error("Error parsing guides:", err);
-      }
+      try { guides = JSON.parse(savedGuides); } catch (err) { console.error(err); }
     }
 
+    const guideId = id || (formData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString().slice(-4));
     const guideToSave = { 
       ...formData, 
-      id: id || Date.now().toString(),
+      id: guideId,
       date: formData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     };
 
     let updatedGuides;
     if (id) {
       updatedGuides = guides.map(g => String(g.id) === String(id) ? guideToSave : g);
-      if (!guides.find(g => String(g.id) === String(id))) {
-        updatedGuides = [...guides, guideToSave];
-      }
+      if (!guides.find(g => String(g.id) === String(id))) updatedGuides = [...guides, guideToSave];
     } else {
       updatedGuides = [...guides, guideToSave];
     }
 
     localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updatedGuides));
-    alert(`Article ${id ? 'Updated' : 'Created'} Successfully! (Stored in Local Storage)`);
+    alert(`Article ${id ? 'Updated' : 'Created'} Successfully!`);
     
     setLoading(false);
     navigate('/admin/guides');
   };
 
   return (
-    <div data-page="admin_new_article_upload_form">
-      <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden bg-[#f8fafc]">
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar Navigation */}
-          <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex flex-col hidden md:flex">
-            <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">space_dashboard</span>
-                <span className="text-[15px] font-medium">Overview</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">tour</span>
-                <span className="text-[15px] font-medium">Manage Tours</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] bg-[#eefaf9] text-[#0a6c75] transition-colors" to="/admin/guides">
-<span className="material-symbols-outlined text-[20px] text-[#0a6c75]">menu_book</span>
-<span className="text-[15px] font-medium">Guides & Blogs</span>
-</Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/categorization">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">category</span>
-                <span className="text-[15px] font-medium">Categorization</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/bookings">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">group</span>
-                <span className="text-[15px] font-medium">Bookings</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/referral/dashboard">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">payments</span>
-                <span className="text-[15px] font-medium">Financials</span>
-              </Link>
-              <Link className="flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-slate-600 hover:bg-slate-50 transition-colors" to="/admin/leads">
-                <span className="material-symbols-outlined text-[20px] text-slate-500">smart_toy</span>
-                <span className="text-[15px] font-medium">Chatbot Leads</span>
-              </Link>
-            </nav>
-          </aside>
-          
-          <main className="flex-1 overflow-y-auto p-6 md:p-10">
-            <div className="max-w-[800px] mx-auto">
-              <div className="mb-8">
-                <Link to="/admin/guides" className="text-[#0a6c75] text-[13px] font-bold flex items-center gap-1 hover:underline mb-2">
-                  <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                  Back to Guides
-                </Link>
-                <h1 className="text-3xl font-extrabold text-[#0a6c75] tracking-tight">{id ? 'Edit Guide' : 'Create New Guide'}</h1>
-                <p className="text-slate-500 mt-1 font-medium">Fill out the details below to publish a new travel guide or tip.</p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="bg-white p-8 rounded-[14px] shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-slate-200">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Article Title</label>
-                    <input required type="text" name="title" value={formData.title} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="e.g. Exploring the Swiss Alps" />
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Category / Tag</label>
-                    <input required type="text" name="category" value={formData.category} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="e.g. Destinations, Tips, City Life" />
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Read Time</label>
-                    <input required type="text" name="readTime" value={formData.readTime} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" />
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Article Type</label>
-                    <select name="type" value={formData.type} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3">
-                      <option value="blog">Blog Post</option>
-                      <option value="destination">Destination Guide</option>
-                      <option value="tip">Travel Tip / Hack</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Author Name</label>
-                    <input type="text" name="author" value={formData.author} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="e.g. Sarah Jenkins" />
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Tags (comma separated)</label>
-                    <input type="text" name="tags" value={formData.tags} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="e.g. Switzerland, Hiking, Alps" />
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Short Description</label>
-                  <textarea required name="description" value={formData.description} onChange={handleChange} rows="2" className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="Brief summary of the article..." />
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Blog Content (Full Text)</label>
-                  <textarea required name="content" value={formData.content} onChange={handleChange} rows="8" className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="Write the full blog post content here. You can use Markdown or plain text..." />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Inline Content Image URL</label>
-                    <input type="text" name="inlineImageUrl" value={formData.inlineImageUrl} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="https://..." />
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Inline Image Caption</label>
-                    <input type="text" name="inlineImageCaption" value={formData.inlineImageCaption} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="e.g. Scenic railway in Switzerland" />
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Related Tours (Right Sidebar)</label>
-                  <input type="text" name="relatedTours" value={formData.relatedTours} onChange={handleChange} className="w-full bg-[#f8fafc] border border-slate-200 text-slate-900 text-[14px] font-medium rounded-[8px] focus:ring-1 focus:ring-[#0f766e] focus:border-[#0f766e] block p-3" placeholder="e.g. Swiss Alps Trek, Jungfrau Region Workshop" />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border border-slate-200 rounded-xl p-5 bg-slate-50">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" name="showNewsletter" checked={formData.showNewsletter} onChange={handleChange} className="w-5 h-5 rounded border-slate-300 text-[#0a6c75] focus:ring-[#0a6c75]" />
-                    <div>
-                      <span className="block text-[14px] font-extrabold text-slate-900">Include Newsletter Widget</span>
-                      <span className="block text-[12px] text-slate-500">Show the "Get Travel Tips" box on the right sidebar.</span>
-                    </div>
-                  </label>
-
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" name="allowComments" checked={formData.allowComments} onChange={handleChange} className="w-5 h-5 rounded border-slate-300 text-[#0a6c75] focus:ring-[#0a6c75]" />
-                    <div>
-                      <span className="block text-[14px] font-extrabold text-slate-900">Enable Comments & Replies</span>
-                      <span className="block text-[12px] text-slate-500">Show discussion thread and "Leave a Reply" query form.</span>
-                    </div>
-                  </label>
-                </div>
-
-                <div className="mb-8">
-                  <label className="block text-[13px] font-extrabold text-[#0a6c75] mb-2">Cover Image (Upload)</label>
-                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-slate-300 border-dashed rounded-[10px] cursor-pointer bg-slate-50 hover:bg-slate-100 relative overflow-hidden">
-                    {formData.image ? (
-                        <img src={formData.image} alt="Cover Preview" className="absolute inset-0 w-full h-full object-cover" />
-                    ) : (
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <span className="material-symbols-outlined text-[30px] text-slate-400 mb-2">cloud_upload</span>
-                          <p className="mb-1 text-[13px] font-bold text-slate-600">Click to upload image</p>
-                          <p className="text-[11px] font-medium text-slate-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                        </div>
-                    )}
-                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-                  </label>
-                </div>
-                
-                <div className="flex justify-end pt-4 border-t border-slate-100">
-                  <button type="submit" disabled={loading} className="px-8 py-3 bg-[#0a6c75] text-white text-[14px] font-extrabold rounded-[8px] hover:bg-[#07565e] transition-colors shadow-sm disabled:opacity-50">
-                    {loading ? 'Saving...' : 'Publish Guide'}
-                  </button>
-                </div>
-
-              </form>
-            </div>
-          </main>
-        </div>
+    <div className="p-6 lg:p-10 max-w-[1200px] mx-auto space-y-10 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex flex-col gap-2">
+        <Link to="/admin/guides" className="text-[#0a6c75] text-[11px] font-black uppercase tracking-widest flex items-center gap-1 hover:underline mb-2">
+          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          Back to Library
+        </Link>
+        <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight">{id ? 'Edit Guide' : 'Draft New Article'}</h1>
+        <p className="text-slate-500 dark:text-slate-400 font-bold italic">Craft stories that inspire every traveler.</p>
       </div>
+
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Main Content Card */}
+        <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-8 md:p-12 space-y-10">
+          
+          {/* Cover Image Upload */}
+          <div className="space-y-4">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Primary Cover Image</h3>
+            <label className="group relative flex flex-col items-center justify-center w-full h-[300px] border-2 border-slate-100 dark:border-slate-800 border-dashed rounded-[24px] cursor-pointer bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 transition-all overflow-hidden">
+              {formData.image ? (
+                <div className="absolute inset-0">
+                  <img src={formData.image} alt="Cover Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="bg-white text-slate-900 px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest">Change Photo</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-4">
+                  <span className="material-symbols-outlined text-[48px] text-slate-200">photo_library</span>
+                  <div className="text-center">
+                    <p className="font-black text-slate-800 dark:text-slate-100 text-sm">Upload High Resolution Cover</p>
+                    <p className="text-[11px] font-bold text-slate-400 italic">Portrait or Landscape (Max 5MB)</p>
+                  </div>
+                </div>
+              )}
+              <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+            </label>
+          </div>
+
+          {/* Core Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Article Title</label>
+              <input required name="title" value={formData.title} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20" placeholder="e.g. 10 Secret Cafes in Old Delhi" />
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Primary Category</label>
+              <input required name="category" value={formData.category} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20" placeholder="e.g. Gastronomy" />
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Type</label>
+              <select name="type" value={formData.type} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20">
+                <option value="blog">Editorial Blog</option>
+                <option value="destination">Expert Guide</option>
+                <option value="tip">Quick Hack / Tip</option>
+              </select>
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Read Time estimate</label>
+              <input name="readTime" value={formData.readTime} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20" />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Article Content</label>
+            <textarea required name="content" value={formData.content} onChange={handleChange} rows="12" className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm font-medium leading-[1.8] outline-none focus:ring-2 focus:ring-teal-500/20 font-serif" placeholder="Tell your story here..." />
+          </div>
+
+          {/* Meta Info */}
+          <div className="pt-8 border-t border-slate-50 dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Related Tours (ID list)</label>
+              <input name="relatedTours" value={formData.relatedTours} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-xs font-bold" placeholder="e.g. delhi-food-walk, taj-mahal-luxury" />
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Tags (Keywords)</label>
+              <input name="tags" value={formData.tags} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-xs font-bold" placeholder="Food, Culture, Heritage" />
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="flex justify-between items-center bg-slate-900 p-8 rounded-[40px] shadow-2xl">
+          <div className="flex gap-4">
+             <label className="flex items-center gap-3 cursor-pointer group">
+               <input type="checkbox" name="showNewsletter" checked={formData.showNewsletter} onChange={handleChange} className="w-5 h-5 rounded-[6px] bg-white/10 border-white/20 text-[#0a6c75] focus:ring-0" />
+               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest group-hover:text-white transition-colors">Newsletter Widget</span>
+             </label>
+             <label className="flex items-center gap-3 cursor-pointer group">
+               <input type="checkbox" name="allowComments" checked={formData.allowComments} onChange={handleChange} className="w-5 h-5 rounded-[6px] bg-white/10 border-white/20 text-[#0a6c75] focus:ring-0" />
+               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest group-hover:text-white transition-colors">Interactive Comments</span>
+             </label>
+          </div>
+          <button type="submit" disabled={loading} className="px-10 py-4 bg-[#0a6c75] hover:bg-teal-500 text-white rounded-[20px] font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-teal-900/40 disabled:opacity-50 active:scale-95">
+            {loading ? 'Processing...' : id ? 'Update Published Article' : 'Launch Live Article'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
