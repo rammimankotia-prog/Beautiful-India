@@ -168,6 +168,40 @@ const TourDetailView = () => {
       .catch(err => console.error("Reviews fetch error:", err));
   }, [title, id]);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <p className="font-bold text-slate-400 animate-pulse uppercase tracking-widest text-xs">Curating Your Journey...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !tour || tour.status === 'paused') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 px-6 text-center">
+        <div className="max-w-md">
+          <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="material-symbols-outlined text-4xl">travel_explore</span>
+          </div>
+          <h2 className="text-2xl font-black text-slate-800 mb-4 uppercase tracking-tight">Tour Not Found</h2>
+          <p className="text-slate-500 font-bold mb-8 leading-relaxed italic">
+            {(error && error !== 'Tour not found') ? error : "We couldn't find the specific tour you're looking for. It might have been moved or recently updated."}
+          </p>
+          <Link 
+            to="/"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-black rounded-2xl hover:brightness-110 transition-all shadow-xl shadow-primary/20"
+          >
+            <span className="material-symbols-outlined">west</span>
+            EXPLORE ALL TOURS
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const handleLeadSubmit = async () => {
     // Validation
     if (!leadName.trim()) { alert('Please enter your name.'); return; }
@@ -333,9 +367,6 @@ const TourDetailView = () => {
     return elements;
   };
 
-  if (loading) return <div className="p-20 text-center font-bold text-2xl animate-pulse text-primary">Loading your adventure...</div>;
-  if (error) return <div className="p-20 text-center text-red-500 font-bold text-2xl">Error: {error}</div>;
-  if (!tour || (tour.status === 'paused')) return <div className="p-20 text-center font-bold text-2xl">Tour not found or currently unavailable</div>;
 
   // Build itinerary from tour data or fall back to defaults
   const itinerary = tour.itinerary && tour.itinerary.length > 0
@@ -379,6 +410,7 @@ const TourDetailView = () => {
     return months;
   };
   const availableMonths = getAvailableMonths();
+
 
   return (
     <div data-page="tour_detail_view">
