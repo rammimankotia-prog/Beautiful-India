@@ -13,23 +13,21 @@ const BeautifulIndiaHome = () => {
         const fetchTours = async () => {
           try {
             let allToursList = [];
-            const saved = localStorage.getItem('beautifulindia_admin_tours');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
-                } catch(e) {}
-            }
-            if (allToursList.length === 0) {
-                const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
-                if (!res.ok) throw new Error('Failed to fetch tours');
+            
+            const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+            if (res.ok) {
                 allToursList = await res.json();
-                
-                // If local storage was empty, but server has data, save it to local storage to keep them in sync
-                if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-                    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+                localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+            } else {
+                const saved = localStorage.getItem('beautifulindia_admin_tours');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+                    } catch(e) {}
                 }
             }
+            
             setTours(allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft'));
           } catch (err) {
             setTours([
