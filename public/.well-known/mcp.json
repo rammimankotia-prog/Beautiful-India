@@ -1,0 +1,61 @@
+{
+  "mcpVersion": "1.0",
+  "name": "Bharat Darshan - The Beautiful India",
+  "description": "Agent-ready interface for exploring India with curated tour packages and travel guides.",
+  "capabilities": {
+    "tools": [
+      {
+        "name": "search_tours",
+        "description": "Search for tour packages by destination, budget, theme, or category.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": { "type": "string", "description": "Free text search query" },
+            "destination": { "type": "string", "description": "Specific state or region (e.g., Ladakh, Kashmir)" },
+            "maxPrice": { "type": "number", "description": "Maximum budget in INR" },
+            "theme": { "type": "string", "description": "Tour theme (e.g., adventure, honeymoon, family)" }
+          }
+        }
+      },
+      {
+        "name": "get_tour_details",
+        "description": "Get complete information for a specific tour, including itinerary, price, and inclusions.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "tourId": { "type": "string", "description": "The unique ID of the tour" }
+          },
+          "required": ["tourId"]
+        }
+      },
+      {
+        "name": "request_quote",
+        "description": "Submit a request for a customized tour quote.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string" },
+            "phone": { "type": "string" },
+            "destination": { "type": "string" },
+            "numAdults": { "type": "number" },
+            "numChildren": { "type": "number" }
+          },
+          "required": ["name", "email", "phone", "destination"]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "uri": "mcp://bharat-darshan/tours/featured",
+        "name": "Featured Tours",
+        "mimeType": "application/json"
+      },
+      {
+        "uri": "mcp://bharat-darshan/guides/kashmir",
+        "name": "Kashmir Travel Guide",
+        "mimeType": "text/markdown"
+      }
+    ]
+  }
+}

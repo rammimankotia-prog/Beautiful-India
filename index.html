@@ -11,9 +11,15 @@
     <!-- RSS Feeds -->
     <link rel="alternate" type="application/rss+xml" title="Beautiful India - Latest Tours" href="/rss-tours.xml" />
     <link rel="alternate" type="application/rss+xml" title="Beautiful India - Travel Guides" href="/rss-guides.xml" />
+
+    <!-- AI & Agent Discovery (WebMCP) -->
+    <link rel="mcp" href="/.well-known/mcp.json" />
+    <meta name="ai-service" content="mcp" />
   </head>
   <body>
     <div id="root"></div>
+    <!-- WebMCP Bridge -->
+    <script src="/webmcp-bridge.js"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
