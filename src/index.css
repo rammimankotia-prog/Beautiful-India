@@ -38,3 +38,56 @@ body {
     display: none !important;
   }
 }
+
+/* Hamburger Menu Animation */
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 70;
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 2px;
+  background: #CBD5E1;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+.hamburger-btn.open .hamburger-line:first-child {
+  transform: rotate(45deg);
+  background: #fff;
+}
+
+.hamburger-btn.open .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.hamburger-btn.open .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg);
+  background: #fff;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

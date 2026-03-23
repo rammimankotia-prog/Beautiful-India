@@ -165,126 +165,165 @@ const Header = () => {
             />
 
             {/* Mobile Menu Button */}
-            <div className="lg:hidden flex items-center ml-2">
+            <div className="lg:hidden flex items-center ml-4">
                 <button 
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="text-slate-300 hover:text-white transition-colors p-1"
+                    className={`hamburger-btn ${isMobileMenuOpen ? 'open' : ''}`}
+                    aria-label="Toggle Menu"
                 >
-                    <span className="material-symbols-outlined text-2xl">
-                        {isMobileMenuOpen ? 'close' : 'menu'}
-                    </span>
+                    <span className="hamburger-line"></span>
+                    <span className="hamburger-line"></span>
+                    <span className="hamburger-line"></span>
                 </button>
             </div>
 
             {/* Mobile Menu Drawer */}
-            <div className={`lg:hidden fixed inset-0 z-[60] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+            <div className={`lg:hidden fixed inset-0 z-[60] transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
                 {/* Backdrop */}
                 <div 
-                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                    className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-500"
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
                 
                 {/* Content */}
-                <div className={`absolute right-0 top-0 bottom-0 w-64 bg-slate-900 shadow-2xl transition-transform duration-300 p-6 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                    <div className="flex justify-between items-center mb-10">
+                <div className={`absolute right-0 top-0 bottom-0 w-[280px] glass-panel shadow-[-20px_0_50px_rgba(0,0,0,0.3)] transition-transform duration-500 ease-out p-0 flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                    
+                    {/* Drawer Header */}
+                    <div className="flex justify-between items-center p-6 border-b border-white/5 bg-white/5">
                         <img src={`${import.meta.env.BASE_URL}beautiful_india_logo_1773142903437.png`} alt="Logo" className="h-10 w-auto" />
-                        <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-400 hover:text-white">
-                            <span className="material-symbols-outlined">close</span>
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(false)} 
+                            className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                        >
+                            <span className="material-symbols-outlined text-[20px]">close</span>
                         </button>
                     </div>
 
-                    <nav className="flex flex-col gap-2">
-                        {navLinks.map(link => {
-                            const isActive = currentPath === link.path || (link.path === '/tours' && currentPath.startsWith('/tours'));
-                            
-                            if (link.subItems) {
-                                return (
-                                    <div key={link.name} className="flex flex-col">
-                                        <button 
-                                            onClick={() => setIsMobileToursOpen(!isMobileToursOpen)}
-                                            className={`flex items-center justify-between text-lg font-medium py-3 transition-colors ${isActive ? 'text-primary' : 'text-slate-300 hover:text-white'}`}
-                                        >
-                                            {link.name}
-                                            <span className={`material-symbols-outlined transition-transform duration-300 ${isMobileToursOpen ? 'rotate-180' : ''}`}>
-                                                expand_more
-                                            </span>
-                                        </button>
-                                        
-                                        <div className={`flex flex-col gap-2 pl-4 overflow-hidden transition-all duration-300 ${isMobileToursOpen ? 'max-h-40 opacity-100 mt-1 mb-3' : 'max-h-0 opacity-0 pointer-events-none'}`}>
-                                            {link.subItems.map(subItem => (
-                                                <Link 
-                                                    key={subItem.name} 
-                                                    to={subItem.path}
-                                                    onClick={() => setIsMobileMenuOpen(false)}
-                                                    className={`flex items-center gap-2 text-sm py-2 transition-colors ${currentPath === subItem.path ? 'text-white' : 'text-slate-400 hover:text-white'}`}
-                                                >
-                                                    <span className="material-symbols-outlined text-[18px] text-primary">{subItem.icon}</span>
-                                                    {subItem.name}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            }
-
-                            return (
-                                <Link 
-                                    key={link.name} 
-                                    to={link.path}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`text-lg font-medium py-3 transition-colors ${isActive ? 'text-primary' : 'text-slate-300 hover:text-white'}`}
-                                >
-                                    {link.name}
-                                </Link>
-                            )
-                        })}
-                    </nav>
-
-                    {/* Mobile Actions */}
-                    <div className="mt-6 flex flex-col gap-4">
-                        <div className="flex items-center justify-between bg-slate-800/50 p-3 rounded-xl border border-slate-700">
-                            <span className="text-slate-400 text-sm font-bold uppercase tracking-wider">Currency</span>
-                            <select 
-                                value={currency} 
-                                onChange={(e) => setCurrency(e.target.value)}
-                                className="bg-transparent text-white text-sm font-bold focus:outline-none uppercase"
-                            >
-                                {currencies.map(c => (
-                                    <option key={c} value={c} className="bg-slate-900">{c}</option>
-                                ))}
-                            </select>
-                        </div>
+                    <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
                         
+                        {/* Mobile Search */}
+                        <div className="relative group">
+                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] group-focus-within:text-primary transition-colors">search</span>
+                            <input 
+                                type="text"
+                                placeholder="Search destinations..."
+                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 focus:bg-white/10 transition-all font-medium"
+                            />
+                        </div>
+
+                        {/* Navigation Links */}
+                        <nav className="flex flex-col gap-1">
+                            <div className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-1">Menu</div>
+                            {navLinks.map(link => {
+                                const isActive = currentPath === link.path || (link.path === '/tours' && currentPath.startsWith('/tours'));
+                                
+                                if (link.subItems) {
+                                    return (
+                                        <div key={link.name} className="flex flex-col">
+                                            <button 
+                                                onClick={() => setIsMobileToursOpen(!isMobileToursOpen)}
+                                                className={`flex items-center justify-between text-[16px] font-bold py-3 px-3 rounded-xl transition-all ${isActive ? 'bg-primary/10 text-primary' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <span className="material-symbols-outlined text-[22px]">{link.name === 'Tours' ? 'explore' : 'link'}</span>
+                                                    {link.name}
+                                                </div>
+                                                <span className={`material-symbols-outlined text-[20px] transition-transform duration-300 ${isMobileToursOpen ? 'rotate-180' : ''}`}>
+                                                    expand_more
+                                                </span>
+                                            </button>
+                                            
+                                            <div className={`flex flex-col gap-1 pl-12 overflow-hidden transition-all duration-300 ${isMobileToursOpen ? 'max-h-40 opacity-100 mt-1 mb-2' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                                                {link.subItems.map(subItem => (
+                                                    <Link 
+                                                        key={subItem.name} 
+                                                        to={subItem.path}
+                                                        onClick={() => setIsMobileMenuOpen(false)}
+                                                        className={`text-sm py-2.5 transition-colors font-semibold ${currentPath === subItem.path ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+                                                    >
+                                                        {subItem.name}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                }
+
+                                return (
+                                    <Link 
+                                        key={link.name} 
+                                        to={link.path}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`flex items-center gap-3 text-[16px] font-bold py-3 px-3 rounded-xl transition-all ${isActive ? 'bg-primary/10 text-primary' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+                                    >
+                                        <span className="material-symbols-outlined text-[22px]">
+                                            {link.name === 'Home' ? 'home' : link.name === 'Destinations' ? 'map' : link.name === 'About Us' ? 'info' : 'mail'}
+                                        </span>
+                                        {link.name}
+                                    </Link>
+                                )
+                            })}
+                        </nav>
+
+                        {/* Mobile Settings */}
+                        <div className="space-y-4">
+                            <div className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-1">Settings</div>
+                            <div className="flex items-center justify-between bg-white/5 p-4 rounded-2xl border border-white/5">
+                                <div className="flex items-center gap-3">
+                                    <span className="material-symbols-outlined text-slate-400 text-[20px]">payments</span>
+                                    <span className="text-slate-300 text-sm font-bold uppercase tracking-wider">Currency</span>
+                                </div>
+                                <select 
+                                    value={currency} 
+                                    onChange={(e) => setCurrency(e.target.value)}
+                                    className="bg-transparent text-primary text-sm font-black focus:outline-none uppercase cursor-pointer"
+                                >
+                                    {currencies.map(c => (
+                                        <option key={c} value={c} className="bg-slate-900">{c}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {/* Mobile Footer/Actions */}
+                    <div className="p-6 bg-slate-950/40 border-t border-white/5 space-y-6">
                         {!user ? (
                             <button 
                                 onClick={() => {
                                     setIsSignInModalOpen(true);
                                     setIsMobileMenuOpen(false);
                                 }}
-                                className="w-full bg-primary hover:bg-[#005a63] text-white font-bold py-3 rounded-xl transition-colors shadow-lg"
+                                className="w-full bg-primary hover:bg-[#005a63] text-white font-black py-4 rounded-xl transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
                             >
+                                <span className="material-symbols-outlined text-[20px]">login</span>
                                 Sign In
                             </button>
                         ) : (
-                            <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700">
-                                <img src={user.avatar} alt="Avatar" className="w-10 h-10 rounded-full bg-white" />
+                            <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                                <img src={user.avatar} alt="Avatar" className="w-12 h-12 rounded-full border-2 border-primary/50 p-0.5 bg-white" />
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-bold text-white truncate">{user.name}</p>
-                                    <button onClick={logout} className="text-xs text-red-400 font-bold hover:text-red-300">Sign Out</button>
+                                    <p className="text-sm font-black text-white truncate">{user.name}</p>
+                                    <button onClick={logout} className="text-xs text-red-500 font-black hover:text-red-400 flex items-center gap-1 mt-0.5">
+                                        Sign Out <span className="material-symbols-outlined text-[14px]">logout</span>
+                                    </button>
                                 </div>
+                                <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary/10 text-primary">
+                                    <span className="material-symbols-outlined">dashboard</span>
+                                </Link>
                             </div>
                         )}
-                    </div>
 
-                    <div className="mt-10 pt-10 border-t border-slate-800 flex flex-col gap-4">
-                        <div className="text-slate-500 text-xs font-bold uppercase tracking-widest">Connect With Us</div>
-                        <div className="flex gap-4">
-                            <span className="material-symbols-outlined text-slate-400">call</span>
-                            <span className="text-slate-300 text-sm">+916005159433</span>
-                        </div>
-                        <div className="flex gap-4">
-                            <span className="material-symbols-outlined text-slate-400">mail</span>
-                            <span className="text-slate-300 text-sm">info@beautifulindia.com</span>
+                        <div className="flex flex-col gap-3">
+                            <div className="flex items-center gap-3 text-slate-400">
+                                <span className="material-symbols-outlined text-[18px]">call</span>
+                                <span className="text-[13px] font-bold">+91 60051 59433</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-slate-400">
+                                <span className="material-symbols-outlined text-[18px]">mail</span>
+                                <span className="text-[13px] font-bold truncate">info@beautifulindia.com</span>
+                            </div>
                         </div>
                     </div>
                 </div>
