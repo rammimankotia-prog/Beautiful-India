@@ -387,11 +387,11 @@ const ToursDiscoveryFiltering1 = () => {
             {/* ── Hero ──────────────────────────────────────────────────────── */}
             <section className="relative h-[220px] md:h-[320px] flex items-end overflow-hidden bg-slate-700">
                 <img
-                    src="https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&q=80&w=1400"
-                    alt={pageTitle}
+                    src="/kashmir-snow-mountains.png"
+                    alt="Discover India's Best Tours"
                     loading="eager"
                     fetchPriority="high"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent" />
                 <div className="relative z-10 w-full pb-8 px-4 sm:px-6 lg:px-8">
@@ -531,7 +531,7 @@ const ToursDiscoveryFiltering1 = () => {
                                                 {/* Image */}
                                                 <div className="relative h-52 overflow-hidden bg-gray-100">
                                                     <img
-                                                        src={tour.image || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&q=75'}
+                                                        src={tour.image || '/dal-lake-kashmir.png'}
                                                         alt={`${tour.title} - ${tour.destination} tour package`}
                                                         loading="lazy"
                                                         decoding="async"
