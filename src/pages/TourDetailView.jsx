@@ -422,7 +422,7 @@ const TourDetailView = () => {
         {/* Top Navigation */}
 
         <main className="flex h-full grow flex-col pb-10 md:pb-20">
-          <div className="px-3 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-2 md:py-5">
+          <div className="px-5 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-2 md:py-5">
             <div className="flex flex-col flex-1 w-full gap-4 md:gap-6">
 
               {/* ── Premium Header ── */}
@@ -430,7 +430,7 @@ const TourDetailView = () => {
                 {/* Left: Title + Badges */}
                 <div className="flex flex-col gap-3 flex-1">
                   {/* Breadcrumb */}
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center gap-1 px-1">
                     <span className="material-symbols-outlined text-[13px]">explore</span>
                     {tour.destination || 'India'} · {tour.stateRegion || ''}
                   </p>
@@ -748,7 +748,7 @@ const TourDetailView = () => {
                         const services = Array.isArray(item.services) ? item.services : [];
                         return (
                           <div className="flex gap-0 pb-4">
-                            <div className="flex flex-col items-center shrink-0 w-[72px] pt-3 z-10">
+                            <div className="flex flex-col items-center shrink-0 w-20 pt-3 z-10">
                               <span className="text-[11px] font-black text-[#f45d48] uppercase tracking-wide leading-none">Day {item.day}</span>
                               <div className="w-3 h-3 bg-white dark:bg-background-dark border-2 border-[#f45d48] rounded-full mt-1.5 shrink-0" />
                             </div>
@@ -792,7 +792,7 @@ const TourDetailView = () => {
                       };
                       return (
                         <div className="relative">
-                          <div className="absolute left-[36px] top-4 bottom-8 w-0.5 bg-slate-200 dark:bg-slate-700" />
+                          <div className="absolute left-10 top-4 bottom-8 w-0.5 bg-slate-200 dark:bg-slate-700" />
                           {visibleDays.map((item, idx) => (
                             <ItineraryDayCard key={item.day} item={item} defaultOpen={idx === 0} />
                           ))}

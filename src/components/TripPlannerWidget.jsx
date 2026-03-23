@@ -102,12 +102,12 @@ const TripPlannerWidget = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 font-sans">
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 font-sans">
             {/* Chatbot Toggle Button */}
             {!isOpen && (
                 <button 
                     onClick={() => setIsOpen(true)}
-                    className="w-16 h-16 bg-[#0a6c75] rounded-full flex items-center justify-center shadow-2xl hover:bg-[#07565e] transition-transform hover:scale-105 p-2"
+                    className="w-12 h-12 md:w-16 md:h-16 bg-[#0a6c75] rounded-full flex items-center justify-center shadow-2xl hover:bg-[#07565e] transition-transform hover:scale-105 p-2"
                 >
                     <img src={`${import.meta.env.BASE_URL}vite.svg`} alt="Chat" className="w-full h-full object-contain" />
                 </button>
@@ -115,7 +115,7 @@ const TripPlannerWidget = () => {
 
             {/* Chatbot Window */}
             {isOpen && (
-                <div className="w-[350px] h-[500px] bg-white rounded-t-xl rounded-bl-xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-fade-in-up">
+                <div className="w-[calc(100vw-32px)] sm:w-[350px] h-[500px] bg-white rounded-t-xl rounded-bl-xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-fade-in-up">
                     {/* Header */}
                     <div className="bg-[#0a6c75] text-white p-4 flex items-center justify-between shadow-sm z-10 transition-all">
                         <div className="flex items-center gap-2">

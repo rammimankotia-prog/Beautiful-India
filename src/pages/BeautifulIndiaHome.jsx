@@ -60,7 +60,7 @@ const BeautifulIndiaHome = () => {
         .sort((a, b) => (a.order || 0) - (b.order || 0));
 
     return (
-        <div style={{ padding:'0 80px' }}>
+        <div className="px-5 md:px-20 lg:px-32 xl:px-40">
             <Helmet>
                 <title>The Beautiful India - Bharat Darshan | Explore India's Wonders</title>
                 <meta name="description" content="Explore the incredible beauty of India with Bharat Darshan. Curated tour packages for Himachal, Kashmir, Rajasthan, Kerala, and more." />
@@ -231,7 +231,7 @@ const BeautifulIndiaHome = () => {
                     </Link>
                 </div>
 
-                <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:24 }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {displayedTours.map(tour => {
                         const tourDestSegment = encodeURIComponent((tour.destination || 'global').toLowerCase().replace(/\s+/g, '-'));
                         const tourStateSegment = encodeURIComponent((tour.stateRegion || 'state').toLowerCase().replace(/\s+/g, '-'));
@@ -292,7 +292,7 @@ const BeautifulIndiaHome = () => {
                     </div>
                 </div>
 
-                <div style={{ display:'grid', gridTemplateColumns:'repeat(6, 1fr)', gap:16 }}>
+                <div className="grid grid-cols-2 min-[480px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
                     {themes.map(theme => (
                         <Link key={theme.title} to="/tours" style={{ textDecoration:'none', color:'inherit', display:'block' }}>
                             <div style={{ cursor:'pointer', transition:'transform .2s' }} 
@@ -312,7 +312,7 @@ const BeautifulIndiaHome = () => {
             </section>
 
             {/* ── Quick Nav ────────────────────────────────────────────── */}
-            <section style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20, marginBottom:60 }}>
+            <section className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mb-16">
                 {[
                     { icon:'travel_explore', label:'Browse All Tours',   sub:'500+ worldwide adventures', to:'/tours',      bg:'#006D77' },
                     { icon:'smart_toy',      label:'Bharat Bot AI',        sub:'AI-powered trip matching',  to:'/wanderbot',  bg:'#7b2d8b' },
