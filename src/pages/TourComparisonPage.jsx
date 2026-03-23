@@ -82,7 +82,7 @@ const TourComparisonPage = () => {
     { key: 'price', label: 'Price (Starting From)', icon: 'payments', render: (t) => <span className="text-lg font-black text-[#006D77]">{formatPrice(t.price, true)}</span> },
     { key: 'duration', label: 'Duration', icon: 'schedule', render: (t) => t.duration },
     { key: 'style', label: 'Travel Style', icon: 'group', render: (t) => t.style || 'Group Tour' },
-    { key: 'destination', label: 'Primary Destination', icon: 'location_on', render: (t) => t.destination || 'Various' },
+    { key: 'destination', label: 'Primary Destination', icon: 'location_on', render: (t) => (Array.isArray(t.destination) ? t.destination.join(', ') : t.destination) || 'Various' },
     { key: 'hotel', label: 'Hotel Quality', icon: 'hotel', render: (t) => <span className="flex items-center gap-1 text-yellow-500"><span className="material-symbols-outlined text-[16px]">star</span>3/4 Star</span> },
     { key: 'meals', label: 'Meals Included', icon: 'restaurant', render: (t) => 'Breakfast & Dinner' },
     { key: 'cabs', label: 'Transfers', icon: 'directions_car', render: (t) => 'Private AC Vehicle' },
@@ -125,9 +125,12 @@ const TourComparisonPage = () => {
                  
                  {/* Tour Image/Title Columns */}
                  {toursToCompare.map(tour => {
-                    const tourDestSegment = encodeURIComponent((tour.destination || 'dest').toLowerCase().replace(/\s+/g, '-'));
-                    const tourStateSegment = encodeURIComponent((tour.stateRegion || 'state').toLowerCase().replace(/\s+/g, '-'));
-                    const tourSubSegment = encodeURIComponent((tour.subregion || 'subregion').toLowerCase().replace(/\s+/g, '-'));
+                    const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
+                    const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
+                    const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
+                    const tourDestSegment = encodeURIComponent((safeDest || 'dest').toLowerCase().replace(/\s+/g, '-'));
+                    const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
+                    const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
                     const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
                     const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
 

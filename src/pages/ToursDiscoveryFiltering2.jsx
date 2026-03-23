@@ -88,9 +88,15 @@ const ToursDiscoveryFiltering2 = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {tours.map(tour => {
-                const tourDestSegment = encodeURIComponent((tour.destination || 'global').toLowerCase().replace(/\s+/g, '-'));
-                const tourStateSegment = encodeURIComponent((tour.stateRegion || 'state').toLowerCase().replace(/\s+/g, '-'));
-                const tourSubSegment = encodeURIComponent((tour.subregion || 'subregion').toLowerCase().replace(/\s+/g, '-'));
+                const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
+                const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
+                const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
+                const displayState = Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion;
+                const displayDest = Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination;
+
+                const tourDestSegment = encodeURIComponent((safeDest || 'global').toLowerCase().replace(/\s+/g, '-'));
+                const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
+                const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
                 const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
                 const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
 
@@ -108,7 +114,7 @@ const ToursDiscoveryFiltering2 = () => {
                       <div className="p-6">
                         <div className="flex items-center gap-1 text-primary text-xs font-bold uppercase mb-3">
                           <span className="material-symbols-outlined text-[16px]">location_on</span>
-                          <span>{tour.stateRegion}, {tour.destination}</span>
+                          <span>{displayState}, {displayDest}</span>
                         </div>
                         <h3 className="text-xl font-bold mb-3 text-neutral-900 group-hover:text-primary transition-colors">{tour.title}</h3>
                         <div className="flex items-center gap-6 text-sm text-neutral-600 mb-6">

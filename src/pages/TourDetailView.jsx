@@ -179,7 +179,7 @@ const TourDetailView = () => {
       email: leadEmail,
       phone: leadPhone,
       from: originCity,
-      to: tour.stateRegion || tour.destination || tour.title,
+      to: (Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion) || (Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination) || tour.title,
       departureType,
       departureDate: departureType === 'fixed' ? selectedDate : (departureType === 'flexible' ? `${selectedMonthFull} - ${selectedWeekNum}` : 'Anytime'),
       duration: `${numDays} Days`,
@@ -220,7 +220,18 @@ const TourDetailView = () => {
   const similarTours = (() => {
     if (!tour) return [];
     // First try same state/region
-    let result = allTours.filter(t => t.id !== tour.id && (t.stateRegion === tour.stateRegion || t.destination === tour.destination));
+    let result = allTours.filter(t => {
+      if (t.id === tour.id) return false;
+      const tState = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
+      const tourState = Array.isArray(tour.stateRegion) ? tour.stateRegion : [tour.stateRegion];
+      const stateMatch = tState.some(s => tourState.includes(s));
+
+      const tDest = Array.isArray(t.destination) ? t.destination : [t.destination];
+      const tourDest = Array.isArray(tour.destination) ? tour.destination : [tour.destination];
+      const destMatch = tDest.some(d => tourDest.includes(d));
+
+      return stateMatch || destMatch;
+    });
     // If fewer than 3, pad with packages from other regions
     if (result.length < 3) {
       const extra = allTours.filter(t => t.id !== tour.id && !result.find(r => r.id === t.id)).slice(0, 4 - result.length);
@@ -428,7 +439,7 @@ const TourDetailView = () => {
                   {/* Breadcrumb */}
                   <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center gap-1 px-1">
                     <span className="material-symbols-outlined text-[13px]">explore</span>
-                    {tour.destination || 'India'} · {tour.stateRegion || ''}
+                    {(Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination) || 'India'} · {(Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion) || ''}
                   </p>
                   <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight text-slate-900 dark:text-white">{tour.title}</h1>
                   {/* Info Pills */}

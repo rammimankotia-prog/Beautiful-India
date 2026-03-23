@@ -352,7 +352,7 @@ const ToursByTrain = () => {
                                         <div className="p-6 flex flex-col flex-grow">
                                             <div className="flex items-center gap-1 text-[#0a6c75] text-[11px] font-black uppercase tracking-wider mb-2">
                                                 <span className="material-symbols-outlined text-[14px]">location_on</span>
-                                                {tour.stateRegion}
+                                                {Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion}
                                             </div>
                                             <h3 className="text-lg font-black text-slate-800 mb-2 leading-snug group-hover:text-[#0a6c75] transition-colors line-clamp-2">{tour.title}</h3>
                                             <p className="text-slate-500 text-sm mb-6 line-clamp-2 font-medium leading-relaxed">{tour.description}</p>

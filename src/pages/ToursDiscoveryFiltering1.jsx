@@ -6,11 +6,20 @@ import { useCurrency } from '../context/CurrencyContext';
 const findTourBySlug = (tours, slug) => {
     if (!slug) return null;
     const decoded = decodeURIComponent(slug).toLowerCase();
-    let match = tours.find(t => t.stateRegion && t.stateRegion.toLowerCase().replace(/\s+/g, '-') === decoded);
+    let match = tours.find(t => {
+        const regions = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
+        return regions.some(r => r && r.toLowerCase().replace(/\s+/g, '-') === decoded);
+    });
     if (match) return match;
-    match = tours.find(t => t.stateRegion && t.stateRegion.toLowerCase().includes(decoded));
+    match = tours.find(t => {
+        const regions = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
+        return regions.some(r => r && r.toLowerCase().includes(decoded));
+    });
     if (match) return match;
-    match = tours.find(t => t.stateRegion && decoded.includes(t.stateRegion.toLowerCase()));
+    match = tours.find(t => {
+        const regions = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
+        return regions.some(r => r && decoded.includes(r.toLowerCase()));
+    });
     return match || null;
 };
 
@@ -318,10 +327,19 @@ const ToursDiscoveryFiltering1 = () => {
 
     const filteredTours = tours.filter(tour => {
         if (destination !== 'Any Destination' && tour.destination) {
-            if (tour.destination.toLowerCase() !== destination.toLowerCase()) return false;
+            const tourDest = tour.destination;
+            const destMatch = Array.isArray(tourDest) 
+                ? tourDest.some(d => d && d.toLowerCase() === destination.toLowerCase())
+                : (tourDest.toLowerCase() === destination.toLowerCase());
+            if (!destMatch) return false;
         }
+
         if (stateRegion !== 'All States') {
-            if (!tour.stateRegion || tour.stateRegion.toLowerCase() !== stateRegion.toLowerCase()) return false;
+            const tourState = tour.stateRegion;
+            const stateMatch = Array.isArray(tourState)
+                ? tourState.some(s => s && s.toLowerCase() === stateRegion.toLowerCase())
+                : (tourState && tourState.toLowerCase() === stateRegion.toLowerCase());
+            if (!stateMatch) return false;
         }
         if (themeFilters.length > 0) {
             const hasTheme = themeFilters.some(theme =>
@@ -518,11 +536,20 @@ const ToursDiscoveryFiltering1 = () => {
                             <>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                                     {processedTours.map((tour, index) => {
-                                        const locationStr = [tour.subregion, tour.stateRegion, tour.destination].filter(Boolean).join(', ');
+                                        const locationStr = [
+                                            Array.isArray(tour.subregion) ? tour.subregion.join(', ') : tour.subregion,
+                                            Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion,
+                                            Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination
+                                        ].filter(Boolean).join(', ');
                                         const themeTag = tour.nature || tour.theme || 'Adventure';
-                                        const tourDestSegment = encodeURIComponent((tour.destination || 'global').toLowerCase().replace(/\s+/g, '-'));
-                                        const tourStateSegment = encodeURIComponent((tour.stateRegion || 'state').toLowerCase().replace(/\s+/g, '-'));
-                                        const tourSubSegment = encodeURIComponent((tour.subregion || 'subregion').toLowerCase().replace(/\s+/g, '-'));
+                                        
+                                        const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
+                                        const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
+                                        const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
+                                        
+                                        const tourDestSegment = encodeURIComponent((safeDest || 'global').toLowerCase().replace(/\s+/g, '-'));
+                                        const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
+                                        const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
                                         const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
                                         const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
 

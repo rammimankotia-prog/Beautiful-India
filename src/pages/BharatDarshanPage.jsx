@@ -245,11 +245,19 @@ const BharatDarshanPage = () => {
     ? allTours.slice(0, 8) // Show top 8 by default
     : allTours.filter(t => {
         const query = activeFilter.toLowerCase();
+        const tState = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
+        const stateMatch = tState.some(s => s?.toLowerCase().includes(query));
+        
+        const dMatch = destinations.find(d => {
+            const isMatchName = Array.isArray(t.stateRegion) ? t.stateRegion.includes(d.name) : t.stateRegion === d.name;
+            return isMatchName && d.badge.toLowerCase().includes(query);
+        });
+
         return (
           t.theme?.toLowerCase().includes(query) || 
-          t.stateRegion?.toLowerCase().includes(query) ||
+          stateMatch ||
           (t.title?.toLowerCase().includes(query)) ||
-          destinations.find(d => d.name === t.stateRegion && d.badge.toLowerCase().includes(query))
+          dMatch
         );
       });
 
@@ -521,7 +529,7 @@ const BharatDarshanPage = () => {
                     </div>
                     {/* Body */}
                     <div className="p-4 flex-1 flex flex-col">
-                      <div className="text-[10px] font-black text-[#0a6c75] uppercase tracking-wider mb-1">{tour.stateRegion}</div>
+                      <div className="text-[10px] font-black text-[#0a6c75] uppercase tracking-wider mb-1">{Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion}</div>
                       <h3 className="font-extrabold text-slate-800 text-[14px] leading-tight mb-2 line-clamp-2">{tour.title}</h3>
                       <p className="text-slate-500 text-[12px] line-clamp-2 mb-4 flex-1">{tour.description}</p>
                       <div className="flex justify-between items-center mt-auto pt-3 border-t border-slate-50">
@@ -614,7 +622,7 @@ const BharatDarshanPage = () => {
                 <div className="p-6">
                   <div className="text-amber-400 flex items-center gap-1 mb-2">
                     <span className="material-symbols-outlined text-[16px]">location_on</span>
-                    <span className="text-[11px] font-bold uppercase tracking-wider">{tour.stateRegion}</span>
+                    <span className="text-[11px] font-bold uppercase tracking-wider">{Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion}</span>
                   </div>
                   <h3 className="text-xl font-black text-white mb-3 leading-tight group-hover:text-amber-400 transition-colors line-clamp-1">{tour.title}</h3>
                   <p className="text-white/50 text-sm mb-6 line-clamp-2 font-medium">{tour.description}</p>

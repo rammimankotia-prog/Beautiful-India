@@ -150,11 +150,17 @@ const AdminTourManagementDashboard = () => {
           <>
             {viewMode === 'folders' && !selectedDest && (
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                {[...new Set(tours.map(t => t.destination || 'Uncategorized'))].map(dest => (
+                {[...new Set(tours.map(t => {
+                  const dest = Array.isArray(t.destination) ? t.destination[0] : t.destination;
+                  return dest || 'Uncategorized';
+                }))].map(dest => (
                   <div key={dest} onClick={() => setSelectedDest(dest)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl cursor-pointer hover:shadow-xl hover:border-[#0a6c75] transition-all group text-center">
                       <span className="material-symbols-outlined text-4xl text-slate-300 group-hover:text-[#0a6c75] transition-colors mb-2 block">folder</span>
                       <h3 className="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest">{dest}</h3>
-                      <p className="text-[10px] font-bold text-slate-400 mt-1">{tours.filter(t => (t.destination || 'Uncategorized') === dest).length} Tours</p>
+                      <p className="text-[10px] font-bold text-slate-400 mt-1">{tours.filter(t => {
+                        const tourDest = Array.isArray(t.destination) ? t.destination[0] : t.destination;
+                        return (tourDest || 'Uncategorized') === dest;
+                      }).length} Tours</p>
                   </div>
                 ))}
               </div>
@@ -166,7 +172,13 @@ const AdminTourManagementDashboard = () => {
                    <span className="material-symbols-outlined text-sm">arrow_back</span> Back to Destinations
                 </button>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                  {[...new Set(tours.filter(t => (t.destination || 'Uncategorized') === selectedDest).map(t => t.stateRegion || 'Unspecified'))].map(state => (
+                  {[...new Set(tours.filter(t => {
+                    const tourDest = Array.isArray(t.destination) ? t.destination[0] : t.destination;
+                    return (tourDest || 'Uncategorized') === selectedDest;
+                  }).map(t => {
+                    const state = Array.isArray(t.stateRegion) ? t.stateRegion[0] : t.stateRegion;
+                    return state || 'Unspecified';
+                  }))].map(state => (
                     <div key={state} onClick={() => setSelectedState(state)} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl cursor-pointer hover:shadow-xl hover:border-[#0a6c75] transition-all group text-center">
                         <span className="material-symbols-outlined text-4xl text-primary/30 group-hover:text-[#0a6c75] transition-colors mb-2 block">folder_open</span>
                         <h3 className="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest">{state}</h3>
@@ -200,7 +212,9 @@ const AdminTourManagementDashboard = () => {
                         {tours
                           .filter(tour => {
                              if (viewMode === 'folders' && selectedDest && selectedState) {
-                                if ((tour.destination || 'Uncategorized') !== selectedDest || (tour.stateRegion || 'Unspecified') !== selectedState) return false;
+                                const tourDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
+                                const tourState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
+                                if ((tourDest || 'Uncategorized') !== selectedDest || (tourState || 'Unspecified') !== selectedState) return false;
                              }
                              if (activeTab === 'Active' && tour.status !== 'active') return false;
                              if (activeTab === 'Train Tours' && tour.transport !== 'train') return false;
@@ -220,8 +234,8 @@ const AdminTourManagementDashboard = () => {
                                </td>
                                <td className="px-8 py-6">
                                   <div className="flex flex-col">
-                                     <span className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-tight">{tour.destination}</span>
-                                     <span className="text-[10px] font-bold text-slate-400">{tour.stateRegion}</span>
+                                     <span className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-tight">{Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination}</span>
+                                     <span className="text-[10px] font-bold text-slate-400">{Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion}</span>
                                   </div>
                                </td>
                                <td className="px-8 py-6">

@@ -91,9 +91,13 @@ const BharatBotRecommendedToursView = () => {
                                 <div className="relative w-full overflow-hidden">
                                     <div className="flex overflow-x-auto gap-6 pb-6 scrollbar-hide snap-x px-2">
                                         {recommendedTours.map(tour => {
-                                            const tourDestSegment = encodeURIComponent((tour.destination || 'global').toLowerCase().replace(/\s+/g, '-'));
-                                            const tourStateSegment = encodeURIComponent((tour.stateRegion || 'state').toLowerCase().replace(/\s+/g, '-'));
-                                            const tourSubSegment = encodeURIComponent((tour.subregion || 'subregion').toLowerCase().replace(/\s+/g, '-'));
+                                            const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
+                                            const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
+                                            const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
+
+                                            const tourDestSegment = encodeURIComponent((safeDest || 'global').toLowerCase().replace(/\s+/g, '-'));
+                                            const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
+                                            const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
                                             const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
                                             const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
                                             

@@ -129,9 +129,15 @@ const ToursDiscoveryFiltering6 = () => {
         [1, 2, 3].map(i => <div key={i} className="h-64 bg-gray-100 animate-pulse rounded-xl"></div>)
     ) : (
         tours.map(tour => {
-            const tourDestSegment = encodeURIComponent((tour.destination || 'global').toLowerCase().replace(/\s+/g, '-'));
-            const tourStateSegment = encodeURIComponent((tour.stateRegion || 'state').toLowerCase().replace(/\s+/g, '-'));
-            const tourSubSegment = encodeURIComponent((tour.subregion || 'subregion').toLowerCase().replace(/\s+/g, '-'));
+            const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
+            const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
+            const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
+            const displayState = Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion;
+            const displayDest = Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination;
+
+            const tourDestSegment = encodeURIComponent((safeDest || 'global').toLowerCase().replace(/\s+/g, '-'));
+            const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
+            const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
             const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
             const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
 
@@ -146,7 +152,7 @@ const ToursDiscoveryFiltering6 = () => {
                     <div className="p-5">
                         <div className="flex items-center gap-1 text-neutral-600 dark:text-neutral-200 text-xs font-medium mb-2">
                             <span className="material-symbols-outlined text-[16px]">location_on</span>
-                            <span>{tour.stateRegion}, {tour.destination}</span>
+                            <span>{displayState}, {displayDest}</span>
                         </div>
                         <h3 className="text-neutral-900 dark:text-neutral-100 text-lg font-bold leading-tight mb-2 line-clamp-2">{tour.title}</h3>
                         <div className="flex items-center gap-4 text-sm text-neutral-600 dark:text-neutral-200 mb-4">
