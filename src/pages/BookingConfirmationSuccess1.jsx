@@ -46,7 +46,7 @@ const BookingConfirmationSuccess1 = () => {
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-500 font-medium">Total Paid:</span>
-                  <span className="font-bold text-primary text-lg">{formatPrice(booking.amount)}</span>
+                  <span className="font-bold text-primary text-lg">{formatPrice(booking.amount, true)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-500 font-medium">Status:</span>

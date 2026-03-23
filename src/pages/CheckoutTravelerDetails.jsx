@@ -148,15 +148,15 @@ const CheckoutTravelerDetails = () => {
 <div className="pt-6 space-y-2">
 <div className="flex justify-between items-center text-sm">
 <span className="text-slate-600 dark:text-slate-400">Base Price (x{travelers.length})</span>
-<span className="text-slate-900 dark:text-slate-100">{formatPrice(tour.price * travelers.length)}</span>
-</div>
-<div className="flex justify-between items-center text-sm">
-<span className="text-slate-600 dark:text-slate-400">Taxes &amp; Fees</span>
-<span className="text-slate-900 dark:text-slate-100">{formatPrice(tour.price * 0.05)}</span>
-</div>
-<div className="flex justify-between items-center pt-4 border-t border-primary/10 mt-4">
-<span className="text-lg font-black text-slate-900 dark:text-slate-100">Total Price</span>
-<span className="text-2xl font-black text-primary">{formatPrice(tour.price * travelers.length + tour.price * 0.05)}</span>
+                        <span className="text-slate-900 dark:text-slate-100">{formatPrice(tour.price * travelers.length, true)}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-500">Service Fee & Taxes (5%)</span>
+                        <span className="text-slate-900 dark:text-slate-100">{formatPrice(tour.price * 0.05, true)}</span>
+                      </div>
+                      <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                        <span className="text-base font-bold text-slate-900 dark:text-white">Total Amount</span>
+                        <span className="text-2xl font-black text-primary">{formatPrice(tour.price * travelers.length + tour.price * 0.05, true)}</span>
 </div>
 </div>
 </div>

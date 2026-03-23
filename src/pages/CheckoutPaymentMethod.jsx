@@ -148,22 +148,22 @@ const CheckoutPaymentMethod = () => {
 </div>
 </div>
 <div className="space-y-3 py-6 border-y border-slate-100 dark:border-slate-800">
-<div className="flex justify-between text-sm">
-<span className="text-slate-500">Base Price ({travelers.length} Adults)</span>
-<span className="font-semibold">{formatPrice(tour.price * travelers.length)}</span>
-</div>
-<div className="flex justify-between text-sm">
-<span className="text-slate-500">Service Fee</span>
-<span className="font-semibold">{formatPrice(tour.price * 0.05)}</span>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
+                    <span className="font-semibold">{formatPrice(tour.price * travelers.length, true)}</span>
+                  </div>
+                  <div className="flex justify-between mb-4">
+                    <span className="text-slate-600 dark:text-slate-400">Fees & Taxes</span>
+                    <span className="font-semibold">{formatPrice(tour.price * 0.05, true)}</span>
+                  </div>
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-700 mt-4 flex justify-between items-center">
+                    <span className="text-slate-900 dark:text-white font-bold">Total Payable</span>
+                    <span className="block text-2xl font-black text-slate-900 dark:text-white">{formatPrice(tour.price * travelers.length + tour.price * 0.05, true)}</span>
 </div>
 </div>
 <div className="pt-6">
 <div className="flex justify-between items-end mb-8">
-<span className="text-slate-900 dark:text-white font-bold text-lg">Total Amount</span>
-<div className="text-right">
-<span className="block text-2xl font-black text-slate-900 dark:text-white">{formatPrice(tour.price * travelers.length + tour.price * 0.05)}</span>
 <span className="text-[10px] text-slate-400 uppercase tracking-widest">Inclusive of all taxes</span>
-</div>
 </div>
 <button 
     onClick={handleCompleteBooking}

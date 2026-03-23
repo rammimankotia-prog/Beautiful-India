@@ -93,7 +93,7 @@ const AdminOverviewDashboard = () => {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {[
-                    { label: 'Total Revenue', value: formatPrice(stats.revenue), icon: 'payments', color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/20' },
+                    { label: 'Total Revenue', value: formatPrice(stats.revenue, true), icon: 'payments', color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/20' },
                     { label: 'Total Bookings', value: stats.totalBookings, icon: 'receipt_long', color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/20' },
                     { label: 'Fresh Leads', value: stats.totalLeads, icon: 'campaign', color: 'text-purple-600', bg: 'bg-purple-50 dark:bg-purple-950/20' },
                     { label: 'User Feedback', value: stats.totalReviews, icon: 'grade', color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/20' }

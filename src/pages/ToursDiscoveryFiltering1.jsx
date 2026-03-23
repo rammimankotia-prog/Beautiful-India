@@ -172,7 +172,7 @@ const FilterPanel = ({
         <div>
             <div className="flex justify-between items-center mb-3">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Budget</label>
-                <span className="text-xs font-bold text-primary">{formatPrice(budgetUsd)}</span>
+                <span className="text-xs font-bold text-primary">{formatPrice(budgetUsd, true)}</span>
             </div>
             <input
                 type="range" min="0" max="1000000" step="5000"
@@ -181,8 +181,8 @@ const FilterPanel = ({
                 className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
             />
             <div className="flex justify-between text-xs text-gray-400 mt-1.5 font-medium">
-                <span>{formatPrice(0)}</span>
-                <span>{formatPrice(1000000)}+</span>
+                <span>{formatPrice(0, true)}</span>
+                <span>{formatPrice(1000000, true)}+</span>
             </div>
         </div>
 

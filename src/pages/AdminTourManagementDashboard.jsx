@@ -220,7 +220,7 @@ const AdminTourManagementDashboard = () => {
                                   </div>
                                </td>
                                <td className="px-8 py-6">
-                                  <span className="text-sm font-black text-slate-800 dark:text-slate-100">{formatPrice(tour.pricePerPerson || tour.price)}</span>
+                                  <span className="text-sm font-black text-slate-800 dark:text-slate-100">{formatPrice(tour.pricePerPerson || tour.price, true)}</span>
                                </td>
                                <td className="px-8 py-6">
                                   <select 

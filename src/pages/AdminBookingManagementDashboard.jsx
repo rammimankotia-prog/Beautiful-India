@@ -188,7 +188,7 @@ const AdminBookingManagementDashboard = () => {
         </div>
         <div className="bg-white dark:bg-slate-900 p-6 rounded-[24px] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
           <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Total Revenue</p>
-          <h3 className="text-2xl font-black text-[#0a6c75]">{formatPrice(bookings.reduce((sum, b) => sum + (b.amount || 0), 0))}</h3>
+          <h3 className="text-2xl font-black text-[#0a6c75]">{formatPrice(bookings.reduce((sum, b) => sum + (b.amount || 0), 0), true)}</h3>
         </div>
         <div className="bg-white dark:bg-slate-900 p-6 rounded-[24px] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
           <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Pending Invoices</p>
@@ -256,7 +256,7 @@ const AdminBookingManagementDashboard = () => {
                   </td>
                   <td className="px-8 py-6 text-sm font-bold text-slate-600 dark:text-slate-400">{b.tourTitle}</td>
                   <td className="px-8 py-6 text-[11px] font-black text-slate-400">{b.date}</td>
-                  <td className="px-8 py-6 font-black text-slate-800 dark:text-slate-100">{formatPrice(b.amount)}</td>
+                  <td className="px-8 py-6 font-black text-slate-800 dark:text-slate-100">{formatPrice(b.amount, true)}</td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex justify-end gap-2 text-slate-200 group-hover:text-slate-400 hover:text-slate-600 transition-colors">
                       <button onClick={() => handleDelete(b.id)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100">
