@@ -108,19 +108,13 @@ const TourDetailView = () => {
         let allToursList = [];
         
         // Always fetch from server first — server is the source of truth
-        try {
-            const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
-            if (res.ok) {
-                allToursList = await res.json();
-                // Update localStorage cache
-                localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
-            }
-        } catch(fetchErr) {
-            console.error("Server fetch error, falling back to localStorage:", fetchErr);
-        }
-        
-        // Fallback to localStorage if server fetch failed
-        if (allToursList.length === 0) {
+        const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+        if (res.ok) {
+            allToursList = await res.json();
+            // Update localStorage cache
+            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+        } else {
+            // Fallback to localStorage if server fetch failed
             const saved = localStorage.getItem('beautifulindia_admin_tours');
             if (saved) {
                 try {

@@ -9,7 +9,7 @@ const destinations = [
     name: 'Himachal Pradesh',
     slug: 'himachal',
     tagline: 'Land of Snow & Serenity',
-    image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80',
+    image: '/himachal-pradesh.png',
     packages: 245,
     startingFrom: 8999,
     duration: '4–10 Days',
@@ -23,7 +23,7 @@ const destinations = [
     name: 'Kashmir',
     slug: 'kashmir',
     tagline: 'Paradise on Earth',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80',
+    image: '/dal-lake-kashmir.png',
     packages: 312,
     startingFrom: 12999,
     duration: '5–8 Days',
@@ -37,7 +37,7 @@ const destinations = [
     name: 'Rajasthan',
     slug: 'rajasthan',
     tagline: 'The Land of Kings',
-    image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=800&q=80',
+    image: '/hawa-mahal-rajasthan.png',
     packages: 189,
     startingFrom: 7499,
     duration: '5–12 Days',
@@ -51,7 +51,7 @@ const destinations = [
     name: 'Kerala',
     slug: 'kerala',
     tagline: 'God\'s Own Country',
-    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80',
+    image: '/kerala-tour-package.png',
     packages: 276,
     startingFrom: 9499,
     duration: '5–9 Days',
@@ -65,7 +65,7 @@ const destinations = [
     name: 'Ladakh',
     slug: 'ladakh',
     tagline: 'Where Heaven Meets Earth',
-    image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80',
+    image: '/ladakh-monastery.png',
     packages: 143,
     startingFrom: 15999,
     duration: '7–12 Days',
@@ -79,7 +79,7 @@ const destinations = [
     name: 'Goa',
     slug: 'goa',
     tagline: 'Sun, Sand & Serenity',
-    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80',
+    image: '/goa-family-vacation.png',
     packages: 198,
     startingFrom: 5999,
     duration: '3–6 Days',
@@ -93,7 +93,7 @@ const destinations = [
     name: 'Uttarakhand',
     slug: 'uttarakhand',
     tagline: 'Dev Bhoomi – Land of Gods',
-    image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=800&q=80',
+    image: '/uttarakhand.png',
     packages: 211,
     startingFrom: 7999,
     duration: '4–8 Days',
@@ -107,7 +107,7 @@ const destinations = [
     name: 'Andaman Islands',
     slug: 'andaman',
     tagline: 'Jewels of the Bay of Bengal',
-    image: 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?auto=format&fit=crop&w=800&q=80',
+    image: '/andaman-islands.png',
     packages: 127,
     startingFrom: 18999,
     duration: '5–8 Days',
@@ -123,25 +123,25 @@ const metroCitiesIndia = [
   {
     name: 'Delhi',
     description: 'The Heart of India, where history meets modernity.',
-    image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80',
+    image: '/delhi.png',
     slug: 'delhi'
   },
   {
     name: 'Mumbai',
     description: 'The City of Dreams and the financial capital of India.',
-    image: 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=800&q=80',
     slug: 'mumbai'
   },
   {
     name: 'Kolkatta',
     description: 'The City of Joy, known for its rich culture and heritage.',
-    image: 'https://images.unsplash.com/photo-1558431382-bb74994135b3?auto=format&fit=crop&w=600&q=80',
+    image: '/howrah-bridge-kolkata.png',
     slug: 'kolkatta'
   },
   {
     name: 'Chennai',
     description: 'The Gateway to South India, famous for its temples and beaches.',
-    image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800&q=80',
     slug: 'chennai'
   }
 ];
@@ -185,19 +185,22 @@ const BharatDarshanPage = () => {
     const fetchTours = async () => {
       try {
         let allToursList = [];
-        const saved = localStorage.getItem('beautifulindia_admin_tours');
-        if (saved !== null) {
-            try {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
-            } catch(e) {}
+        
+        // Priority: Fetch from server to ensure latest images/data
+        const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
+        if (res.ok) {
+            allToursList = await res.json();
+            if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
+                localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+            }
         } else {
-            const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
-            if (res.ok) {
-                allToursList = await res.json();
-                if (allToursList && Array.isArray(allToursList) && allToursList.length > 0) {
-                    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
-                }
+            // Fallback to localStorage if server fetch fails
+            const saved = localStorage.getItem('beautifulindia_admin_tours');
+            if (saved !== null) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+                } catch(e) {}
             }
         }
         
