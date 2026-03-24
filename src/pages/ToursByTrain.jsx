@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
+import { useData } from '../context/DataContext';
 
 // ─── Skeleton Card ────────────────────────────────────────────────────────────
 const SkeletonCard = () => (
@@ -113,6 +114,7 @@ const FilterPanel = ({
 );
 
 const ToursByTrain = () => {
+    const { tours: allToursList, loading: dataLoading } = useData();
     const [tours, setTours] = useState([]);
     const [loading, setLoading] = useState(true);
     const { formatPrice } = useCurrency();
@@ -126,42 +128,14 @@ const ToursByTrain = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     useEffect(() => {
-        const fetchTours = async () => {
-            try {
-                let processedTours = [];
-                const res = await fetch(`${import.meta.env.BASE_URL || '/'}data/tours.json?t=${Date.now()}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && Array.isArray(data)) {
-                        const allTours = data.filter(Boolean); // Filter out null/undefined entries
-                        localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allTours));
-                        processedTours = allTours;
-                    }
-                } else {
-                    // Fallback to localStorage if fetch fails
-                    const saved = localStorage.getItem('beautifulindia_admin_tours');
-                    if (saved !== null) {
-                        try {
-                            const parsed = JSON.parse(saved);
-                            if (Array.isArray(parsed)) {
-                                const allTours = parsed.filter(Boolean); // Filter out null/undefined entries
-                                processedTours = allTours;
-                            }
-                        } catch(e) {
-                            console.error("Failed to parse tours from localStorage:", e);
-                        }
-                    }
-                }
-                const trainTours = processedTours.filter(t => t.transport === 'train' && t.status !== 'paused');
-                setTours(trainTours);
-                setLoading(false);
-            } catch (err) {
-                console.error('Failed to fetch tours:', err);
-                setLoading(false);
-            }
-        };
-        fetchTours();
-    }, []);
+        if (!dataLoading && allToursList.length > 0) {
+            const trainTours = allToursList.filter(t => t.transport === 'train' && t.status !== 'paused');
+            setTours(trainTours);
+            setLoading(false);
+        } else if (!dataLoading) {
+            setLoading(false);
+        }
+    }, [dataLoading, allToursList]);
 
     // Lock scroll when drawer is open
     useEffect(() => {

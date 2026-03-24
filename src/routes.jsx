@@ -1,174 +1,185 @@
+import React, { lazy, Suspense } from 'react';
+import LoadingSpinner from './components/LoadingSpinner';
 
-import React from 'react';
-import NavigationHub from './pages/NavigationHub';
-import BeautifulIndiaHome from './pages/BeautifulIndiaHome';
-import PrivacyPolicyLayout from './pages/PrivacyPolicyLayout';
-import TermsOfServiceLayout from './pages/TermsOfServiceLayout';
-import TourDetailView from './pages/TourDetailView';
-import TripDepartureCountdownEmail from './pages/24HourTripDepartureCountdownEmail';
-import ErrorPageNotFound from './pages/404ErrorPageNotFound';
-import AdminBookingManagementDashboard from './pages/AdminBookingManagementDashboard';
-import AdminLeadsDashboard from './pages/AdminLeadsDashboard';
-import AdminChatbotFlow from './pages/AdminChatbotFlow';
-import AdminNewTourUploadForm from './pages/AdminNewTourUploadForm';
-import AdminTourManagementDashboard from './pages/AdminTourManagementDashboard';
-import AdminOverviewDashboard from './pages/AdminOverviewDashboard';
-import AdminQueryManagement from './pages/AdminQueryManagement';
-import AdminArticleManagementDashboard from './pages/AdminArticleManagementDashboard';
-import AdminNewArticleUploadForm from './pages/AdminNewArticleUploadForm';
-import AdminCategorizationSettings from './pages/AdminCategorizationSettings';
-import AdminThemeManagement from './pages/AdminThemeManagement';
-import AdminTrainQueries from './pages/AdminTrainQueries';
-import AdminUserManagement from './pages/AdminUserManagement';
+// Layouts - Keep static for structural stability
 import AdminLayout from './components/AdminLayout';
-import BookingCancellationConfirmationEmail from './pages/BookingCancellationConfirmationEmail';
-import BookingCancellationRequestForm from './pages/BookingCancellationRequestForm';
-import BookingConfirmationSuccess1 from './pages/BookingConfirmationSuccess1';
-import BookingConfirmationSuccess2 from './pages/BookingConfirmationSuccess2';
-import CheckoutPaymentMethod from './pages/CheckoutPaymentMethod';
-import CheckoutTravelerDetails from './pages/CheckoutTravelerDetails';
-import CustomerSuccessStoryDetail from './pages/CustomerSuccessStoryDetail';
-import CustomTripQuoteRequestEmail from './pages/CustomTripQuoteRequestEmail';
-import GiftCardCheckoutDelivery from './pages/GiftCardCheckoutDelivery';
-import GiftCardDeliveryEmailTemplate from './pages/GiftCardDeliveryEmailTemplate';
-import GiftCardPersonalizeYourGift from './pages/GiftCardPersonalizeYourGift';
-import GiftCardPurchaseConfirmed from './pages/GiftCardPurchaseConfirmed';
-import MemberOnlyExclusiveTourEmail from './pages/MemberOnlyExclusiveTourEmail';
-import ReferralCreditAppliedNotification from './pages/ReferralCreditAppliedNotification';
-import ReferralInviteEmailTemplate from './pages/ReferralInviteEmailTemplate';
-import ReferralRewardsDashboard from './pages/ReferralRewardsDashboard';
-import ReferralRewardMilestonePopUp from './pages/ReferralRewardMilestonePopUp';
-import ReferAFriendRewards from './pages/ReferAFriendRewards';
-import SavedTripsWishlist from './pages/SavedTripsWishlist';
-import SeasonalReferralCampaignLandingPage from './pages/SeasonalReferralCampaignLandingPage';
-import SeasonalTourSalePromotionalEmail from './pages/SeasonalTourSalePromotionalEmail';
-import SecurePasswordResetEmail from './pages/SecurePasswordResetEmail';
-import SmartPackingListGenerator from './pages/SmartPackingListGenerator';
-import ToursDiscoveryFiltering1 from './pages/ToursDiscoveryFiltering1';
-import TourComparisonPage from './pages/TourComparisonPage';
-import ToursDiscoveryFiltering2 from './pages/ToursDiscoveryFiltering2';
-import ToursDiscoveryFiltering3 from './pages/ToursDiscoveryFiltering3';
-import ToursDiscoveryFiltering4 from './pages/ToursDiscoveryFiltering4';
-import ToursDiscoveryFiltering5 from './pages/ToursDiscoveryFiltering5';
-import ToursDiscoveryFiltering6 from './pages/ToursDiscoveryFiltering6';
-import ToursDiscoveryFiltering7 from './pages/ToursDiscoveryFiltering7';
-import ToursDiscoveryFiltering8 from './pages/ToursDiscoveryFiltering8';
-import TourReviewConfirmationEmail from './pages/TourReviewConfirmationEmail';
-import TourReviewSubmissionForm from './pages/TourReviewSubmissionForm';
-import ReviewSuccessPage from './pages/ReviewSuccessPage';
-import TravelAdvisorySafetyGuide from './pages/TravelAdvisorySafetyGuide';
-import TravelBlogPostDetailView1 from './pages/TravelBlogPostDetailView1';
-import TravelBlogPostDetailView2 from './pages/TravelBlogPostDetailView2';
-import TravelGuidesCategoryLanding from './pages/TravelGuidesCategoryLanding';
-import TripAnniversaryMilestoneEmail from './pages/TripAnniversaryMilestoneEmail';
-import UpcomingTripBookingReminderEmail from './pages/UpcomingTripBookingReminderEmail';
-import UserMyBookingsHistory from './pages/UserMyBookingsHistory';
-import WaitlistJoinConfirmationEmail from './pages/WaitlistJoinConfirmationEmail';
-import BharatBotConsultationSuccessScreen from './pages/BharatBotConsultationSuccessScreen';
-import BharatBotLimitedTimeFlashSaleCard from './pages/BharatBotLimitedTimeFlashSaleCard';
-import BharatBotRecommendedToursView from './pages/BharatBotRecommendedToursView';
-import BharatBotTourMatchmakerChatbot from './pages/BharatBotTourMatchmakerChatbot';
-import WelcomeEmailTemplate from './pages/WelcomeEmailTemplate';
-import BharatDarshanPage from './pages/BharatDarshanPage';
-import ContactPage from './pages/ContactPage';
-import AboutUsPage from './pages/AboutUsPage';
-import FestivalsPage from './pages/FestivalsPage';
-import ToursByTrain from './pages/ToursByTrain';
-import TrainBookingPage from './pages/TrainBookingPage';
-import TrainBookingSuccessPage from './pages/TrainBookingSuccessPage';
+
+// Lazy Loaded Pages
+const NavigationHub = lazy(() => import('./pages/NavigationHub'));
+const BeautifulIndiaHome = lazy(() => import('./pages/BeautifulIndiaHome'));
+const PrivacyPolicyLayout = lazy(() => import('./pages/PrivacyPolicyLayout'));
+const TermsOfServiceLayout = lazy(() => import('./pages/TermsOfServiceLayout'));
+const TourDetailView = lazy(() => import('./pages/TourDetailView'));
+const TripDepartureCountdownEmail = lazy(() => import('./pages/24HourTripDepartureCountdownEmail'));
+const ErrorPageNotFound = lazy(() => import('./pages/404ErrorPageNotFound'));
+const AdminBookingManagementDashboard = lazy(() => import('./pages/AdminBookingManagementDashboard'));
+const AdminLeadsDashboard = lazy(() => import('./pages/AdminLeadsDashboard'));
+const AdminChatbotFlow = lazy(() => import('./pages/AdminChatbotFlow'));
+const AdminNewTourUploadForm = lazy(() => import('./pages/AdminNewTourUploadForm'));
+const AdminTourManagementDashboard = lazy(() => import('./pages/AdminTourManagementDashboard'));
+const AdminOverviewDashboard = lazy(() => import('./pages/AdminOverviewDashboard'));
+const AdminQueryManagement = lazy(() => import('./pages/AdminQueryManagement'));
+const AdminArticleManagementDashboard = lazy(() => import('./pages/AdminArticleManagementDashboard'));
+const AdminNewArticleUploadForm = lazy(() => import('./pages/AdminNewArticleUploadForm'));
+const AdminCategorizationSettings = lazy(() => import('./pages/AdminCategorizationSettings'));
+const AdminThemeManagement = lazy(() => import('./pages/AdminThemeManagement'));
+const AdminTrainQueries = lazy(() => import('./pages/AdminTrainQueries'));
+const AdminUserManagement = lazy(() => import('./pages/AdminUserManagement'));
+const BookingCancellationConfirmationEmail = lazy(() => import('./pages/BookingCancellationConfirmationEmail'));
+const BookingCancellationRequestForm = lazy(() => import('./pages/BookingCancellationRequestForm'));
+const BookingConfirmationSuccess1 = lazy(() => import('./pages/BookingConfirmationSuccess1'));
+const BookingConfirmationSuccess2 = lazy(() => import('./pages/BookingConfirmationSuccess2'));
+const CheckoutPaymentMethod = lazy(() => import('./pages/CheckoutPaymentMethod'));
+const CheckoutTravelerDetails = lazy(() => import('./pages/CheckoutTravelerDetails'));
+const CustomerSuccessStoryDetail = lazy(() => import('./pages/CustomerSuccessStoryDetail'));
+const CustomTripQuoteRequestEmail = lazy(() => import('./pages/CustomTripQuoteRequestEmail'));
+const GiftCardCheckoutDelivery = lazy(() => import('./pages/GiftCardCheckoutDelivery'));
+const GiftCardDeliveryEmailTemplate = lazy(() => import('./pages/GiftCardDeliveryEmailTemplate'));
+const GiftCardPersonalizeYourGift = lazy(() => import('./pages/GiftCardPersonalizeYourGift'));
+const GiftCardPurchaseConfirmed = lazy(() => import('./pages/GiftCardPurchaseConfirmed'));
+const MemberOnlyExclusiveTourEmail = lazy(() => import('./pages/MemberOnlyExclusiveTourEmail'));
+const ReferralCreditAppliedNotification = lazy(() => import('./pages/ReferralCreditAppliedNotification'));
+const ReferralInviteEmailTemplate = lazy(() => import('./pages/ReferralInviteEmailTemplate'));
+const ReferralRewardsDashboard = lazy(() => import('./pages/ReferralRewardsDashboard'));
+const ReferralRewardMilestonePopUp = lazy(() => import('./pages/ReferralRewardMilestonePopUp'));
+const ReferAFriendRewards = lazy(() => import('./pages/ReferAFriendRewards'));
+const SavedTripsWishlist = lazy(() => import('./pages/SavedTripsWishlist'));
+const SeasonalReferralCampaignLandingPage = lazy(() => import('./pages/SeasonalReferralCampaignLandingPage'));
+const SeasonalTourSalePromotionalEmail = lazy(() => import('./pages/SeasonalTourSalePromotionalEmail'));
+const SecurePasswordResetEmail = lazy(() => import('./pages/SecurePasswordResetEmail'));
+const SmartPackingListGenerator = lazy(() => import('./pages/SmartPackingListGenerator'));
+const ToursDiscoveryFiltering1 = lazy(() => import('./pages/ToursDiscoveryFiltering1'));
+const TourComparisonPage = lazy(() => import('./pages/TourComparisonPage'));
+const ToursDiscoveryFiltering2 = lazy(() => import('./pages/ToursDiscoveryFiltering2'));
+const ToursDiscoveryFiltering3 = lazy(() => import('./pages/ToursDiscoveryFiltering3'));
+const ToursDiscoveryFiltering4 = lazy(() => import('./pages/ToursDiscoveryFiltering4'));
+const ToursDiscoveryFiltering5 = lazy(() => import('./pages/ToursDiscoveryFiltering5'));
+const ToursDiscoveryFiltering6 = lazy(() => import('./pages/ToursDiscoveryFiltering6'));
+const ToursDiscoveryFiltering7 = lazy(() => import('./pages/ToursDiscoveryFiltering7'));
+const ToursDiscoveryFiltering8 = lazy(() => import('./pages/ToursDiscoveryFiltering8'));
+const TourReviewConfirmationEmail = lazy(() => import('./pages/TourReviewConfirmationEmail'));
+const TourReviewSubmissionForm = lazy(() => import('./pages/TourReviewSubmissionForm'));
+const ReviewSuccessPage = lazy(() => import('./pages/ReviewSuccessPage'));
+const TravelAdvisorySafetyGuide = lazy(() => import('./pages/TravelAdvisorySafetyGuide'));
+const TravelBlogPostDetailView1 = lazy(() => import('./pages/TravelBlogPostDetailView1'));
+const TravelBlogPostDetailView2 = lazy(() => import('./pages/TravelBlogPostDetailView2'));
+const TravelGuidesCategoryLanding = lazy(() => import('./pages/TravelGuidesCategoryLanding'));
+const TripAnniversaryMilestoneEmail = lazy(() => import('./pages/TripAnniversaryMilestoneEmail'));
+const UpcomingTripBookingReminderEmail = lazy(() => import('./pages/UpcomingTripBookingReminderEmail'));
+const UserMyBookingsHistory = lazy(() => import('./pages/UserMyBookingsHistory'));
+const WaitlistJoinConfirmationEmail = lazy(() => import('./pages/WaitlistJoinConfirmationEmail'));
+const BharatBotConsultationSuccessScreen = lazy(() => import('./pages/BharatBotConsultationSuccessScreen'));
+const BharatBotLimitedTimeFlashSaleCard = lazy(() => import('./pages/BharatBotLimitedTimeFlashSaleCard'));
+const BharatBotRecommendedToursView = lazy(() => import('./pages/BharatBotRecommendedToursView'));
+const BharatBotTourMatchmakerChatbot = lazy(() => import('./pages/BharatBotTourMatchmakerChatbot'));
+const WelcomeEmailTemplate = lazy(() => import('./pages/WelcomeEmailTemplate'));
+const BharatDarshanPage = lazy(() => import('./pages/BharatDarshanPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const AboutUsPage = lazy(() => import('./pages/AboutUsPage'));
+const FestivalsPage = lazy(() => import('./pages/FestivalsPage'));
+const ToursByTrain = lazy(() => import('./pages/ToursByTrain'));
+const TrainBookingPage = lazy(() => import('./pages/TrainBookingPage'));
+const TrainBookingSuccessPage = lazy(() => import('./pages/TrainBookingSuccessPage'));
+
+// Helper to wrap lazy components in Suspense with localized fallback
+const Loadable = (Component) => (props) => (
+  <Suspense fallback={<LoadingSpinner />}>
+    <Component {...props} />
+  </Suspense>
+);
 
 /**
  * All 56 Beautiful India pages, organised by group.
  * Generated by build-site.cjs
  */
 export const routes = [
-  { path: '/nav',  element: <NavigationHub /> },
-  { path: '/sitemap', element: <NavigationHub /> },
-  { path: '/contact', element: <ContactPage /> },
-  { path: '/about', element: <AboutUsPage /> },
-  { path: '/festivals', element: <FestivalsPage /> },
-  { path: '/', element: <BharatDarshanPage /> },
-  { path: '/privacy', element: <PrivacyPolicyLayout /> },
-  { path: '/terms', element: <TermsOfServiceLayout /> },
-  { path: '/tours/detail', element: <TourDetailView /> },
-  { path: '/tours/:id', element: <TourDetailView /> },
-  { path: '/tour/:id', element: <TourDetailView /> },
-  { path: '/tours/:destination/:stateRegion/:subregion/:title', element: <TourDetailView /> },
-  { path: '/emails/countdown', element: <TripDepartureCountdownEmail /> },
-  { path: '/404', element: <ErrorPageNotFound /> },
+  { path: '/nav',  element: Loadable(NavigationHub)() },
+  { path: '/sitemap', element: Loadable(NavigationHub)() },
+  { path: '/contact', element: Loadable(ContactPage)() },
+  { path: '/about', element: Loadable(AboutUsPage)() },
+  { path: '/festivals', element: Loadable(FestivalsPage)() },
+  { path: '/', element: Loadable(BharatDarshanPage)() },
+  { path: '/privacy', element: Loadable(PrivacyPolicyLayout)() },
+  { path: '/terms', element: Loadable(TermsOfServiceLayout)() },
+  { path: '/tours/detail', element: Loadable(TourDetailView)() },
+  { path: '/tours/:id', element: Loadable(TourDetailView)() },
+  { path: '/tour/:id', element: Loadable(TourDetailView)() },
+  { path: '/tours/:destination/:stateRegion/:subregion/:title', element: Loadable(TourDetailView)() },
+  { path: '/emails/countdown', element: Loadable(TripDepartureCountdownEmail)() },
+  { path: '/404', element: Loadable(ErrorPageNotFound)() },
   {
     path: '/admin',
     element: <AdminLayout />,
     children: [
-      { path: '', element: <AdminTourManagementDashboard /> },
-      { path: 'users', element: <AdminUserManagement /> },
-      { path: 'bookings', element: <AdminBookingManagementDashboard /> },
-      { path: 'leads', element: <AdminLeadsDashboard /> },
-      { path: 'queries', element: <AdminLeadsDashboard /> },
-      { path: 'tours/new', element: <AdminNewTourUploadForm /> },
-      { path: 'tours/edit/:id', element: <AdminNewTourUploadForm /> },
-      { path: 'tours', element: <AdminTourManagementDashboard /> },
-      { path: 'overview', element: <AdminOverviewDashboard /> },
-      { path: 'guides', element: <AdminArticleManagementDashboard /> },
-      { path: 'guides/new', element: <AdminNewArticleUploadForm /> },
-      { path: 'guides/edit/:id', element: <AdminNewArticleUploadForm /> },
-      { path: 'categorization', element: <AdminCategorizationSettings /> },
-      { path: 'chatbot-flow', element: <AdminChatbotFlow /> },
-      { path: 'train-queries', element: <AdminTrainQueries /> },
-      { path: 'themes', element: <AdminThemeManagement /> },
+      { path: '', element: Loadable(AdminTourManagementDashboard)() },
+      { path: 'users', element: Loadable(AdminUserManagement)() },
+      { path: 'bookings', element: Loadable(AdminBookingManagementDashboard)() },
+      { path: 'leads', element: Loadable(AdminLeadsDashboard)() },
+      { path: 'queries', element: Loadable(AdminLeadsDashboard)() },
+      { path: 'tours/new', element: Loadable(AdminNewTourUploadForm)() },
+      { path: 'tours/edit/:id', element: Loadable(AdminNewTourUploadForm)() },
+      { path: 'tours', element: Loadable(AdminTourManagementDashboard)() },
+      { path: 'overview', element: Loadable(AdminOverviewDashboard)() },
+      { path: 'guides', element: Loadable(AdminArticleManagementDashboard)() },
+      { path: 'guides/new', element: Loadable(AdminNewArticleUploadForm)() },
+      { path: 'guides/edit/:id', element: Loadable(AdminNewArticleUploadForm)() },
+      { path: 'categorization', element: Loadable(AdminCategorizationSettings)() },
+      { path: 'chatbot-flow', element: Loadable(AdminChatbotFlow)() },
+      { path: 'train-queries', element: Loadable(AdminTrainQueries)() },
+      { path: 'themes', element: Loadable(AdminThemeManagement)() },
     ]
   },
-  { path: '/emails/cancel-confirm', element: <BookingCancellationConfirmationEmail /> },
-  { path: '/booking/cancel', element: <BookingCancellationRequestForm /> },
-  { path: '/booking/success', element: <BookingConfirmationSuccess1 /> },
-  { path: '/booking/success-2', element: <BookingConfirmationSuccess2 /> },
-  { path: '/checkout/payment', element: <CheckoutPaymentMethod /> },
-  { path: '/checkout/traveler', element: <CheckoutTravelerDetails /> },
-  { path: '/success-story', element: <CustomerSuccessStoryDetail /> },
-  { path: '/emails/quote-request', element: <CustomTripQuoteRequestEmail /> },
-  { path: '/gift-cards/checkout', element: <GiftCardCheckoutDelivery /> },
-  { path: '/gift-cards/delivery-email', element: <GiftCardDeliveryEmailTemplate /> },
-  { path: '/gift-cards', element: <GiftCardPersonalizeYourGift /> },
-  { path: '/gift-cards/confirmed', element: <GiftCardPurchaseConfirmed /> },
-  { path: '/emails/member-offer', element: <MemberOnlyExclusiveTourEmail /> },
-  { path: '/referral/credit-applied', element: <ReferralCreditAppliedNotification /> },
-  { path: '/emails/referral-invite', element: <ReferralInviteEmailTemplate /> },
-  { path: '/referral/dashboard', element: <ReferralRewardsDashboard /> },
-  { path: '/referral/milestone', element: <ReferralRewardMilestonePopUp /> },
-  { path: '/referral', element: <ReferAFriendRewards /> },
-  { path: '/account/wishlist', element: <SavedTripsWishlist /> },
-  { path: '/referral/campaign', element: <SeasonalReferralCampaignLandingPage /> },
-  { path: '/emails/seasonal-sale', element: <SeasonalTourSalePromotionalEmail /> },
-  { path: '/emails/password-reset', element: <SecurePasswordResetEmail /> },
-  { path: '/account/packing-list', element: <SmartPackingListGenerator /> },
-  { path: '/tours/compare', element: <TourComparisonPage /> },
-  { path: '/tours', element: <ToursDiscoveryFiltering1 /> },
-  { path: '/tours/filter/2', element: <ToursDiscoveryFiltering2 /> },
-  { path: '/tours/filter/3', element: <ToursDiscoveryFiltering3 /> },
-  { path: '/tours/filter/4', element: <ToursDiscoveryFiltering4 /> },
-  { path: '/tours/filter/5', element: <ToursDiscoveryFiltering5 /> },
-  { path: '/tours/filter/6', element: <ToursDiscoveryFiltering6 /> },
-  { path: '/tours/filter/7', element: <ToursDiscoveryFiltering7 /> },
-  { path: '/tours/filter/8', element: <ToursDiscoveryFiltering8 /> },
-  { path: '/emails/review-confirm', element: <TourReviewConfirmationEmail /> },
-  { path: '/account/review', element: <TourReviewSubmissionForm /> },
-  { path: '/account/review-success', element: <ReviewSuccessPage /> },
-  { path: '/guides/safety', element: <TravelAdvisorySafetyGuide /> },
-  { path: '/blog/post-1', element: <TravelBlogPostDetailView1 /> },
-  { path: '/blog/post-2', element: <TravelBlogPostDetailView2 /> },
-  { path: '/guides', element: <TravelGuidesCategoryLanding /> },
-  { path: '/emails/anniversary', element: <TripAnniversaryMilestoneEmail /> },
-  { path: '/emails/trip-reminder', element: <UpcomingTripBookingReminderEmail /> },
-  { path: '/account/bookings', element: <UserMyBookingsHistory /> },
-  { path: '/emails/waitlist', element: <WaitlistJoinConfirmationEmail /> },
-  { path: '/bharatbot/success', element: <BharatBotConsultationSuccessScreen /> },
-  { path: '/bharatbot/flash-sale', element: <BharatBotLimitedTimeFlashSaleCard /> },
-  { path: '/bharatbot/recommendations', element: <BharatBotRecommendedToursView /> },
-  { path: '/bharatbot', element: <BharatBotTourMatchmakerChatbot /> },
-  { path: '/emails/welcome', element: <WelcomeEmailTemplate /> },
-  { path: '/bharat-darshan', element: <BharatDarshanPage /> },
-  { path: '/tours/tours-by-train', element: <ToursByTrain /> },
-  { path: '/booking/train', element: <TrainBookingPage /> },
-  { path: '/booking/train-success', element: <TrainBookingSuccessPage /> },
-  { path: '/:regionSlug', element: <ToursDiscoveryFiltering1 /> }
+  { path: '/emails/cancel-confirm', element: Loadable(BookingCancellationConfirmationEmail)() },
+  { path: '/booking/cancel', element: Loadable(BookingCancellationRequestForm)() },
+  { path: '/booking/success', element: Loadable(BookingConfirmationSuccess1)() },
+  { path: '/booking/success-2', element: Loadable(BookingConfirmationSuccess2)() },
+  { path: '/checkout/payment', element: Loadable(CheckoutPaymentMethod)() },
+  { path: '/checkout/traveler', element: Loadable(CheckoutTravelerDetails)() },
+  { path: '/success-story', element: Loadable(CustomerSuccessStoryDetail)() },
+  { path: '/emails/quote-request', element: Loadable(CustomTripQuoteRequestEmail)() },
+  { path: '/gift-cards/checkout', element: Loadable(GiftCardCheckoutDelivery)() },
+  { path: '/gift-cards/delivery-email', element: Loadable(GiftCardDeliveryEmailTemplate)() },
+  { path: '/gift-cards', element: Loadable(GiftCardPersonalizeYourGift)() },
+  { path: '/gift-cards/confirmed', element: Loadable(GiftCardPurchaseConfirmed)() },
+  { path: '/emails/member-offer', element: Loadable(MemberOnlyExclusiveTourEmail)() },
+  { path: '/referral/credit-applied', element: Loadable(ReferralCreditAppliedNotification)() },
+  { path: '/emails/referral-invite', element: Loadable(ReferralInviteEmailTemplate)() },
+  { path: '/referral/dashboard', element: Loadable(ReferralRewardsDashboard)() },
+  { path: '/referral/milestone', element: Loadable(ReferralRewardMilestonePopUp)() },
+  { path: '/referral', element: Loadable(ReferAFriendRewards)() },
+  { path: '/account/wishlist', element: Loadable(SavedTripsWishlist)() },
+  { path: '/referral/campaign', element: Loadable(SeasonalReferralCampaignLandingPage)() },
+  { path: '/emails/seasonal-sale', element: Loadable(SeasonalTourSalePromotionalEmail)() },
+  { path: '/emails/password-reset', element: Loadable(SecurePasswordResetEmail)() },
+  { path: '/account/packing-list', element: Loadable(SmartPackingListGenerator)() },
+  { path: '/tours/compare', element: Loadable(TourComparisonPage)() },
+  { path: '/tours', element: Loadable(ToursDiscoveryFiltering1)() },
+  { path: '/tours/filter/2', element: Loadable(ToursDiscoveryFiltering2)() },
+  { path: '/tours/filter/3', element: Loadable(ToursDiscoveryFiltering3)() },
+  { path: '/tours/filter/4', element: Loadable(ToursDiscoveryFiltering4)() },
+  { path: '/tours/filter/5', element: Loadable(ToursDiscoveryFiltering5)() },
+  { path: '/tours/filter/6', element: Loadable(ToursDiscoveryFiltering6)() },
+  { path: '/tours/filter/7', element: Loadable(ToursDiscoveryFiltering7)() },
+  { path: '/tours/filter/8', element: Loadable(ToursDiscoveryFiltering8)() },
+  { path: '/emails/review-confirm', element: Loadable(TourReviewConfirmationEmail)() },
+  { path: '/account/review', element: Loadable(TourReviewSubmissionForm)() },
+  { path: '/account/review-success', element: Loadable(ReviewSuccessPage)() },
+  { path: '/guides/safety', element: Loadable(TravelAdvisorySafetyGuide)() },
+  { path: '/blog/post-1', element: Loadable(TravelBlogPostDetailView1)() },
+  { path: '/blog/post-2', element: Loadable(TravelBlogPostDetailView2)() },
+  { path: '/guides', element: Loadable(TravelGuidesCategoryLanding)() },
+  { path: '/emails/anniversary', element: Loadable(TripAnniversaryMilestoneEmail)() },
+  { path: '/emails/trip-reminder', element: Loadable(UpcomingTripBookingReminderEmail)() },
+  { path: '/account/bookings', element: Loadable(UserMyBookingsHistory)() },
+  { path: '/emails/waitlist', element: Loadable(WaitlistJoinConfirmationEmail)() },
+  { path: '/bharatbot/success', element: Loadable(BharatBotConsultationSuccessScreen)() },
+  { path: '/bharatbot/flash-sale', element: Loadable(BharatBotLimitedTimeFlashSaleCard)() },
+  { path: '/bharatbot/recommendations', element: Loadable(BharatBotRecommendedToursView)() },
+  { path: '/bharatbot', element: Loadable(BharatBotTourMatchmakerChatbot)() },
+  { path: '/emails/welcome', element: Loadable(WelcomeEmailTemplate)() },
+  { path: '/bharat-darshan', element: Loadable(BharatDarshanPage)() },
+  { path: '/tours/tours-by-train', element: Loadable(ToursByTrain)() },
+  { path: '/booking/train', element: Loadable(TrainBookingPage)() },
+  { path: '/booking/train-success', element: Loadable(TrainBookingSuccessPage)() },
+  { path: '/:regionSlug', element: Loadable(ToursDiscoveryFiltering1)() }
 ];

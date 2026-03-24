@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
+import { useData } from '../context/DataContext';
 
 const AdminTourManagementDashboard = () => {
-  const [tours, setTours] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const { tours, setTours, loading, refreshData } = useData();
   const [viewMode, setViewMode] = React.useState('list'); // 'list' | 'folders'
   const [selectedDest, setSelectedDest] = React.useState(null);
   const [selectedState, setSelectedState] = React.useState(null);
@@ -17,40 +17,13 @@ const AdminTourManagementDashboard = () => {
     setTimeout(() => setToastMsg(''), 3000);
   };
 
-  React.useEffect(() => {
-    fetchTours();
-  }, []);
-
   const fetchTours = () => {
-    setLoading(true);
-    fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && Array.isArray(data)) {
-          const validTours = data.filter(Boolean);
-          setTours(validTours);
-          localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(validTours));
-        } else {
-          setTours([]);
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        const saved = localStorage.getItem('beautifulindia_admin_tours');
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            setTours(Array.isArray(parsed) ? parsed.filter(Boolean) : []);
-          } catch (e) { console.error("Parse error:", e); }
-        }
-        setLoading(false);
-      });
+    refreshData();
   };
 
   const saveTours = (updatedTours) => {
     setTours(updatedTours);
-    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(updatedTours));
+    localStorage.setItem('beautifulindia_cache_tours', JSON.stringify(updatedTours));
   };
 
   const handleDelete = (id) => {

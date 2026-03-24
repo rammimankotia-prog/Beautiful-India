@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
+import { useData } from '../context/DataContext';
 
 // Helper: Normalize slugs for fuzzy matching
 const fuzzySlug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -181,82 +182,52 @@ const TourDetailView = () => {
     }
   };
 
+  const { tours, reviews: globalReviews, loading: dataLoading } = useData();
+
   useEffect(() => {
-    setLoading(true);
-    const fetchTourData = async () => {
-      try {
-        let allToursList = [];
-        
-        // Always fetch from server first — server is the source of truth
-        const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
-        if (res.ok) {
-            const data = await res.json();
-            if (data && Array.isArray(data)) {
-                allToursList = data.filter(Boolean);
-                localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
-            }
-        } else {
-            // Fallback to localStorage if server fetch failed
-            const saved = localStorage.getItem('beautifulindia_admin_tours');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
-                } catch(e) {}
-            }
-        }
+    if (!dataLoading && tours.length > 0) {
+      const activeTours = tours.filter(t => t.status !== 'paused' && t.status !== 'draft');
+      setAllTours(activeTours);
+      setReviews(globalReviews);
 
-        const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
-        
-        // Find the tour - try by ID first, then by title slug
-        const identifier = id || title;
-        let matchedTour = null;
+      const identifier = id || title;
+      let matchedTour = null;
 
-        // 1. Try matching by ID
-        if (identifier) {
-          matchedTour = activeTours.find(t => String(t.id) === String(identifier));
-        }
+      if (identifier) {
+        matchedTour = activeTours.find(t => String(t.id) === String(identifier) || t.slug === identifier);
+      }
 
-        // 2. If no ID match, try matching by title slug
-        if (!matchedTour && identifier) {
-          matchedTour = activeTours.find(t => {
-            const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-            return tSlug === identifier;
-          });
-        }
+      if (!matchedTour && identifier) {
+        matchedTour = activeTours.find(t => {
+          const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
+          return tSlug === identifier;
+        });
+      }
 
-        if (matchedTour) {
-          // Normalize legacy string fields to arrays to prevent .map() crash
-          if (matchedTour.highlights && typeof matchedTour.highlights === 'string') {
-              matchedTour.highlights = matchedTour.highlights.split('\n').filter(Boolean);
-          }
-          if (matchedTour.inclusions && typeof matchedTour.inclusions === 'string') {
-              matchedTour.inclusions = matchedTour.inclusions.split('\n').filter(Boolean);
-          }
-          if (matchedTour.exclusions && typeof matchedTour.exclusions === 'string') {
-              matchedTour.exclusions = matchedTour.exclusions.split('\n').filter(Boolean);
-          }
-          setTour(matchedTour);
-        } else if (!identifier) {
-          // No identifier at all, show first tour
-          setTour(activeTours[0]);
-        } else {
-          throw new Error('Tour not found');
+      if (matchedTour) {
+        // Normalization
+        if (matchedTour.highlights && typeof matchedTour.highlights === 'string') {
+          matchedTour.highlights = matchedTour.highlights.split('\n').filter(Boolean);
         }
-        setAllTours(activeTours);
+        if (matchedTour.inclusions && typeof matchedTour.inclusions === 'string') {
+          matchedTour.inclusions = matchedTour.inclusions.split('\n').filter(Boolean);
+        }
+        if (matchedTour.exclusions && typeof matchedTour.exclusions === 'string') {
+          matchedTour.exclusions = matchedTour.exclusions.split('\n').filter(Boolean);
+        }
+        setTour(matchedTour);
         setLoading(false);
-      } catch (err) {
-        setError(err.message);
+      } else if (!identifier) {
+        setTour(activeTours[0]);
+        setLoading(false);
+      } else {
+        setError('Tour not found');
         setLoading(false);
       }
-    };
-    fetchTourData();
-    // Fetch reviews
-    fetch(`${import.meta.env.BASE_URL}data/reviews.json`)
-      .then(res => res.json())
-      .then(data => setReviews(data))
-      .catch(err => console.error("Reviews fetch error:", err));
-  }, [title, id]);
+    } else if (!dataLoading) {
+      setLoading(false);
+    }
+  }, [id, title, tours, dataLoading, globalReviews]);
 
   if (loading) {
     return (
@@ -1301,7 +1272,7 @@ const TourDetailView = () => {
                     reviews.filter(r => r.tourId === tour.id).map((review) => (
                       <div key={review.id} className="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex flex-col gap-4">
                         {/* Quote mark */}
-                        <span className="text-5xl text-primary/10 font-black leading-none -mb-2 select-none">"</span>
+                        <span className="text-5xl text-primary/10 font-black leading-none -mb-2 select-none">&quot;</span>
                         <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm flex-1">{review.comment}</p>
                         <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
                           <div className="flex items-center gap-3">

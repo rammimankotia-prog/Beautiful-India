@@ -4,45 +4,15 @@ import { useCurrency } from '../context/CurrencyContext';
 import { Helmet } from 'react-helmet-async';
 import BharatDarshanBanner from '../components/BharatDarshanBanner';
 
+import { useData } from '../context/DataContext';
+
 const BeautifulIndiaHome = () => {
     const { formatPrice } = useCurrency();
-    const [tours, setTours] = useState([]);
+    const { tours, loading: dataLoading } = useData();
     const [themes, setThemes] = useState([]);
 
     useEffect(() => {
-        const fetchTours = async () => {
-          try {
-            let allToursList = [];
-            
-            const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
-            if (res.ok) {
-                const data = await res.json();
-                if (data && Array.isArray(data)) {
-                    allToursList = data.filter(Boolean);
-                    localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
-                }
-            } else {
-                const saved = localStorage.getItem('beautifulindia_admin_tours');
-                if (saved) {
-                    try {
-                        const parsed = JSON.parse(saved);
-                        if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
-                    } catch(e) {}
-                }
-            }
-            
-            setTours(allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft'));
-          } catch (err) {
-            setTours([
-                { id:'1', title:'Kashmir Great Lakes Trek',       duration:'7 Days',  rating:4.9, price:1299, image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80', description:'Experience the breathtaking beauty of the Himalayas on a guided trekking adventure.' },
-                { id:'2', title:'Varkala Wellness Retreat', duration:'5 Days',  rating:4.8, price:899,  image:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80', description:'Rejuvenate your mind, body, and soul on the golden cliffs of Kerala.' },
-                { id:'3', title:'Spiti Valley Expedition',  duration:'10 Days', rating:4.7, price:2499, image:'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80', description:'Journey to the cold desert and witness spectacular monasteries and landscapes.' },
-                { id:'4', title:'Andaman Islands Getaway',     duration:'6 Days',  rating:4.9, price:1499, image:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80', description:'Relax on pristine beaches overlooking the emerald waters of the Bay of Bengal.' },
-            ]);
-          }
-        };
-        fetchTours();
-
+        // Fetch themes (themes.json is small, can stay local or move to context if needed)
         fetch(`${import.meta.env.BASE_URL}data/themes.json`)
             .then(res => res.json())
             .then(data => setThemes(data.sort((a,b) => (a.order || 0) - (b.order || 0))))
