@@ -4,7 +4,7 @@ const AuthContext = createContext();
 
 // Master Admin Constants
 const MASTER_ADMIN_EMAIL = 'robertjack442@gmail.com';
-const MASTER_ADMIN_PASSWORD = 'Jaimaatdi@24';
+const MASTER_ADMIN_PASSWORD = 'Jaimatadi@24';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -66,9 +66,12 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'Invalid password.' };
       }
       
+      // Allow pending users to login (for immediate access as requested)
+      /*
       if (existingUser.status === 'pending') {
         return { success: false, message: 'Your account is pending approval from the Master Admin.' };
       }
+      */
       
       if (existingUser.status === 'rejected') {
         return { success: false, message: 'Your access has been rejected by the Master Admin.' };
@@ -86,7 +89,7 @@ export const AuthProvider = ({ children }) => {
       password: password,
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}&backgroundColor=c0aede`,
       role: 'admin',
-      status: 'pending', // All new users are pending
+      status: 'approved', // Default to approved for immediate access
       requestedAt: new Date().toISOString()
     };
     
