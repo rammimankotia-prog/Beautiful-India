@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import categoriesData from "../data/categories.json";
+import { safeCacheTours } from "../utils/storage";
 
 /**
  * Auto-generated from: admin_new_tour_upload_form/code.html
@@ -465,10 +466,7 @@ const AdminNewTourUploadForm = () => {
       }
 
       // Also update localStorage as a cache for faster page loads
-      localStorage.setItem(
-        "beautifulindia_admin_tours",
-        JSON.stringify(updatedTours),
-      );
+      safeCacheTours("beautifulindia_admin_tours", updatedTours);
 
       const statusMsg =
         tourToSave.status === "draft"

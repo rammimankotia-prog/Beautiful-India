@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
+import { safeCacheTours } from '../utils/storage';
 
 const AdminTourManagementDashboard = () => {
   const { tours, setTours, loading, refreshData } = useData();
@@ -23,7 +24,7 @@ const AdminTourManagementDashboard = () => {
 
   const saveTours = (updatedTours) => {
     setTours(updatedTours);
-    localStorage.setItem('beautifulindia_cache_tours', JSON.stringify(updatedTours));
+    safeCacheTours('beautifulindia_cache_tours', updatedTours);
   };
 
   const handleDelete = (id) => {
