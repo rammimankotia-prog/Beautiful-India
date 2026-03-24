@@ -1,6 +1,88 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
+// Helper: Normalize slugs for fuzzy matching
+const fuzzySlug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+const Thumb = ({ img, className = '', large = false, tourTitle = '' }) => (
+  <div className={`relative overflow-hidden rounded-2xl group cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 ${className}`}>
+    <div
+      className="absolute inset-0 bg-center bg-cover transition-transform duration-700 ease-out group-hover:scale-110"
+      style={{ backgroundImage: `url('${img?.url || ''}')` }}
+    />
+    <div className={`absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent transition-opacity duration-300 ${large ? 'opacity-80' : 'opacity-0 group-hover:opacity-100'}`} />
+    {(img?.caption || tourTitle) && (
+      <div className={`absolute bottom-0 left-0 right-0 px-4 py-3 transition-all duration-300 ${large ? '' : 'translate-y-1 group-hover:translate-y-0 opacity-0 group-hover:opacity-100'}`}>
+        <p className="text-white text-sm font-semibold leading-snug drop-shadow">{img?.caption || tourTitle}</p>
+      </div>
+    )}
+  </div>
+);
+
+const SERVICE_ICONS = {
+  breakfast:   { icon: 'free_breakfast',  label: 'Breakfast',   color: 'text-amber-600' },
+  lunch:       { icon: 'lunch_dining',    label: 'Lunch',       color: 'text-green-600' },
+  dinner:      { icon: 'dinner_dining',   label: 'Dinner',      color: 'text-orange-600' },
+  stay:        { icon: 'hotel',           label: 'Stay',        color: 'text-blue-600' },
+  transfer:    { icon: 'airport_shuttle', label: 'Transfer',    color: 'text-purple-600' },
+  sightseeing: { icon: 'photo_camera',    label: 'Sightseeing', color: 'text-teal-600' },
+  flight:      { icon: 'flight',          label: 'Flight',      color: 'text-sky-600' },
+  train:       { icon: 'train',           label: 'Train',       color: 'text-indigo-600' },
+};
+
+const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
+  const [open, setOpen] = useState(defaultOpen);
+  if (!item) return null;
+  const tags = Array.isArray(item.tags) ? item.tags : (item.tags ? String(item.tags).split(',').map(t => t.trim()).filter(Boolean) : []);
+  const services = Array.isArray(item.services) ? item.services : [];
+  return (
+    <div className="flex gap-0 pb-4">
+      <div className="flex flex-col items-center shrink-0 w-20 pt-3 z-10">
+        <span className="text-[11px] font-black text-[#f45d48] uppercase tracking-wide leading-none">Day {item.day}</span>
+        <div className="w-3 h-3 bg-white dark:bg-slate-900 border-2 border-[#f45d48] rounded-full mt-1.5 shrink-0" />
+      </div>
+      <div className="flex-1 ml-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+        <button type="button" onClick={() => setOpen(o => !o)} className="w-full flex items-center justify-between px-5 py-4 text-left group">
+          <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+            <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-primary transition-colors pr-2">{item.title}</h4>
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {tags.map((tag, tidx) => (
+                  <span key={tidx} className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/80">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+          <span className={`material-symbols-outlined text-xl shrink-0 ml-3 transition-transform duration-300 ${open ? 'rotate-180 text-primary' : 'text-slate-400'}`}>expand_more</span>
+        </button>
+        {open && (
+          <div className="px-5 pb-5 border-t border-slate-50 dark:border-slate-800 pt-3">
+            {services.length > 0 && (
+              <div className="flex flex-wrap gap-5 pb-3 mb-3 border-b border-dashed border-slate-100 dark:border-slate-700">
+                {services.map((svc, sidx) => {
+                  const def = SERVICE_ICONS[svc] || { icon: 'check_circle', label: svc, color: 'text-slate-500' };
+                  return (
+                    <div key={sidx} className="flex flex-col items-center gap-0.5">
+                      <span className={`material-symbols-outlined text-[26px] ${def.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{def.icon}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">{def.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            <div className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+              {renderRichText(item.description)}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+// Sub-components moved above
 
 /**
  * Auto-generated from: tour_detail_view/code.html
@@ -170,34 +252,81 @@ const TourDetailView = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="font-bold text-slate-400 animate-pulse uppercase tracking-widest text-xs">Curating Your Journey...</p>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-primary/20 rounded-full"></div>
+              <div className="absolute top-0 left-0 w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <p className="font-black text-slate-400 animate-pulse uppercase tracking-[0.3em] text-[10px]">Curating Your Journey...</p>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
-  if (error || !tour || tour.status === 'paused') {
+  if (error || !tour || tour?.status === 'paused' || tour?.status === 'draft') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 px-6 text-center">
-        <div className="max-w-md">
-          <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="material-symbols-outlined text-4xl">travel_explore</span>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-sans">
+        <Header />
+        <div className="flex-1 flex items-center justify-center px-6 py-20">
+          <div className="max-w-2xl w-full text-center">
+            <div className="relative inline-block mb-8">
+              <div className="w-24 h-24 bg-red-50 dark:bg-red-950/30 text-red-500 rounded-3xl flex items-center justify-center mx-auto rotate-12 shadow-xl shadow-red-200/50 dark:shadow-none transition-transform hover:rotate-0 duration-500">
+                <span className="material-symbols-outlined text-5xl" style={{fontVariationSettings: "'FILL' 1"}}>travel_explore</span>
+              </div>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center shadow-md">
+                <span className="material-symbols-outlined text-red-500 text-sm font-black">close</span>
+              </div>
+            </div>
+            
+            <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-4 uppercase tracking-tight">Tour Unavailable</h2>
+            <p className="text-lg text-slate-500 dark:text-slate-400 font-medium mb-10 leading-relaxed max-w-lg mx-auto">
+              {error && error !== 'Tour not found' 
+                ? error 
+                : "We couldn't find the specific itinerary you're looking for. It might have been retired or moved to a new destination."}
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                to="/"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 bg-primary text-white font-black rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-2xl shadow-primary/30 uppercase tracking-widest text-sm"
+              >
+                <span className="material-symbols-outlined">explore</span>
+                Discovery Home
+              </Link>
+              <button 
+                onClick={() => navigate(-1)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-black rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all uppercase tracking-widest text-sm"
+              >
+                <span className="material-symbols-outlined">arrow_back</span>
+                Go Back
+              </button>
+            </div>
+
+            {/* Suggested Collections */}
+            <div className="mt-20 pt-10 border-t border-slate-200 dark:border-slate-800">
+              <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Popular Collections You Might Like</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { label: 'Train Tours', icon: 'train', path: '/tours/tours-by-train' },
+                  { label: 'Hill Stations', icon: 'landscape', path: '/tours/hill-stations' },
+                  { label: 'Pilgrimage', icon: 'temple_hindu', path: '/tours/pilgrimage' },
+                  { label: 'Beaches', icon: 'beach_access', path: '/tours/beaches' }
+                ].map((item, i) => (
+                  <Link key={i} to={item.path} className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:shadow-lg transition-all group">
+                    <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">{item.icon}</span>
+                    <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
-          <h2 className="text-2xl font-black text-slate-800 mb-4 uppercase tracking-tight">Tour Not Found</h2>
-          <p className="text-slate-500 font-bold mb-8 leading-relaxed italic">
-            {(error && error !== 'Tour not found') ? error : "We couldn't find the specific tour you're looking for. It might have been moved or recently updated."}
-          </p>
-          <Link 
-            to="/"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-black rounded-2xl hover:brightness-110 transition-all shadow-xl shadow-primary/20"
-          >
-            <span className="material-symbols-outlined">west</span>
-            EXPLORE ALL TOURS
-          </Link>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -213,7 +342,7 @@ const TourDetailView = () => {
       email: leadEmail,
       phone: leadPhone,
       from: originCity,
-      to: (Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion) || (Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination) || tour.title,
+      to: (Array.isArray(tour?.stateRegion) ? tour.stateRegion.join(', ') : tour?.stateRegion) || (Array.isArray(tour?.destination) ? tour.destination.join(', ') : tour?.destination) || tour?.title || 'Tour',
       departureType,
       departureDate: departureType === 'fixed' ? selectedDate : (departureType === 'flexible' ? `${selectedMonthFull} - ${selectedWeekNum}` : 'Anytime'),
       duration: `${numDays} Days`,
@@ -279,19 +408,19 @@ const TourDetailView = () => {
     if (!tour) return { amount: 0, label: 'Per Person' };
     
     // Priority: Per Person -> Per Couple -> Per Group -> Base Price
-    if (tour.pricePerPerson && tour.pricePerPerson != 0) {
+    if (tour?.pricePerPerson && tour.pricePerPerson != 0) {
       return { amount: tour.pricePerPerson, label: 'Per Person' };
     }
-    if (tour.pricePerCouple && tour.pricePerCouple != 0) {
+    if (tour?.pricePerCouple && tour.pricePerCouple != 0) {
       return { amount: tour.pricePerCouple, label: 'Per Couple' };
     }
-    if (tour.pricePerGroup && tour.pricePerGroup != 0) {
+    if (tour?.pricePerGroup && tour.pricePerGroup != 0) {
       return { amount: tour.pricePerGroup, label: `Per Group (of ${tour.groupSize || 10})` };
     }
     
     // Fallback to base price
-    const fallbackLabel = tour.priceBasis === 'per_package' ? 'Per Package' : 'Per Person';
-    return { amount: tour.price || 0, label: fallbackLabel };
+    const fallbackLabel = tour?.priceBasis === 'per_package' ? 'Per Package' : 'Per Person';
+    return { amount: tour?.price || 0, label: fallbackLabel };
   };
 
   const displayPrice = getDisplayPriceData();
@@ -368,19 +497,7 @@ const TourDetailView = () => {
   };
 
 
-  // Build itinerary from tour data or fall back to defaults
-  const itinerary = tour.itinerary && tour.itinerary.length > 0
-    ? tour.itinerary
-    : [
-      { day: 1, title: 'Arrival & Orientation', description: 'Meet your personal guide at the airport and transfer to your luxury boutique hotel. Evening welcome dinner with local specialties.' },
-      { day: 2, title: 'Exploratory Journey', description: 'A deep dive into the most famous landmarks of the region. Guided private tour followed by an afternoon of leisure.' },
-      { day: 3, title: 'Cultural Immersion', description: 'Experience the local culture with a guided tour of the city and a traditional dinner.' },
-      { day: 4, title: 'Departure', description: 'Farewell breakfast and transfer to the airport.' },
-    ];
-
-  // Always show first 2 days; show rest when expanded
-  const visibleDays = itineraryExpanded ? itinerary : itinerary.slice(0, 2);
-  const hiddenCount = itinerary.length - 2;
+  // Itinerary logic moved to render block
 
   // Generate months based on Operation Period
   const getAvailableMonths = () => {
@@ -534,75 +651,57 @@ const TourDetailView = () => {
                 ];
                 while (normalized.length < 5) normalized.push({ url: placeholders[normalized.length % 4], caption: '' });
 
-                const Thumb = ({ img, className = '', large = false }) => (
-                  <div className={`relative overflow-hidden rounded-2xl group cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 ${className}`}>
-                    <div
-                      className="absolute inset-0 bg-center bg-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                      style={{ backgroundImage: `url('${img.url}')` }}
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent transition-opacity duration-300 ${large ? 'opacity-80' : 'opacity-0 group-hover:opacity-100'}`} />
-                    {img.caption && (
-                      <div className={`absolute bottom-0 left-0 right-0 px-4 py-3 transition-all duration-300 ${large ? '' : 'translate-y-1 group-hover:translate-y-0 opacity-0 group-hover:opacity-100'}`}>
-                        <p className="text-white text-sm font-semibold leading-snug drop-shadow">{img.caption}</p>
-                      </div>
-                    )}
-                  </div>
-                );
-
                 const userPhotos = normalized.filter(img => img.url && !img.url.includes('unsplash'));
                 const extraCount = Math.max(normalized.length - 5, 0);
 
                 return (
                   <>
-
                     {/* Hero Grid — adaptive based on real photo count */}
                     {(() => {
                       const count = userPhotos.length;
                       if (count === 0) {
-                        // No real photos — show 1 placeholder hero
                         return (
                           <div style={{ height: '400px' }}>
-                            <Thumb img={{ url: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=1200&q=80', caption: tour.title }} className="h-full w-full" large />
+                            <Thumb img={{ url: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=1200&q=80' }} tourTitle={tour?.title} className="h-full w-full" large />
                           </div>
                         );
                       }
                       if (count === 1) {
                         return (
                           <div style={{ height: '400px' }}>
-                            <Thumb img={userPhotos[0]} className="h-full w-full" large />
+                            <Thumb img={userPhotos[0]} tourTitle={tour?.title} className="h-full w-full" large />
                           </div>
                         );
                       }
                       if (count === 2) {
                         return (
                           <div className="grid grid-cols-2 gap-3" style={{ height: '400px' }}>
-                            <Thumb img={userPhotos[0]} className="h-full" large />
-                            <Thumb img={userPhotos[1]} className="h-full" />
+                            <Thumb img={userPhotos[0]} tourTitle={tour?.title} className="h-full" large />
+                            <Thumb img={userPhotos[1]} tourTitle={tour?.title} className="h-full" />
                           </div>
                         );
                       }
                       if (count === 3) {
                         return (
                           <div className="grid grid-cols-3 gap-3" style={{ height: '400px' }}>
-                            <Thumb img={userPhotos[0]} className="col-span-2 h-full" large />
+                            <Thumb img={userPhotos[0]} tourTitle={tour?.title} className="col-span-2 h-full" large />
                             <div className="flex flex-col gap-3 h-full">
-                              <Thumb img={userPhotos[1]} className="flex-1" />
-                              <Thumb img={userPhotos[2]} className="flex-1" />
+                              <Thumb img={userPhotos[1]} tourTitle={tour?.title} className="flex-1" />
+                              <Thumb img={userPhotos[2]} tourTitle={tour?.title} className="flex-1" />
                             </div>
                           </div>
                         );
                       }
-                      // 4+ photos — 2-col right with "View All" on last cell
                       const extraCount = Math.max(count - 5, 0);
                       return (
                         <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-none md:grid-rows-2 gap-2 md:gap-3 h-[280px] md:h-[480px]">
-                          <Thumb img={userPhotos[0]} className="col-span-2 row-span-1 md:row-span-2" large />
-                          <Thumb img={userPhotos[1]} className="h-full hidden md:block" />
-                          <Thumb img={userPhotos[2]} className="h-full hidden md:block" />
-                          {count >= 4 ? <Thumb img={userPhotos[3]} className="h-full hidden md:block" /> : <div className="h-full rounded-2xl bg-slate-100 dark:bg-slate-800 hidden md:block" />}
+                          <Thumb img={userPhotos[0]} tourTitle={tour?.title} className="col-span-2 row-span-1 md:row-span-2" large />
+                          <Thumb img={userPhotos[1]} tourTitle={tour?.title} className="h-full hidden md:block" />
+                          <Thumb img={userPhotos[2]} tourTitle={tour?.title} className="h-full hidden md:block" />
+                          {count >= 4 ? <Thumb img={userPhotos[3]} tourTitle={tour?.title} className="h-full hidden md:block" /> : <div className="h-full rounded-2xl bg-slate-100 dark:bg-slate-800 hidden md:block" />}
                           <div className="relative overflow-hidden rounded-2xl cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 h-full hidden md:block">
                             <div className="absolute inset-0 bg-center bg-cover transition-transform duration-700 group-hover:scale-110"
-                              style={{ backgroundImage: `url('${(userPhotos[4] || userPhotos[count - 1]).url}')` }} />
+                              style={{ backgroundImage: `url('${(userPhotos[4] || userPhotos[count - 1])?.url || ''}')` }} />
                             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/60 transition-colors duration-300 flex flex-col items-center justify-center gap-1">
                               <span className="material-symbols-outlined text-white text-3xl">photo_library</span>
                               <span className="text-white font-bold text-sm">
@@ -771,69 +870,20 @@ const TourDetailView = () => {
                   <div id="itinerary" className="flex flex-col gap-4 mt-4">
                     <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Day-by-Day Itinerary</h3>
                     {(() => {
-                      const SERVICE_ICONS = {
-                        breakfast:   { icon: 'free_breakfast',  label: 'Breakfast',   color: 'text-amber-600' },
-                        lunch:       { icon: 'lunch_dining',    label: 'Lunch',       color: 'text-green-600' },
-                        dinner:      { icon: 'dinner_dining',   label: 'Dinner',      color: 'text-orange-600' },
-                        stay:        { icon: 'hotel',           label: 'Stay',        color: 'text-blue-600' },
-                        transfer:    { icon: 'airport_shuttle', label: 'Transfer',    color: 'text-purple-600' },
-                        sightseeing: { icon: 'photo_camera',    label: 'Sightseeing', color: 'text-teal-600' },
-                        flight:      { icon: 'flight',          label: 'Flight',      color: 'text-sky-600' },
-                        train:       { icon: 'train',           label: 'Train',       color: 'text-indigo-600' },
-                      };
-                      const ItineraryDayCard = ({ item, defaultOpen }) => {
-                        const [open, setOpen] = React.useState(defaultOpen);
-                        const tags = Array.isArray(item.tags) ? item.tags : (item.tags ? String(item.tags).split(',').map(t => t.trim()).filter(Boolean) : []);
-                        const services = Array.isArray(item.services) ? item.services : [];
-                        return (
-                          <div className="flex gap-0 pb-4">
-                            <div className="flex flex-col items-center shrink-0 w-20 pt-3 z-10">
-                              <span className="text-[11px] font-black text-[#f45d48] uppercase tracking-wide leading-none">Day {item.day}</span>
-                              <div className="w-3 h-3 bg-white dark:bg-background-dark border-2 border-[#f45d48] rounded-full mt-1.5 shrink-0" />
-                            </div>
-                            <div className="flex-1 ml-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                              <button type="button" onClick={() => setOpen(o => !o)} className="w-full flex items-center justify-between px-5 py-4 text-left group">
-                                <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-                                  <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-primary transition-colors pr-2">{item.title}</h4>
-                                  {tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-1.5">
-                                      {tags.map((tag, tidx) => (
-                                        <span key={tidx} className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/80">{tag}</span>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                                <span className={`material-symbols-outlined text-xl shrink-0 ml-3 transition-transform duration-300 ${open ? 'rotate-180 text-primary' : 'text-slate-400'}`}>expand_more</span>
-                              </button>
-                              {open && (
-                                <div className="px-5 pb-5 border-t border-slate-50 dark:border-slate-800 pt-3">
-                                  {services.length > 0 && (
-                                    <div className="flex flex-wrap gap-5 pb-3 mb-3 border-b border-dashed border-slate-100 dark:border-slate-700">
-                                      {services.map((svc, sidx) => {
-                                        const def = SERVICE_ICONS[svc] || { icon: 'check_circle', label: svc, color: 'text-slate-500' };
-                                        return (
-                                          <div key={sidx} className="flex flex-col items-center gap-0.5">
-                                            <span className={`material-symbols-outlined text-[26px] ${def.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{def.icon}</span>
-                                            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">{def.label}</span>
-                                          </div>
-                                        );
-                                      })}
-                                    </div>
-                                  )}
-                                    <div className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                      {renderRichText(item.description)}
-                                    </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      };
+                      const itinerary = tour?.itinerary && tour.itinerary.length > 0
+                        ? tour.itinerary
+                        : [
+                            { day: 1, title: 'Arrival & Welcome', description: `Welcome to your ${tour?.title || 'Tour'}! Our representative will meet you at the airport/station and transfer you to your hotel. Rest and prepare for the adventure ahead.`, tags: ['Arrival', 'Transfer', 'Rest'], services: ['transfer', 'stay'] },
+                            { day: 2, title: 'Local Sightseeing', description: `After a hearty breakfast, embark on a guided tour of the city's most iconic landmarks and hidden gems. Enjoy local cuisine and culture.`, tags: ['Sightseeing', 'Culture', 'Local Food'], services: ['breakfast', 'sightseeing', 'stay'] }
+                          ];
+                      const visibleDays = itineraryExpanded ? itinerary : itinerary.slice(0, 2);
+                      const hiddenCount = itinerary.length - 2;
+
                       return (
                         <div className="relative">
                           <div className="absolute left-10 top-4 bottom-8 w-0.5 bg-slate-200 dark:bg-slate-700" />
                           {visibleDays.map((item, idx) => (
-                            <ItineraryDayCard key={item.day} item={item} defaultOpen={idx === 0} />
+                            <ItineraryDayCard key={item?.day || idx} item={item} defaultOpen={idx === 0} renderRichText={renderRichText} />
                           ))}
                           {itinerary.length > 2 && (
                             <button onClick={() => setItineraryExpanded(!itineraryExpanded)} className="ml-[76px] text-primary font-semibold hover:underline flex items-center gap-1 mt-1 transition-all text-sm">
@@ -919,12 +969,12 @@ const TourDetailView = () => {
                           <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-2">Staying at:</p>
                           <div className="flex flex-wrap gap-2">
                             {(() => {
-                              const cats = Array.isArray(tour.hotelCategory) ? tour.hotelCategory : (tour.hotelCategory ? [tour.hotelCategory] : []);
-                              const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : []);
+                              const cats = Array.isArray(tour?.hotelCategory) ? tour.hotelCategory.filter(Boolean) : (tour?.hotelCategory ? [tour.hotelCategory] : []);
+                              const types = Array.isArray(tour?.accommodationType) ? tour.accommodationType.filter(Boolean) : (tour?.accommodationType ? [tour.accommodationType] : []);
                               
                               return [
-                                ...cats.map(c => ({ label: c === 'budget' ? 'Budget' : c.replace('_star', '') + ' Star', icon: 'star' })),
-                                ...types.map(t => ({ label: t.charAt(0).toUpperCase() + t.slice(1), icon: 'apartment' }))
+                                ...cats.map(c => ({ label: String(c) === 'budget' ? 'Budget' : String(c).replace('_star', '') + ' Star', icon: 'star' })),
+                                ...types.map(t => ({ label: String(t).charAt(0).toUpperCase() + String(t).slice(1), icon: 'apartment' }))
                               ].map((item, idx) => (
                                 <span key={idx} className="inline-flex items-center gap-1 px-2 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase rounded-lg border border-primary/10">
                                   <span className="material-symbols-outlined text-[12px]">{item.icon}</span>
@@ -939,16 +989,16 @@ const TourDetailView = () => {
                         <div>
                           <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1">Cities:</p>
                           <p className="text-[13px] text-slate-500 dark:text-slate-400 leading-snug">
-                            {tour.cityPath || `${tour.stateRegion} (2D) → ${tour.destination} (2D) → ${tour.subregion || 'Local'} (2D)`}
+                            {tour?.cityPath || `${tour?.stateRegion || ''} (2D) → ${tour?.destination || ''} (2D) → ${tour?.subregion || 'Local'} (2D)`}
                           </p>
                         </div>
 
                         {/* Service Icons (Dynamic) */}
                         <div className={`grid gap-1 pt-2 items-start`} style={{ gridTemplateColumns: `repeat(auto-fit, minmax(60px, 1fr))` }}>
                           {(() => {
-                            const types = Array.isArray(tour.accommodationType) ? tour.accommodationType : (tour.accommodationType ? [tour.accommodationType] : []);
-                            const meals = tour.mealPlan || (tour.isDayTour ? [] : ['breakfast']);
-                            const features = tour.tourFeatures || ['accommodation', 'sightseeing', 'stay', 'transfers'];
+                            const types = Array.isArray(tour?.accommodationType) ? tour.accommodationType.filter(Boolean) : (tour?.accommodationType ? [tour.accommodationType] : []);
+                            const meals = tour?.mealPlan || (tour?.isDayTour ? [] : ['breakfast']);
+                            const features = tour?.tourFeatures || ['accommodation', 'sightseeing', 'stay', 'transfers'];
 
                             const typeIcons = {
                               hotel: 'hotel',
