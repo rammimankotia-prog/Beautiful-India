@@ -40,7 +40,7 @@ const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
   return (
     <div className="flex gap-0 pb-3">
       {/* Day column — compact for mobile */}
-      <div className="flex flex-col items-center shrink-0 w-14 pt-2.5 z-10">
+      <div className="flex flex-col items-center shrink-0 w-12 pt-2.5 z-10">
         <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-b from-[#f45d48] to-[#d43a2a] text-white shadow-md shadow-[#f45d48]/30">
           <span className="flex flex-col items-center leading-none">
             <span className="text-[8px] font-bold uppercase tracking-wider opacity-80">Day</span>
@@ -50,7 +50,7 @@ const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
         <div className="w-0.5 flex-1 bg-gradient-to-b from-[#f45d48]/40 to-transparent mt-1" />
       </div>
       {/* Card */}
-      <div className={`flex-1 ml-2 bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${
+      <div className={`flex-1 ml-1.5 bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${
         open 
           ? 'border-primary/30 shadow-primary/10' 
           : 'border-slate-200'
@@ -81,13 +81,13 @@ const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
                   return (
                     <div key={sidx} className="flex flex-col items-center gap-0.5">
                       <span className={`material-symbols-outlined text-2xl ${def.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{def.icon}</span>
-                      <span className="text-[9px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">{def.label}</span>
+                      <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wide">{def.label}</span>
                     </div>
                   );
                 })}
               </div>
             )}
-            <div className="text-slate-600 dark:text-slate-300 text-[13px] leading-relaxed space-y-1">
+            <div className="text-slate-700 text-[13px] leading-relaxed space-y-1">
               {renderRichText(item.description)}
             </div>
           </div>
@@ -264,16 +264,16 @@ const TourDetailView = () => {
         <div className="flex items-center justify-center px-6 py-20">
           <div className="max-w-2xl w-full text-center">
             <div className="relative inline-block mb-8">
-              <div className="w-24 h-24 bg-red-50 dark:bg-red-950/30 text-red-500 rounded-3xl flex items-center justify-center mx-auto rotate-12 shadow-xl shadow-red-200/50 dark:shadow-none transition-transform hover:rotate-0 duration-500">
+              <div className="w-24 h-24 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mx-auto rotate-12 shadow-xl shadow-red-200/50 transition-transform hover:rotate-0 duration-500">
                 <span className="material-symbols-outlined text-5xl" style={{fontVariationSettings: "'FILL' 1"}}>travel_explore</span>
               </div>
-              <div className="absolute -top-2 -right-2 w-8 h-8 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center shadow-md">
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
                 <span className="material-symbols-outlined text-red-500 text-sm font-black">close</span>
               </div>
             </div>
             
-            <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-4 uppercase tracking-tight">Tour Unavailable</h2>
-            <p className="text-lg text-slate-500 dark:text-slate-400 font-medium mb-10 leading-relaxed max-w-lg mx-auto">
+            <h2 className="text-4xl font-black text-slate-900 mb-4 uppercase tracking-tight">Tour Unavailable</h2>
+            <p className="text-lg text-slate-500 font-medium mb-10 leading-relaxed max-w-lg mx-auto">
               {error && error !== 'Tour not found' 
                 ? error 
                 : "We couldn't find the specific itinerary you're looking for. It might have been retired or moved to a new destination."}
@@ -289,7 +289,7 @@ const TourDetailView = () => {
               </Link>
               <button 
                 onClick={() => navigate(-1)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-black rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all uppercase tracking-widest text-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 bg-white text-slate-700 font-black rounded-2xl border border-slate-200 hover:bg-slate-50 transition-all uppercase tracking-widest text-sm"
               >
                 <span className="material-symbols-outlined">arrow_back</span>
                 Go Back
@@ -297,7 +297,7 @@ const TourDetailView = () => {
             </div>
 
             {/* Suggested Collections */}
-            <div className="mt-20 pt-10 border-t border-slate-200 dark:border-slate-800">
+            <div className="mt-20 pt-10 border-t border-slate-200">
               <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Popular Collections You Might Like</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
@@ -306,9 +306,9 @@ const TourDetailView = () => {
                   { label: 'Pilgrimage', icon: 'temple_hindu', path: '/tours/pilgrimage' },
                   { label: 'Beaches', icon: 'beach_access', path: '/tours/beaches' }
                 ].map((item, i) => (
-                  <Link key={i} to={item.path} className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:shadow-lg transition-all group">
+                  <Link key={i} to={item.path} className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white border border-slate-100 hover:border-primary/30 hover:shadow-lg transition-all group">
                     <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">{item.icon}</span>
-                    <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase">{item.label}</span>
+                    <span className="text-[11px] font-bold text-slate-600 uppercase">{item.label}</span>
                   </Link>
                 ))}
               </div>
@@ -520,7 +520,7 @@ const TourDetailView = () => {
   return (
     <div data-page="tour_detail_view" style={{ colorScheme: 'light' }}>
       {/* Sticky Navigation Bar (Desktop Only) */}
-      <div className={`fixed top-0 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 z-[90] transition-all duration-500 shadow-xl overflow-hidden hidden md:block ${showSticky ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}`}>
+      <div className={`fixed top-0 left-0 w-full bg-white border-b border-slate-100 z-[90] transition-all duration-500 shadow-xl overflow-hidden hidden md:block ${showSticky ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}`}>
         <div className="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between">
            {/* Left: Nav Links */}
            <div className="flex items-center gap-1">
@@ -590,7 +590,7 @@ const TourDetailView = () => {
                       Curated Route
                     </span>
                     {tour.availableFrom && (
-                      <span className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold border border-emerald-200/60">
+                      <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold border border-emerald-200/60">
                         <span className="material-symbols-outlined text-[14px]">event_available</span>
                         Valid till {tour.availableTo ? new Date(tour.availableTo).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Ongoing'}
                       </span>
@@ -686,7 +686,7 @@ const TourDetailView = () => {
                           <Thumb img={userPhotos[0]} tourTitle={tour?.title} className="col-span-2 row-span-1 md:row-span-2" large />
                           <Thumb img={userPhotos[1]} tourTitle={tour?.title} className="h-full hidden md:block" />
                           <Thumb img={userPhotos[2]} tourTitle={tour?.title} className="h-full hidden md:block" />
-                          {count >= 4 ? <Thumb img={userPhotos[3]} tourTitle={tour?.title} className="h-full hidden md:block" /> : <div className="h-full rounded-2xl bg-slate-100 dark:bg-slate-800 hidden md:block" />}
+                          {count >= 4 ? <Thumb img={userPhotos[3]} tourTitle={tour?.title} className="h-full hidden md:block" /> : <div className="h-full rounded-2xl bg-slate-100 hidden md:block" />}
                           <div className="relative overflow-hidden rounded-2xl cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 h-full hidden md:block">
                             <div className="absolute inset-0 bg-center bg-cover transition-transform duration-700 group-hover:scale-110"
                               style={{ backgroundImage: `url('${(userPhotos[4] || userPhotos[count - 1])?.url || ''}')` }} />
@@ -703,9 +703,9 @@ const TourDetailView = () => {
 
                     {/* Premium Photo Strip */}
                     {userPhotos.length > 0 && (
-                      <div className="mt-5 bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-100 dark:border-slate-700/50">
+                      <div className="mt-5 bg-slate-50 rounded-2xl p-5 border border-slate-100">
                         <div className="flex items-center justify-between mb-4">
-                          <h4 className="text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                          <h4 className="text-xs font-extrabold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                             <span className="material-symbols-outlined text-primary text-[16px]">photo_library</span>
                             Photo Gallery · {userPhotos.length} photos
                           </h4>
@@ -723,7 +723,7 @@ const TourDetailView = () => {
                                   {i + 1}
                                 </div>
                               </div>
-                              <p className={`text-[11px] mt-1.5 leading-tight line-clamp-2 text-center px-0.5 font-medium ${img.caption ? 'text-slate-600 dark:text-slate-300' : 'text-slate-300 dark:text-slate-600 italic'}`}>
+                              <p className={`text-[11px] mt-1.5 leading-tight line-clamp-2 text-center px-0.5 font-medium ${img.caption ? 'text-slate-600' : 'text-slate-300 italic'}`}>
                                 {img.caption || `Photo ${i + 1}`}
                               </p>
                             </div>
@@ -750,9 +750,9 @@ const TourDetailView = () => {
                       <p className="text-primary text-sm font-semibold leading-normal">{tour.theme || 'Premium Experience'}</p>
                     </div>
                     {tour.bookingEnd && (
-                      <div className="flex h-8 items-center justify-center gap-x-2 rounded-full bg-orange-100 dark:bg-orange-900/20 px-4 border border-orange-200 dark:border-orange-900/30">
-                        <span className="material-symbols-outlined text-orange-600 dark:text-orange-400 text-sm">alarm</span>
-                        <span className="text-orange-700 dark:text-orange-300 text-[11px] font-black uppercase tracking-widest">Book by {new Date(tour.bookingEnd).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                      <div className="flex h-8 items-center justify-center gap-x-2 rounded-full bg-orange-100 px-4 border border-orange-200">
+                        <span className="material-symbols-outlined text-orange-600 text-sm">alarm</span>
+                        <span className="text-orange-700 text-[11px] font-black uppercase tracking-widest">Book by {new Date(tour.bookingEnd).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                       </div>
                     )}
                   </div>
@@ -769,39 +769,39 @@ const TourDetailView = () => {
                       </div>
                       
                       {/* Price Guide Card */}
-                      <div className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center gap-6">
+                      <div className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-white border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center gap-6">
                         <div className="flex-1 flex items-center gap-4 md:justify-center">
-                          <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-orange-600 dark:text-orange-400">payments</span>
+                          <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-orange-600">payments</span>
                           </div>
                           <div>
-                            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estimated Price Guide</p>
-                            <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">
+                            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Estimated Price Guide</p>
+                            <h4 className="text-xl font-black text-slate-800">
                               {formatPrice(displayPrice.amount, true)}
                               <span className="text-sm font-medium text-slate-400 ml-2">/ {displayPrice.label.toLowerCase()}</span>
                             </h4>
                           </div>
                         </div>
-                        <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
+                        <div className="h-px md:h-10 w-full md:w-px bg-slate-200" />
                         <div className="flex-1 flex items-center gap-4 md:justify-center">
-                          <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">calendar_month</span>
+                          <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-blue-600">calendar_month</span>
                           </div>
                           <div>
-                            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Package Duration</p>
-                            <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">{tour.duration}</h4>
+                            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Package Duration</p>
+                            <h4 className="text-xl font-black text-slate-800">{tour.duration}</h4>
                           </div>
                         </div>
                         {tour.bestTimeToVisit && (
                           <>
-                            <div className="h-px md:h-10 w-full md:w-px bg-slate-200 dark:bg-slate-700" />
+                            <div className="h-px md:h-10 w-full md:w-px bg-slate-200" />
                             <div className="flex-1 flex items-center gap-4 md:justify-center">
-                              <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">sunny</span>
+                              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
+                                <span className="material-symbols-outlined text-amber-600">sunny</span>
                               </div>
                               <div>
-                                <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Best Time To Visit</p>
-                                <h4 className="text-xl font-black text-slate-800 dark:text-slate-100">{tour.bestTimeToVisit}</h4>
+                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Best Time To Visit</p>
+                                <h4 className="text-xl font-black text-slate-800">{tour.bestTimeToVisit}</h4>
                               </div>
                             </div>
                           </>
@@ -852,7 +852,7 @@ const TourDetailView = () => {
                   {/* Itinerary — Mobile-First */}
                   <div id="itinerary" className="flex flex-col gap-3 mt-4">
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-[22px] font-black text-slate-800 dark:text-slate-100 tracking-tight">Day-by-Day Itinerary</h3>
+                      <h3 className="text-[22px] font-black text-slate-800 tracking-tight">Day-by-Day Itinerary</h3>
                     </div>
                     {(() => {
                       const itinerary = tour?.itinerary && tour.itinerary.length > 0
@@ -1101,21 +1101,21 @@ const TourDetailView = () => {
                            <h4 className="text-[13px] font-extrabold text-[#0a6c75] mb-4 uppercase tracking-tighter">Next Scheduled Departure</h4>
                            <div className="space-y-4">
                               <div className="flex items-center gap-3">
-                                 <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
+                                 <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
                                     <span className="material-symbols-outlined text-primary">calendar_month</span>
                                  </div>
                                  <div>
                                     <p className="text-[11px] text-slate-500 font-bold uppercase">Dates</p>
-                                    <p className="text-sm font-black text-slate-800 dark:text-slate-100 italic">Oct 15 - Oct 21, 2026</p>
+                                    <p className="text-sm font-black text-slate-800 italic">Oct 15 - Oct 21, 2026</p>
                                  </div>
                               </div>
                               <div className="flex items-center gap-3">
-                                 <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
+                                 <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
                                     <span className="material-symbols-outlined text-primary">group</span>
                                  </div>
                                  <div>
                                     <p className="text-[11px] text-slate-500 font-bold uppercase">Group Size</p>
-                                    <p className="text-sm font-black text-slate-800 dark:text-slate-100">{tour.minPersons > 1 ? `Min ${tour.minPersons}` : 'Private'} Persons</p>
+                                    <p className="text-sm font-black text-slate-800">{tour.minPersons > 1 ? `Min ${tour.minPersons}` : 'Private'} Persons</p>
                                  </div>
                               </div>
                            </div>
@@ -1136,7 +1136,7 @@ const TourDetailView = () => {
                         <span className="material-symbols-outlined text-[14px]">explore</span>
                         You Might Also Like
                       </span>
-                      <h3 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight">Similar Tour Packages</h3>
+                      <h3 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">Similar Tour Packages</h3>
                     </div>
                     <Link to="/tours" className="hidden md:flex items-center gap-1.5 text-primary font-black text-sm uppercase tracking-wider hover:gap-3 transition-all border border-primary/20 px-4 py-2 rounded-xl hover:bg-primary/5">
                       View All <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -1163,7 +1163,7 @@ const TourDetailView = () => {
                       };
                       const themeClass = themeColors[t.theme] || 'bg-primary/10 text-primary';
                       return (
-                        <Link key={idx} to={tPath} className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 flex flex-col h-full active:scale-[0.98]">
+                        <Link key={idx} to={tPath} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full active:scale-[0.98]">
                           {/* Image */}
                           <div className="relative h-48 overflow-hidden">
                             <img src={imgSrc} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
@@ -1182,8 +1182,8 @@ const TourDetailView = () => {
                           {/* Card body */}
                           <div className="p-4 flex flex-col flex-1">
                             <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">{t.stateRegion || t.destination}</p>
-                            <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">{t.title}</h4>
-                            <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                            <h4 className="font-black text-slate-800 text-sm leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">{t.title}</h4>
+                            <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
                               <div>
                                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starts from</p>
                                 <p className="text-base font-black text-primary">{formatPrice(t.price, true)}</p>
@@ -1214,7 +1214,7 @@ const TourDetailView = () => {
                       <span className="material-symbols-outlined text-[14px]">help</span>
                       Have Questions?
                     </span>
-                    <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white">Frequently Asked Questions</h2>
+                    <h2 className="text-3xl md:text-4xl font-black text-slate-800">Frequently Asked Questions</h2>
                     <p className="text-slate-500 mt-2 text-base">Everything you need to know before booking your trip.</p>
                   </div>
 
@@ -1226,7 +1226,7 @@ const TourDetailView = () => {
                         className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
                           openFaq === idx
                             ? 'border-primary/30 bg-primary/5 shadow-md'
-                            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-primary/20'
+                            : 'border-slate-200 bg-white hover:border-primary/20'
                         }`}
                       >
                         <button
@@ -1235,18 +1235,18 @@ const TourDetailView = () => {
                         >
                           <div className="flex items-center gap-4">
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                              openFaq === idx ? 'bg-primary text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                              openFaq === idx ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'
                             }`}>
                               <span className="text-sm font-black">{idx + 1}</span>
                             </div>
-                            <span className="text-slate-800 dark:text-slate-100 font-bold text-base leading-snug">{item.question}</span>
+                            <span className="text-slate-800 font-bold text-base leading-snug">{item.question}</span>
                           </div>
                           <span className={`material-symbols-outlined text-xl shrink-0 ml-4 transition-transform duration-300 ${
                             openFaq === idx ? 'text-primary rotate-180' : 'text-slate-400'
                           }`}>expand_more</span>
                         </button>
                         {openFaq === idx && (
-                          <div className="px-6 pb-5 pl-[72px] text-slate-600 dark:text-slate-400 text-sm leading-relaxed border-t border-primary/10 pt-4">
+                          <div className="px-6 pb-5 pl-[72px] text-slate-600 text-sm leading-relaxed border-t border-primary/10 pt-4">
                             {item.answer}
                           </div>
                         )}
@@ -1264,17 +1264,17 @@ const TourDetailView = () => {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                   <div>
                     <p className="text-xs font-black text-primary uppercase tracking-widest mb-1">What Travelers Say</p>
-                    <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight">Stories & Reviews</h2>
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">Stories & Reviews</h2>
                   </div>
                   {/* Rating Badge */}
-                  <div className="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 shadow-sm">
+                  <div className="flex items-center gap-4 bg-white border border-slate-100 rounded-2xl px-5 py-3 shadow-sm">
                     <div className="text-center">
-                      <p className="text-3xl font-black text-slate-800 dark:text-white leading-none">4.9</p>
+                      <p className="text-3xl font-black text-slate-800 leading-none">4.9</p>
                       <div className="flex text-amber-400 mt-0.5 justify-center">{'★★★★★'.split('').map((s, i) => <span key={i} className="text-base">{s}</span>)}</div>
                     </div>
                     <div className="w-px h-10 bg-slate-200" />
                     <div>
-                      <p className="text-sm font-black text-slate-700 dark:text-slate-200">Excellent</p>
+                      <p className="text-sm font-black text-slate-700">Excellent</p>
                       <p className="text-xs text-slate-400 font-semibold mt-0.5">Based on {reviews.filter(r => r.tourId === tour.id).length || 2} reviews</p>
                     </div>
                   </div>
@@ -1284,15 +1284,15 @@ const TourDetailView = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {reviews.filter(r => r.tourId === tour.id).length > 0 ? (
                     reviews.filter(r => r.tourId === tour.id).map((review) => (
-                      <div key={review.id} className="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex flex-col gap-4">
+                      <div key={review.id} className="group bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex flex-col gap-4">
                         {/* Quote mark */}
                         <span className="text-5xl text-primary/10 font-black leading-none -mb-2 select-none">&quot;</span>
-                        <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm flex-1">{review.comment}</p>
-                        <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
+                        <p className="text-slate-600 italic leading-relaxed text-sm flex-1">{review.comment}</p>
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                           <div className="flex items-center gap-3">
                             <img src={review.userImage} alt={review.userName} className="w-10 h-10 rounded-xl object-cover shadow" />
                             <div>
-                              <p className="font-black text-slate-800 dark:text-slate-100 text-sm">{review.userName}</p>
+                              <p className="font-black text-slate-800 text-sm">{review.userName}</p>
                               <div className="flex text-amber-400 text-[11px]">
                                 {Array.from({ length: review.rating }).map((_, i) => <span key={i}>★</span>)}
                               </div>
@@ -1307,7 +1307,7 @@ const TourDetailView = () => {
                     ))
                   ) : (
                     [1, 2].map(i => (
-                      <div key={i} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 animate-pulse">
+                      <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 animate-pulse">
                         <div className="h-4 bg-slate-100 rounded w-3/4 mb-3" />
                         <div className="h-4 bg-slate-50 rounded w-full mb-2" />
                         <div className="h-4 bg-slate-50 rounded w-5/6 mb-6" />
@@ -1327,7 +1327,7 @@ const TourDetailView = () => {
                 <div className="mt-10 text-center">
                   <Link
                     to={`/account/review?tourId=${tour.id}&tourName=${encodeURIComponent(tour.title)}`}
-                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-white border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-900 rounded-xl font-black text-slate-700 dark:text-slate-300 hover:border-primary hover:text-primary dark:hover:text-primary transition-all shadow-sm text-xs uppercase tracking-widest"
+                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-white border-2 border-slate-200 rounded-xl font-black text-slate-700 hover:border-primary hover:text-primary transition-all shadow-sm text-xs uppercase tracking-widest"
                   >
                     <span className="material-symbols-outlined text-[16px]">rate_review</span>
                     Write a Review
