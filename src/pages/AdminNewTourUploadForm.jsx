@@ -382,6 +382,15 @@ const AdminNewTourUploadForm = () => {
         }));
       }
 
+      // Normalize highlights, inclusions, exclusions to arrays before saving
+      ['highlights', 'inclusions', 'exclusions'].forEach(field => {
+        if (tourToSave[field] && typeof tourToSave[field] === 'string') {
+          tourToSave[field] = tourToSave[field].split('\n').map(s => s.trim()).filter(Boolean);
+        } else if (!tourToSave[field]) {
+          tourToSave[field] = [];
+        }
+      });
+
       // Generate ID from title slug (e.g. "Golden Triangle Tour" → "golden-triangle-tour")
       // NEW tours: always derive a fresh slug from the title — prevents numeric/timestamp IDs.
       // EDIT tours: keep the existing ID unchanged.
@@ -1175,7 +1184,7 @@ const AdminNewTourUploadForm = () => {
                         </span>
                         <textarea
                           name="highlights"
-                          value={formData.highlights || ""}
+                          value={Array.isArray(formData.highlights) ? formData.highlights.join('\n') : (formData.highlights || "")}
                           onChange={handleChange}
                           className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
                           placeholder="Enjoy a trekking trip to Vaishno Devi Temple&#10;Enjoy skiing at Gulmarg"
@@ -2314,7 +2323,7 @@ const AdminNewTourUploadForm = () => {
                       </span>
                       <textarea
                         name="inclusions"
-                        value={formData.inclusions || ""}
+                        value={Array.isArray(formData.inclusions) ? formData.inclusions.join('\n') : (formData.inclusions || "")}
                         onChange={handleChange}
                         className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
                         placeholder="Accommodation&#10;Meals&#10;Transportation"
@@ -2327,7 +2336,7 @@ const AdminNewTourUploadForm = () => {
                       </span>
                       <textarea
                         name="exclusions"
-                        value={formData.exclusions || ""}
+                        value={Array.isArray(formData.exclusions) ? formData.exclusions.join('\n') : (formData.exclusions || "")}
                         onChange={handleChange}
                         className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
                         placeholder="Visas&#10;Personal travel insurance&#10;Optional activities"

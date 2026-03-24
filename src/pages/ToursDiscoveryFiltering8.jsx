@@ -84,17 +84,9 @@ const ToursDiscoveryFiltering8 = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {tours.map(tour => {
-                        const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
-                        const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
-                        const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
                         const displayState = Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion;
                         const displayDest = Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination;
-
-                        const tourDestSegment = encodeURIComponent((safeDest || 'global').toLowerCase().replace(/\s+/g, '-'));
-                        const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
-                        const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
-                        const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-                        const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
+                        const detailUrl = `/tour/${tour.id}`;
 
                         return (
                             <Link key={tour.id} to={detailUrl} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-neutral-100 group block">

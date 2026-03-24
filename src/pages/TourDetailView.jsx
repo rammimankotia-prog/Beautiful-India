@@ -846,7 +846,7 @@ const TourDetailView = () => {
                         {/* Highlights Grid */}
                         <div className="p-8">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
-                            {tour.highlights.split('\n').filter(Boolean).map((highlight, idx) => (
+                            {(tour.highlights || []).map((highlight, idx) => (
                               <div key={idx} className="group flex gap-4 items-start transition-all hover:translate-x-1">
                                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-transform">
                                   <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-[16px] font-black">done</span>
@@ -918,11 +918,11 @@ const TourDetailView = () => {
                               </div>
                               <div>
                                 <h4 className="text-base font-black text-emerald-700 dark:text-emerald-400">What's Included</h4>
-                                <p className="text-[11px] text-emerald-600/70 dark:text-emerald-500/60 font-semibold">{tour.inclusions.split('\n').filter(Boolean).length} items covered</p>
+                                <p className="text-[11px] text-emerald-600/70 dark:text-emerald-500/60 font-semibold">{(tour.inclusions || []).length} items covered</p>
                               </div>
                             </div>
                             <ul className="flex flex-col divide-y divide-emerald-50 dark:divide-emerald-900/30 px-5 py-2">
-                              {tour.inclusions.split('\n').filter(Boolean).map((item, idx) => (
+                              {(tour.inclusions || []).map((item, idx) => (
                                 <li key={idx} className="flex items-start gap-3 py-3">
                                   <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center shrink-0 mt-0.5">
                                     <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>done</span>
@@ -941,11 +941,11 @@ const TourDetailView = () => {
                               </div>
                               <div>
                                 <h4 className="text-base font-black text-rose-700 dark:text-rose-400">Not Included</h4>
-                                <p className="text-[11px] text-rose-600/70 dark:text-rose-500/60 font-semibold">{tour.exclusions.split('\n').filter(Boolean).length} items excluded</p>
+                                <p className="text-[11px] text-rose-600/70 dark:text-rose-500/60 font-semibold">{(tour.exclusions || []).length} items excluded</p>
                               </div>
                             </div>
                             <ul className="flex flex-col divide-y divide-rose-50 dark:divide-rose-900/30 px-5 py-2">
-                              {tour.exclusions.split('\n').filter(Boolean).map((item, idx) => (
+                              {(tour.exclusions || []).map((item, idx) => (
                                 <li key={idx} className="flex items-start gap-3 py-3">
                                   <span className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-800/50 flex items-center justify-center shrink-0 mt-0.5">
                                     <span className="material-symbols-outlined text-rose-500 dark:text-rose-400 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>close</span>
@@ -1159,8 +1159,7 @@ const TourDetailView = () => {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     {similarTours.map((t, idx) => {
-                      const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-                      const tPath = `/tours/${encodeURIComponent((t.destination || 'global').toLowerCase())}/${encodeURIComponent((t.stateRegion || 'region').toLowerCase())}/${encodeURIComponent((t.subRegion || 'sub-region').toLowerCase())}/${tSlug}`;
+                      const tPath = `/tour/${t.id}`;
                       const imgSrc = (() => {
                         if (!t.image) return 'https://images.unsplash.com/photo-1596760407110-2f759c2b7188?auto=format&fit=crop&w=400&q=80';
                         if (typeof t.image === 'string') return t.image;

@@ -91,15 +91,7 @@ const BharatBotRecommendedToursView = () => {
                                 <div className="relative w-full overflow-hidden">
                                     <div className="flex overflow-x-auto gap-6 pb-6 scrollbar-hide snap-x px-2">
                                         {recommendedTours.map(tour => {
-                                            const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
-                                            const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
-                                            const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
-
-                                            const tourDestSegment = encodeURIComponent((safeDest || 'global').toLowerCase().replace(/\s+/g, '-'));
-                                            const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
-                                            const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
-                                            const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-                                            const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
+                                            const detailUrl = `/tour/${tour.id}`;
                                             
                                             return (
                                             <Link key={tour.id} to={detailUrl} className="min-w-[320px] max-w-[320px] snap-center bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md border border-primary/5 hover:shadow-xl transition-shadow group block">

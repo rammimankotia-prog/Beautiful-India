@@ -543,15 +543,7 @@ const ToursDiscoveryFiltering1 = () => {
                                         ].filter(Boolean).join(', ');
                                         const themeTag = tour.nature || tour.theme || 'Adventure';
                                         
-                                        const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
-                                        const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
-                                        const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
-                                        
-                                        const tourDestSegment = encodeURIComponent((safeDest || 'global').toLowerCase().replace(/\s+/g, '-'));
-                                        const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
-                                        const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
-                                        const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-                                        const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
+                                        const detailUrl = `/tour/${tour.id}`;
 
                                         return (
                                             <div

@@ -1,0 +1,65 @@
+{
+  "id": "kerala-tour-package",
+  "title": "Kerala Tour Package",
+  "description": "A Kerala tour offers beautiful backwaters, hill stations, beaches, and wildlife. Popular destinations include Munnar, Alleppey, Thekkady, and Kochi",
+  "destination": "Asia",
+  "stateRegion": "Kerala",
+  "subregion": "Kochi",
+  "duration": "6 Days",
+  "price": 18000,
+  "priceBasis": "per_package",
+  "minPersons": 2,
+  "status": "active",
+  "order": 2,
+  "theme": "adventure",
+  "nature": "private",
+  "style": "budget",
+  "priceCategory": "low",
+  "inclusions": [
+    "Hotel / Houseboat accommodation",
+    "Breakfast & Dinner",
+    "Private cab for sightseeing",
+    "Airport pickup & drop"
+  ],
+  "exclusions": [
+    "Flights / train tickets",
+    "Entry tickets to parks & monuments",
+    "Personal expenses"
+  ],
+  "highlights": [
+    "Kerala Tour Itinerary (5 Nights / 6 Days)"
+  ],
+  "isFeatured": true,
+  "itinerary": [
+    {
+      "day": 1,
+      "title": "Day 1 – Arrival in Kochi",
+      "description": "Arrival at Kochi Airport\n\nVisit Fort Kochi\n\nSee Chinese Fishing Nets & local markets\n\nOvernight stay in Kochi"
+    },
+    {
+      "day": 2,
+      "title": "Kochi → Munnar",
+      "description": "Drive to Munnar (famous for tea gardens)\n\nVisit waterfalls and scenic viewpoints\n\nEvening free for local sightseeing\n\nOvernight stay in Munnar"
+    },
+    {
+      "day": 3,
+      "title": "Munnar Sightseeing",
+      "description": "Visit Eravikulam National Park\n\nTea Museum visit\n\nPhoto points and tea plantations"
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is the best time to visit Kerala?",
+      "answer": "The best time to visit Kerala is from October to March, when the weather is pleasant and ideal for sightseeing."
+    },
+    {
+      "question": "How many days are enough for a Kerala trip?",
+      "answer": "A 5 to 7 days tour is ideal to explore major destinations like Munnar, Alleppey, Thekkady, and Kochi."
+    }
+  ],
+  "images": [
+    null
+  ],
+  "transport": "train",
+  "slug": "kerala-tour-package"
+}

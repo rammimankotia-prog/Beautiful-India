@@ -125,14 +125,7 @@ const TourComparisonPage = () => {
                  
                  {/* Tour Image/Title Columns */}
                  {toursToCompare.map(tour => {
-                    const safeDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
-                    const safeState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
-                    const safeSub = Array.isArray(tour.subregion) ? tour.subregion[0] : tour.subregion;
-                    const tourDestSegment = encodeURIComponent((safeDest || 'dest').toLowerCase().replace(/\s+/g, '-'));
-                    const tourStateSegment = encodeURIComponent((safeState || 'state').toLowerCase().replace(/\s+/g, '-'));
-                    const tourSubSegment = encodeURIComponent((safeSub || 'subregion').toLowerCase().replace(/\s+/g, '-'));
-                    const tourTitleSegment = encodeURIComponent((tour.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-                    const detailUrl = `/tours/${tourDestSegment}/${tourStateSegment}/${tourSubSegment}/${tourTitleSegment}`;
+                    const detailUrl = `/tour/${tour.id}`;
 
                     return (
                         <th key={`header-${tour.id}`} className="p-6 align-top w-1/4 min-w-[250px] relative border-r border-slate-200 last:border-r-0">

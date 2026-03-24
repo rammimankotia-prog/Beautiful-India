@@ -40,7 +40,7 @@ const SavedTripsWishlist = () => {
           {/* Wishlist Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {/* Tour Card 1 */}
-            <Link to="/tours/2" className="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700 block">
+            <Link to="/tour/kerala-backwaters-houseboat-experience" className="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700 block">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img alt="Amalfi Coast" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Sunny view of colorful buildings on Amalfi Coast cliffside" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj_C8KSIm3vUgA3J3sAwjRVER0oYvaQ7e5L_SSPrsC6pguxQJSx0xOoG7Wpjtknwaicf-4CT0r0xD2xPTg5adxVTP8ZygLoTJCMp1G1lhVGx5lspQq2qik55z298-aLlfYa7ALzW2GB2St91VUTgnOC3Y9DHzBX_HBMQMdiOtxxi3cQnLmsMGqN1yW7ivCkFgZG9NIydoBU3k_8gRDMvcvNq0TX7KljF-wz76NpCnEyXCuH27aXCLMD185u_ywhxTDEAUHacZ49x3I" />
                 <button className="absolute top-4 right-4 h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center text-primary shadow-lg backdrop-blur-sm">

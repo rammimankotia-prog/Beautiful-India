@@ -911,7 +911,7 @@ const TravelGuidesCategoryLanding = () => {
                 Curated Tours for You
               </div>
 
-              <Link to="/tours/1" className="featured-tour-card">
+              <Link to="/tour/golden-triangle-delhi-agra-jaipur" className="featured-tour-card">
                 <div className="featured-tour-img-wrap">
                   <img
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGCFXThfsSoiPSdQX5-y98NOuiBEIH70C7PxkszGP8xEA6jtTg46KE2jIOqyEsodJiVJqFNbdNwqDd0T_oEtBuqMDJ3JFjUlVXpWGbsT4U_D_2BaVDwf3Rt3CySyF8eyvwo6iLaqXlICQq5T5F-1bhIiOgD7i1KZnKtxFwcCVEFG1P6Ou_lcK2sfiXbak6XEzw98y5aXKgBqMfpB0w3rrdapUkY7Cl463xw_fpXRxJw6S09wHlPn5IbdOCJbMjqW42VaKXA8Laakgm"
