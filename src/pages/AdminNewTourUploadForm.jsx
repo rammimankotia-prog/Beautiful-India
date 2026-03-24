@@ -746,6 +746,21 @@ const AdminNewTourUploadForm = () => {
                           exists, a number will be appended automatically.
                         </p>
                       </label>
+
+                      {/* City Path */}
+                      <label className="flex flex-col flex-1 pb-4">
+                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
+                          City Path (Highlight Cities)
+                        </span>
+                        <input
+                          name="cityPath"
+                          value={formData.cityPath || ""}
+                          onChange={handleChange}
+                          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
+                          placeholder="e.g. Kashmir (2D) → Srinagar (2D) → Gulmarg (2D) - Pahalgam (1D)"
+                          type="text"
+                        />
+                      </label>
                     </div>
 
                     {/* ── HOTEL & ACCOMMODATION (Shifted here - Multi-select) ── */}
@@ -1103,22 +1118,6 @@ const AdminNewTourUploadForm = () => {
                           </p>
                         </div>
                       )}
-                    </div>
-                    {/* City Path */}
-                    <div className="col-span-1 md:col-span-2">
-                      <label className="flex flex-col flex-1">
-                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                          City Path (Highlight Cities)
-                        </span>
-                        <input
-                          name="cityPath"
-                          value={formData.cityPath || ""}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
-                          placeholder="e.g. Kashmir (2D) → Srinagar (2D) → Gulmarg (2D) - Pahalgam (1D)"
-                          type="text"
-                        />
-                      </label>
                     </div>
                     {/* Description (Rich Text Mock) */}
                     <div className="col-span-1 md:col-span-2">
