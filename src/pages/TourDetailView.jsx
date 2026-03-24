@@ -226,6 +226,16 @@ const TourDetailView = () => {
         }
 
         if (matchedTour) {
+          // Normalize legacy string fields to arrays to prevent .map() crash
+          if (matchedTour.highlights && typeof matchedTour.highlights === 'string') {
+              matchedTour.highlights = matchedTour.highlights.split('\n').filter(Boolean);
+          }
+          if (matchedTour.inclusions && typeof matchedTour.inclusions === 'string') {
+              matchedTour.inclusions = matchedTour.inclusions.split('\n').filter(Boolean);
+          }
+          if (matchedTour.exclusions && typeof matchedTour.exclusions === 'string') {
+              matchedTour.exclusions = matchedTour.exclusions.split('\n').filter(Boolean);
+          }
           setTour(matchedTour);
         } else if (!identifier) {
           // No identifier at all, show first tour
