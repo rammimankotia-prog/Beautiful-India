@@ -562,7 +562,7 @@ const TourDetailView = () => {
         </div>
       </div>
 
-      <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+      <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden bg-white">
         {/* Top Navigation */}
 
         <main className="flex h-full grow flex-col pb-10 md:pb-20">
@@ -578,14 +578,14 @@ const TourDetailView = () => {
                     <span className="material-symbols-outlined text-[13px]">explore</span>
                     {(Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination) || 'India'} · {(Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion) || ''}
                   </p>
-                  <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight text-slate-900 dark:text-white">{tour.title}</h1>
+                  <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight text-slate-900">{tour.title}</h1>
                   {/* Info Pills */}
                   <div className="flex flex-wrap items-center gap-2 mt-1 mb-2">
                     <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-bold">
                       <span className="material-symbols-outlined text-[14px]">schedule</span>
                       {tour.duration}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-full text-xs font-bold">
+                    <span className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full text-xs font-bold">
                       <span className="material-symbols-outlined text-[14px]">route</span>
                       Curated Route
                     </span>
