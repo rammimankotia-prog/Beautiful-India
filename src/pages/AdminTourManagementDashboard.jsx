@@ -22,16 +22,35 @@ const AdminTourManagementDashboard = () => {
     refreshData();
   };
 
-  const saveTours = (updatedTours) => {
-    setTours(updatedTours);
-    safeCacheTours('beautifulindia_cache_tours', updatedTours);
+  const persistToursToServer = async (updatedTours) => {
+    try {
+      const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-tours' : `${import.meta.env.BASE_URL}api-save-tours.php`;
+      const response = await fetch(targetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTours)
+      });
+      const result = await response.json();
+      if (!result.success) throw new Error(result.error);
+      return true;
+    } catch (err) {
+      console.error("Failed to persist tours to server:", err);
+      showToast('❌ Server Save Failed');
+      return false;
+    }
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this tour?")) {
+  const saveTours = (updatedTours, persist = false) => {
+    setTours(updatedTours);
+    safeCacheTours('beautifulindia_cache_tours', updatedTours);
+    if (persist) persistToursToServer(updatedTours);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this tour package permanently?")) {
       const updated = tours.filter(t => t.id !== id);
-      saveTours(updated);
-      showToast('🗑️ Tour deleted from local storage');
+      saveTours(updated, true); // Immediate persistence
+      showToast('🗑️ Tour deleted successfully');
     }
   };
 
@@ -220,8 +239,10 @@ const AdminTourManagementDashboard = () => {
                                     value={tour.status || 'active'} 
                                     className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-emerald-600 outline-none cursor-pointer"
                                     onChange={(e) => {
-                                      const updated = tours.map(t => t.id === tour.id ? { ...t, status: e.target.value } : t);
-                                      saveTours(updated);
+                                      const newStatus = e.target.value;
+                                      const updated = tours.map(t => t.id === tour.id ? { ...t, status: newStatus } : t);
+                                      saveTours(updated, true); // Immediate persistence
+                                      showToast(`✅ Status updated to ${newStatus}`);
                                     }}
                                   >
                                     <option value="active">Active</option>

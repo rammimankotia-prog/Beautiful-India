@@ -349,7 +349,7 @@ const AdminNewTourUploadForm = () => {
     setFormData((prev) => ({ ...prev, faq: newFaq }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, forcedStatus = null) => {
     if (e && e.preventDefault) e.preventDefault();
     setLoading(true);
 
@@ -366,6 +366,9 @@ const AdminNewTourUploadForm = () => {
       }
 
       const tourToSave = { ...formData };
+      if (forcedStatus) {
+        tourToSave.status = forcedStatus;
+      }
 
       // Process itinerary tags: convert string to array
       if (tourToSave.itinerary) {
@@ -2661,8 +2664,7 @@ const AdminNewTourUploadForm = () => {
               </button>
               <button
                 onClick={(e) => {
-                  setFormData((prev) => ({ ...prev, status: "draft" }));
-                  setTimeout(() => handleSubmit(e), 0);
+                  handleSubmit(e, "draft");
                 }}
                 className="px-5 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/10 transition-colors border border-primary/20"
                 type="button"
@@ -2671,7 +2673,7 @@ const AdminNewTourUploadForm = () => {
               </button>
               <button
                 type="button"
-                onClick={handleSubmit}
+                onClick={(e) => handleSubmit(e, isEdit ? formData.status : "active")}
                 className="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all shadow-sm flex items-center gap-2"
               >
                 <span className="material-symbols-outlined text-sm">
