@@ -241,10 +241,14 @@ const BharatDarshanPage = () => {
         d.name.toLowerCase() === activeFilter.toLowerCase()
       );
 
-  // Refine tour filtering logic
+  // Show tours flagged for homepage, falling back to all active tours if none are flagged
+  const recommendedTours = allTours.filter(t => 
+    t.status === 'active' && (t.isFeatured || (t.homePagePlacements && t.homePagePlacements.includes("Recommended Tour Packages")))
+  );
   const filteredTourPackages = activeFilter === 'All'
-    ? allTours.filter(t => t.isFeatured || (t.homePagePlacements && t.homePagePlacements.includes("Recommended Tour Packages"))).slice(0, 8) // Show top 8 recommended by default
+    ? (recommendedTours.length > 0 ? recommendedTours : allTours.filter(t => t.status !== 'draft')).slice(0, 8)
     : allTours.filter(t => {
+        if (t.status === 'draft') return false;
         const query = activeFilter.toLowerCase();
         const tState = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
         const stateMatch = tState.some(s => s?.toLowerCase().includes(query));
