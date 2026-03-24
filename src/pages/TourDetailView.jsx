@@ -901,46 +901,46 @@ const TourDetailView = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         {tour.inclusions && (
-                          <div className="relative overflow-hidden rounded-2xl border border-emerald-200 dark:border-emerald-800/40 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/30 dark:to-slate-900 shadow-sm">
-                            <div className="flex items-center gap-3 px-6 py-4 border-b border-emerald-100 dark:border-emerald-800/30 bg-emerald-500/5">
-                              <div className="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-200 dark:shadow-emerald-900/50">
+                          <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white shadow-sm">
+                            <div className="flex items-center gap-3 px-6 py-4 border-b border-emerald-100 bg-emerald-500/5">
+                              <div className="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-200">
                                 <span className="material-symbols-outlined text-white text-[20px]" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
                               </div>
                               <div>
-                                <h4 className="text-base font-black text-emerald-700 dark:text-emerald-400">What's Included</h4>
-                                <p className="text-[11px] text-emerald-600/70 dark:text-emerald-500/60 font-semibold">{(tour.inclusions || []).length} items covered</p>
+                                <h4 className="text-base font-black text-emerald-700">What's Included</h4>
+                                <p className="text-[11px] text-emerald-600/70 font-semibold">{(tour.inclusions || []).length} items covered</p>
                               </div>
                             </div>
-                            <ul className="flex flex-col divide-y divide-emerald-50 dark:divide-emerald-900/30 px-5 py-2">
+                            <ul className="flex flex-col divide-y divide-emerald-50 px-5 py-2">
                               {(tour.inclusions || []).map((item, idx) => (
                                 <li key={idx} className="flex items-start gap-3 py-3">
-                                  <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center shrink-0 mt-0.5">
-                                    <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>done</span>
+                                  <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                                    <span className="material-symbols-outlined text-emerald-600 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>done</span>
                                   </span>
-                                  <span className="text-sm text-slate-700 dark:text-slate-300 leading-snug">{item}</span>
+                                  <span className="text-sm text-slate-700 leading-snug">{item}</span>
                                 </li>
                               ))}
                             </ul>
                           </div>
                         )}
                         {tour.exclusions && (
-                          <div className="relative overflow-hidden rounded-2xl border border-rose-200 dark:border-rose-800/40 bg-gradient-to-br from-rose-50 to-white dark:from-rose-950/20 dark:to-slate-900 shadow-sm">
-                            <div className="flex items-center gap-3 px-6 py-4 border-b border-rose-100 dark:border-rose-800/30 bg-rose-500/5">
-                              <div className="w-9 h-9 rounded-xl bg-rose-500 flex items-center justify-center shadow-md shadow-rose-200 dark:shadow-rose-900/50">
+                          <div className="relative overflow-hidden rounded-2xl border border-rose-200 bg-gradient-to-br from-rose-50 to-white shadow-sm">
+                            <div className="flex items-center gap-3 px-6 py-4 border-b border-rose-100 bg-rose-500/5">
+                              <div className="w-9 h-9 rounded-xl bg-rose-500 flex items-center justify-center shadow-md shadow-rose-200">
                                 <span className="material-symbols-outlined text-white text-[20px]" style={{fontVariationSettings:"'FILL' 1"}}>cancel</span>
                               </div>
                               <div>
-                                <h4 className="text-base font-black text-rose-700 dark:text-rose-400">Not Included</h4>
-                                <p className="text-[11px] text-rose-600/70 dark:text-rose-500/60 font-semibold">{(tour.exclusions || []).length} items excluded</p>
+                                <h4 className="text-base font-black text-rose-700">Not Included</h4>
+                                <p className="text-[11px] text-rose-600/70 font-semibold">{(tour.exclusions || []).length} items excluded</p>
                               </div>
                             </div>
-                            <ul className="flex flex-col divide-y divide-rose-50 dark:divide-rose-900/30 px-5 py-2">
+                            <ul className="flex flex-col divide-y divide-rose-50 px-5 py-2">
                               {(tour.exclusions || []).map((item, idx) => (
                                 <li key={idx} className="flex items-start gap-3 py-3">
-                                  <span className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-800/50 flex items-center justify-center shrink-0 mt-0.5">
-                                    <span className="material-symbols-outlined text-rose-500 dark:text-rose-400 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>close</span>
+                                  <span className="w-5 h-5 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
+                                    <span className="material-symbols-outlined text-rose-500 text-[13px]" style={{fontVariationSettings:"'FILL' 1"}}>close</span>
                                   </span>
-                                  <span className="text-sm text-slate-700 dark:text-slate-300 leading-snug">{item}</span>
+                                  <span className="text-sm text-slate-700 leading-snug">{item}</span>
                                 </li>
                               ))}
                             </ul>
@@ -954,11 +954,11 @@ const TourDetailView = () => {
                 <div className="lg:col-span-1">
                   <div className="flex flex-col gap-0 sticky top-24">
                     {/* Upper Features Card */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl rounded-b-none p-5 shadow-sm border-b-0">
+                    <div className="bg-white border border-slate-200 rounded-xl rounded-b-none p-5 shadow-sm border-b-0">
                       <div className="space-y-5">
                         {/* Hotel Selection */}
                         <div>
-                          <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-2">Staying at:</p>
+                          <p className="text-[13px] font-bold text-slate-700 mb-2">Staying at:</p>
                           <div className="flex flex-wrap gap-2">
                             {(() => {
                               const cats = Array.isArray(tour?.hotelCategory) ? tour.hotelCategory.filter(Boolean) : (tour?.hotelCategory ? [tour.hotelCategory] : []);
@@ -979,9 +979,9 @@ const TourDetailView = () => {
 
                         {/* Cities Path */}
                         <div>
-                          <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1">Cities:</p>
-                          <p className="text-[13px] text-slate-500 dark:text-slate-400 leading-snug">
-                            {tour?.cityPath || `${tour?.stateRegion || ''} (2D) → ${tour?.destination || ''} (2D) → ${tour?.subregion || 'Local'} (2D)`}
+                          <p className="text-[13px] font-bold text-slate-700 mb-1">Cities:</p>
+                          <p className="text-[13px] text-slate-500 leading-snug">
+                             {tour?.cityPath || `${tour?.stateRegion || ''} (2D) → ${tour?.destination || ''} (2D) → ${tour?.subregion || 'Local'} (2D)`}
                           </p>
                         </div>
 
@@ -1032,7 +1032,7 @@ const TourDetailView = () => {
 
                             return items.map((item, idx) => (
                               <div key={idx} className="flex flex-col items-center gap-1 min-w-[50px]">
-                                <span className="material-symbols-outlined text-slate-700 dark:text-slate-300 text-xl font-light">{item.icon}</span>
+                                <span className="material-symbols-outlined text-slate-600 text-xl font-light">{item.icon}</span>
                                 <span className="text-[9px] text-slate-500 font-bold text-center uppercase leading-tight line-clamp-1">{item.label}</span>
                               </div>
                             ));
@@ -1042,20 +1042,20 @@ const TourDetailView = () => {
                     </div>
 
                     {/* Middle Pricing Card */}
-                    <div className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 p-4 md:p-5 flex flex-col gap-4 border-b-2">
+                    <div className="bg-slate-50 border border-slate-200 p-4 md:p-5 flex flex-col gap-4 border-b-2">
                        <div className="flex flex-col min-[400px]:flex-row justify-between items-start gap-4">
                           <div className="w-full min-[400px]:w-auto">
                             <p className="text-[10px] md:text-[11px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Starting from:</p>
                             <div className="flex items-baseline gap-2">
-                               <span className="text-2xl font-black text-emerald-600 dark:text-emerald-500">{formatPrice(tour.pricePerPerson || tour.price, true)}/-</span>
+                             <span className="text-2xl font-black text-emerald-600">{formatPrice(tour.pricePerPerson || tour.price, true)}/-</span>
                                <span className="text-sm text-slate-400 line-through font-medium">{formatPrice(Math.round((tour.pricePerPerson || tour.price) * 1.15), true)}/-</span>
                             </div>
                             <p className="text-[11px] text-slate-500 font-bold mt-1">Per {tour.pricePerPerson ? 'Person on twin sharing' : (tour.priceBasis === 'per_package' ? 'Package' : 'Person on twin sharing')}.</p>
-                            <p className="text-[10px] text-orange-600 dark:text-orange-400 font-black mt-1 uppercase italic">Hotel cost may vary - submit details for rates!</p>
+                            <p className="text-[10px] text-orange-600 font-black mt-1 uppercase italic">Hotel cost may vary - submit details for rates!</p>
                           </div>
                           <div className="w-full min-[400px]:w-auto flex flex-row min-[400px]:flex-col justify-between items-center min-[400px]:items-end gap-2">
                              <p className="text-[10px] text-slate-400 font-bold uppercase mb-0 min-[400px]:mb-1">Month</p>
-                             <select className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-1 text-xs font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer flex-1 min-[400px]:flex-none">
+                             <select className="bg-white border border-slate-200 rounded px-2 py-1 text-xs font-bold text-slate-700 outline-none cursor-pointer flex-1 min-[400px]:flex-none">
                                 {availableMonths.map(month => (
                                   <option key={month} value={month}>{month}</option>
                                 ))}
