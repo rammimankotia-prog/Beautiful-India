@@ -519,7 +519,7 @@ const BharatDarshanPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredTourPackages.map(tour => (
                 <article key={tour.id}>
-                  <Link to={`/tour/${tour.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col h-full">
+                  <Link to={`/tour/${tour.slug || tour.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col h-full">
                     {/* Image */}
                     <div className="relative h-44 overflow-hidden">
                       <img src={tour.image} alt={tour.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -632,7 +632,7 @@ const BharatDarshanPage = () => {
                       <div className="text-[10px] text-white/40 font-black uppercase tracking-widest">Starts at</div>
                       <div className="text-2xl font-black text-white">₹{parseInt(tour.price).toLocaleString('en-IN')}</div>
                     </div>
-                    <Link to={`/tour/${tour.id}`} className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white group-hover:bg-amber-400 group-hover:text-slate-900 transition-all duration-300">
+                    <Link to={`/tour/${tour.slug || tour.id}`} className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white group-hover:bg-amber-400 group-hover:text-slate-900 transition-all duration-300">
                       <span className="material-symbols-outlined">arrow_outward</span>
                     </Link>
                   </div>
