@@ -38,41 +38,56 @@ const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
   const tags = Array.isArray(item.tags) ? item.tags : (item.tags ? String(item.tags).split(',').map(t => t.trim()).filter(Boolean) : []);
   const services = Array.isArray(item.services) ? item.services : [];
   return (
-    <div className="flex gap-0 pb-4">
-      <div className="flex flex-col items-center shrink-0 w-20 pt-3 z-10">
-        <span className="text-[11px] font-black text-[#f45d48] uppercase tracking-wide leading-none">Day {item.day}</span>
-        <div className="w-3 h-3 bg-white dark:bg-slate-900 border-2 border-[#f45d48] rounded-full mt-1.5 shrink-0" />
+    <div className="flex gap-0 pb-3">
+      {/* Day column — compact for mobile */}
+      <div className="flex flex-col items-center shrink-0 w-14 pt-2.5 z-10">
+        <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-b from-[#f45d48] to-[#d43a2a] text-white shadow-md shadow-[#f45d48]/30">
+          <span className="flex flex-col items-center leading-none">
+            <span className="text-[8px] font-bold uppercase tracking-wider opacity-80">Day</span>
+            <span className="text-[15px] font-black">{item.day}</span>
+          </span>
+        </span>
+        <div className="w-0.5 flex-1 bg-gradient-to-b from-[#f45d48]/40 to-transparent mt-1" />
       </div>
-      <div className="flex-1 ml-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-        <button type="button" onClick={() => setOpen(o => !o)} className="w-full flex items-center justify-between px-5 py-4 text-left group">
+      {/* Card */}
+      <div className={`flex-1 ml-2 bg-white dark:bg-slate-900 rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${
+        open 
+          ? 'border-primary/30 dark:border-primary/20 shadow-primary/10' 
+          : 'border-slate-100 dark:border-slate-800'
+      }`}>
+        <button type="button" onClick={() => setOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3.5 text-left group">
           <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-            <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-primary transition-colors pr-2">{item.title}</h4>
+            <h4 className={`text-[15px] font-bold leading-snug transition-colors pr-2 ${
+              open ? 'text-primary' : 'text-slate-800 dark:text-slate-100 group-hover:text-primary'
+            }`}>{item.title}</h4>
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1">
                 {tags.map((tag, tidx) => (
-                  <span key={tidx} className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/80">{tag}</span>
+                  <span key={tidx} className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-500 dark:text-slate-400">{tag}</span>
                 ))}
               </div>
             )}
           </div>
-          <span className={`material-symbols-outlined text-xl shrink-0 ml-3 transition-transform duration-300 ${open ? 'rotate-180 text-primary' : 'text-slate-400'}`}>expand_more</span>
+          <span className={`material-symbols-outlined text-lg shrink-0 ml-2 transition-all duration-300 ${
+            open ? 'rotate-180 text-primary' : 'text-slate-400'
+          }`}>expand_more</span>
         </button>
         {open && (
-          <div className="px-5 pb-5 border-t border-slate-50 dark:border-slate-800 pt-3">
+          <div className="px-4 pb-4 border-t border-slate-50 dark:border-slate-800 pt-3">
             {services.length > 0 && (
-              <div className="flex flex-wrap gap-5 pb-3 mb-3 border-b border-dashed border-slate-100 dark:border-slate-700">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 pb-3 mb-3 border-b border-dashed border-slate-100 dark:border-slate-700">
                 {services.map((svc, sidx) => {
                   const def = SERVICE_ICONS[svc] || { icon: 'check_circle', label: svc, color: 'text-slate-500' };
                   return (
                     <div key={sidx} className="flex flex-col items-center gap-0.5">
-                      <span className={`material-symbols-outlined text-[26px] ${def.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{def.icon}</span>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">{def.label}</span>
+                      <span className={`material-symbols-outlined text-2xl ${def.color}`} style={{fontVariationSettings:"'FILL' 0, 'wght' 300"}}>{def.icon}</span>
+                      <span className="text-[9px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">{def.label}</span>
                     </div>
                   );
                 })}
               </div>
             )}
-            <div className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+            <div className="text-slate-600 dark:text-slate-300 text-[13px] leading-relaxed space-y-1">
               {renderRichText(item.description)}
             </div>
           </div>
@@ -839,9 +854,11 @@ const TourDetailView = () => {
                     )}
                   </div>
 
-                  {/* Itinerary — TravelTriangle Style */}
-                  <div id="itinerary" className="flex flex-col gap-4 mt-4">
-                    <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Day-by-Day Itinerary</h3>
+                  {/* Itinerary — Mobile-First */}
+                  <div id="itinerary" className="flex flex-col gap-3 mt-4">
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="text-[22px] font-black text-slate-800 dark:text-slate-100 tracking-tight">Day-by-Day Itinerary</h3>
+                    </div>
                     {(() => {
                       const itinerary = tour?.itinerary && tour.itinerary.length > 0
                         ? tour.itinerary
@@ -853,17 +870,19 @@ const TourDetailView = () => {
                       const hiddenCount = itinerary.length - 2;
 
                       return (
-                        <div className="relative">
-                          <div className="absolute left-10 top-4 bottom-8 w-0.5 bg-slate-200 dark:bg-slate-700" />
+                        <div className="flex flex-col gap-0">
                           {visibleDays.map((item, idx) => (
                             <ItineraryDayCard key={item?.day || idx} item={item} defaultOpen={idx === 0} renderRichText={renderRichText} />
                           ))}
                           {itinerary.length > 2 && (
-                            <button onClick={() => setItineraryExpanded(!itineraryExpanded)} className="ml-[76px] text-primary font-semibold hover:underline flex items-center gap-1 mt-1 transition-all text-sm">
-                              {itineraryExpanded
-                                ? <><span className="material-symbols-outlined text-sm">expand_less</span> Show Less</>
-                                : <><span className="material-symbols-outlined text-sm">expand_more</span> View Full Itinerary ({hiddenCount} more days)</>
-                              }
+                            <button
+                              onClick={() => setItineraryExpanded(!itineraryExpanded)}
+                              className="ml-16 flex items-center gap-1.5 mt-2 text-primary font-bold text-sm hover:underline transition-all"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">
+                                {itineraryExpanded ? 'expand_less' : 'expand_more'}
+                              </span>
+                              {itineraryExpanded ? 'Show Less' : `View Full Itinerary (${hiddenCount} more days)`}
                             </button>
                           )}
                         </div>
