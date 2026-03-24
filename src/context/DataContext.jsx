@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import { safeCacheTours } from '../utils/storage';
+import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 
 const DataContext = createContext();
 
@@ -21,10 +21,10 @@ export const DataProvider = ({ children }) => {
                 const toursData = await toursRes.json();
                 const validTours = Array.isArray(toursData) ? toursData.filter(Boolean) : [];
                 setTours(validTours);
-                safeCacheTours('beautifulindia_cache_tours', validTours);
+                safeCacheTours(STORAGE_KEYS.TOURS, validTours);
             } else {
                 // Fallback to localStorage if fetch fails
-                const savedTours = localStorage.getItem('beautifulindia_cache_tours');
+                const savedTours = localStorage.getItem(STORAGE_KEYS.TOURS);
                 if (savedTours) setTours(JSON.parse(savedTours));
             }
 

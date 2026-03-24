@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
+import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 
 /**
  * Auto-generated from: bharatbot_recommended_tours_view/code.html
@@ -23,10 +24,10 @@ const BharatBotRecommendedToursView = () => {
                     const data = await res.json();
                     if (data && Array.isArray(data)) {
                         allToursList = data.filter(Boolean);
-                        localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+                        safeCacheTours(STORAGE_KEYS.TOURS, allToursList);
                     }
                 } else {
-                    const saved = localStorage.getItem('beautifulindia_admin_tours');
+                    const saved = localStorage.getItem(STORAGE_KEYS.TOURS);
                     if (saved !== null) {
                         try {
                             const parsed = JSON.parse(saved);

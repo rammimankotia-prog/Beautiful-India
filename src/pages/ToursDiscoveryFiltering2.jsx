@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
+import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 
 /**
  * Auto-generated from: tours_discovery_filtering_2/code.html
@@ -19,20 +20,20 @@ const ToursDiscoveryFiltering2 = () => {
         const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
-          if (data && Array.isArray(data)) {
-            allToursList = data.filter(Boolean);
-            localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+            if (data && Array.isArray(data)) {
+              allToursList = data.filter(Boolean);
+              safeCacheTours(STORAGE_KEYS.TOURS, allToursList);
+            }
+          } else {
+            // Fallback to localStorage if fetch fails
+            const saved = localStorage.getItem(STORAGE_KEYS.TOURS);
+            if (saved !== null) {
+              try {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
+              } catch(e) {}
+            }
           }
-        } else {
-          // Fallback to localStorage if fetch fails
-          const saved = localStorage.getItem('beautifulindia_admin_tours');
-          if (saved !== null) {
-            try {
-              const parsed = JSON.parse(saved);
-              if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
-            } catch(e) {}
-          }
-        }
         // Filter out paused/draft
         setTours(allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft').slice(0, 6));
         setLoading(false);

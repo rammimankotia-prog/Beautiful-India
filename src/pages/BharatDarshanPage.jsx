@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { safeCacheTours, STORAGE_KEYS } from './utils/storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import categoriesData from '../data/categories.json';
@@ -192,11 +193,11 @@ const BharatDarshanPage = () => {
             const data = await res.json();
             if (data && Array.isArray(data)) {
                 allToursList = data.filter(Boolean);
-                localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+                safeCacheTours(STORAGE_KEYS.TOURS, allToursList);
             }
         } else {
             // Fallback to localStorage if server fetch fails
-            const saved = localStorage.getItem('beautifulindia_admin_tours');
+            const saved = localStorage.getItem(STORAGE_KEYS.TOURS);
             if (saved !== null) {
                 try {
                     const parsed = JSON.parse(saved);

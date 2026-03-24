@@ -1,4 +1,13 @@
 /**
+ * Unified storage keys to prevent inconsistency across the app.
+ */
+export const STORAGE_KEYS = {
+  TOURS: 'beautifulindia_tours_cache',
+  ARTICLES: 'beautifulindia_articles_cache',
+  CATEGORIES: 'beautifulindia_categories_cache'
+};
+
+/**
  * Safely caches tours in localStorage.
  * If the quota is exceeded (common with base64 images), it attempts to save a "light" version
  * without images, or clears the cache if even that fails.
@@ -20,11 +29,9 @@ export const safeCacheTours = (key, tours) => {
         // Attempt 2: Light save (strip large base64 strings)
         const lightTours = tours.map(tour => ({
           ...tour,
-          // If image is a base64 string, replace it with a placeholder or empty string
           image: (typeof tour.image === 'string' && tour.image.startsWith('data:image/')) 
             ? 'cached://base64-stripped' 
             : tour.image,
-          // Handle the images array as well
           images: Array.isArray(tour.images) 
             ? tour.images.map(img => {
                 const url = typeof img === 'string' ? img : (img?.url || '');

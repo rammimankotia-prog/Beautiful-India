@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
-import { safeCacheTours } from '../utils/storage';
+import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 
 const AdminTourManagementDashboard = () => {
   const { tours, setTours, loading, refreshData } = useData();
@@ -42,7 +42,7 @@ const AdminTourManagementDashboard = () => {
 
   const saveTours = (updatedTours, persist = false) => {
     setTours(updatedTours);
-    safeCacheTours('beautifulindia_cache_tours', updatedTours);
+    safeCacheTours(STORAGE_KEYS.TOURS, updatedTours);
     if (persist) persistToursToServer(updatedTours);
   };
 
@@ -232,7 +232,9 @@ const AdminTourManagementDashboard = () => {
                                   </div>
                                </td>
                                <td className="px-8 py-6">
-                                  <span className="text-sm font-black text-slate-800 dark:text-slate-100">{formatPrice(tour.pricePerPerson || tour.price, true)}</span>
+                                  <span className="text-sm font-black text-slate-800 dark:text-slate-100">
+                                    {formatPrice(tour.pricePerPerson || tour.price || 0, true)}
+                                  </span>
                                </td>
                                <td className="px-8 py-6">
                                   <select 

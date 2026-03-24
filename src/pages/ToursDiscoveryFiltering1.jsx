@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
+import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 
 // Smarter slug matching
 const findTourBySlug = (tours, slug) => {
@@ -244,11 +245,11 @@ const ToursDiscoveryFiltering1 = () => {
                     const data = await res.json();
                     if (data && Array.isArray(data)) {
                         allToursList = data.filter(Boolean);
-                        localStorage.setItem('beautifulindia_admin_tours', JSON.stringify(allToursList));
+                        safeCacheTours(STORAGE_KEYS.TOURS, allToursList);
                     }
                 } else {
                     // Fallback to localStorage if fetch fails
-                    const saved = localStorage.getItem('beautifulindia_admin_tours');
+                    const saved = localStorage.getItem(STORAGE_KEYS.TOURS);
                     if (saved !== null) {
                         try {
                             const parsed = JSON.parse(saved);

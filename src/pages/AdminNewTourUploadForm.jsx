@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import categoriesData from "../data/categories.json";
-import { safeCacheTours } from "../utils/storage";
+import { safeCacheTours, STORAGE_KEYS } from "../utils/storage";
 
 /**
  * Auto-generated from: admin_new_tour_upload_form/code.html
@@ -190,7 +190,7 @@ const AdminNewTourUploadForm = () => {
   React.useEffect(() => {
     if (id) {
       // First check localStorage for session changes
-      const savedTours = localStorage.getItem("beautifulindia_admin_tours");
+      const savedTours = localStorage.getItem(STORAGE_KEYS.TOURS);
       if (savedTours) {
         try {
           const tours = JSON.parse(savedTours);
@@ -421,12 +421,17 @@ const AdminNewTourUploadForm = () => {
       }
 
       // Sync new pricing fields to legacy 'price' field for backward compatibility
-      if (tourToSave.pricePerPerson) {
-        tourToSave.price = tourToSave.pricePerPerson;
-      } else if (tourToSave.pricePerCouple) {
-        tourToSave.price = tourToSave.pricePerCouple;
-      } else if (tourToSave.pricePerGroup) {
-        tourToSave.price = tourToSave.pricePerGroup;
+      // Prioritize pricePerPerson, then Couple, then Group
+      const pPerson = parseFloat(tourToSave.pricePerPerson);
+      const pCouple = parseFloat(tourToSave.pricePerCouple);
+      const pGroup = parseFloat(tourToSave.pricePerGroup);
+
+      if (!isNaN(pPerson) && pPerson > 0) {
+        tourToSave.price = pPerson;
+      } else if (!isNaN(pCouple) && pCouple > 0) {
+        tourToSave.price = pCouple;
+      } else if (!isNaN(pGroup) && pGroup > 0) {
+        tourToSave.price = pGroup;
       }
 
       // Handle 'No end date' flags
@@ -469,7 +474,7 @@ const AdminNewTourUploadForm = () => {
       }
 
       // Also update localStorage as a cache for faster page loads
-      safeCacheTours("beautifulindia_admin_tours", updatedTours);
+      safeCacheTours(STORAGE_KEYS.TOURS, updatedTours);
 
       const statusMsg =
         tourToSave.status === "draft"
