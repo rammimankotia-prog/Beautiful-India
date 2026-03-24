@@ -50,20 +50,20 @@ const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
         <div className="w-0.5 flex-1 bg-gradient-to-b from-[#f45d48]/40 to-transparent mt-1" />
       </div>
       {/* Card */}
-      <div className={`flex-1 ml-2 bg-white dark:bg-slate-900 rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${
+      <div className={`flex-1 ml-2 bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${
         open 
-          ? 'border-primary/30 dark:border-primary/20 shadow-primary/10' 
-          : 'border-slate-100 dark:border-slate-800'
+          ? 'border-primary/30 shadow-primary/10' 
+          : 'border-slate-200'
       }`}>
         <button type="button" onClick={() => setOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3.5 text-left group">
           <div className="flex flex-col gap-1.5 flex-1 min-w-0">
             <h4 className={`text-[15px] font-bold leading-snug transition-colors pr-2 ${
-              open ? 'text-primary' : 'text-slate-800 dark:text-slate-100 group-hover:text-primary'
+              open ? 'text-primary' : 'text-slate-800 group-hover:text-primary'
             }`}>{item.title}</h4>
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
                 {tags.map((tag, tidx) => (
-                  <span key={tidx} className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-500 dark:text-slate-400">{tag}</span>
+                  <span key={tidx} className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-semibold text-slate-600">{tag}</span>
                 ))}
               </div>
             )}
@@ -73,9 +73,9 @@ const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
           }`}>expand_more</span>
         </button>
         {open && (
-          <div className="px-4 pb-4 border-t border-slate-50 dark:border-slate-800 pt-3">
+          <div className="px-4 pb-4 border-t border-slate-100 pt-3">
             {services.length > 0 && (
-              <div className="flex flex-wrap gap-x-4 gap-y-2 pb-3 mb-3 border-b border-dashed border-slate-100 dark:border-slate-700">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 pb-3 mb-3 border-b border-dashed border-slate-200">
                 {services.map((svc, sidx) => {
                   const def = SERVICE_ICONS[svc] || { icon: 'check_circle', label: svc, color: 'text-slate-500' };
                   return (
@@ -518,7 +518,7 @@ const TourDetailView = () => {
 
 
   return (
-    <div data-page="tour_detail_view">
+    <div data-page="tour_detail_view" style={{ colorScheme: 'light' }}>
       {/* Sticky Navigation Bar (Desktop Only) */}
       <div className={`fixed top-0 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 z-[90] transition-all duration-500 shadow-xl overflow-hidden hidden md:block ${showSticky ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}`}>
         <div className="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between">
@@ -605,11 +605,11 @@ const TourDetailView = () => {
                 </div>
 
                 {/* Right: Price + CTA */}
-                <div className="flex flex-col items-start md:items-end gap-3 shrink-0 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+                <div className="flex flex-col items-start md:items-end gap-3 shrink-0 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-slate-200">
                   <div className="text-left md:text-right">
-                    <p className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase tracking-widest">Starting from</p>
-                    <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(displayPrice.amount, true)}</p>
-                    <p className="text-[10px] md:text-xs text-slate-400 font-bold mt-0.5 uppercase">{displayPrice.label}</p>
+                    <p className="text-[10px] md:text-xs text-slate-500 font-semibold uppercase tracking-widest">Starting from</p>
+                    <p className="text-2xl md:text-3xl font-black text-slate-900 leading-none">{formatPrice(displayPrice.amount, true)}</p>
+                    <p className="text-[10px] md:text-xs text-slate-500 font-bold mt-0.5 uppercase">{displayPrice.label}</p>
                   </div>
                   {(tour.nature === 'group' || tour.nature === 'private') && tour.minPersons > 1 && (
                     <span className="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wide">
@@ -808,8 +808,8 @@ const TourDetailView = () => {
                         )}
                       </div>
 
-                      <div className="prose prose-lg dark:prose-invert max-w-none">
-                        <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-[17px]">
+                      <div className="rounded-2xl bg-slate-50 border border-slate-100 px-5 py-4">
+                        <div className="text-slate-700 leading-relaxed text-[15px] space-y-3">
                           {renderRichText(tour.description || "No description available for this tour.")}
                         </div>
                       </div>
@@ -817,35 +817,30 @@ const TourDetailView = () => {
 
                     {/* Highlights */}
                     {tour.highlights && (
-                      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl shadow-slate-200/50 dark:shadow-none">
-                        {/* Highlights Header */}
-                        <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="material-symbols-outlined text-primary text-xl" style={{fontVariationSettings: "'FILL' 1"}}>auto_awesome</span>
+                      <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md">
+                        <div className="px-6 py-5 border-b border-slate-100 bg-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="material-symbols-outlined text-primary text-lg" style={{fontVariationSettings: "'FILL' 1"}}>auto_awesome</span>
                             </div>
-                            <h3 className="text-xl font-black text-slate-800 dark:text-slate-100">Package Highlights</h3>
+                            <h3 className="text-lg font-black text-slate-800">Package Highlights</h3>
                           </div>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">Top Rated Experience</p>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">Top Rated Experience</p>
                         </div>
-
-                        {/* Highlights Grid */}
-                        <div className="p-8">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                        <div className="p-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                             {(tour.highlights || []).map((highlight, idx) => (
-                              <div key={idx} className="group flex gap-4 items-start transition-all hover:translate-x-1">
-                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-transform">
-                                  <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-[16px] font-black">done</span>
+                              <div key={idx} className="flex gap-3 items-start">
+                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5">
+                                  <span className="material-symbols-outlined text-emerald-600 text-[14px] font-black">done</span>
                                 </span>
-                                <span className="text-[15px] font-medium text-slate-700 dark:text-slate-300 leading-snug group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{highlight}</span>
+                                <span className="text-[14px] font-medium text-slate-700 leading-snug">{highlight}</span>
                               </div>
                             ))}
                           </div>
                         </div>
-
-                        {/* Subtle Footer/Tagline */}
-                        <div className="px-8 py-4 bg-primary/5 border-t border-primary/10">
-                          <p className="text-[11px] text-primary/70 font-bold uppercase tracking-[0.2em] flex items-center gap-2">
+                        <div className="px-6 py-3 bg-primary/5 border-t border-primary/10">
+                          <p className="text-[11px] text-primary/70 font-bold uppercase tracking-widest flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                             Premium inclusions for a worry-free holiday
                           </p>
