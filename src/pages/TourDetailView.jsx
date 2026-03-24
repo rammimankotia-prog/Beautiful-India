@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 // Helper: Normalize slugs for fuzzy matching
 const fuzzySlug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -252,27 +250,22 @@ const TourDetailView = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              <div className="w-16 h-16 border-4 border-primary/20 rounded-full"></div>
-              <div className="absolute top-0 left-0 w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-            </div>
-            <p className="font-black text-slate-400 animate-pulse uppercase tracking-[0.3em] text-[10px]">Curating Your Journey...</p>
+      <div className="flex items-center justify-center py-40">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-primary/20 rounded-full"></div>
+            <div className="absolute top-0 left-0 w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
+          <p className="font-black text-slate-400 animate-pulse uppercase tracking-[0.3em] text-[10px]">Curating Your Journey...</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   if (error || !tour || tour?.status === 'paused' || tour?.status === 'draft') {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-sans">
-        <Header />
-        <div className="flex-1 flex items-center justify-center px-6 py-20">
+      <div className="flex flex-col font-sans">
+        <div className="flex items-center justify-center px-6 py-20">
           <div className="max-w-2xl w-full text-center">
             <div className="relative inline-block mb-8">
               <div className="w-24 h-24 bg-red-50 dark:bg-red-950/30 text-red-500 rounded-3xl flex items-center justify-center mx-auto rotate-12 shadow-xl shadow-red-200/50 dark:shadow-none transition-transform hover:rotate-0 duration-500">
@@ -326,7 +319,6 @@ const TourDetailView = () => {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
