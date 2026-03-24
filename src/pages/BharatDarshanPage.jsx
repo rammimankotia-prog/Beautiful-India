@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { safeCacheTours, STORAGE_KEYS } from './utils/storage';
+import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import categoriesData from '../data/categories.json';
@@ -243,7 +243,7 @@ const BharatDarshanPage = () => {
 
   // Refine tour filtering logic
   const filteredTourPackages = activeFilter === 'All'
-    ? allTours.slice(0, 8) // Show top 8 by default
+    ? allTours.filter(t => t.isFeatured || (t.homePagePlacements && t.homePagePlacements.includes("Recommended Tour Packages"))).slice(0, 8) // Show top 8 recommended by default
     : allTours.filter(t => {
         const query = activeFilter.toLowerCase();
         const tState = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
@@ -610,7 +610,7 @@ const BharatDarshanPage = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {allTours.filter(t => t.transport === 'train' && t.showOnHome !== false).slice(0, 3).map(tour => (
+            {allTours.filter(t => (t.transport === 'train' || (t.homePagePlacements && t.homePagePlacements.includes("Travel by Train"))) && t.showOnHome !== false).slice(0, 3).map(tour => (
               <article key={tour.id} className="group relative bg-[#0f172a] rounded-3xl overflow-hidden border border-white/10 hover:border-amber-400/50 transition-all duration-500 hover:shadow-2xl hover:shadow-amber-400/10">
                 <div className="relative h-64 overflow-hidden">
                   <img src={tour.image} alt={tour.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" />

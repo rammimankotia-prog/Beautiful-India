@@ -24,7 +24,10 @@ const AdminTourManagementDashboard = () => {
 
   const persistToursToServer = async (updatedTours) => {
     try {
-      const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-tours' : `${import.meta.env.BASE_URL}api-save-tours.php`;
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const targetUrl = import.meta.env.MODE === 'development' 
+        ? '/api/save-tours' 
+        : `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}api-save-tours.php`;
       const response = await fetch(targetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -83,7 +86,10 @@ const AdminTourManagementDashboard = () => {
           <button 
             onClick={async () => {
               try {
-                const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-tours' : `${import.meta.env.BASE_URL}api-save-tours.php`;
+                const baseUrl = import.meta.env.BASE_URL || '/';
+                const targetUrl = import.meta.env.MODE === 'development' 
+                  ? '/api/save-tours' 
+                  : `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}api-save-tours.php`;
                 const response = await fetch(targetUrl, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },

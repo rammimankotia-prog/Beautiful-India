@@ -34,7 +34,7 @@ try {
 
     $jsonStr = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     
-    if (file_put_contents($srcPath, $jsonStr) === false) {
+    if (file_put_contents($srcPath, $jsonStr, LOCK_EX) === false) {
         throw new Exception('Failed to write to tours.json. Check folder permissions.');
     }
 

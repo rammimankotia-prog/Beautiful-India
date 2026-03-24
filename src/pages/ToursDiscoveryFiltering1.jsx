@@ -231,7 +231,18 @@ const ToursDiscoveryFiltering1 = () => {
         const urlTheme = searchParams.get('theme');
         const urlDest = searchParams.get('destination');
         if (urlTheme) setThemeFilters([urlTheme]);
-        if (urlDest) setStateRegion(urlDest);
+        // If it's a known destination, set it; otherwise try as stateRegion
+        if (urlDest) {
+            // Broad search: set both and the filter logic will find it
+            const destLower = urlDest.toLowerCase();
+            const isCityOrState = ['delhi', 'mumbai', 'kolkatta', 'chennai', 'himachal', 'kashmir', 'rajasthan', 'kerala', 'ladakh', 'goa', 'uttarakhand', 'andaman'].some(d => destLower.includes(d));
+            
+            if (isCityOrState) {
+                setStateRegion(urlDest);
+            } else {
+                setDestination(urlDest);
+            }
+        }
     }, []);
 
     useEffect(() => {
@@ -239,8 +250,11 @@ const ToursDiscoveryFiltering1 = () => {
             try {
                 let allToursList = [];
                 
-                // Always try to fetch first to ensure fresh data
-                const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+                // Robust path resolution for both dev and prod
+                const baseUrl = import.meta.env.BASE_URL || '/';
+                const apiUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/tours.json?t=${Date.now()}`;
+                
+                const res = await fetch(apiUrl);
                 if (res.ok) {
                     const data = await res.json();
                     if (data && Array.isArray(data)) {

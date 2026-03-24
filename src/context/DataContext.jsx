@@ -16,7 +16,9 @@ export const DataProvider = ({ children }) => {
             const cacheBust = force ? `?t=${Date.now()}` : '';
             
             // Fetch Tours
-            const toursRes = await fetch(`${import.meta.env.BASE_URL}data/tours.json${cacheBust}`);
+            const baseUrl = import.meta.env.BASE_URL || '/';
+            const toursUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/tours.json${cacheBust}`;
+            const toursRes = await fetch(toursUrl);
             if (toursRes.ok) {
                 const toursData = await toursRes.json();
                 const validTours = Array.isArray(toursData) ? toursData.filter(Boolean) : [];
@@ -29,7 +31,8 @@ export const DataProvider = ({ children }) => {
             }
 
             // Fetch Reviews
-            const reviewsRes = await fetch(`${import.meta.env.BASE_URL}data/reviews.json${cacheBust}`);
+            const reviewsUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/reviews.json${cacheBust}`;
+            const reviewsRes = await fetch(reviewsUrl);
             if (reviewsRes.ok) {
                 const reviewsData = await reviewsRes.json();
                 setReviews(Array.isArray(reviewsData) ? reviewsData : []);

@@ -16,7 +16,9 @@ const ToursDiscoveryFiltering8 = () => {
         const fetchTours = async () => {
             try {
                 let allToursList = [];
-                // Always try to fetch first to ensure fresh                const res = await fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`);
+                const baseUrl = import.meta.env.BASE_URL || '/';
+                const apiUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/tours.json?t=${Date.now()}`;
+                const res = await fetch(apiUrl);
                 if (res.ok) {
                     const data = await res.json();
                     if (data && Array.isArray(data)) {

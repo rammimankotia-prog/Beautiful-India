@@ -456,10 +456,11 @@ const AdminNewTourUploadForm = () => {
       }
 
       // Save to server via PHP API
+      const baseUrl = import.meta.env.BASE_URL || '/';
       const targetUrl =
         import.meta.env.MODE === "development"
           ? "/api/save-tours"
-          : `${import.meta.env.BASE_URL}api-save-tours.php`;
+          : `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}api-save-tours.php`;
 
       const response = await fetch(targetUrl, {
         method: "POST",
