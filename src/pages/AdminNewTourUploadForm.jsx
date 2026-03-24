@@ -383,42 +383,28 @@ const AdminNewTourUploadForm = () => {
       }
 
       // Generate ID from title slug (e.g. "Golden Triangle Tour" → "golden-triangle-tour")
-      const isNumericId = tourToSave.id && /^\d+$/.test(String(tourToSave.id));
-      if (!tourToSave.id || !isEdit || isNumericId) {
-        // Generate ID from slug (or title if slug is empty)
-        const baseSlug = (
-          tourToSave.slug ||
-          tourToSave.title ||
-          "untitled-tour"
-        )
+      // NEW tours: always derive a fresh slug from the title — prevents numeric/timestamp IDs.
+      // EDIT tours: keep the existing ID unchanged.
+      if (!isEdit) {
+        const baseSlug = (tourToSave.title || 'untitled-tour')
           .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, "") // Remove special chars
-          .replace(/\s+/g, "-") // Spaces → hyphens
-          .replace(/-+/g, "-") // Collapse multiple hyphens
-          .replace(/^-|-$/g, ""); // Trim leading/trailing hyphens
+          .replace(/[^\u0000-\u007E]/g, '')  // Strip non-ASCII characters
+          .replace(/[^a-z0-9\s-]/g, '')      // Remove remaining special chars
+          .replace(/\s+/g, '-')              // Spaces → hyphens
+          .replace(/-+/g, '-')               // Collapse multiple hyphens
+          .replace(/^-|-$/g, '')             // Trim leading/trailing hyphens
+          || 'untitled-tour';
 
-        // If editing AND the slug hasn't changed from the original ID, keep the original ID
-        if (isEdit && !isNumericId && tourToSave.slug === id) {
-          tourToSave.id = id;
-        } else {
-          // Ensure uniqueness: if slug already exists (and not this tour), append a number
-          let finalSlug = baseSlug;
-          let counter = 1; // User said "if the slug is already added... automatically add single numeric value"
-
-          // Loop to find an available slug
-          while (
-            tours.some(
-              (t) =>
-                String(t.id) === finalSlug &&
-                (!isEdit || String(t.id) !== String(id)),
-            )
-          ) {
-            finalSlug = `${baseSlug}-${counter}`;
-            counter++;
-          }
-          tourToSave.id = finalSlug;
-          tourToSave.slug = finalSlug; // Sync record as well
+        // Ensure uniqueness: if slug already exists, append a counter starting at 2
+        let finalSlug = baseSlug;
+        let counter = 2;
+        while (tours.some((t) => String(t.id) === finalSlug)) {
+          finalSlug = `${baseSlug}-${counter}`;
+          counter++;
         }
+        tourToSave.id = finalSlug;
+        tourToSave.slug = finalSlug;
+        console.log(`[Tour Save] Generated ID: "${finalSlug}" from title: "${tourToSave.title}"`);
       }
 
       // Sync new pricing fields to legacy 'price' field for backward compatibility
