@@ -317,7 +317,7 @@
     "style": "standard",
     "priceCategory": "medium",
     "transport": "mixed",
-    "image": "https://images.unsplash.com/photo-1581793745862-99f6606fec28?auto=format&fit=crop&q=80&w=800",
+    "image": "/ladakh-bike-expedition.png",
     "inclusions": [
       "Bike Rental",
       "Accommodation",
@@ -342,7 +342,7 @@
     "faq": [],
     "images": [
       {
-        "url": "https://images.unsplash.com/photo-1581793745862-99f6606fec28?auto=format&fit=crop&q=80&w=800"
+        "url": "/ladakh-bike-expedition.png"
       }
     ],
     "slug": "ladakh-bike-expedition"
@@ -458,7 +458,7 @@
     "style": "comfort",
     "priceCategory": "medium",
     "transport": "flight",
-    "image": "https://images.unsplash.com/photo-1589136777351-fdc9c9cb15f9?auto=format&fit=crop&q=80&w=800",
+    "image": "/andaman-beach-retreat.png",
     "inclusions": [
       "Hotels",
       "Ferry transfers",
@@ -483,7 +483,7 @@
     "faq": [],
     "images": [
       {
-        "url": "https://images.unsplash.com/photo-1589136777351-fdc9c9cb15f9?auto=format&fit=crop&q=80&w=800"
+        "url": "/andaman-beach-retreat.png"
       }
     ],
     "slug": "andaman-beach-retreat"
