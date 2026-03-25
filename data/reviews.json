@@ -1,11 +1,29 @@
 [
   {
+    "tourId": "1",
+    "userName": "Verified Traveler",
+    "userImage": "https://i.pravatar.cc/150?u=0.1805517773378471",
+    "rating": 5,
+    "comment": "Thanks",
+    "createdAt": "2026-03-22T09:52:30.536Z",
+    "id": "REV-1774173150677"
+  },
+  {
+    "tourId": "1",
+    "userName": "Verified Traveler",
+    "userImage": "https://i.pravatar.cc/150?u=0.7597988125220264",
+    "rating": 5,
+    "comment": "Amazing tour, highly recommended!",
+    "createdAt": "2026-03-22T09:48:56.769Z",
+    "id": "REV-1774172936852"
+  },
+  {
     "id": "1",
     "tourId": "1",
     "userName": "Rahul Sharma",
     "userImage": "https://i.pravatar.cc/150?u=rahul",
     "rating": 5,
-    "comment": "An absolutely breathtaking experience! The Kashmir tour was well-organized, and the houseboats were a highlight. Highly recommend Wanderlust.",
+    "comment": "An absolutely breathtaking experience! The Kashmir tour was well-organized, and the houseboats were a highlight. Highly recommend Beautiful India.",
     "createdAt": "2026-02-15T10:30:00.000Z"
   },
   {
@@ -19,7 +37,7 @@
   },
   {
     "id": "3",
-    "tourId": "2",
+    "tourId": "kerala-tour-package",
     "userName": "Vikram Singh",
     "userImage": "https://i.pravatar.cc/150?u=vikram",
     "rating": 5,
