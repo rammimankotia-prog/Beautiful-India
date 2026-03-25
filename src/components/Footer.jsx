@@ -33,40 +33,40 @@ const Footer = () => {
         { label: "Australia", slug: "australia" }
     ];
     const domestic = [
-        { label: "Kerala", slug: "kerala" },
-        { label: "Ladakh", slug: "ladakh" },
-        { label: "Goa", slug: "goa" },
-        { label: "Rajasthan", slug: "rajasthan" },
-        { label: "Kashmir", slug: "kashmir" },
-        { label: "Andaman", slug: "andaman" },
-        { label: "Andhra Pradesh", slug: "andhra-pradesh" },
-        { label: "Bihar", slug: "bihar" },
-        { label: "Gujarat", slug: "gujarat" },
-        { label: "Himachal", slug: "himachal" },
-        { label: "Karnataka", slug: "karnataka" },
-        { label: "Uttarakhand", slug: "uttarakhand" },
-        { label: "Sikkim", slug: "sikkim" },
-        { label: "Meghalaya", slug: "meghalaya" },
-        { label: "Maharashtra", slug: "maharashtra" },
-        { label: "Tamil Nadu", slug: "tamil-nadu" },
-        { label: "Odisha", slug: "odisha" },
-        { label: "Madhya Pradesh", slug: "madhya-pradesh" },
-        { label: "Assam", slug: "assam" },
-        { label: "West Bengal", slug: "west-bengal" },
-        { label: "Punjab", slug: "punjab" },
-        { label: "Lakshadweep", slug: "lakshadweep" },
-        { label: "Varanasi", slug: "varanasi" },
-        { label: "Pondicherry", slug: "pondicherry" },
-        { label: "Arunachal Pradesh", slug: "arunachal-pradesh" },
-        { label: "Jharkhand", slug: "jharkhand" },
-        { label: "Chhattisgarh", slug: "chhattisgarh" },
-        { label: "Nagaland", slug: "nagaland" },
+        { label: "Kerala", dest: "Kerala" },
+        { label: "Ladakh", dest: "Ladakh" },
+        { label: "Goa", dest: "Goa" },
+        { label: "Rajasthan", dest: "Rajasthan" },
+        { label: "Kashmir", dest: "Kashmir" },
+        { label: "Andaman", dest: "Andaman" },
+        { label: "Andhra Pradesh", dest: "Andhra Pradesh" },
+        { label: "Bihar", dest: "Bihar" },
+        { label: "Gujarat", dest: "Gujarat" },
+        { label: "Himachal", dest: "Himachal Pradesh" },
+        { label: "Karnataka", dest: "Karnataka" },
+        { label: "Uttarakhand", dest: "Uttarakhand" },
+        { label: "Sikkim", dest: "Sikkim" },
+        { label: "Meghalaya", dest: "Meghalaya" },
+        { label: "Maharashtra", dest: "Maharashtra" },
+        { label: "Tamil Nadu", dest: "Tamil Nadu" },
+        { label: "Odisha", dest: "Odisha" },
+        { label: "Madhya Pradesh", dest: "Madhya Pradesh" },
+        { label: "Assam", dest: "Assam" },
+        { label: "West Bengal", dest: "West Bengal" },
+        { label: "Punjab", dest: "Punjab" },
+        { label: "Lakshadweep", dest: "Lakshadweep" },
+        { label: "Varanasi", dest: "Varanasi" },
+        { label: "Pondicherry", dest: "Pondicherry" },
+        { label: "Arunachal Pradesh", dest: "Arunachal Pradesh" },
+        { label: "Jharkhand", dest: "Jharkhand" },
+        { label: "Chhattisgarh", dest: "Chhattisgarh" },
+        { label: "Nagaland", dest: "Nagaland" },
     ];
     const metroCities = [
-        { label: "Delhi", slug: "delhi" },
-        { label: "Mumbai", slug: "mumbai" },
-        { label: "Kolkatta", slug: "kolkatta" },
-        { label: "Chennai", slug: "chennai" }
+        { label: "Delhi", dest: "Delhi" },
+        { label: "Mumbai", dest: "Mumbai" },
+        { label: "Kolkatta", dest: "Kolkatta" },
+        { label: "Chennai", dest: "Chennai" }
     ];
     const domPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
     const intPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
@@ -133,7 +133,7 @@ const Footer = () => {
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
                             {domestic.map((dest, i) => (
                                 <React.Fragment key={i}>
-                                    <Link to={`/${dest.slug}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{dest.label}</Link>
+                                    <Link to={`/tours?destination=${encodeURIComponent(dest.dest)}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{dest.label}</Link>
                                     {i < domestic.length - 1 && <span className="text-gray-700">|</span>}
                                 </React.Fragment>
                             ))}
@@ -159,7 +159,7 @@ const Footer = () => {
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
                             {metroCities.map((city, i) => (
                                 <React.Fragment key={i}>
-                                    <Link to={`/${city.slug}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{city.label}</Link>
+                                    <Link to={`/tours?destination=${encodeURIComponent(city.dest)}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{city.label}</Link>
                                     {i < metroCities.length - 1 && <span className="text-gray-700">|</span>}
                                 </React.Fragment>
                             ))}

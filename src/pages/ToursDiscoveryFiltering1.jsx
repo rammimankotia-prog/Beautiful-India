@@ -234,17 +234,10 @@ const ToursDiscoveryFiltering1 = () => {
         const urlTheme = searchParams.get('theme');
         const urlDest = searchParams.get('destination');
         if (urlTheme) setThemeFilters([urlTheme]);
-        // If it's a known destination, set it; otherwise try as stateRegion
+        // ?destination= param always maps to a stateRegion filter
+        // (footer links use this format for all domestic regions and cities)
         if (urlDest) {
-            // Broad search: set both and the filter logic will find it
-            const destLower = urlDest.toLowerCase();
-            const isCityOrState = ['delhi', 'mumbai', 'kolkatta', 'chennai', 'himachal', 'kashmir', 'rajasthan', 'kerala', 'ladakh', 'goa', 'uttarakhand', 'andaman'].some(d => destLower.includes(d));
-            
-            if (isCityOrState) {
-                setStateRegion(urlDest);
-            } else {
-                setDestination(urlDest);
-            }
+            setStateRegion(urlDest);
         }
     }, []);
 
