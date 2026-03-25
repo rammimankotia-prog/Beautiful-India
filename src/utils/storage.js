@@ -7,8 +7,10 @@ export const STORAGE_KEYS = {
   CATEGORIES: 'beautifulindia_categories_cache'
 };
 
+const lastWriteTime = {};
+
 /**
- * Safely caches tours in localStorage.
+ * Safely caches tours in localStorage with anti-storm protection.
  * If the quota is exceeded (common with base64 images), it attempts to save a "light" version
  * without images, or clears the cache if even that fails.
  * 
@@ -17,6 +19,11 @@ export const STORAGE_KEYS = {
  */
 export const safeCacheTours = (key, tours) => {
   if (!key || !tours) return;
+
+  // Anti-storm: Avoid redundant writes (5s debounce)
+  const now = Date.now();
+  if (lastWriteTime[key] && now - lastWriteTime[key] < 5000) return;
+  lastWriteTime[key] = now;
 
   try {
     // Attempt 1: Full save

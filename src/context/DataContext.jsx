@@ -48,7 +48,7 @@ export const DataProvider = ({ children }) => {
             setError("Failed to load data. Please refresh.");
             
             // Final fallback to localStorage
-            const savedTours = localStorage.getItem('beautifulindia_cache_tours');
+            const savedTours = localStorage.getItem(STORAGE_KEYS.TOURS);
             const savedReviews = localStorage.getItem('beautifulindia_cache_reviews');
             if (savedTours) setTours(JSON.parse(savedTours));
             if (savedReviews) setReviews(JSON.parse(savedReviews));

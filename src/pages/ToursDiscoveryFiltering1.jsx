@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
-import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
+import { useData } from '../context/DataContext';
 
 // Smarter slug matching
 const findTourBySlug = (tours, slug) => {
@@ -211,9 +210,11 @@ const FilterPanel = ({
 const ToursDiscoveryFiltering1 = () => {
     const { regionSlug } = useParams();
     const [searchParams] = useSearchParams();
+    const { tours: allTours, loading: dataLoading, error: dataError } = useData();
+    const { formatPrice } = useCurrency();
+
     const [tours, setTours] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { formatPrice } = useCurrency();
 
     // Filter states
     const [destination, setDestination] = useState('Any Destination');
@@ -245,61 +246,39 @@ const ToursDiscoveryFiltering1 = () => {
         }
     }, []);
 
+    // Synchronize local tours state with DataContext
     useEffect(() => {
-        const fetchTours = async () => {
-            try {
-                let allToursList = [];
-                
-                // Robust path resolution for both dev and prod
-                const baseUrl = import.meta.env.BASE_URL || '/';
-                const apiUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/tours.json?t=${Date.now()}`;
-                
-                const res = await fetch(apiUrl);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && Array.isArray(data)) {
-                        allToursList = data.filter(Boolean);
-                        safeCacheTours(STORAGE_KEYS.TOURS, allToursList);
-                    }
-                } else {
-                    // Fallback to localStorage if fetch fails
-                    const saved = localStorage.getItem(STORAGE_KEYS.TOURS);
-                    if (saved !== null) {
-                        try {
-                            const parsed = JSON.parse(saved);
-                            if (Array.isArray(parsed)) allToursList = parsed.filter(Boolean);
-                        } catch(e) {}
-                    }
+        if (!dataLoading && allTours.length > 0) {
+            const activeTours = allTours.filter(t => t.status !== 'paused' && t.status !== 'draft');
+            setTours(activeTours);
+            
+            if (regionSlug) {
+                const matchedTour = findTourBySlug(activeTours, regionSlug);
+                if (matchedTour) {
+                    setDestination(matchedTour.destination || 'Any Destination');
+                    const targetState = Array.isArray(matchedTour.stateRegion) ? matchedTour.stateRegion[0] : matchedTour.stateRegion;
+                    setStateRegion(targetState || 'All States');
+                    const targetSub = Array.isArray(matchedTour.subregion) ? matchedTour.subregion[0] : matchedTour.subregion;
+                    setSubregion(targetSub || 'All subregions');
                 }
-                
-                const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
-                setTours(activeTours);
-                if (regionSlug) {
-                    const matchedTour = findTourBySlug(activeTours, regionSlug);
-                    if (matchedTour) {
-                        setDestination(matchedTour.destination || 'Any Destination');
-                        setStateRegion(matchedTour.stateRegion);
-                    }
-                }
-                setLoading(false);
-            } catch (err) {
-                console.error('Failed to fetch tours:', err);
-                setLoading(false);
             }
-        };
-        fetchTours();
-    }, []);
+            setLoading(false);
+        } else if (!dataLoading && allTours.length === 0) {
+            setLoading(false);
+        }
+    }, [allTours, dataLoading, regionSlug]);
 
+    // Handle slug changes after initial load
     useEffect(() => {
         if (regionSlug && tours.length > 0) {
             const matchedTour = findTourBySlug(tours, regionSlug);
             if (matchedTour) {
                 setDestination(matchedTour.destination || 'Any Destination');
-                setStateRegion(matchedTour.stateRegion);
+                const targetState = Array.isArray(matchedTour.stateRegion) ? matchedTour.stateRegion[0] : matchedTour.stateRegion;
+                setStateRegion(targetState || 'All States');
+                const targetSub = Array.isArray(matchedTour.subregion) ? matchedTour.subregion[0] : matchedTour.subregion;
+                setSubregion(targetSub || 'All subregions');
             }
-        } else if (!regionSlug && !searchParams.get('destination')) {
-            setDestination('Any Destination');
-            setStateRegion('All States');
         }
     }, [regionSlug, tours]);
 
@@ -351,10 +330,22 @@ const ToursDiscoveryFiltering1 = () => {
 
         if (stateRegion !== 'All States') {
             const tourState = tour.stateRegion;
+            // Defensive: ensure stateRegion is string before calling .toLowerCase()
+            const filterState = String(stateRegion).toLowerCase();
             const stateMatch = Array.isArray(tourState)
-                ? tourState.some(s => s && s.toLowerCase() === stateRegion.toLowerCase())
-                : (tourState && tourState.toLowerCase() === stateRegion.toLowerCase());
+                ? tourState.some(s => s && String(s).toLowerCase() === filterState)
+                : (tourState && String(tourState).toLowerCase() === filterState);
             if (!stateMatch) return false;
+        }
+
+        if (subregion !== 'All subregions') {
+            const tourSub = tour.subregion;
+            // Defensive: ensure subregion is string before calling .toLowerCase()
+            const filterSub = String(subregion).toLowerCase();
+            const subMatch = Array.isArray(tourSub)
+                ? tourSub.some(s => s && String(s).toLowerCase() === filterSub)
+                : (tourSub && String(tourSub).toLowerCase() === filterSub);
+            if (!subMatch) return false;
         }
         if (themeFilters.length > 0) {
             const hasTheme = themeFilters.some(theme =>
