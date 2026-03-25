@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
@@ -219,6 +220,7 @@ const ToursDiscoveryFiltering1 = () => {
     // Filter states
     const [destination, setDestination] = useState('Any Destination');
     const [stateRegion, setStateRegion] = useState('All States');
+    const [subregion, setSubregion] = useState('All subregions');
     const [themeFilters, setThemeFilters] = useState([]);
     const [travelStyle, setTravelStyle] = useState('Any');
     const [budgetUsd, setBudgetUsd] = useState(1000000);
