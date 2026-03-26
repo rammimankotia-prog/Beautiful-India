@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { 
+  Bold, 
+  Italic, 
+  Link as LinkIcon, 
+  Heading1, 
+  Heading2, 
+  Heading3, 
+  Heading4, 
+  Heading5, 
+  Heading6, 
+  Type, 
+  Trash2,
+  Code
+} from 'lucide-react';
 
 const AdminNewArticleUploadForm = () => {
   const navigate = useNavigate();
@@ -60,6 +74,37 @@ const AdminNewArticleUploadForm = () => {
 
       return newState;
     });
+  };
+
+  const insertFormatting = (prefix, suffix = "") => {
+    const textarea = document.getElementById("article-content");
+    if (!textarea) return;
+
+    textarea.focus();
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const before = text.substring(0, start);
+    const selection = text.substring(start, end);
+    const after = text.substring(end);
+
+    const newValue = before + prefix + selection + suffix + after;
+    
+    setFormData(prev => ({ ...prev, content: newValue }));
+
+    // Small delay to reset cursor position
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = start + prefix.length + (selection ? selection.length + suffix.length : 0);
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 10);
+  };
+
+  const handleAddLink = () => {
+    const url = prompt("Enter full URL (including https://):", "https://");
+    if (url && url !== "https://") {
+      insertFormatting(`<a href="${url}" class="text-teal-600 font-bold hover:underline" target="_blank">`, "</a>");
+    }
   };
 
   useEffect(() => {
@@ -218,9 +263,71 @@ const AdminNewArticleUploadForm = () => {
             </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Article Content</label>
-            <textarea required name="content" value={formData.content} onChange={handleChange} rows="12" className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm font-medium leading-[1.8] outline-none focus:ring-2 focus:ring-teal-500/20 font-serif" placeholder="Tell your story here..." />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between ml-1">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em]">Article Content</label>
+              <div className="flex gap-2 text-slate-400 font-bold text-[9px] uppercase tracking-tighter">
+                <span>HTML Supported</span>
+                <span>•</span>
+                <span>Auto-Saving to local</span>
+              </div>
+            </div>
+
+            {/* Premium Formatting Toolbar */}
+            <div className="flex flex-wrap items-center gap-1.5 p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner">
+              <button type="button" onClick={() => insertFormatting("<b>", "</b>")} className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-xl transition-all group shadow-sm hover:shadow-md" title="Bold">
+                <Bold size={16} className="text-slate-600 dark:text-slate-300 group-hover:text-teal-600" />
+              </button>
+              <button type="button" onClick={() => insertFormatting("<i>", "</i>")} className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-xl transition-all group shadow-sm hover:shadow-md" title="Italic">
+                <Italic size={16} className="text-slate-600 dark:text-slate-300 group-hover:text-teal-600" />
+              </button>
+              <button type="button" onClick={handleAddLink} className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-xl transition-all group shadow-sm hover:shadow-md" title="Add Link">
+                <LinkIcon size={16} className="text-slate-600 dark:text-slate-300 group-hover:text-teal-600" />
+              </button>
+              
+              <div className="w-[1px] h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+
+              {[Heading1, Heading2, Heading3, Heading4, Heading5].map((HIcon, idx) => (
+                <button 
+                  key={idx} 
+                  type="button" 
+                  onClick={() => insertFormatting(`<h${idx + 1} class="text-${idx === 0 ? '4xl' : idx === 1 ? '2xl' : 'xl'} font-black text-slate-800 dark:text-white mt-10 mb-4 tracking-tight">`, `</h${idx + 1}>`)} 
+                  className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-xl transition-all group shadow-sm hover:shadow-md" 
+                  title={`Heading ${idx + 1}`}
+                >
+                  <HIcon size={16} className="text-slate-600 dark:text-slate-300 group-hover:text-teal-600" />
+                </button>
+              ))}
+
+              <div className="w-[1px] h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+
+              <button type="button" onClick={() => insertFormatting("<p class=\"mb-6 leading-[1.8]\">", "</p>")} className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-xl transition-all group shadow-sm hover:shadow-md" title="Paragraph">
+                <Type size={16} className="text-slate-600 dark:text-slate-300 group-hover:text-teal-600" />
+              </button>
+              <button type="button" onClick={() => insertFormatting("<div class=\"bg-teal-50 dark:bg-teal-900/10 border-l-4 border-teal-500 p-6 my-10 italic text-lg\">", "</div>")} className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-xl transition-all group shadow-sm hover:shadow-md" title="Quote Block">
+                <Code size={16} className="text-slate-600 dark:text-slate-300 group-hover:text-teal-600" />
+              </button>
+              
+              <button 
+                type="button" 
+                onClick={() => { if(confirm("Clear all content?")) setFormData(prev => ({...prev, content: ''})) }} 
+                className="p-2 ml-auto hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all group" 
+                title="Clear Content"
+              >
+                <Trash2 size={16} className="text-slate-400 group-hover:text-red-500" />
+              </button>
+            </div>
+
+            <textarea 
+              required 
+              id="article-content"
+              name="content" 
+              value={formData.content} 
+              onChange={handleChange} 
+              rows="16" 
+              className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm font-medium leading-[1.8] outline-none focus:ring-2 focus:ring-teal-500/20 font-serif" 
+              placeholder="Tell your story here..." 
+            />
           </div>
 
           {/* Meta Info */}
