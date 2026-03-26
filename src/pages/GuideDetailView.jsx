@@ -297,7 +297,7 @@ const GuideDetailView = () => {
                 <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Tours Inspired by this Guide</h2>
               </div>
               <Link to="/tours" className="flex items-center gap-2 text-slate-400 hover:text-teal-500 font-bold transition-colors uppercase tracking-widest text-xs">
-                Browse All Tours <ArrowLeft className="rotate-180" size={16} />
+                View All Tours <ArrowLeft className="rotate-180" size={16} />
               </Link>
            </div>
            

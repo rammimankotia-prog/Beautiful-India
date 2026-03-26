@@ -586,8 +586,8 @@ const BharatDarshanPage = () => {
                   <p className="text-slate-500 text-sm font-medium mb-4 leading-relaxed">
                     {city.description}
                   </p>
-                  <Link to={`/tours?destination=${city.name}`} className="inline-flex items-center text-[#0a6c75] font-black text-sm hover:translate-x-1 transition-transform">
-                    View Tours <span className="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                  <Link to="/tours" className="inline-flex items-center text-[#0a6c75] font-black text-sm hover:translate-x-1 transition-transform">
+                    View All Tours <span className="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
                   </Link>
                 </div>
               </article>
@@ -608,8 +608,8 @@ const BharatDarshanPage = () => {
               <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">Travel by Train</h2>
               <p className="text-white/60 mt-2 max-w-xl">Experience the scenic beauty of India through the windows of a train. Romantic, sustainable, and iconic.</p>
             </div>
-            <Link to="/tours/tours-by-train" className="px-8 py-3.5 bg-amber-400 text-slate-900 font-black rounded-2xl hover:bg-amber-300 transition-all shadow-xl shadow-amber-400/20 flex items-center gap-2 whitespace-nowrap">
-              View All Train Tours <span className="material-symbols-outlined">arrow_forward</span>
+            <Link to="/tours" className="px-8 py-3.5 bg-amber-400 text-slate-900 font-black rounded-2xl hover:bg-amber-300 transition-all shadow-xl shadow-amber-400/20 flex items-center gap-2 whitespace-nowrap">
+              View All Tours <span className="material-symbols-outlined">arrow_forward</span>
             </Link>
           </div>
           
