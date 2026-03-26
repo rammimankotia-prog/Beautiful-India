@@ -8,6 +8,7 @@ const AdminNewArticleUploadForm = () => {
   
   const [formData, setFormData] = useState({
     title: '',
+    slug: '',
     category: '',
     readTime: '5 min read',
     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
@@ -24,12 +25,41 @@ const AdminNewArticleUploadForm = () => {
     allowComments: true
   });
 
+  const [slugEdited, setSlugEdited] = useState(false);
+
+  const slugify = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')     // Replace spaces with -
+      .replace(/[^\w-]+/g, '')  // Remove all non-word chars
+      .replace(/--+/g, '-')     // Replace multiple - with single -
+      .replace(/^-+/, '')       // Trim - from start of text
+      .replace(/-+$/, '');      // Trim - from end of text
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: type === 'checkbox' ? checked : value 
-    }));
+    
+    setFormData(prev => {
+      const newState = { 
+        ...prev, 
+        [name]: type === 'checkbox' ? checked : value 
+      };
+
+      // Auto-generate slug from title if not manually edited
+      if (name === 'title' && !slugEdited) {
+        newState.slug = slugify(value);
+      }
+
+      // Track if slug was manually edited
+      if (name === 'slug') {
+        setSlugEdited(true);
+      }
+
+      return newState;
+    });
   };
 
   useEffect(() => {
@@ -85,7 +115,7 @@ const AdminNewArticleUploadForm = () => {
         try { guides = JSON.parse(savedGuides); } catch (err) { console.error("Parse error:", err); }
       }
 
-      const guideId = id || (formData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString().slice(-4));
+      const guideId = id || (formData.slug || slugify(formData.title));
       const guideToSave = { 
         ...formData, 
         id: guideId,
@@ -161,6 +191,14 @@ const AdminNewArticleUploadForm = () => {
             <div className="space-y-3">
               <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Article Title</label>
               <input required name="title" value={formData.title} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20" placeholder="e.g. 10 Secret Cafes in Old Delhi" />
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Custom URL Slug</label>
+              <div className="relative">
+                <input required name="slug" value={formData.slug} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 pr-12 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20 lowercase" placeholder="e.g. secret-cafes-delhi" />
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-600">link</span>
+              </div>
+              <p className="text-[9px] text-slate-400 font-bold px-1 italic">Preview: bhaktikishakti.com/guides/<span className="text-[#0a6c75] dark:text-teal-400">{formData.slug || 'your-slug'}</span></p>
             </div>
             <div className="space-y-3">
               <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Primary Category</label>
