@@ -89,9 +89,9 @@ const AdminNewArticleUploadForm = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // 2MB size limit for localStorage stability
-      if (file.size > 2 * 1024 * 1024) {
-        alert("Image is too large (Max 2MB). Please compress it or use a smaller image to ensure it can be saved in your browser's local library.");
+      // 5MB size limit for localStorage stability (user requested)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Image is too large (Max 5MB). Please compress it or use a smaller image to ensure it can be saved in your browser's local library.");
         e.target.value = ''; // Reset input
         return;
       }
