@@ -254,7 +254,7 @@ const GuideDetailView = () => {
           <div className="bg-slate-50 dark:bg-slate-900/50 rounded-3xl p-8 border border-white dark:border-white/5 shadow-sm">
             <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
               <span className="w-1.5 h-6 bg-indigo-500 rounded-full"></span>
-              Latest Updates
+              Latest Articles
             </h3>
             <div className="space-y-8">
               {latestGuides.map(lg => (
@@ -266,7 +266,10 @@ const GuideDetailView = () => {
                     <h4 className="font-bold text-slate-900 dark:text-white text-sm line-clamp-2 leading-snug group-hover:text-teal-500 transition-colors">
                       {lg.title}
                     </h4>
-                    <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mt-2">{lg.category || 'Travel'}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-slate-400 text-[9px] uppercase font-black tracking-widest">{lg.category || 'Travel'}</p>
+                      <p className="text-slate-300 text-[9px] font-bold">{lg.date ? new Date(lg.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently'}</p>
+                    </div>
                   </div>
                 </Link>
               ))}
