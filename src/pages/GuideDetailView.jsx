@@ -15,14 +15,20 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Link as LinkIcon
+  Link as LinkIcon,
+  ExternalLink
 } from 'lucide-react';
+import { useData } from '../context/DataContext';
+import QueryModal from '../components/QueryModal';
 
 const GuideDetailView = () => {
   const { id } = useParams();
   const [guide, setGuide] = useState(null);
   const [guides, setGuides] = useState([]);
+  const [latestGuides, setLatestGuides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
+  const { tours } = useData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +45,11 @@ const GuideDetailView = () => {
         }
 
         const combined = [...globalData, ...localGuides];
-        setGuides(globalData); // used for "related"
+        setGuides(combined);
+        
+        // Latest articles (sorted by date, newest first)
+        const sorted = [...combined].sort((a, b) => new Date(b.date || '') - new Date(a.date || ''));
+        setLatestGuides(sorted.slice(0, 3));
         
         // Find the specific guide (by ID or Slug)
         const found = combined.find(g => String(g.id) === String(id) || g.slug === id);
@@ -75,8 +85,25 @@ const GuideDetailView = () => {
     );
   }
 
-  // Related guides (exclude current)
-  const relatedGuides = guides.filter(g => String(g.id) !== String(id)).slice(0, 3);
+  // Related guides (exclude current, match category)
+  const relatedGuides = guides
+    .filter(g => String(g.id) !== String(id) && g.category === guide.category)
+    .slice(0, 3);
+  
+  // Related Tours (match category/destination)
+  const relatedTours = tours
+    .filter(t => {
+      const gTitle = (guide.title || '').toLowerCase();
+      const gDest = (guide.destination || '').toLowerCase();
+      const gCat = (guide.category || '').toLowerCase();
+      
+      const tTitle = (t.title || '').toLowerCase();
+      const tDest = Array.isArray(t.destination) ? t.destination.join(' ').toLowerCase() : (t.destination || '').toLowerCase();
+      const tTheme = (t.theme || '').toLowerCase();
+      
+      return tTitle.includes(gDest) || tDest.includes(gDest) || tTheme.includes(gCat) || tTitle.includes(gCat);
+    })
+    .slice(0, 3);
 
   // Helper to format raw text content into HTML paragraphs if not already tagged
   const formatContent = (content) => {
@@ -213,39 +240,37 @@ const GuideDetailView = () => {
               <TrendingUp size={40} className="mb-6 opacity-50 group-hover:scale-110 transition-transform" />
               <h3 className="text-2xl font-black mb-4 leading-tight">Need Expert Help Planning This?</h3>
               <p className="text-teal-50 font-medium mb-8 leading-relaxed opacity-90">Our local travel specialists can curate a custom itinerary based on this guide.</p>
-              <button className="w-full bg-white text-teal-700 font-black py-4 rounded-2xl hover:bg-teal-50 transition-colors shadow-lg uppercase tracking-widest text-sm">
+              <button 
+                onClick={() => setIsQueryModalOpen(true)}
+                className="w-full bg-white text-teal-700 font-black py-4 rounded-2xl hover:bg-teal-50 transition-colors shadow-lg uppercase tracking-widest text-sm"
+              >
                 Consult a Specialist
               </button>
             </div>
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
           </div>
 
-          {/* Related Articles Widget */}
+          {/* Latest Articles Widget */}
           <div className="bg-slate-50 dark:bg-slate-900/50 rounded-3xl p-8 border border-white dark:border-white/5 shadow-sm">
             <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-6 bg-teal-500 rounded-full"></span>
-              Recommended
+              <span className="w-1.5 h-6 bg-indigo-500 rounded-full"></span>
+              Latest Updates
             </h3>
             <div className="space-y-8">
-              {relatedGuides.map(rg => (
-                <Link key={rg.id} to={`/guides/${rg.id}`} className="flex gap-4 group">
+              {latestGuides.map(lg => (
+                <Link key={lg.id} to={`/guides/${lg.id}`} className="flex gap-4 group">
                   <div className="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0 shadow-lg border border-white dark:border-slate-800">
-                    <img src={rg.image} alt={rg.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={lg.image} alt={lg.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex flex-col justify-center">
                     <h4 className="font-bold text-slate-900 dark:text-white text-sm line-clamp-2 leading-snug group-hover:text-teal-500 transition-colors">
-                      {rg.title}
+                      {lg.title}
                     </h4>
-                    <p className="text-slate-400 text-xs mt-2 flex items-center gap-1">
-                       {rg.date}
-                    </p>
+                    <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mt-2">{lg.category || 'Travel'}</p>
                   </div>
                 </Link>
               ))}
             </div>
-            <Link to="/guides" className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-teal-600 dark:text-teal-400 font-bold text-sm uppercase tracking-widest hover:gap-1 transition-all">
-               View All Guides <ArrowLeft className="rotate-180" size={16} />
-            </Link>
           </div>
 
           {/* Sticky Sidebar Ad */}
@@ -259,6 +284,55 @@ const GuideDetailView = () => {
           </div>
         </aside>
       </main>
+
+      {/* Related Tours Section - BEFORE newsletter */}
+      {relatedTours.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 md:px-12 lg:px-24 py-20 border-t border-slate-50 dark:border-slate-900">
+           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+              <div>
+                <p className="text-xs font-black text-teal-600 uppercase tracking-[0.3em] mb-3">Tailored Experiences</p>
+                <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Tours Inspired by this Guide</h2>
+              </div>
+              <Link to="/tours" className="flex items-center gap-2 text-slate-400 hover:text-teal-500 font-bold transition-colors uppercase tracking-widest text-xs">
+                Browse All Tours <ArrowLeft className="rotate-180" size={16} />
+              </Link>
+           </div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+             {relatedTours.map(tour => (
+               <Link key={tour.id} to={`/tours/${tour.slug || tour.id}`} className="group flex flex-col bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                  <div className="relative h-64 overflow-hidden">
+                    <img src={tour.image} alt={tour.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                    <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
+                      <p className="text-[10px] font-black text-slate-800 dark:text-white uppercase tracking-widest">{tour.duration}</p>
+                    </div>
+                  </div>
+                  <div className="p-8">
+                    <p className="text-[10px] font-black text-teal-600 uppercase tracking-widest mb-3">{tour.theme || 'Premium Tour'}</p>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-teal-600 transition-colors line-clamp-1">{tour.title}</h3>
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Starting from</p>
+                        <p className="text-lg font-black text-slate-900 dark:text-white">₹{tour.price || 'TBA'}</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-all">
+                        <ArrowLeft className="rotate-180" size={20} />
+                      </div>
+                    </div>
+                  </div>
+               </Link>
+             ))}
+           </div>
+        </section>
+      )}
+
+      {/* Lead Modal Integration */}
+      <QueryModal 
+        isOpen={isQueryModalOpen} 
+        onClose={() => setIsQueryModalOpen(false)} 
+        topic={guide.title}
+        source="Travel Guide"
+      />
 
       {/* Newsletter Bottom Bar */}
       <section className="bg-slate-100 dark:bg-slate-900 py-20 px-4">

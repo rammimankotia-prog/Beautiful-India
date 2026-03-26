@@ -22,7 +22,7 @@ const AdminLeadsDashboard = () => {
         setLoading(true);
         const saved = localStorage.getItem('beautifulindia_admin_leads');
         const fetchData = () => {
-            fetch(`${import.meta.env.BASE_URL}data/leads.json`)
+            fetch(`${import.meta.env.BASE_URL}api-save-leads.php`)
                 .then(res => res.json())
                 .then(data => {
                     const dataArray = Array.isArray(data) ? data : [];

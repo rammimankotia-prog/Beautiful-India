@@ -11,7 +11,7 @@ const AdminQueryManagement = () => {
 
   const fetchQueries = () => {
     setLoading(true);
-    fetch(`${import.meta.env.BASE_URL}data/leads.json`)
+    fetch(`${import.meta.env.BASE_URL}api-save-leads.php`)
       .then(res => res.json())
       .then(data => {
         // Sort by timestamp descending (newest first)

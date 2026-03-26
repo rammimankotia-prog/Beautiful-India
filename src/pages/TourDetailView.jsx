@@ -344,20 +344,28 @@ const TourDetailView = () => {
     };
 
     try {
-    // Mocked for static site
-    console.log(`[ADMIN NOTIFICATION] New Query from ${leadData.name} for ${leadData.to}. Email sent to admin@beautifulindia.com (MOCKED)`);
-    
-    setIsQuoteModalOpen(false);
-    setModalStep(1);
-    setShowSuccessOverlay(true);
-    
-    // Reset form
-    setLeadName('');
-    setLeadEmail('');
-    setLeadPhone('');
-    
-    // Auto-close after 4 seconds
-    setTimeout(() => setShowSuccessOverlay(false), 4000);
+      const resp = await fetch(`${import.meta.env.BASE_URL}api-save-leads.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(leadData)
+      });
+      const res = await resp.json();
+      
+      if (res.success) {
+        setIsQuoteModalOpen(false);
+        setModalStep(1);
+        setShowSuccessOverlay(true);
+        
+        // Reset form
+        setLeadName('');
+        setLeadEmail('');
+        setLeadPhone('');
+        
+        // Auto-close after 4 seconds
+        setTimeout(() => setShowSuccessOverlay(false), 4000);
+      } else {
+        throw new Error(res.message);
+      }
     } catch (err) {
       console.error("Lead submission error:", err);
       alert('Error submitting request. Please try again.');
