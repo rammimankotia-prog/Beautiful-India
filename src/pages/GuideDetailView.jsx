@@ -12,6 +12,7 @@ import {
   MessageCircle, 
   TrendingUp,
   MapPin,
+  Smartphone,
   Facebook,
   Twitter,
   Instagram,
