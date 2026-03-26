@@ -64,6 +64,7 @@ const TravelAdvisorySafetyGuide = lazy(() => import('./pages/TravelAdvisorySafet
 const TravelBlogPostDetailView1 = lazy(() => import('./pages/TravelBlogPostDetailView1'));
 const TravelBlogPostDetailView2 = lazy(() => import('./pages/TravelBlogPostDetailView2'));
 const TravelGuidesCategoryLanding = lazy(() => import('./pages/TravelGuidesCategoryLanding'));
+const GuideDetailView = lazy(() => import('./pages/GuideDetailView'));
 const TripAnniversaryMilestoneEmail = lazy(() => import('./pages/TripAnniversaryMilestoneEmail'));
 const UpcomingTripBookingReminderEmail = lazy(() => import('./pages/UpcomingTripBookingReminderEmail'));
 const UserMyBookingsHistory = lazy(() => import('./pages/UserMyBookingsHistory'));
@@ -168,6 +169,7 @@ export const routes = [
   { path: '/blog/post-1', element: Loadable(TravelBlogPostDetailView1)() },
   { path: '/blog/post-2', element: Loadable(TravelBlogPostDetailView2)() },
   { path: '/guides', element: Loadable(TravelGuidesCategoryLanding)() },
+  { path: '/guides/:id', element: Loadable(GuideDetailView)() },
   { path: '/emails/anniversary', element: Loadable(TripAnniversaryMilestoneEmail)() },
   { path: '/emails/trip-reminder', element: Loadable(UpcomingTripBookingReminderEmail)() },
   { path: '/account/bookings', element: Loadable(UserMyBookingsHistory)() },
