@@ -78,6 +78,24 @@ const GuideDetailView = () => {
   // Related guides (exclude current)
   const relatedGuides = guides.filter(g => String(g.id) !== String(id)).slice(0, 3);
 
+  // Helper to format raw text content into HTML paragraphs if not already tagged
+  const formatContent = (content) => {
+    if (!content) return "";
+    
+    // If the content is already heavily tagged with block elements, return as is
+    if (/<(p|div|h[1-6]|ul|ol|li|blockquote|section|article)/i.test(content)) {
+      // Still replace single newlines with <br/> in non-tag areas if needed? 
+      // For now, assume if they use tags, they know what they are doing.
+      return content;
+    }
+
+    // Convert double newlines to paragraphs and single newlines to <br/>
+    return content
+      .split(/\n\s*\n/)
+      .map(para => `<p class="mb-6 leading-[1.8]">${para.replace(/\n/g, '<br />')}</p>`)
+      .join('');
+  };
+
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen transition-colors duration-300">
       <Helmet>
@@ -154,7 +172,7 @@ const GuideDetailView = () => {
               prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-[1.8]
               prose-img:rounded-3xl prose-img:shadow-2xl prose-blockquote:border-teal-500 
               prose-blockquote:bg-teal-50/50 dark:prose-blockquote:bg-teal-900/10 prose-blockquote:p-8 prose-blockquote:rounded-2xl prose-blockquote:italic"
-            dangerouslySetInnerHTML={{ __html: guide.content }} 
+            dangerouslySetInnerHTML={{ __html: formatContent(guide.content) }} 
           />
 
           {/* Social Share & Interaction */}
