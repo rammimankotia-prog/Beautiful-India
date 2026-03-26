@@ -59,6 +59,13 @@ const AdminNewArticleUploadForm = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // 2MB size limit for localStorage stability
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Image is too large (Max 2MB). Please compress it or use a smaller image to ensure it can be saved in your browser's local library.");
+        e.target.value = ''; // Reset input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (event) => {
         setFormData(prev => ({ ...prev, image: event.target.result }));
@@ -71,32 +78,42 @@ const AdminNewArticleUploadForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
-    let guides = [];
-    if (savedGuides) {
-      try { guides = JSON.parse(savedGuides); } catch (err) { console.error(err); }
+    try {
+      const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
+      let guides = [];
+      if (savedGuides) {
+        try { guides = JSON.parse(savedGuides); } catch (err) { console.error("Parse error:", err); }
+      }
+
+      const guideId = id || (formData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString().slice(-4));
+      const guideToSave = { 
+        ...formData, 
+        id: guideId,
+        date: formData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+
+      let updatedGuides;
+      if (id) {
+        updatedGuides = guides.map(g => String(g.id) === String(id) ? guideToSave : g);
+        if (!guides.find(g => String(g.id) === String(id))) updatedGuides = [...guides, guideToSave];
+      } else {
+        updatedGuides = [...guides, guideToSave];
+      }
+
+      localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updatedGuides));
+      alert(`Article ${id ? 'Updated' : 'Created'} Successfully!`);
+      navigate('/admin/guides');
+      
+    } catch (err) {
+      console.error("Submission error:", err);
+      if (err.name === 'QuotaExceededError' || err.message.includes('quota')) {
+        alert("❌ Storage Full: The article (likely the image) is too large for your browser's local library. Please use a smaller image (under 2MB) or compress it before uploading.");
+      } else {
+        alert("❌ Failed to save article: " + (err.message || "Unknown error occurred"));
+      }
+    } finally {
+      setLoading(false);
     }
-
-    const guideId = id || (formData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString().slice(-4));
-    const guideToSave = { 
-      ...formData, 
-      id: guideId,
-      date: formData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-    };
-
-    let updatedGuides;
-    if (id) {
-      updatedGuides = guides.map(g => String(g.id) === String(id) ? guideToSave : g);
-      if (!guides.find(g => String(g.id) === String(id))) updatedGuides = [...guides, guideToSave];
-    } else {
-      updatedGuides = [...guides, guideToSave];
-    }
-
-    localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updatedGuides));
-    alert(`Article ${id ? 'Updated' : 'Created'} Successfully!`);
-    
-    setLoading(false);
-    navigate('/admin/guides');
   };
 
   return (
