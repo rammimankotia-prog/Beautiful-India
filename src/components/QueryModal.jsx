@@ -90,7 +90,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
       ></div>
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[95vh] flex flex-col">
         
         {/* Header Decor */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-teal-500 via-indigo-500 to-teal-500"></div>
@@ -118,19 +118,19 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
             </div>
           </div>
         ) : (
-          <div className="p-8 sm:p-10">
-            <div className="mb-10 pr-10">
-              <span className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 dark:bg-teal-900/20 dark:text-teal-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4">
-                <Smartphone size={14} />
-                Consult a Specialist
-              </span>
-              <h2 className="text-3xl font-black text-slate-900 dark:text-white leading-tight mb-2 tracking-tight">
-                Let's plan your journey to {topic || 'India'}
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 font-medium">
-                Fill in your details and we'll get back to you shortly.
-              </p>
-            </div>
+            <div className="flex-1 overflow-y-auto p-6 sm:p-10 custom-scrollbar">
+              <div className="mb-8 pr-6">
+                <span className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 dark:bg-teal-900/20 dark:text-teal-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
+                  <Smartphone size={14} />
+                  Consult a Specialist
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight mb-2 tracking-tight">
+                  Let's plan your journey to {topic || 'India'}
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
+                  Fill in your details and we'll get back to you shortly.
+                </p>
+              </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name */}
@@ -151,7 +151,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
               </div>
 
               {/* Email & Phone */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Email Address *</label>
                   <div className="relative group">
@@ -245,7 +245,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                 )}
               </button>
 
-              <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest px-8">
+              <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest px-4">
                 By submitting, you agree to our privacy policy and terms of service.
               </p>
             </form>

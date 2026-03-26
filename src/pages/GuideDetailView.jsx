@@ -178,7 +178,7 @@ const GuideDetailView = () => {
       </header>
 
       {/* Content Layout */}
-      <main className="max-w-7xl mx-auto px-4 md:px-12 lg:px-24 py-16 grid grid-cols-1 lg:grid-cols-12 gap-16 relative">
+      <main className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-24 py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 relative">
           
         {/* Ad Space (Sticky Sidebar or Top) */}
         <div className="col-span-1 lg:hidden mb-12">
@@ -301,7 +301,7 @@ const GuideDetailView = () => {
               </Link>
            </div>
            
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
              {relatedTours.map(tour => (
                <Link key={tour.id} to={`/tours/${tour.slug || tour.id}`} className="group flex flex-col bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
                   <div className="relative h-64 overflow-hidden">
@@ -328,6 +328,17 @@ const GuideDetailView = () => {
            </div>
         </section>
       )}
+
+      {/* Sticky Mobile CTA */}
+      <div className="fixed bottom-0 left-0 w-full p-4 lg:hidden z-[90] animate-in slide-in-from-bottom duration-500 delay-1000">
+        <button 
+          onClick={() => setIsQueryModalOpen(true)}
+          className="w-full bg-slate-900 dark:bg-teal-600 text-white font-black py-4 rounded-2xl shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition-all text-sm uppercase tracking-widest border border-white/10"
+        >
+          <Smartphone size={18} />
+          Consult a Specialist
+        </button>
+      </div>
 
       {/* Lead Modal Integration */}
       <QueryModal 
