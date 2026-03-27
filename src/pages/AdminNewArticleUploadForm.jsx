@@ -213,7 +213,8 @@ const AdminNewArticleUploadForm = () => {
       // 4. Sync to Server (Permanence)
       setIsSyncing(true);
       try {
-        const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
+        // Use proxy-friendly absolute path for both local and live
+        const targetUrl = '/api/save-guides';
         const syncResponse = await fetch(targetUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

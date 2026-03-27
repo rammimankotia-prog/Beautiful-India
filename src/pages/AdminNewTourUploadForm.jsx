@@ -456,11 +456,8 @@ const AdminNewTourUploadForm = () => {
       }
 
       // Save to server via PHP API
-      const baseUrl = import.meta.env.BASE_URL || '/';
-      const targetUrl =
-        import.meta.env.MODE === "development"
-          ? "/api/save-tours"
-          : `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}api-save-tours.php`;
+      // Use proxy-friendly absolute path for both local and live
+      const targetUrl = '/api/save-tours';
 
       const response = await fetch(targetUrl, {
         method: "POST",

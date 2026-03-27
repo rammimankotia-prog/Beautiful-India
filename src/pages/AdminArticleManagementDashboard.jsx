@@ -22,8 +22,11 @@ const AdminArticleManagementDashboard = () => {
       // 1. Fetch Master List from Server
       let remoteGuides = [];
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`);
-        if (res.ok) remoteGuides = await res.json();
+        // Fetch from system master source via absolute path
+        const res = await fetch('/api/save-guides');
+        if (res.ok) {
+          remoteGuides = await res.json();
+        }
       } catch (e) { console.warn("Remote guides unavailable:", e); }
 
       // 2. Fetch Local Drafts/Edits
@@ -101,7 +104,8 @@ const AdminArticleManagementDashboard = () => {
   const handleSync = async () => {
     setIsSyncing(true);
     try {
-      const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
+      // Use proxy-friendly absolute path
+      const targetUrl = '/api/save-guides';
       const response = await fetch(targetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
