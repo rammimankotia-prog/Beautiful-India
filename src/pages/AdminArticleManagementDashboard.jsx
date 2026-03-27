@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 const AdminArticleManagementDashboard = () => {
   const [guides, setGuides] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [isSyncing, setIsSyncing] = React.useState(false);
   const [toastMsg, setToastMsg] = React.useState('');
 
   const showToast = (msg) => {
@@ -50,6 +51,17 @@ const AdminArticleManagementDashboard = () => {
     }
   };
 
+  const handleExport = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(guides, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("download", `bharat_darshan_guides_backup_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    showToast("⬇️ Backup downloaded");
+  };
+
   const saveGuides = (updated) => {
     setGuides(updated);
     localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updated));
@@ -64,6 +76,7 @@ const AdminArticleManagementDashboard = () => {
   };
 
   const handleSync = async () => {
+    setIsSyncing(true);
     try {
       const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
       const response = await fetch(targetUrl, {
@@ -79,6 +92,8 @@ const AdminArticleManagementDashboard = () => {
       }
     } catch (error) {
       showToast("❌ Connection error");
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -102,11 +117,22 @@ const AdminArticleManagementDashboard = () => {
         </div>
         <div className="flex items-center gap-4">
           <button 
-            onClick={handleSync}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#0a6c75] text-white rounded-xl font-black hover:bg-[#085a62] transition-all text-sm shadow-lg shadow-teal-900/20"
+            onClick={handleExport}
+            className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 rounded-xl font-black hover:border-slate-400 transition-all text-sm shadow-sm"
+            title="Download JSON Backup"
           >
-            <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
-            Save to System
+            <span className="material-symbols-outlined text-[20px]">download</span>
+            Export
+          </button>
+          <button 
+            onClick={handleSync}
+            disabled={isSyncing}
+            className={`flex items-center gap-2 px-6 py-2.5 bg-[#0a6c75] text-white rounded-xl font-black hover:bg-[#085a62] transition-all text-sm shadow-lg shadow-teal-900/20 ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <span className={`material-symbols-outlined text-[20px] ${isSyncing ? 'animate-spin' : ''}`}>
+              {isSyncing ? 'sync' : 'cloud_upload'}
+            </span>
+            {isSyncing ? 'Syncing...' : 'Save to System'}
           </button>
           <Link 
             to="/admin/guides/new"

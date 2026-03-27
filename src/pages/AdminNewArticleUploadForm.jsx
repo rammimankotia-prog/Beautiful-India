@@ -22,6 +22,8 @@ const AdminNewArticleUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [error, setError] = useState(null);
   const [isHtmlMode, setIsHtmlMode] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -166,18 +168,21 @@ const AdminNewArticleUploadForm = () => {
         try { guides = JSON.parse(savedGuides); } catch (err) { console.error("Parse error:", err); }
       }
 
-      // 2. Fetch from server if we are starting fresh or think we're missing articles
-      if (guides.length === 0) {
-        try {
-          const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
-          const serverGuides = await res.json();
-          // Use Map for initial merge
-          const mergedMap = new Map();
-          serverGuides.forEach(g => mergedMap.set(String(g.id), g));
-          guides = Array.from(mergedMap.values());
-        } catch (e) {
-          console.error("Master list fetch error:", e);
-        }
+      // 2. FETCH FROM SERVER & MERGE (to ensure we don't overwrite server data with partial local state)
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
+        const serverGuides = await res.json();
+        
+        // Use Map to merge: local edits take precedence, server provides the rest
+        const mergedMap = new Map();
+        serverGuides.forEach(g => mergedMap.set(String(g.id), g));
+        // Add existing local guides (if any) - they overwrite server guides with same ID
+        guides.forEach(g => mergedMap.set(String(g.id), g));
+        
+        guides = Array.from(mergedMap.values());
+      } catch (e) {
+        console.error("Master list merge fetch error:", e);
+        // Continue with local guides if server is unreachable
       }
 
       const guideId = id || (formData.slug || slugify(formData.title));
@@ -196,6 +201,30 @@ const AdminNewArticleUploadForm = () => {
       }
 
       localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updatedGuides));
+      
+      // 4. PERSIST TO SERVER (AUTOMATIC SYNC)
+      setSyncing(true);
+      try {
+        const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
+        const syncRes = await fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedGuides)
+        });
+        const syncResult = await syncRes.json();
+        if (syncResult.success) {
+          console.log("✅ Server synchronized");
+        } else {
+          console.warn("⚠️ Local saved, but server sync failed:", syncResult.message);
+          alert("Article saved to your browser, but we couldn't reach the server. Please click 'Save to System' on the dashboard later to make it permanent.");
+        }
+      } catch (syncErr) {
+        console.error("Sync error:", syncErr);
+        alert("Article saved locally, but server sync failed (Connection Error).");
+      } finally {
+        setSyncing(false);
+      }
+
       alert(`Article ${id ? 'Updated' : 'Created'} Successfully!`);
       navigate('/admin/guides');
       
