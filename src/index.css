@@ -86,8 +86,42 @@ body {
   border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.glass-pill {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+/* Article Typography Styling (Replaces Tailwind Typography Plugin) */
+.article-content {
+  @apply text-slate-700 dark:text-slate-300;
 }
+
+.article-content p {
+  @apply mb-10 leading-[2.0] font-normal text-slate-700 dark:text-slate-300;
+}
+
+.article-content h1, .article-content h2, .article-content h3, .article-content h4, .article-content h5, .article-content h6 {
+  @apply font-bold text-slate-900 dark:text-white mt-12 mb-6 tracking-tight;
+  line-height: 1.2;
+}
+
+.article-content h1 { @apply text-4xl lg:text-5xl; }
+.article-content h2 { @apply text-3xl lg:text-4xl; }
+.article-content h3 { @apply text-2xl lg:text-3xl; }
+.article-content h4 { @apply text-xl lg:text-2xl; }
+
+.article-content a {
+  @apply text-teal-600 dark:text-teal-400 font-bold underline hover:no-underline transition-all;
+}
+
+.article-content blockquote {
+  @apply border-l-4 border-teal-500 bg-teal-50/50 dark:bg-teal-900/10 p-8 my-10 rounded-r-2xl italic text-lg text-slate-800 dark:text-slate-200;
+}
+
+.article-content ul, .article-content ol {
+  @apply my-10 pl-6 space-y-4;
+}
+
+.article-content li {
+  @apply leading-[1.8];
+}
+
+.article-content img {
+  @apply rounded-3xl shadow-2xl my-16 w-full object-cover;
+}
+

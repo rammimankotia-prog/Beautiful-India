@@ -120,7 +120,7 @@ const GuideDetailView = () => {
     // Convert double newlines to paragraphs and single newlines to <br/>
     return content
       .split(/\n\s*\n/)
-      .map(para => `<p class="mb-6 leading-[1.8]">${para.replace(/\n/g, '<br />')}</p>`)
+      .map(para => `<p>${para.replace(/\n/g, '<br />')}</p>`)
       .join('');
   };
 
@@ -195,11 +195,7 @@ const GuideDetailView = () => {
         {/* Article Body */}
         <article className="lg:col-span-8">
           <div 
-            className="prose prose-teal prose-xl max-w-none dark:prose-invert 
-              prose-headings:font-black prose-headings:tracking-tight 
-              prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-[1.8]
-              prose-img:rounded-3xl prose-img:shadow-2xl prose-blockquote:border-teal-500 
-              prose-blockquote:bg-teal-50/50 dark:prose-blockquote:bg-teal-900/10 prose-blockquote:p-8 prose-blockquote:rounded-2xl prose-blockquote:italic"
+            className="article-content max-w-none"
             dangerouslySetInnerHTML={{ __html: formatContent(guide.content) }} 
           />
 

@@ -104,7 +104,7 @@ const AdminNewArticleUploadForm = () => {
   const handleAddLink = () => {
     const url = prompt("Enter full URL (including https://):", "https://");
     if (url && url !== "https://") {
-      insertFormatting(`<a href="${url}" class="text-teal-600 font-bold hover:underline" target="_blank">`, "</a>");
+      insertFormatting(`<a href="${url}" target="_blank">`, "</a>");
     }
   };
 
@@ -292,7 +292,7 @@ const AdminNewArticleUploadForm = () => {
                 <button 
                   key={idx} 
                   type="button" 
-                  onClick={() => insertFormatting(`<h${idx + 1} class="text-${idx === 0 ? '4xl' : idx === 1 ? '2xl' : 'xl'} font-black text-slate-800 dark:text-white mt-10 mb-4 tracking-tight">`, `</h${idx + 1}>`)} 
+                  onClick={() => insertFormatting(`<h${idx + 1}>`, `</h${idx + 1}>`)} 
                   className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-xl transition-all group shadow-sm hover:shadow-md" 
                   title={`Heading ${idx + 1}`}
                 >
@@ -326,7 +326,7 @@ const AdminNewArticleUploadForm = () => {
               value={formData.content} 
               onChange={handleChange} 
               rows="16" 
-              className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm font-medium leading-[1.8] outline-none focus:ring-2 focus:ring-teal-500/20 font-serif" 
+              className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm font-normal leading-[2.0] outline-none focus:ring-2 focus:ring-teal-500/20 font-serif" 
               placeholder="Tell your story here..." 
             />
           </div>
