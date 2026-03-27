@@ -1,8 +1,18 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  
+  # API Rewrite Rules
+  RewriteRule ^api/save-categories/?$ api-save-categories.php [L]
+  RewriteRule ^api/save-tours/?$ api-save-tours.php [L]
+  RewriteRule ^api/save-guides/?$ api-save-guides.php [L]
+  RewriteRule ^api/save-leads$ api-save-leads.php [L]
+  RewriteRule ^api/train-queries$ api-train-queries.php [L]
+  RewriteRule ^api/save-review$ api-save-review.php [L]
+
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
 </IfModule>
+
