@@ -17,15 +17,9 @@ jobs:
         run: npm install
       - name: Build Site
         run: npm run build
-      - name: "Post-Build: Prepare PHP Fallback"
-        run: |
-          echo "Copying PHP fallback scripts and .htaccess to dist..."
-          cp api-save-categories.php dist/
-          cp api-save-tours.php dist/
-          cp api-train-queries.php dist/
-          cp api-save-review.php dist/
-          cp .htaccess dist/
-          ls -la dist/
+      # Note: Vite automatically copies everything from public/ (including PHP files and .htaccess) to dist/ during build.
+      # Removed redundant manual cp commands that were breaking the build.
+
       - name: Validate Configuration
         run: |
           if [ -n "${{ secrets.FTP_SERVER }}" ]; then echo "✅ Found FTP_SERVER"; fi
