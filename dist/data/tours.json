@@ -921,5 +921,490 @@
     "noAvailableTo": true,
     "_lastAutoSlug": "golden-triangle-tour",
     "id": "golden-triangle-tour"
+  },
+  {
+    "id": "3",
+    "title": "Old & New Delhi City Tour",
+    "description": "Experience the perfect blend of history and modernity in India's capital.",
+    "destination": "India",
+    "stateRegion": "Delhi",
+    "duration": "3 days",
+    "price": 8500,
+    "priceBasis": "per_person",
+    "minPersons": 1,
+    "status": "active",
+    "order": 3,
+    "theme": "cultural",
+    "nature": "private",
+    "style": "standard",
+    "priceCategory": "low",
+    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "AC Vehicle, Guide, Monument entrance fees",
+    "exclusions": "Meals, Personal expenses",
+    "highlights": "Red Fort, Qutub Minar, Lotus Temple, Chandni Chowk",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Historical Old Delhi",
+        "description": "Visit Jama Masjid and Rickshaw ride in Chandni Chowk."
+      },
+      {
+        "day": 2,
+        "title": "Lutyens' Delhi",
+        "description": "India Gate, Rashtrapati Bhavan, and Qutub Minar."
+      },
+      {
+        "day": 3,
+        "title": "Modern Delhi",
+        "description": "Lotus Temple and Akshardham Temple visit."
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Mumbai City of Dreams",
+    "description": "Explore the bustling metropolis and the home of Bollywood.",
+    "destination": "India",
+    "stateRegion": "Mumbai",
+    "duration": "4 days",
+    "price": 12000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 4,
+    "theme": "adventure",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Hotel stay, Local transport, Breakfast",
+    "exclusions": "Lunch & Dinner, Airfare",
+    "highlights": "Gateway of India, Marine Drive, Elephanta Caves",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival & Marine Drive",
+        "description": "Check-in and evening walk at Queen's Necklace."
+      },
+      {
+        "day": 2,
+        "title": "Elephanta & Colaba",
+        "description": "Ferry to Elephanta Caves and shopping at Colaba Causeway."
+      },
+      {
+        "day": 3,
+        "title": "Bollywood Tour",
+        "description": "Behind the scenes tour of a film studio."
+      },
+      {
+        "day": 4,
+        "title": "Departure",
+        "description": "Transfer to airport."
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Cultural Kolkata",
+    "description": "The intellectual and cultural heart of India.",
+    "destination": "India",
+    "stateRegion": "Kolkata",
+    "duration": "3 days",
+    "price": 7500,
+    "priceBasis": "per_person",
+    "minPersons": 1,
+    "status": "active",
+    "order": 5,
+    "theme": "cultural",
+    "nature": "private",
+    "style": "standard",
+    "priceCategory": "low",
+    "image": "https://images.unsplash.com/photo-1558431382-bb7b38c290b7?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Guide, Meals, Entry fees",
+    "exclusions": "Personal shopping",
+    "highlights": "Victoria Memorial, Howrah Bridge, Dakshineswar Temple",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "City of Palaces",
+        "description": "Victoria Memorial and St. Paul's Cathedral."
+      },
+      {
+        "day": 2,
+        "title": "Temples & Bridges",
+        "description": "Howrah Bridge and Dakshineswar Kali Temple."
+      },
+      {
+        "day": 3,
+        "title": "Heritage Walk",
+        "description": "Explore the colonial architecture of North Kolkata."
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Chennai Heritage Tour",
+    "description": "Discover the gateway to South Indian culture.",
+    "destination": "India",
+    "stateRegion": "Chennai",
+    "duration": "3 days",
+    "price": 9000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 6,
+    "theme": "pilgrimage",
+    "nature": "private",
+    "style": "standard",
+    "priceCategory": "low",
+    "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Hotel stay, Sightseeing, Breakfast",
+    "exclusions": "Entry fees, Guide",
+    "highlights": "Marina Beach, Kapaleeshwarar Temple, Santhome Cathedral",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Beach & Temples",
+        "description": "Marina Beach sunset and Kapaleeshwarar Temple."
+      },
+      {
+        "day": 2,
+        "title": "Heritage Museums",
+        "description": "Government Museum and Fort St. George."
+      },
+      {
+        "day": 3,
+        "title": "Departure",
+        "description": "Shopping at T-Nagar and airport drop."
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Himachal Explorer",
+    "description": "Breathtaking views of Shimla and Manali.",
+    "destination": "India",
+    "stateRegion": "Himachal Pradesh",
+    "duration": "6 days",
+    "price": 18500,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 7,
+    "theme": "adventure",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Hotels, Sightseeing, Food (MAP)",
+    "exclusions": "Adventure activities",
+    "highlights": "Rohtang Pass, Solang Valley, Ridge Road",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Delhi to Shimla",
+        "description": "Scenic drive from Delhi."
+      },
+      {
+        "day": 2,
+        "title": "Shimla Sightseeing",
+        "description": "The Ridge, Jakhoo Temple, Mall Road."
+      },
+      {
+        "day": 3,
+        "title": "Shimla to Manali",
+        "description": "Drive via Kullu Valley."
+      },
+      {
+        "day": 4,
+        "title": "Manali Local",
+        "description": "Hadimba Temple, Vashisht Springs."
+      },
+      {
+        "day": 5,
+        "title": "Rohtang Pass",
+        "description": "Snow point excursion."
+      },
+      {
+        "day": 6,
+        "title": "Return",
+        "description": "Back to Delhi."
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Royal Rajasthan",
+    "description": "Walk through the palaces of Jaipur and Udaipur.",
+    "destination": "India",
+    "stateRegion": "Rajasthan",
+    "duration": "7 days",
+    "price": 24000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 8,
+    "theme": "luxury",
+    "nature": "private",
+    "style": "luxury",
+    "priceCategory": "high",
+    "image": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Luxury Heritage Hotels, Private Chauffeur, Guides",
+    "exclusions": "Alcohol, Tips",
+    "highlights": "Amer Fort, City Palace, Lake Pichola",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival Jaipur",
+        "description": "Check-in and evening at Chokhi Dhani."
+      },
+      {
+        "day": 2,
+        "title": "Amber Fort & Pink City",
+        "description": "Elephant ride and shopping."
+      },
+      {
+        "day": 3,
+        "title": "Jaipur to Jodhpur",
+        "description": "Drive to the Blue City."
+      },
+      {
+        "day": 4,
+        "title": "Mehrangarh Fort",
+        "description": "Explore the mighty fort."
+      },
+      {
+        "day": 5,
+        "title": "Jodhpur to Udaipur",
+        "description": "Enroute Ranakpur Temples."
+      },
+      {
+        "day": 6,
+        "title": "Udaipur Lakes",
+        "description": "Boat ride and City Palace."
+      },
+      {
+        "day": 7,
+        "title": "Departure",
+        "description": "Airport transfer."
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Ladakh Adventure",
+    "description": "The land of high passes and crystal blue lakes.",
+    "destination": "India",
+    "stateRegion": "Ladakh",
+    "duration": "8 days",
+    "price": 32000,
+    "priceBasis": "per_person",
+    "minPersons": 4,
+    "status": "active",
+    "order": 9,
+    "theme": "trekking",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "high",
+    "image": "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Inner Line Permits, Oxygen backup, Camps/Hotels",
+    "exclusions": "Warm gear, Bike rentals",
+    "highlights": "Pangong Lake, Nubra Valley, Khardung La",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival Leh",
+        "description": "Mandatory acclimatization day."
+      },
+      {
+        "day": 2,
+        "title": "Leh Local",
+        "description": "Shanti Stupa, Leh Palace."
+      },
+      {
+        "day": 3,
+        "title": "Nubra Valley",
+        "description": "Cross Khardung La Pass."
+      },
+      {
+        "day": 4,
+        "title": "Hunder & Diskit",
+        "description": "Double humped camel ride."
+      },
+      {
+        "day": 5,
+        "title": "Pangong Lake",
+        "description": "Drive along the Shyok River."
+      },
+      {
+        "day": 6,
+        "title": "Pangong to Leh",
+        "description": "Return via Chang La."
+      },
+      {
+        "day": 7,
+        "title": "Magnetic Hill",
+        "description": "Visit Sangam and Pathar Sahib."
+      },
+      {
+        "day": 8,
+        "title": "Departure",
+        "description": "Transfer to KBR airport."
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Goa Beach Holiday",
+    "description": "Sun, sand, and seafood in North & South Goa.",
+    "destination": "India",
+    "stateRegion": "Goa",
+    "duration": "4 days",
+    "price": 11500,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 10,
+    "theme": "honeymoon",
+    "nature": "private",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Resort stay, Island tour, Scooty rental",
+    "exclusions": "Water sports",
+    "highlights": "Baga Beach, Old Goa, Dudhsagar Falls",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Welcome to Goa",
+        "description": "Check-in at Baga/Calangute."
+      },
+      {
+        "day": 2,
+        "title": "North Goa",
+        "description": "Fort Aguada, Beaches, Night Markets."
+      },
+      {
+        "day": 3,
+        "title": "South Goa & Heritage",
+        "description": "Old Goa Churches, Miramar Beach."
+      },
+      {
+        "day": 4,
+        "title": "Departure",
+        "description": "Beach yoga and farewell."
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Spiritual Uttarakhand",
+    "description": "Journey through Rishikesh and Haridwar.",
+    "destination": "India",
+    "stateRegion": "Uttarakhand",
+    "duration": "5 days",
+    "price": 13500,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 11,
+    "theme": "pilgrimage",
+    "nature": "group",
+    "style": "standard",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Ganga Aarti, Rafting, Transport",
+    "exclusions": "Pony rides",
+    "highlights": "Triveni Ghat, Ram Jhula, Neelkanth Temple",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Haridwar Arrival",
+        "description": "Evening Ganga Aarti."
+      },
+      {
+        "day": 2,
+        "title": "Haridwar to Rishikesh",
+        "description": "Check-in at ashram/camp."
+      },
+      {
+        "day": 3,
+        "title": "Adventure Day",
+        "description": "Rafting and Bungee jumping."
+      },
+      {
+        "day": 4,
+        "title": "Temples & Yoga",
+        "description": "Beatles Ashram, Local Markets."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Return to Dehradun."
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Andaman Bliss",
+    "description": "Explore the pristine islands of Havelock and Neil.",
+    "destination": "India",
+    "stateRegion": "Andaman Islands",
+    "duration": "6 days",
+    "price": 38000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 12,
+    "theme": "honeymoon",
+    "nature": "private",
+    "style": "luxury",
+    "priceCategory": "high",
+    "image": "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Private Cab, Scuba Intro, Ferry tickets",
+    "exclusions": "Flights to Port Blair",
+    "highlights": "Radhanagar Beach, Cellular Jail, Coral Safari",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Port Blair Arrival",
+        "description": "Cellular Jail Light & Sound show."
+      },
+      {
+        "day": 2,
+        "title": "Havelock Island",
+        "description": "Ferry ride and Radhanagar Beach."
+      },
+      {
+        "day": 3,
+        "title": "Scuba & Snorkeling",
+        "description": "Elephant Beach activities."
+      },
+      {
+        "day": 4,
+        "title": "Neil Island",
+        "description": "Laxmanpur & Bharatpur Beach."
+      },
+      {
+        "day": 5,
+        "title": "Return Port Blair",
+        "description": "Chidiya Tapu sunset."
+      },
+      {
+        "day": 6,
+        "title": "Departure",
+        "description": "Drop at airport."
+      }
+    ]
   }
 ]
