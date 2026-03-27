@@ -375,11 +375,11 @@ const AdminNewArticleUploadForm = () => {
               <button 
                 type="button" 
                 onClick={() => setIsHtmlMode(!isHtmlMode)} 
-                className={`p-2 rounded-xl transition-all group shadow-sm hover:shadow-md ml-auto flex items-center gap-2 px-3 ${isHtmlMode ? 'bg-teal-500 text-white shadow-teal-500/20' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
-                title={isHtmlMode ? "Switch to Text Mode" : "Switch to HTML Mode"}
+                className={`p-2 rounded-xl transition-all group shadow-sm hover:shadow-md ml-auto flex items-center gap-2 px-3 ${!isHtmlMode ? 'bg-teal-500 text-white shadow-teal-500/20' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+                title={!isHtmlMode ? "Switch to Edit Mode" : "Switch to Reader Mode"}
               >
-                {isHtmlMode ? <Eye size={16} /> : <Code size={16} />}
-                <span className="text-[10px] font-black uppercase tracking-widest">{isHtmlMode ? 'Preview Mode' : 'HTML Mode'}</span>
+                {!isHtmlMode ? <Eye size={16} /> : <Code size={16} />}
+                <span className="text-[10px] font-black uppercase tracking-widest">{!isHtmlMode ? 'Reader Mode' : 'HTML Mode'}</span>
               </button>
 
               <div className="w-[1px] h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
@@ -394,16 +394,27 @@ const AdminNewArticleUploadForm = () => {
               </button>
             </div>
 
-            <textarea 
-              required 
-              id="article-content"
-              name="content" 
-              value={formData.content} 
-              onChange={handleChange} 
-              rows="20" 
-              className={`w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm outline-none focus:ring-4 focus:ring-teal-500/10 transition-all ${isHtmlMode ? 'font-mono text-teal-700 dark:text-teal-400 leading-[1.6] bg-slate-100/50' : 'font-serif font-normal leading-[2.0]'}`} 
-              placeholder={isHtmlMode ? "<!-- Enter your HTML code here -->" : "Step into the story..."} 
-            />
+            {isHtmlMode ? (
+              <textarea 
+                required 
+                id="article-content"
+                name="content" 
+                value={formData.content} 
+                onChange={handleChange} 
+                rows="20" 
+                className="w-full bg-slate-100/50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm font-mono text-teal-700 dark:text-teal-400 outline-none focus:ring-4 focus:ring-teal-500/10 leading-[1.6] transition-all" 
+                placeholder="<!-- Enter your HTML code here -->"
+              />
+            ) : (
+              <div 
+                className="w-full min-h-[500px] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-[32px] p-10 overflow-auto shadow-inner"
+              >
+                <div 
+                  className="article-content"
+                  dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-slate-400 italic">No content to preview...</p>' }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Meta Info */}
