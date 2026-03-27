@@ -506,6 +506,16 @@ const AdminNewTourUploadForm = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
+    
+    // Validate each file size (User requested 5MB max)
+    for (const file of files) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`Image "${file.name}" is too large (Max 5MB). Please use a smaller image.`);
+        e.target.value = ''; // Reset
+        return;
+      }
+    }
+
     Promise.all(
       files.map((file) => {
         return new Promise((resolve, reject) => {

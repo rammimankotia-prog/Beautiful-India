@@ -20,8 +20,11 @@ const AdminArticleManagementDashboard = () => {
     setLoading(true);
     try {
       // 1. Fetch Master List from Server
-      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
-      const remoteGuides = await res.json();
+      let remoteGuides = [];
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`);
+        if (res.ok) remoteGuides = await res.json();
+      } catch (e) { console.warn("Remote guides unavailable:", e); }
 
       // 2. Fetch Local Drafts/Edits
       const saved = localStorage.getItem('beautifulindia_admin_guides');
@@ -32,7 +35,9 @@ const AdminArticleManagementDashboard = () => {
 
       // 3. Merge them (Local edits/new articles take precedence by ID)
       const mergedMap = new Map();
+      // Server is the ground truth for state
       remoteGuides.forEach(g => mergedMap.set(String(g.id), g));
+      // Local overrides (if user has unsynced changes)
       localGuides.forEach(g => mergedMap.set(String(g.id), g));
 
       const finalGuides = Array.from(mergedMap.values());
@@ -43,7 +48,6 @@ const AdminArticleManagementDashboard = () => {
 
     } catch (err) {
       console.error("Fetch error:", err);
-      // Fallback to local only if fetch fails
       const saved = localStorage.getItem('beautifulindia_admin_guides');
       if (saved) setGuides(JSON.parse(saved));
     } finally {
@@ -67,11 +71,30 @@ const AdminArticleManagementDashboard = () => {
     localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updated));
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this article?")) {
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this article everywhere?")) {
       const updated = guides.filter(g => g.id !== id);
       saveGuides(updated);
-      showToast("Article deleted locally");
+      
+      // Auto-Sync to server immediately on delete
+      setIsSyncing(true);
+      try {
+        const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
+        const response = await fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated)
+        });
+        if (response.ok) {
+          showToast("🗑️ Article deleted permanently");
+        } else {
+          showToast("🗑️ Deleted locally (Sync to server manually)");
+        }
+      } catch (e) {
+        showToast("🗑️ Deleted locally (No connection to sync)");
+      } finally {
+        setIsSyncing(false);
+      }
     }
   };
 

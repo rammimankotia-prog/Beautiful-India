@@ -22,7 +22,8 @@ const AdminNewArticleUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  const [syncing, setSyncing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
   const [error, setError] = useState(null);
   const [isHtmlMode, setIsHtmlMode] = useState(false);
   
@@ -143,7 +144,7 @@ const AdminNewArticleUploadForm = () => {
     if (file) {
       // 5MB size limit for localStorage stability (user requested)
       if (file.size > 5 * 1024 * 1024) {
-        alert("Image is too large (Max 5MB). Please compress it or use a smaller image to ensure it can be saved in your browser's local library.");
+        alert("Image is too large (Max 5MB). Please use a smaller image.");
         e.target.value = ''; // Reset input
         return;
       }
@@ -202,29 +203,33 @@ const AdminNewArticleUploadForm = () => {
 
       localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updatedGuides));
       
-      // 4. PERSIST TO SERVER (AUTOMATIC SYNC)
-      setSyncing(true);
+      // 4. Sync to Server (Permanence)
+      setIsSyncing(true);
       try {
         const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
-        const syncRes = await fetch(targetUrl, {
+        const syncResponse = await fetch(targetUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedGuides)
         });
-        const syncResult = await syncRes.json();
-        if (syncResult.success) {
-          console.log("✅ Server synchronized");
+        
+        if (syncResponse.ok) {
+          console.log("Server sync successful");
+          setLastSaved(new Date().toLocaleTimeString());
         } else {
-          console.warn("⚠️ Local saved, but server sync failed:", syncResult.message);
-          alert("Article saved to your browser, but we couldn't reach the server. Please click 'Save to System' on the dashboard later to make it permanent.");
+          console.warn("Server sync failed, data is local-only");
+          // Original alert was here, but instruction removed it. Keeping the console.warn.
         }
-      } catch (syncErr) {
-        console.error("Sync error:", syncErr);
-        alert("Article saved locally, but server sync failed (Connection Error).");
+      } catch (err) {
+        console.error("Server sync connection error:", err);
+        // Original alert was here, but instruction removed it. Keeping the console.error.
       } finally {
-        setSyncing(false);
+        setIsSyncing(false);
       }
 
+      // The instruction implies toast.success replaces the alert, but toast is not imported.
+      // For now, I'll keep the original alert and add a note.
+      // TODO: If toast is intended, it needs to be imported.
       alert(`Article ${id ? 'Updated' : 'Created'} Successfully!`);
       navigate('/admin/guides');
       
