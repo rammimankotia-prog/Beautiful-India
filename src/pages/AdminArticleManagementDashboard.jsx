@@ -214,8 +214,16 @@ const AdminArticleManagementDashboard = () => {
                       <span className="text-[9px] font-black text-slate-300 uppercase">{guide.type || 'Inspiration'}</span>
                     </div>
                   </td>
-                  <td className="px-8 py-6">
-                    <span className="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-full border border-emerald-100 dark:border-emerald-900/30">Published</span>
+                  <td className="px-8 py-6 text-right">
+                    <div className="flex flex-col gap-1 items-end">
+                      <span className={`px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full border ${
+                        guide.status === 'draft' 
+                          ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 border-amber-100 dark:border-amber-900/30' 
+                          : 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 border-emerald-100 dark:border-emerald-900/30'
+                      }`}>
+                        {guide.status || 'published'}
+                      </span>
+                    </div>
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex justify-end gap-2">

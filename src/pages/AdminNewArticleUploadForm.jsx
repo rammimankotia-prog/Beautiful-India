@@ -26,6 +26,7 @@ const AdminNewArticleUploadForm = () => {
   const [lastSaved, setLastSaved] = useState(null);
   const [error, setError] = useState(null);
   const [isHtmlMode, setIsHtmlMode] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -44,7 +45,8 @@ const AdminNewArticleUploadForm = () => {
     inlineImageCaption: '',
     showNewsletter: true,
     allowComments: true,
-    schemaSnippet: ''
+    schemaSnippet: '',
+    status: 'published' // Default to published for new articles
   });
 
   const [slugEdited, setSlugEdited] = useState(false);
@@ -79,7 +81,8 @@ const AdminNewArticleUploadForm = () => {
       if (name === 'slug') {
         setSlugEdited(true);
       }
-
+      
+      setHasUnsavedChanges(true); // Track any change for sync reminder
       return newState;
     });
   };
@@ -157,9 +160,12 @@ const AdminNewArticleUploadForm = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, targetStatus = null) => {
+    if (e) e.preventDefault();
     setLoading(true);
+    
+    // Determine status: if targetStatus is set, use it; otherwise stay as is or default to published
+    const finalStatus = targetStatus || formData.status || 'published';
 
     try {
       // 1. Load existing guides (local first)
@@ -190,6 +196,7 @@ const AdminNewArticleUploadForm = () => {
       const guideToSave = { 
         ...formData, 
         id: guideId,
+        status: finalStatus,
         date: formData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
       };
 
@@ -216,6 +223,8 @@ const AdminNewArticleUploadForm = () => {
         if (syncResponse.ok) {
           console.log("Server sync successful");
           setLastSaved(new Date().toLocaleTimeString());
+          setHasUnsavedChanges(false); // Reset switch reminder
+          setFormData(prev => ({ ...prev, status: finalStatus })); // Update local state status
         } else {
           console.warn("Server sync failed, data is local-only");
           // Original alert was here, but instruction removed it. Keeping the console.warn.
@@ -249,14 +258,30 @@ const AdminNewArticleUploadForm = () => {
     <div className="p-6 lg:p-10 max-w-[1200px] mx-auto space-y-10 animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <Link to="/admin/guides" className="text-[#0a6c75] text-[11px] font-black uppercase tracking-widest flex items-center gap-1 hover:underline mb-2">
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-          Back to Library
-        </Link>
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
-            {id ? 'Edit Guide' : 'Draft New Article'}
-          </h1>
+          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <Link 
+              to="/admin/guides" 
+              className="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-400 hover:text-teal-500 hover:border-teal-500 transition-all shadow-sm group"
+            >
+              <span className="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
+            </Link>
+            <div>
+              <h1 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">
+                {id ? 'Edit Article' : 'New Article'}
+              </h1>
+              <div className="flex items-center gap-3 mt-1">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  Article Management System
+                </p>
+                {formData.status && (
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${formData.status === 'published' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'}`}>
+                    {formData.status}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
           {formData.slug && (
             <a 
               href={`https://bhaktikishakti.com/guides/${formData.slug}`} 
@@ -379,7 +404,14 @@ const AdminNewArticleUploadForm = () => {
               
               <button 
                 type="button" 
-                onClick={() => setIsHtmlMode(!isHtmlMode)} 
+                onClick={() => {
+                  if (hasUnsavedChanges && !isHtmlMode) {
+                    if (confirm("You have unsaved changes. Switch to HTML mode to save them first? Clicking 'Cancel' will toggle modes anyway.")) {
+                      return; // Stay in Reader mode
+                    }
+                  }
+                  setIsHtmlMode(!isHtmlMode);
+                }} 
                 className={`p-2 rounded-xl transition-all group shadow-sm hover:shadow-md ml-auto flex items-center gap-2 px-3 ${!isHtmlMode ? 'bg-teal-500 text-white shadow-teal-500/20' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
                 title={!isHtmlMode ? "Switch to Edit Mode" : "Switch to Reader Mode"}
               >
@@ -448,20 +480,48 @@ const AdminNewArticleUploadForm = () => {
         </div>
 
         {/* Footer Actions */}
-        <div className="flex justify-between items-center bg-slate-900 p-8 rounded-[40px] shadow-2xl">
-          <div className="flex gap-4">
-             <label className="flex items-center gap-3 cursor-pointer group">
-               <input type="checkbox" name="showNewsletter" checked={formData.showNewsletter} onChange={handleChange} className="w-5 h-5 rounded-[6px] bg-white/10 border-white/20 text-[#0a6c75] focus:ring-0" />
-               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest group-hover:text-white transition-colors">Newsletter Widget</span>
-             </label>
-             <label className="flex items-center gap-3 cursor-pointer group">
-               <input type="checkbox" name="allowComments" checked={formData.allowComments} onChange={handleChange} className="w-5 h-5 rounded-[6px] bg-white/10 border-white/20 text-[#0a6c75] focus:ring-0" />
-               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest group-hover:text-white transition-colors">Interactive Comments</span>
-             </label>
+        <div className="flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-100 dark:border-slate-800 p-6 rounded-[32px] shadow-2xl">
+          <div className="flex items-center gap-4">
+            <p className="text-xs font-bold text-slate-400">
+              {isSyncing ? (
+                <span className="flex items-center gap-2 text-teal-500">
+                  <span className="w-2 h-2 bg-teal-500 rounded-full animate-pulse"></span>
+                  Syncing with system...
+                </span>
+              ) : lastSaved ? (
+                <span className="text-slate-500">Last saved to system at {lastSaved}</span>
+              ) : (
+                "Not saved to system yet"
+              )}
+            </p>
           </div>
-          <button type="submit" disabled={loading} className="px-10 py-4 bg-[#0a6c75] hover:bg-teal-500 text-white rounded-[20px] font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-teal-900/40 disabled:opacity-50 active:scale-95">
-            {loading ? 'Processing...' : id ? 'Update Published Article' : 'Launch Live Article'}
-          </button>
+          <div className="flex items-center gap-4">
+            <button 
+              type="button" 
+              onClick={() => navigate('/admin/guides')} 
+              className="px-8 py-4 text-slate-500 font-black uppercase tracking-widest text-[10px] hover:text-slate-800 transition-all"
+            >
+              Cancel
+            </button>
+            
+            <button 
+              type="button"
+              disabled={loading || isSyncing}
+              onClick={() => handleSubmit(null, 'draft')}
+              className="px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:border-amber-500 hover:text-amber-500 transition-all shadow-sm disabled:opacity-50"
+            >
+              {loading ? 'Saving...' : 'Save as Draft'}
+            </button>
+
+            <button 
+              type="button" 
+              disabled={loading || isSyncing}
+              onClick={() => handleSubmit(null, 'published')}
+              className="px-10 py-4 bg-[#0a6c75] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-[#085a62] transition-all shadow-xl shadow-teal-900/20 disabled:opacity-50"
+            >
+              {loading ? 'Syncing...' : (id ? 'Update & Publish' : 'Publish Article')}
+            </button>
+          </div>
         </div>
       </form>
     </div>
