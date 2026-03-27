@@ -13,34 +13,19 @@ const TravelGuidesCategoryLanding = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchGlobal = fetch(`${import.meta.env.BASE_URL}data/guides.json`).then(res => res.json());
-    
-    // Load local articles from admin
-    let localGuides = [];
-    const saved = localStorage.getItem('beautifulindia_admin_guides');
-    if (saved) {
-      try { localGuides = JSON.parse(saved); } catch (e) { console.error(e); }
-    }
-
-    fetchGlobal
-      .then(globalData => {
-        // Merge global and local, avoiding duplicates by ID
-        const combined = [...globalData];
-        localGuides.forEach(lg => {
-          if (!combined.find(g => String(g.id) === String(lg.id))) {
-            combined.unshift(lg); // Show newest admin articles at the top
-          }
-        });
-        setGuides(combined);
+    // 1. Fetch Master List from Server with cache-busting
+    fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        setGuides(data);
         setIsLoaded(true);
       })
       .catch(err => {
         console.error("Error fetching guides:", err);
-        // Fallback to only local if global fetch fails
-        setGuides(localGuides);
         setIsLoaded(true);
       });
   }, []);
+
 
   const filters = [
     { id: 'all', label: 'All Guides', icon: 'public' },

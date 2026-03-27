@@ -239,27 +239,17 @@ const AdminNewArticleUploadForm = () => {
         lastModified: new Date().toISOString()
       };
 
-      let updatedGuides;
-      if (id) {
-        updatedGuides = currentGuides.map(g => String(g.id) === String(id) ? guideToSave : g);
-        // If article isn't in server list yet (newly created but not synced), add it
-        if (!currentGuides.find(g => String(g.id) === String(id))) {
-          updatedGuides = [...currentGuides, guideToSave];
-        }
-      } else {
-        updatedGuides = [...currentGuides, guideToSave];
-      }
-
-      // 2. Direct Server Write
-      setIsSyncing(true); // Reusing this state as 'isSaving'
+      // 2. Direct Server Write (Atomic Save)
+      setIsSyncing(true); 
       let errorDetail = "";
       
       const targetUrl = '/api/save-guides';
       const syncResponse = await fetch(targetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedGuides)
+        body: JSON.stringify(guideToSave) // Now sending ONLY the current article
       });
+
       
       if (syncResponse.ok) {
         const result = await syncResponse.json();

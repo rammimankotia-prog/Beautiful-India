@@ -20,7 +20,8 @@ const AdminArticleManagementDashboard = () => {
     setLoading(true);
     try {
       // 1. Fetch Master List from Server (Ground Truth)
-      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
+      // Added cache-busting timestamp to bypass Hostinger CDN
+      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`);
       if (res.ok) {
         const remoteGuides = await res.json();
         setGuides(remoteGuides);
@@ -60,10 +61,12 @@ const AdminArticleManagementDashboard = () => {
       
       setIsSyncing(true);
       try {
+        // We still send the updated list for deletions currently to keep it simple,
+        // but the backend logic is now more robust.
         const response = await fetch('/api/save-guides', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updated)
+          body: JSON.stringify({ isDeleteAction: true, updatedList: updated })
         });
         
         if (response.ok) {
@@ -80,6 +83,7 @@ const AdminArticleManagementDashboard = () => {
       }
     }
   };
+
 
 
   // Manual Sync is no longer needed in Direct mode

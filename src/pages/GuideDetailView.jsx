@@ -34,30 +34,32 @@ const GuideDetailView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch system guides
-        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
+        setLoading(true);
+        // Use cache-busting for the latest guides
+        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`);
         const globalData = await res.json();
         
-        // Load local articles from admin
-        let localGuides = [];
-        const saved = localStorage.getItem('beautifulindia_admin_guides');
-        if (saved) {
-          try { localGuides = JSON.parse(saved); } catch (e) { console.error(e); }
-        }
-
-        const combined = [...globalData, ...localGuides];
-        setGuides(combined);
-        
-        // Latest articles (sorted by date, newest first)
-        const sorted = [...combined].sort((a, b) => new Date(b.date || '') - new Date(a.date || ''));
-        setLatestGuides(sorted.slice(0, 3));
+        setGuides(globalData);
         
         // Find the specific guide (by ID or Slug)
-        const found = combined.find(g => String(g.id) === String(id) || g.slug === id);
-        setGuide(found);
+        const found = globalData.find(g => String(g.id) === String(id) || g.slug === id);
+        
+        // Draft Protection: Check if it's a draft and if we're in preview mode
+        const isPreview = window.location.search.includes('preview=true');
+        if (found && found.status === 'draft' && !isPreview) {
+          setGuide(null); // Treat as not found for non-admin/non-preview viewers
+        } else {
+          setGuide(found);
+        }
+
+        // Latest articles (sorted by date, newest first, only published)
+        const publishedOnly = globalData.filter(g => g.status !== 'draft');
+        const sorted = [...publishedOnly].sort((a, b) => new Date(b.date || '') - new Date(a.date || ''));
+        setLatestGuides(sorted.slice(0, 3));
       } catch (error) {
         console.error("Error loading guide:", error);
       } finally {
+
         setLoading(false);
         window.scrollTo(0, 0);
       }

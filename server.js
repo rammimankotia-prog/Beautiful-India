@@ -74,21 +74,56 @@ app.get('/api/save-guides', (req, res) => res.json(getData('guides.json')));
 
 app.post('/api/save-guides', (req, res) => {
     try {
-        const data = req.body;
-        const jsonStr = JSON.stringify(data, null, 2);
+        const payload = req.body;
+        if (!payload) {
+            return res.status(400).json({ success: false, error: 'Missing payload' });
+        }
+
         const srcPath = path.join(__dirname, 'src/data/guides.json');
         const publicPath = path.join(__dirname, 'public/data/guides.json');
         
+        // 1. Read existing data
+        let guides = [];
+        if (fs.existsSync(srcPath)) {
+            guides = JSON.parse(fs.readFileSync(srcPath, 'utf8'));
+        } else if (fs.existsSync(publicPath)) {
+            guides = JSON.parse(fs.readFileSync(publicPath, 'utf8'));
+        }
+
+        let finalData = [];
+
+        // MODE A: Safe Delete (Accepts updated list)
+        if (payload.isDeleteAction && payload.updatedList) {
+            finalData = payload.updatedList;
+        }
+        // MODE B: Atomic Update (Single article)
+        else if (payload.id) {
+            const index = guides.findIndex(g => String(g.id) === String(payload.id));
+            if (index !== -1) {
+                guides[index] = { ...guides[index], ...payload };
+            } else {
+                guides.push(payload);
+            }
+            finalData = guides;
+        } else {
+            return res.status(400).json({ success: false, error: 'Invalid payload format' });
+        }
+
+        // 3. Save back
+        const jsonStr = JSON.stringify(finalData, null, 2);
         fs.writeFileSync(srcPath, jsonStr, 'utf8');
         if (fs.existsSync(publicPath)) {
             fs.writeFileSync(publicPath, jsonStr, 'utf8');
         }
-        res.json({ success: true, message: 'Guides saved to system successfully' });
+
+        res.json({ success: true, message: 'Guides synced atomically.' });
     } catch (error) {
         console.error('Save Guides Error:', error);
         res.status(500).json({ success: false, error: 'Internal server error while saving guides' });
     }
 });
+
+
 
 app.post('/api/guides', (req, res) => { saveData('guides.json', req.body); res.json({ success: true }); });
 
