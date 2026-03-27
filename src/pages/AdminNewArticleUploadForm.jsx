@@ -12,13 +12,17 @@ import {
   Heading6, 
   Type, 
   Trash2,
-  Code
+  Code,
+  Eye,
+  EyeOff,
+  ExternalLink
 } from 'lucide-react';
 
 const AdminNewArticleUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [isHtmlMode, setIsHtmlMode] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -215,7 +219,22 @@ const AdminNewArticleUploadForm = () => {
           <span className="material-symbols-outlined text-[16px]">arrow_back</span>
           Back to Library
         </Link>
-        <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight">{id ? 'Edit Guide' : 'Draft New Article'}</h1>
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+            {id ? 'Edit Guide' : 'Draft New Article'}
+          </h1>
+          {formData.slug && (
+            <a 
+              href={`https://bhaktikishakti.com/guides/${formData.slug}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center gap-2 text-xs font-black text-slate-600 hover:text-teal-600 hover:shadow-sm transition-all shadow-inner"
+            >
+              <ExternalLink size={14} />
+              View Live
+            </a>
+          )}
+        </div>
         <p className="text-slate-500 dark:text-slate-400 font-bold italic">Craft stories that inspire every traveler.</p>
       </div>
 
@@ -326,8 +345,20 @@ const AdminNewArticleUploadForm = () => {
               
               <button 
                 type="button" 
+                onClick={() => setIsHtmlMode(!isHtmlMode)} 
+                className={`p-2 rounded-xl transition-all group shadow-sm hover:shadow-md ml-auto flex items-center gap-2 px-3 ${isHtmlMode ? 'bg-teal-500 text-white shadow-teal-500/20' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+                title={isHtmlMode ? "Switch to Text Mode" : "Switch to HTML Mode"}
+              >
+                {isHtmlMode ? <Eye size={16} /> : <Code size={16} />}
+                <span className="text-[10px] font-black uppercase tracking-widest">{isHtmlMode ? 'Preview Mode' : 'HTML Mode'}</span>
+              </button>
+
+              <div className="w-[1px] h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+
+              <button 
+                type="button" 
                 onClick={() => { if(confirm("Clear all content?")) setFormData(prev => ({...prev, content: ''})) }} 
-                className="p-2 ml-auto hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all group" 
+                className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all group" 
                 title="Clear Content"
               >
                 <Trash2 size={16} className="text-slate-400 group-hover:text-red-500" />
@@ -340,9 +371,9 @@ const AdminNewArticleUploadForm = () => {
               name="content" 
               value={formData.content} 
               onChange={handleChange} 
-              rows="16" 
-              className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm font-normal leading-[2.0] outline-none focus:ring-2 focus:ring-teal-500/20 font-serif" 
-              placeholder="Tell your story here..." 
+              rows="20" 
+              className={`w-full bg-slate-50 dark:bg-slate-800 border-none rounded-[32px] p-8 text-sm outline-none focus:ring-4 focus:ring-teal-500/10 transition-all ${isHtmlMode ? 'font-mono text-teal-700 dark:text-teal-400 leading-[1.6] bg-slate-100/50' : 'font-serif font-normal leading-[2.0]'}`} 
+              placeholder={isHtmlMode ? "<!-- Enter your HTML code here -->" : "Step into the story..."} 
             />
           </div>
 
