@@ -139,7 +139,11 @@ const GuideDetailView = () => {
           src={guide.image} 
           alt={guide.title}
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ 
+            objectPosition: `${guide.imagePositionX || 50}% ${guide.imagePositionY || 50}%` 
+          }}
         />
+
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
         
         <div className="absolute inset-0 flex flex-col justify-end px-4 md:px-12 lg:px-24 pb-16 max-w-7xl mx-auto w-full">

@@ -37,6 +37,8 @@ const AdminNewArticleUploadForm = () => {
     description: '',
     type: 'blog',
     image: '',
+    imagePositionX: 50,
+    imagePositionY: 50,
     content: '',
     relatedTours: '',
     author: 'Sarah Jenkins',
@@ -48,6 +50,10 @@ const AdminNewArticleUploadForm = () => {
     schemaSnippet: '',
     status: 'published' // Default to published for new articles
   });
+
+  const [isAdjustingImage, setIsAdjustingImage] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
 
   const [slugEdited, setSlugEdited] = useState(false);
 
@@ -145,20 +151,74 @@ const AdminNewArticleUploadForm = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // 5MB size limit for localStorage stability (user requested)
       if (file.size > 5 * 1024 * 1024) {
         alert("Image is too large (Max 5MB). Please use a smaller image.");
         e.target.value = ''; // Reset input
         return;
       }
-
       const reader = new FileReader();
       reader.onload = (event) => {
-        setFormData(prev => ({ ...prev, image: event.target.result }));
+        setFormData(prev => ({ ...prev, image: event.target.result, imagePositionX: 50, imagePositionY: 50 }));
       };
       reader.readAsDataURL(file);
     }
   };
+
+  const handleImageDelete = (e) => {
+    e.preventDefault();
+    if(confirm("Permanently remove cover image? It will be cleared from this draft.")) {
+      setFormData(prev => ({ ...prev, image: '', imagePositionX: 50, imagePositionY: 50 }));
+      setHasUnsavedChanges(true);
+    }
+  };
+
+  const handleImageMouseMove = (e) => {
+    if (!isDragging) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    setFormData(prev => ({ 
+      ...prev, 
+      imagePositionX: Math.max(0, Math.min(100, x)),
+      imagePositionY: Math.max(0, Math.min(100, y))
+    }));
+    setHasUnsavedChanges(true);
+  };
+
+  // Auto-Save Effect
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    
+    const interval = setInterval(() => {
+      console.log("Auto-saving draft to local storage...");
+      localStorage.setItem('beautifulindia_article_autosave', JSON.stringify({
+        ...formData,
+        lastAutoSave: new Date().toISOString()
+      }));
+      setLastSaved(`Auto-saved at ${new Date().toLocaleTimeString()}`);
+    }, 30000); // Every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [formData, hasUnsavedChanges]);
+
+  // Load Auto-Save if available
+  useEffect(() => {
+    if (!id) {
+       const autosave = localStorage.getItem('beautifulindia_article_autosave');
+       if (autosave) {
+         try {
+           const parsed = JSON.parse(autosave);
+           if (confirm(`A recent un-published draft from ${new Date(parsed.lastAutoSave).toLocaleTimeString()} was found. Load it?`)) {
+             setFormData(prev => ({ ...prev, ...parsed }));
+             setHasUnsavedChanges(true);
+           } else {
+             localStorage.removeItem('beautifulindia_article_autosave');
+           }
+         } catch (e) { console.error(e); }
+       }
+    }
+  }, [id]);
 
   const handleSubmit = async (e, targetStatus = null) => {
     if (e) e.preventDefault();
@@ -212,6 +272,7 @@ const AdminNewArticleUploadForm = () => {
       
       // 4. Sync to Server (Permanence)
       setIsSyncing(true);
+      let syncSuccess = false;
       try {
         // Use proxy-friendly absolute path for both local and live
         const targetUrl = '/api/save-guides';
@@ -226,22 +287,23 @@ const AdminNewArticleUploadForm = () => {
           setLastSaved(new Date().toLocaleTimeString());
           setHasUnsavedChanges(false); // Reset switch reminder
           setFormData(prev => ({ ...prev, status: finalStatus })); // Update local state status
+          syncSuccess = true;
         } else {
           console.warn("Server sync failed, data is local-only");
-          // Original alert was here, but instruction removed it. Keeping the console.warn.
         }
       } catch (err) {
         console.error("Server sync connection error:", err);
-        // Original alert was here, but instruction removed it. Keeping the console.error.
       } finally {
         setIsSyncing(false);
       }
 
-      // The instruction implies toast.success replaces the alert, but toast is not imported.
-      // For now, I'll keep the original alert and add a note.
-      // TODO: If toast is intended, it needs to be imported.
-      alert(`Article ${id ? 'Updated' : 'Created'} Successfully!`);
-      navigate('/admin/guides');
+      if (syncSuccess) {
+        alert(`✅ Article ${id ? 'Updated' : 'Created'} & Synced Successfully!`);
+        navigate('/admin/guides');
+      } else {
+        alert(`⚠️ Saved LOCALLY but failed to sync to server. Your article is safe in this browser, but not yet permanent on the live site. Please try "Save to System" from the dashboard later.`);
+        navigate('/admin/guides');
+      }
       
     } catch (err) {
       console.error("Submission error:", err);
@@ -250,6 +312,7 @@ const AdminNewArticleUploadForm = () => {
       } else {
         alert("❌ Failed to save article: " + (err.message || "Unknown error occurred"));
       }
+
     } finally {
       setLoading(false);
     }
@@ -304,14 +367,58 @@ const AdminNewArticleUploadForm = () => {
           
           {/* Cover Image Upload */}
           <div className="space-y-4">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Primary Cover Image</h3>
-            <label className="group relative flex flex-col items-center justify-center w-full h-[300px] border-2 border-slate-100 dark:border-slate-800 border-dashed rounded-[24px] cursor-pointer bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 transition-all overflow-hidden">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Primary Cover Image</h3>
+              {formData.image && (
+                <div className="flex gap-3">
+                  <button 
+                    type="button" 
+                    onClick={() => setIsAdjustingImage(!isAdjustingImage)}
+                    className={`px-3 py-1.5 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${isAdjustingImage ? 'bg-teal-500 border-teal-500 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:text-teal-500'}`}
+                  >
+                    {isAdjustingImage ? 'Finish Adjustment' : 'Adjust Position'}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={handleImageDelete}
+                    className="p-1.5 bg-red-50 dark:bg-red-950/20 text-red-500 rounded-xl hover:bg-red-100 transition-all border border-red-100 dark:border-red-900/30"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              )}
+            </div>
+            <label 
+              className={`group relative flex flex-col items-center justify-center w-full h-[300px] border-2 border-slate-100 dark:border-slate-800 border-dashed rounded-[24px] overflow-hidden transition-all ${isAdjustingImage ? 'cursor-move ring-4 ring-teal-500/20 border-teal-500' : 'cursor-pointer bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100'}`}
+              onMouseDown={() => isAdjustingImage && setIsDragging(true)}
+              onMouseUp={() => setIsDragging(false)}
+              onMouseLeave={() => setIsDragging(false)}
+              onMouseMove={handleImageMouseMove}
+            >
               {formData.image ? (
-                <div className="absolute inset-0">
-                  <img src={formData.image} alt="Cover Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="bg-white text-slate-900 px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest">Change Photo</span>
-                  </div>
+                <div className="absolute inset-0 select-none">
+                  <img 
+                    src={formData.image} 
+                    alt="Cover Preview" 
+                    className="w-full h-full object-cover transition-transform duration-500" 
+                    style={{ 
+                      objectPosition: `${formData.imagePositionX || 50}% ${formData.imagePositionY || 50}%`,
+                      transform: isAdjustingImage ? 'scale(1.05)' : 'scale(1)'
+                    }} 
+                  />
+                  {!isAdjustingImage && (
+                    <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="bg-white text-slate-900 px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest pointer-events-none">Change Photo</span>
+                    </div>
+                  )}
+                  {isAdjustingImage && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-teal-900/10">
+                       <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-2xl flex items-center gap-2 border border-teal-500/30">
+                          <span className="material-symbols-outlined text-teal-600 animate-pulse">drag_pan</span>
+                          <span className="text-[10px] font-black uppercase text-teal-800 tracking-widest">Dragging: {Math.round(formData.imagePositionX)}% x {Math.round(formData.imagePositionY)}%</span>
+                       </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-4">
@@ -322,8 +429,11 @@ const AdminNewArticleUploadForm = () => {
                   </div>
                 </div>
               )}
-              <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+              {!isAdjustingImage && <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />}
             </label>
+            {isAdjustingImage && (
+              <p className="text-[9px] font-bold text-slate-400 italic text-center uppercase tracking-widest">Hold left-click and drag to adjust the visual center of your cover photo</p>
+            )}
           </div>
 
           {/* Core Info */}
@@ -500,7 +610,7 @@ const AdminNewArticleUploadForm = () => {
             <button 
               type="button" 
               onClick={() => navigate('/admin/guides')} 
-              className="px-8 py-4 text-slate-500 font-black uppercase tracking-widest text-[10px] hover:text-slate-800 transition-all"
+              className="px-8 py-4 text-slate-500 font-black uppercase tracking-widest text-[10px] hover:text-slate-800 transition-all font-sans"
             >
               Cancel
             </button>
@@ -509,8 +619,9 @@ const AdminNewArticleUploadForm = () => {
               type="button"
               disabled={loading || isSyncing}
               onClick={() => handleSubmit(null, 'draft')}
-              className="px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:border-amber-500 hover:text-amber-500 transition-all shadow-sm disabled:opacity-50"
+              className="group px-8 py-4 bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-100 dark:border-amber-900/30 text-amber-700 dark:text-amber-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-amber-100 dark:hover:bg-amber-950/40 hover:border-amber-500 transition-all shadow-sm flex items-center justify-center gap-3 disabled:opacity-50"
             >
+              <span className="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">draft</span>
               {loading ? 'Saving...' : 'Save as Draft'}
             </button>
 
@@ -518,10 +629,12 @@ const AdminNewArticleUploadForm = () => {
               type="button" 
               disabled={loading || isSyncing}
               onClick={() => handleSubmit(null, 'published')}
-              className="px-10 py-4 bg-[#0a6c75] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-[#085a62] transition-all shadow-xl shadow-teal-900/20 disabled:opacity-50"
+              className="group px-10 py-4 bg-slate-900 dark:bg-teal-600 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl hover:bg-[#0a6c75] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
             >
-              {loading ? 'Syncing...' : (id ? 'Update & Publish' : 'Publish Article')}
+              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">publish</span>
+              {loading ? (id ? 'Syncing...' : 'Creating...') : (id ? 'Update & Publish' : 'Launch Article')}
             </button>
+
           </div>
         </div>
       </form>

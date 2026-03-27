@@ -70,7 +70,28 @@ app.get('/api/agents', (req, res) => res.json(getData('agents.json')));
 app.post('/api/agents', (req, res) => { saveData('agents.json', req.body); res.json({ success: true }); });
 
 app.get('/api/guides', (req, res) => res.json(getData('guides.json')));
+app.get('/api/save-guides', (req, res) => res.json(getData('guides.json'))); 
+
+app.post('/api/save-guides', (req, res) => {
+    try {
+        const data = req.body;
+        const jsonStr = JSON.stringify(data, null, 2);
+        const srcPath = path.join(__dirname, 'src/data/guides.json');
+        const publicPath = path.join(__dirname, 'public/data/guides.json');
+        
+        fs.writeFileSync(srcPath, jsonStr, 'utf8');
+        if (fs.existsSync(publicPath)) {
+            fs.writeFileSync(publicPath, jsonStr, 'utf8');
+        }
+        res.json({ success: true, message: 'Guides saved to system successfully' });
+    } catch (error) {
+        console.error('Save Guides Error:', error);
+        res.status(500).json({ success: false, error: 'Internal server error while saving guides' });
+    }
+});
+
 app.post('/api/guides', (req, res) => { saveData('guides.json', req.body); res.json({ success: true }); });
+
 
 app.get('/api/reviews', (req, res) => res.json(getData('reviews.json')));
 app.post('/api/reviews', (req, res) => { saveData('reviews.json', req.body); res.json({ success: true }); });

@@ -111,18 +111,25 @@ const AdminArticleManagementDashboard = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(guides)
       });
-      const result = await response.json();
-      if (result.success) {
-        showToast("✅ System updated successfully!");
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          showToast("✅ System updated successfully!");
+        } else {
+          showToast("❌ Error saving to system");
+        }
       } else {
-        showToast("❌ Error saving to system");
+        showToast("❌ Server sync failed (404/500)");
       }
     } catch (error) {
+      console.error("Sync error:", error);
       showToast("❌ Connection error");
     } finally {
       setIsSyncing(false);
     }
   };
+
 
   return (
     <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-500">
