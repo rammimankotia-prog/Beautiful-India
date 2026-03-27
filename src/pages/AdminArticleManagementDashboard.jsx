@@ -15,29 +15,39 @@ const AdminArticleManagementDashboard = () => {
     fetchGuides();
   }, []);
 
-  const fetchGuides = () => {
+  const fetchGuides = async () => {
     setLoading(true);
-    const saved = localStorage.getItem('beautifulindia_admin_guides');
-    if (saved) {
-      try {
-        setGuides(JSON.parse(saved));
-        setLoading(false);
-        return;
-      } catch (e) {
-        console.error("Parse error:", e);
-      }
-    }
+    try {
+      // 1. Fetch Master List from Server
+      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
+      const remoteGuides = await res.json();
 
-    fetch(`${import.meta.env.BASE_URL}data/guides.json`)
-      .then(res => res.json())
-      .then(data => {
-        setGuides(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setLoading(false);
-      });
+      // 2. Fetch Local Drafts/Edits
+      const saved = localStorage.getItem('beautifulindia_admin_guides');
+      let localGuides = [];
+      if (saved) {
+        try { localGuides = JSON.parse(saved); } catch (e) { console.error("Parse error:", e); }
+      }
+
+      // 3. Merge them (Local edits/new articles take precedence by ID)
+      const mergedMap = new Map();
+      remoteGuides.forEach(g => mergedMap.set(String(g.id), g));
+      localGuides.forEach(g => mergedMap.set(String(g.id), g));
+
+      const finalGuides = Array.from(mergedMap.values());
+      setGuides(finalGuides);
+      
+      // Keep localStorage in sync with the merged state for stability
+      localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(finalGuides));
+
+    } catch (err) {
+      console.error("Fetch error:", err);
+      // Fallback to local only if fetch fails
+      const saved = localStorage.getItem('beautifulindia_admin_guides');
+      if (saved) setGuides(JSON.parse(saved));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const saveGuides = (updated) => {

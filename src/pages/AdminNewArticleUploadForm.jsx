@@ -155,10 +155,25 @@ const AdminNewArticleUploadForm = () => {
     setLoading(true);
 
     try {
+      // 1. Load existing guides (local first)
       const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
       let guides = [];
       if (savedGuides) {
         try { guides = JSON.parse(savedGuides); } catch (err) { console.error("Parse error:", err); }
+      }
+
+      // 2. Fetch from server if we are starting fresh or think we're missing articles
+      if (guides.length === 0) {
+        try {
+          const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
+          const serverGuides = await res.json();
+          // Use Map for initial merge
+          const mergedMap = new Map();
+          serverGuides.forEach(g => mergedMap.set(String(g.id), g));
+          guides = Array.from(mergedMap.values());
+        } catch (e) {
+          console.error("Master list fetch error:", e);
+        }
       }
 
       const guideId = id || (formData.slug || slugify(formData.title));
