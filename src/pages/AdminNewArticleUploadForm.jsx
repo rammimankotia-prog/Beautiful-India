@@ -126,27 +126,19 @@ const AdminNewArticleUploadForm = () => {
 
   useEffect(() => {
     if (id) {
-      const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
-      if (savedGuides) {
-        try {
-          const guides = JSON.parse(savedGuides);
-          const matched = guides.find(g => String(g.id) === String(id));
-          if (matched) {
-            setFormData(prev => ({ ...prev, ...matched }));
-            return;
-          }
-        } catch (e) { console.error(e); }
-      }
-
+      // 1. Fetch source of truth from server only
       fetch(`${import.meta.env.BASE_URL}data/guides.json`)
         .then(res => res.json())
         .then(data => {
           const matched = data.find(g => String(g.id) === String(id));
-          if (matched) setFormData(prev => ({ ...prev, ...matched }));
+          if (matched) {
+            setFormData(prev => ({ ...prev, ...matched }));
+          }
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error("Failed to load article from server:", err));
     }
   }, [id]);
+
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -228,28 +220,14 @@ const AdminNewArticleUploadForm = () => {
     const finalStatus = targetStatus || formData.status || 'published';
 
     try {
-      // 1. Load existing guides (local first)
-      const savedGuides = localStorage.getItem('beautifulindia_admin_guides');
-      let guides = [];
-      if (savedGuides) {
-        try { guides = JSON.parse(savedGuides); } catch (err) { console.error("Parse error:", err); }
-      }
-
-      // 2. FETCH FROM SERVER & MERGE (to ensure we don't overwrite server data with partial local state)
+      // 1. Fetch current live guides to ensure we don't drop other articles
+      let currentGuides = [];
       try {
         const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
-        const serverGuides = await res.json();
-        
-        // Use Map to merge: local edits take precedence, server provides the rest
-        const mergedMap = new Map();
-        serverGuides.forEach(g => mergedMap.set(String(g.id), g));
-        // Add existing local guides (if any) - they overwrite server guides with same ID
-        guides.forEach(g => mergedMap.set(String(g.id), g));
-        
-        guides = Array.from(mergedMap.values());
+        currentGuides = await res.json();
       } catch (e) {
-        console.error("Master list merge fetch error:", e);
-        // Continue with local guides if server is unreachable
+        console.error("Master list fetch error:", e);
+        throw new Error("Could not reach the server to retrieve the article list. Please check your internet connection.");
       }
 
       const guideId = id || (formData.slug || slugify(formData.title));
@@ -257,74 +235,59 @@ const AdminNewArticleUploadForm = () => {
         ...formData, 
         id: guideId,
         status: finalStatus,
-        date: formData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        date: formData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        lastModified: new Date().toISOString()
       };
 
       let updatedGuides;
       if (id) {
-        updatedGuides = guides.map(g => String(g.id) === String(id) ? guideToSave : g);
-        if (!guides.find(g => String(g.id) === String(id))) updatedGuides = [...guides, guideToSave];
-      } else {
-        updatedGuides = [...guides, guideToSave];
-      }
-
-      localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updatedGuides));
-      
-      // 4. Sync to Server (Permanence)
-      setIsSyncing(true);
-      let syncSuccess = false;
-      let errorDetail = "";
-      try {
-        const targetUrl = '/api/save-guides';
-        const syncResponse = await fetch(targetUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedGuides)
-        });
-        
-        if (syncResponse.ok) {
-          const result = await syncResponse.json();
-          if (result.success) {
-            console.log("Server sync successful");
-            setLastSaved(new Date().toLocaleTimeString());
-            setHasUnsavedChanges(false);
-            setFormData(prev => ({ ...prev, status: finalStatus }));
-            syncSuccess = true;
-          } else {
-            errorDetail = `System Error: ${result.error || "Server rejected data"}`;
-          }
-        } else {
-          errorDetail = `HTTP Error ${syncResponse.status} (${syncResponse.statusText})`;
-          console.warn(`Server sync failed: ${errorDetail}`);
+        updatedGuides = currentGuides.map(g => String(g.id) === String(id) ? guideToSave : g);
+        // If article isn't in server list yet (newly created but not synced), add it
+        if (!currentGuides.find(g => String(g.id) === String(id))) {
+          updatedGuides = [...currentGuides, guideToSave];
         }
-      } catch (err) {
-        errorDetail = `Network Failure: ${err.message || "Failed to connect to backend"}`;
-        console.error("Server sync connection error:", err);
-      } finally {
-        setIsSyncing(false);
-      }
-
-      if (syncSuccess) {
-        alert(`✅ Article ${id ? 'Updated' : 'Created'} & Synced Successfully!`);
-        navigate('/admin/guides');
       } else {
-        alert(`⚠️ Local Save Successful — BUT Server Sync Failed.\n\nERROR: ${errorDetail}\n\nYour work is safe in this browser, but NOT yet updated on the live site. Please use the "Save to System" button in your dashboard once fixed.`);
-        navigate('/admin/guides');
+        updatedGuides = [...currentGuides, guideToSave];
       }
 
+      // 2. Direct Server Write
+      setIsSyncing(true); // Reusing this state as 'isSaving'
+      let errorDetail = "";
       
+      const targetUrl = '/api/save-guides';
+      const syncResponse = await fetch(targetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedGuides)
+      });
+      
+      if (syncResponse.ok) {
+        const result = await syncResponse.json();
+        if (result.success) {
+          // Success Path
+          localStorage.removeItem('beautifulindia_article_autosave'); // Clear backup
+          alert(`✅ Article successfully ${id ? 'updated' : 'published'}! It is now live on the website.`);
+          navigate('/admin/guides');
+          return;
+        } else {
+          errorDetail = result.error || "Server rejected the update.";
+        }
+      } else {
+        errorDetail = `Server returned Error ${syncResponse.status} (${syncResponse.statusText})`;
+      }
+      
+      // Failure Path
+      throw new Error(errorDetail);
+
     } catch (err) {
       console.error("Submission error:", err);
-      if (err.name === 'QuotaExceededError' || err.message.includes('quota')) {
-        alert("❌ Storage Full: The article (likely the image) is too large for your browser's local library. Please use a smaller image (under 2MB) or compress it before uploading.");
-      } else {
-        alert("❌ Failed to save article: " + (err.message || "Unknown error occurred"));
-      }
-
+      alert(`❌ FAILED TO PUBLISH\n\nReason: ${err.message}\n\nYour work is still being held in the editor. You can try saving again or copy your text to move it elsewhere.`);
     } finally {
+      setIsSyncing(false);
       setLoading(false);
     }
   };
+
 
   return (
     <div className="p-6 lg:p-10 max-w-[1200px] mx-auto space-y-10 animate-in fade-in duration-500">
@@ -640,8 +603,9 @@ const AdminNewArticleUploadForm = () => {
               className="group px-10 py-4 bg-slate-900 dark:bg-teal-600 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl hover:bg-[#0a6c75] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
             >
               <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">publish</span>
-              {loading ? (id ? 'Syncing...' : 'Creating...') : (id ? 'Update & Publish' : 'Launch Article')}
+              {loading ? (id ? 'Saving...' : 'Publishing...') : (id ? 'Update Website' : 'Publish to Website')}
             </button>
+
 
           </div>
         </div>

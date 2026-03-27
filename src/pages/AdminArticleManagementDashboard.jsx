@@ -19,44 +19,24 @@ const AdminArticleManagementDashboard = () => {
   const fetchGuides = async () => {
     setLoading(true);
     try {
-      // 1. Fetch Master List from Server
-      let remoteGuides = [];
-      try {
-        // Fetch from system master source via absolute path
-        const res = await fetch('/api/save-guides');
-        if (res.ok) {
-          remoteGuides = await res.json();
-        }
-      } catch (e) { console.warn("Remote guides unavailable:", e); }
-
-      // 2. Fetch Local Drafts/Edits
-      const saved = localStorage.getItem('beautifulindia_admin_guides');
-      let localGuides = [];
-      if (saved) {
-        try { localGuides = JSON.parse(saved); } catch (e) { console.error("Parse error:", e); }
+      // 1. Fetch Master List from Server (Ground Truth)
+      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
+      if (res.ok) {
+        const remoteGuides = await res.json();
+        setGuides(remoteGuides);
+        // Keep a backup in localStorage for session stability
+        localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(remoteGuides));
       }
-
-      // 3. Merge them (Local edits/new articles take precedence by ID)
-      const mergedMap = new Map();
-      // Server is the ground truth for state
-      remoteGuides.forEach(g => mergedMap.set(String(g.id), g));
-      // Local overrides (if user has unsynced changes)
-      localGuides.forEach(g => mergedMap.set(String(g.id), g));
-
-      const finalGuides = Array.from(mergedMap.values());
-      setGuides(finalGuides);
-      
-      // Keep localStorage in sync with the merged state for stability
-      localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(finalGuides));
-
     } catch (err) {
       console.error("Fetch error:", err);
+      // Fallback to local storage ONLY if server is down
       const saved = localStorage.getItem('beautifulindia_admin_guides');
       if (saved) setGuides(JSON.parse(saved));
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleExport = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(guides, null, 2));
@@ -75,60 +55,35 @@ const AdminArticleManagementDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this article everywhere?")) {
+    if (window.confirm("Are You Sure? This will delete the article from the website permanently.")) {
       const updated = guides.filter(g => g.id !== id);
-      saveGuides(updated);
       
-      // Auto-Sync to server immediately on delete
       setIsSyncing(true);
       try {
-        const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-guides' : `${import.meta.env.BASE_URL}api-save-guides.php`;
-        const response = await fetch(targetUrl, {
+        const response = await fetch('/api/save-guides', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updated)
         });
+        
         if (response.ok) {
-          showToast("🗑️ Article deleted permanently");
+          setGuides(updated);
+          localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(updated));
+          showToast("🗑️ Article deleted successfully");
         } else {
-          showToast("🗑️ Deleted locally (Sync to server manually)");
+          showToast("❌ Delete failed on server");
         }
       } catch (e) {
-        showToast("🗑️ Deleted locally (No connection to sync)");
+        showToast("❌ Connection error: Delete cancelled");
       } finally {
         setIsSyncing(false);
       }
     }
   };
 
-  const handleSync = async () => {
-    setIsSyncing(true);
-    try {
-      // Use proxy-friendly absolute path
-      const targetUrl = '/api/save-guides';
-      const response = await fetch(targetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(guides)
-      });
-      
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          showToast("✅ System updated successfully!");
-        } else {
-          showToast("❌ Error saving to system");
-        }
-      } else {
-        showToast("❌ Server sync failed (404/500)");
-      }
-    } catch (error) {
-      console.error("Sync error:", error);
-      showToast("❌ Connection error");
-    } finally {
-      setIsSyncing(false);
-    }
-  };
+
+  // Manual Sync is no longer needed in Direct mode
+
 
 
   return (
@@ -159,15 +114,14 @@ const AdminArticleManagementDashboard = () => {
             Export
           </button>
           <button 
-            onClick={handleSync}
-            disabled={isSyncing}
-            className={`flex items-center gap-2 px-6 py-2.5 bg-[#0a6c75] text-white rounded-xl font-black hover:bg-[#085a62] transition-all text-sm shadow-lg shadow-teal-900/20 ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={fetchGuides}
+            disabled={loading}
+            className={`flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 rounded-xl font-black hover:border-teal-500 transition-all text-sm shadow-sm ${loading ? 'opacity-50' : ''}`}
           >
-            <span className={`material-symbols-outlined text-[20px] ${isSyncing ? 'animate-spin' : ''}`}>
-              {isSyncing ? 'sync' : 'cloud_upload'}
-            </span>
-            {isSyncing ? 'Syncing...' : 'Save to System'}
+            <span className={`material-symbols-outlined text-[20px] ${loading ? 'animate-spin' : ''}`}>refresh</span>
+            Refresh List
           </button>
+
           <Link 
             to="/admin/guides/new"
             className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[#0a6c75] rounded-xl font-black hover:border-teal-500 transition-all text-sm shadow-sm"
