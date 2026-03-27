@@ -273,8 +273,8 @@ const AdminNewArticleUploadForm = () => {
       // 4. Sync to Server (Permanence)
       setIsSyncing(true);
       let syncSuccess = false;
+      let errorDetail = "";
       try {
-        // Use proxy-friendly absolute path for both local and live
         const targetUrl = '/api/save-guides';
         const syncResponse = await fetch(targetUrl, {
           method: 'POST',
@@ -283,15 +283,22 @@ const AdminNewArticleUploadForm = () => {
         });
         
         if (syncResponse.ok) {
-          console.log("Server sync successful");
-          setLastSaved(new Date().toLocaleTimeString());
-          setHasUnsavedChanges(false); // Reset switch reminder
-          setFormData(prev => ({ ...prev, status: finalStatus })); // Update local state status
-          syncSuccess = true;
+          const result = await syncResponse.json();
+          if (result.success) {
+            console.log("Server sync successful");
+            setLastSaved(new Date().toLocaleTimeString());
+            setHasUnsavedChanges(false);
+            setFormData(prev => ({ ...prev, status: finalStatus }));
+            syncSuccess = true;
+          } else {
+            errorDetail = `System Error: ${result.error || "Server rejected data"}`;
+          }
         } else {
-          console.warn("Server sync failed, data is local-only");
+          errorDetail = `HTTP Error ${syncResponse.status} (${syncResponse.statusText})`;
+          console.warn(`Server sync failed: ${errorDetail}`);
         }
       } catch (err) {
+        errorDetail = `Network Failure: ${err.message || "Failed to connect to backend"}`;
         console.error("Server sync connection error:", err);
       } finally {
         setIsSyncing(false);
@@ -301,9 +308,10 @@ const AdminNewArticleUploadForm = () => {
         alert(`✅ Article ${id ? 'Updated' : 'Created'} & Synced Successfully!`);
         navigate('/admin/guides');
       } else {
-        alert(`⚠️ Saved LOCALLY but failed to sync to server. Your article is safe in this browser, but not yet permanent on the live site. Please try "Save to System" from the dashboard later.`);
+        alert(`⚠️ Local Save Successful — BUT Server Sync Failed.\n\nERROR: ${errorDetail}\n\nYour work is safe in this browser, but NOT yet updated on the live site. Please use the "Save to System" button in your dashboard once fixed.`);
         navigate('/admin/guides');
       }
+
       
     } catch (err) {
       console.error("Submission error:", err);

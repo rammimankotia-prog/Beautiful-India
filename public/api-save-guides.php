@@ -14,6 +14,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+// 0. Diagnostic Ping (GET)
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $public_file = __DIR__ . '/data/guides.json';
+    $src_file = dirname(__DIR__) . '/src/data/guides.json';
+    $data_dir = __DIR__ . '/data';
+    $src_data_dir = dirname(__DIR__) . '/src/data';
+    
+    header('Content-Type: application/json');
+    echo json_encode([
+        "status" => "online",
+        "timestamp" => date('c'),
+        "diagnostics" => [
+            "public_dir" => is_writable($data_dir) ? "writable" : "locked",
+            "public_file" => file_exists($public_file) ? (is_writable($public_file) ? "writable" : "readonly") : "missing",
+            "src_dir" => file_exists($src_data_dir) ? (is_writable($src_data_dir) ? "writable" : "locked") : "not_found",
+            "php_version" => PHP_VERSION,
+            "user" => get_current_user()
+        ]
+    ]);
+    exit;
+}
+
+
 // 1. Define target paths (Environment aware)
 $public_file = __DIR__ . '/data/guides.json';
 $src_file = dirname(__DIR__) . '/src/data/guides.json';
