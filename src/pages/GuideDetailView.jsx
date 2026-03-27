@@ -203,6 +203,11 @@ const GuideDetailView = () => {
             dangerouslySetInnerHTML={{ __html: formatContent(guide.content) }} 
           />
 
+          {/* JSON-LD Schema Snippet */}
+          {guide.schemaSnippet && (
+            <div dangerouslySetInnerHTML={{ __html: guide.schemaSnippet }} />
+          )}
+
           {/* Social Share & Interaction */}
           <div className="mt-20 pt-10 border-t border-slate-100 dark:border-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="flex flex-wrap gap-2">

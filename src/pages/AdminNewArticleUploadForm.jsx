@@ -36,7 +36,8 @@ const AdminNewArticleUploadForm = () => {
     inlineImageUrl: '',
     inlineImageCaption: '',
     showNewsletter: true,
-    allowComments: true
+    allowComments: true,
+    schemaSnippet: ''
   });
 
   const [slugEdited, setSlugEdited] = useState(false);
@@ -339,6 +340,18 @@ const AdminNewArticleUploadForm = () => {
             <div className="space-y-3">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Tags (Keywords)</label>
               <input name="tags" value={formData.tags} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-xs font-bold" placeholder="Food, Culture, Heritage" />
+            </div>
+            <div className="space-y-3 col-span-1 md:col-span-2">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">JSON-LD Schema Snippet</label>
+              <textarea 
+                name="schemaSnippet" 
+                value={formData.schemaSnippet} 
+                onChange={handleChange} 
+                rows="5" 
+                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-xs font-mono" 
+                placeholder='<script type="application/ld+json">...</script>' 
+              />
+              <p className="text-[9px] text-slate-400 font-bold px-1 italic">This snippet will be rendered at the end of the article for SEO purposes.</p>
             </div>
           </div>
         </div>
