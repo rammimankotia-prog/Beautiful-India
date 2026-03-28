@@ -234,23 +234,23 @@ const AdminNewArticleUploadForm = () => {
     // 1. Title Logic: [Working Title] | The Beautiful India
     const seoTitle = formData.title ? `${formData.title} | The Beautiful India` : '';
 
-    // 2. Meta Description Logic (First paragraph, max 155 chars, end at last full sentence)
+    // 2. Meta Description Logic (First paragraph, max 160 chars, end at last full sentence)
     // Strip HTML first
     const cleanText = formData.content.replace(/<[^>]*>?/gm, '').trim();
     const firstParagraph = cleanText.split('\n')[0] || '';
-    let metaDescription = firstParagraph.substring(0, 158); // Buffer for sentence end
+    let metaDescription = firstParagraph.substring(0, 163); // Buffer for sentence end
     
-    if (metaDescription.length > 155) {
-      // Find the last sentence end before 155
+    if (metaDescription.length > 160) {
+      // Find the last sentence end before 160
       const lastSentenceIdx = Math.max(
-        metaDescription.lastIndexOf('.', 155),
-        metaDescription.lastIndexOf('!', 155),
-        metaDescription.lastIndexOf('?', 155)
+        metaDescription.lastIndexOf('.', 160),
+        metaDescription.lastIndexOf('!', 160),
+        metaDescription.lastIndexOf('?', 160)
       );
-      if (lastSentenceIdx !== -1) {
+      if (lastSentenceIdx !== -1 && lastSentenceIdx > 60) {
         metaDescription = metaDescription.substring(0, lastSentenceIdx + 1);
       } else {
-        metaDescription = metaDescription.substring(0, 155) + '...';
+        metaDescription = metaDescription.substring(0, 157).trim() + '...';
       }
     }
 
