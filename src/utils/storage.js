@@ -61,3 +61,22 @@ export const safeCacheTours = (key, tours) => {
     }
   }
 };
+
+/**
+ * Clears all application-specific cache from localStorage.
+ */
+export const clearAllAppCache = () => {
+  const keys = Object.values(STORAGE_KEYS);
+  keys.forEach(key => localStorage.removeItem(key));
+  
+  // Also clear legacy or manual keys
+  const legacyKeys = [
+    'beautifulindia_cache_reviews',
+    'beautifulindia_admin_guides',
+    'beautifulindia_article_autosave'
+  ];
+  legacyKeys.forEach(key => localStorage.removeItem(key));
+  
+  console.info("[Storage] All application cache cleared.");
+};
+

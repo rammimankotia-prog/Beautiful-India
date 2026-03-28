@@ -14,7 +14,13 @@ const TravelGuidesCategoryLanding = () => {
 
   useEffect(() => {
     // 1. Fetch Master List from Server with cache-busting
-    fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`)
+    fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    })
       .then(res => res.json())
       .then(data => {
         setGuides(data);

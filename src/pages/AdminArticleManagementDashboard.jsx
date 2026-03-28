@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { clearAllAppCache } from '../utils/storage';
 
 const AdminArticleManagementDashboard = () => {
   const [guides, setGuides] = React.useState([]);
@@ -20,8 +21,14 @@ const AdminArticleManagementDashboard = () => {
     setLoading(true);
     try {
       // 1. Fetch Master List from Server (Ground Truth)
-      // Added cache-busting timestamp to bypass Hostinger CDN
-      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`);
+      // Added cache-busting timestamp and no-cache headers to bypass Hostinger CDN
+      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
       if (res.ok) {
         const remoteGuides = await res.json();
         setGuides(remoteGuides);
@@ -35,6 +42,13 @@ const AdminArticleManagementDashboard = () => {
       if (saved) setGuides(JSON.parse(saved));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleHardRefresh = () => {
+    if (window.confirm("This will clear all local app cache and reload everything from the server. Use this if you are seeing old content. Proceed?")) {
+      clearAllAppCache();
+      window.location.reload();
     }
   };
 
@@ -108,7 +122,7 @@ const AdminArticleManagementDashboard = () => {
           <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Guides & Articles</h1>
           <p className="text-slate-500 dark:text-slate-400 font-bold italic">Manage travel tips, blogs, and destination guides.</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <button 
             onClick={handleExport}
             className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 rounded-xl font-black hover:border-slate-400 transition-all text-sm shadow-sm"
@@ -117,6 +131,16 @@ const AdminArticleManagementDashboard = () => {
             <span className="material-symbols-outlined text-[20px]">download</span>
             Export
           </button>
+          
+          <button 
+            onClick={handleHardRefresh}
+            className="flex items-center gap-2 px-6 py-2.5 bg-red-50 dark:bg-red-950/20 text-red-600 border border-red-100 dark:border-red-900/30 rounded-xl font-black hover:bg-red-100 transition-all text-sm shadow-sm"
+            title="Clear all cache and reload"
+          >
+            <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
+            Clear Cache
+          </button>
+
           <button 
             onClick={fetchGuides}
             disabled={loading}

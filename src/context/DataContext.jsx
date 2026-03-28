@@ -12,13 +12,20 @@ export const DataProvider = ({ children }) => {
     const fetchData = useCallback(async (force = false) => {
         setLoading(true);
         try {
-            // Use Cache-Busting only if forced
-            const cacheBust = force ? `?t=${Date.now()}` : '';
+            // Force Cache-Busting by default to ensure live site updates are seen
+            const cacheBust = `?t=${Date.now()}`;
+            const fetchOptions = {
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            };
             
             // Fetch Tours
             const baseUrl = import.meta.env.BASE_URL || '/';
             const toursUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/tours.json${cacheBust}`;
-            const toursRes = await fetch(toursUrl);
+            const toursRes = await fetch(toursUrl, fetchOptions);
             if (toursRes.ok) {
                 const toursData = await toursRes.json();
                 const validTours = Array.isArray(toursData) ? toursData.filter(Boolean) : [];
@@ -32,7 +39,7 @@ export const DataProvider = ({ children }) => {
 
             // Fetch Reviews
             const reviewsUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/reviews.json${cacheBust}`;
-            const reviewsRes = await fetch(reviewsUrl);
+            const reviewsRes = await fetch(reviewsUrl, fetchOptions);
             if (reviewsRes.ok) {
                 const reviewsData = await reviewsRes.json();
                 setReviews(Array.isArray(reviewsData) ? reviewsData : []);
