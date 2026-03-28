@@ -127,7 +127,14 @@ const AdminNewArticleUploadForm = () => {
   useEffect(() => {
     if (id) {
       // 1. Fetch source of truth from server only
-      fetch(`${import.meta.env.BASE_URL}data/guides.json`)
+      // Added cache-busting and no-cache headers to ensure we get the latest data
+      fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      })
         .then(res => res.json())
         .then(data => {
           const matched = data.find(g => String(g.id) === String(id));
@@ -223,7 +230,13 @@ const AdminNewArticleUploadForm = () => {
       // 1. Fetch current live guides to ensure we don't drop other articles
       let currentGuides = [];
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json`);
+        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
         currentGuides = await res.json();
       } catch (e) {
         console.error("Master list fetch error:", e);
