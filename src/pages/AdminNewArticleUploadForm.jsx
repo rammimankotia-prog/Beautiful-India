@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { clearAllAppCache } from '../utils/storage';
 import { 
   Bold, 
   Italic, 
@@ -56,6 +57,13 @@ const AdminNewArticleUploadForm = () => {
 
   const [isAdjustingImage, setIsAdjustingImage] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+
+  const handleHardRefresh = () => {
+    if (window.confirm("This will clear all local app cache and reload everything from the server. Use this if you are seeing old content. Proceed?")) {
+      clearAllAppCache();
+      window.location.reload();
+    }
+  };
 
 
   const [slugEdited, setSlugEdited] = useState(false);
@@ -323,17 +331,28 @@ const AdminNewArticleUploadForm = () => {
               </div>
             </div>
           </div>
-          {formData.slug && (
-            <a 
-              href={`https://bhaktikishakti.com/guides/${formData.slug}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center gap-2 text-xs font-black text-slate-600 hover:text-teal-600 hover:shadow-sm transition-all shadow-inner"
-            >
-              <ExternalLink size={14} />
-              View Live
-            </a>
-          )}
+          <div className="flex items-center gap-3">
+             <button 
+                type="button"
+                onClick={handleHardRefresh}
+                className="px-4 py-2 bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 text-red-600 rounded-2xl flex items-center gap-2 text-xs font-black hover:bg-red-100 transition-all shadow-sm"
+                title="Clear all cache and reload"
+              >
+                <span className="material-symbols-outlined text-[18px]">delete_sweep</span>
+                Clear Cache
+              </button>
+            {formData.slug && (
+              <a 
+                href={`https://bhaktikishakti.com/guides/${formData.slug}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center gap-2 text-xs font-black text-slate-600 hover:text-teal-600 hover:shadow-sm transition-all shadow-inner"
+              >
+                <ExternalLink size={14} />
+                View Live
+              </a>
+            )}
+          </div>
         </div>
         <p className="text-slate-500 dark:text-slate-400 font-bold italic">Craft stories that inspire every traveler.</p>
       </div>
