@@ -48,6 +48,9 @@ const AdminNewArticleUploadForm = () => {
     showNewsletter: true,
     allowComments: true,
     schemaSnippet: '',
+    seoTitle: '',
+    metaDescription: '',
+    metaKeywords: '',
     status: 'published' // Default to published for new articles
   });
 
@@ -560,6 +563,52 @@ const AdminNewArticleUploadForm = () => {
                 placeholder='<script type="application/ld+json">...</script>' 
               />
               <p className="text-[9px] text-slate-400 font-bold px-1 italic">This snippet will be rendered at the end of the article for SEO purposes.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* SEO & Social Metadata Card */}
+        <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-8 md:p-12 space-y-8">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-teal-500">search</span>
+            <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">SEO & Social Metadata</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-8">
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">SEO Page Title</label>
+              <input 
+                name="seoTitle" 
+                value={formData.seoTitle || ''} 
+                onChange={handleChange} 
+                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20" 
+                placeholder="e.g. Best Travel Guide to Swiss Alps | The Beautiful India" 
+              />
+              <p className="text-[9px] text-slate-400 font-bold px-1 italic">Optimal length: 50-60 characters. Current: <span className={(formData.seoTitle?.length || 0) > 60 ? 'text-red-500' : 'text-teal-500'}>{formData.seoTitle?.length || 0}</span></p>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Meta Description</label>
+              <textarea 
+                name="metaDescription" 
+                value={formData.metaDescription || ''} 
+                onChange={handleChange} 
+                rows="3" 
+                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20" 
+                placeholder="Brief summary for search engine results..." 
+              />
+              <p className="text-[9px] text-slate-400 font-bold px-1 italic">Optimal length: 150-160 characters. Current: <span className={(formData.metaDescription?.length || 0) > 160 ? 'text-red-500' : 'text-teal-500'}>{formData.metaDescription?.length || 0}</span></p>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[#0a6c75] uppercase tracking-[0.2em] ml-1">Meta Keywords (Comma separated)</label>
+              <input 
+                name="metaKeywords" 
+                value={formData.metaKeywords || ''} 
+                onChange={handleChange} 
+                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-500/20" 
+                placeholder="e.g. Switzerland, Alps, Travel Guide, Hiking" 
+              />
             </div>
           </div>
         </div>

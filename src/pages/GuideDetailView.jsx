@@ -129,10 +129,16 @@ const GuideDetailView = () => {
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen transition-colors duration-300">
       <Helmet>
-        <title>{guide.title} | The Beautiful India</title>
-        <meta name="description" content={guide.description || guide.title} />
-        <meta property="og:title" content={guide.title} />
+        <title>{guide.seoTitle || `${guide.title} | The Beautiful India`}</title>
+        <meta name="description" content={guide.metaDescription || guide.description || guide.title} />
+        {guide.metaKeywords && <meta name="keywords" content={guide.metaKeywords} />}
+        <meta property="og:title" content={guide.seoTitle || guide.title} />
+        <meta property="og:description" content={guide.metaDescription || guide.description || guide.title} />
         <meta property="og:image" content={guide.image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={guide.seoTitle || guide.title} />
+        <meta name="twitter:description" content={guide.metaDescription || guide.description || guide.title} />
+        <meta name="twitter:image" content={guide.image} />
       </Helmet>
 
       {/* Hero Section */}
