@@ -230,6 +230,56 @@ const AdminNewArticleUploadForm = () => {
     }
   }, [id]);
 
+  const handleAutofillSEO = () => {
+    // 1. Title Logic: [Working Title] | The Beautiful India
+    const seoTitle = formData.title ? `${formData.title} | The Beautiful India` : '';
+
+    // 2. Meta Description Logic (First paragraph, max 155 chars, end at last full sentence)
+    // Strip HTML first
+    const cleanText = formData.content.replace(/<[^>]*>?/gm, '').trim();
+    const firstParagraph = cleanText.split('\n')[0] || '';
+    let metaDescription = firstParagraph.substring(0, 158); // Buffer for sentence end
+    
+    if (metaDescription.length > 155) {
+      // Find the last sentence end before 155
+      const lastSentenceIdx = Math.max(
+        metaDescription.lastIndexOf('.', 155),
+        metaDescription.lastIndexOf('!', 155),
+        metaDescription.lastIndexOf('?', 155)
+      );
+      if (lastSentenceIdx !== -1) {
+        metaDescription = metaDescription.substring(0, lastSentenceIdx + 1);
+      } else {
+        metaDescription = metaDescription.substring(0, 155) + '...';
+      }
+    }
+
+    // 3. Keyword Extraction (Frequency-based filtering common words)
+    const stopwords = new Set(['the', 'and', 'this', 'that', 'with', 'from', 'your', 'will', 'have', 'been', 'which', 'about', 'there', 'their', 'they', 'what', 'when', 'where', 'who', 'how', 'than', 'into', 'most', 'some', 'more', 'also', 'only', 'very', 'each', 'other', 'them', 'then', 'than', 'these', 'those', 'must', 'were', 'both', 'such', 'just', 'made', 'take', 'many', 'good', 'well', 'much', 'back', 'even', 'through', 'under', 'while', 'over', 'between', 'before', 'after', 'used', 'using', 'been', 'being', 'does', 'done', 'here', 'into', 'just', 'like', 'made', 'make', 'once', 'only', 'onto', 'over', 'said', 'same', 'she', 'should', 'since', 'some', 'still', 'than', 'that', 'the', 'their', 'them', 'then', 'there', 'these', 'they', 'this', 'those', 'through', 'thus', 'too', 'under', 'until', 'upon', 'very', 'was', 'were', 'what', 'when', 'where', 'which', 'while', 'who', 'whom', 'why', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves']);
+    
+    const words = (formData.title + ' ' + cleanText).toLowerCase().match(/\b\w{4,}\b/g) || [];
+    const counts = {};
+    words.forEach(word => {
+      if (!stopwords.has(word)) {
+        counts[word] = (counts[word] || 0) + 1;
+      }
+    });
+
+    const sortedKeywords = Object.keys(counts)
+      .sort((a, b) => counts[b] - counts[a])
+      .slice(0, 10)
+      .join(', ');
+
+    setFormData(prev => ({
+      ...prev,
+      seoTitle,
+      metaDescription,
+      metaKeywords: sortedKeywords
+    }));
+    
+    setHasUnsavedChanges(true);
+  };
+
   const handleSubmit = async (e, targetStatus = null) => {
     if (e) e.preventDefault();
     setLoading(true);
@@ -588,9 +638,20 @@ const AdminNewArticleUploadForm = () => {
 
         {/* SEO & Social Metadata Card */}
         <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-8 md:p-12 space-y-8">
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-teal-500">search</span>
-            <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">SEO & Social Metadata</h3>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-teal-500">search</span>
+              <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">SEO & Social Metadata</h3>
+            </div>
+            <button 
+              type="button"
+              onClick={handleAutofillSEO}
+              className="px-4 py-2 bg-teal-50 dark:bg-teal-900/20 text-teal-600 border border-teal-100 dark:border-teal-900/30 rounded-2xl flex items-center gap-2 text-xs font-black hover:bg-teal-100 transition-all shadow-sm"
+              title="Auto-fill SEO based on Content"
+            >
+              <span className="material-symbols-outlined text-[18px]">magic_button</span>
+              Auto-generate from Content
+            </button>
           </div>
           
           <div className="grid grid-cols-1 gap-8">
