@@ -103,6 +103,21 @@ const AdminBikeTourDashboard = () => {
                 </div>
             )}
 
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
+                <div>
+                    <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Bicycle & Bike Expeditions</h1>
+                    <p className="text-slate-500 dark:text-slate-400 font-bold italic">Manage your premium cycling and motorcycling tour portfolio.</p>
+                </div>
+                <Link 
+                    to="/admin/bike-tours/new"
+                    className="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-105 transition-all w-fit"
+                >
+                    <span className="material-symbols-outlined text-[20px]">add_circle</span>
+                    Create New Expedition
+                </Link>
+            </div>
+
             {/* Performance Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
