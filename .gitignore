@@ -23,3 +23,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary and Large Data Files
+tmp*
+*.jsonContent
+*.txt
+!README.md
+!llms.txt
+!robots.txt
