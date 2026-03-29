@@ -17,6 +17,7 @@ const AdminSidebar = () => {
     { name: 'Categorization', path: '/admin/categorization', icon: 'category' },
     { name: 'Themes', path: '/admin/themes', icon: 'palette' },
     { name: 'Chatbot Flow', path: '/admin/chatbot-flow', icon: 'smart_toy' },
+    { name: 'Support & Bot Info', path: '/admin/support', icon: 'contact_support' },
     { name: 'Financials', path: '/referral/dashboard', icon: 'payments' },
   ];
 

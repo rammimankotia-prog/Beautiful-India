@@ -60,7 +60,7 @@ const AdminChatbotFlow = () => {
   const addStep = () => {
     setFlowSteps([
       ...flowSteps, 
-      { id: Date.now(), questionText: "New Question...", options: [], type: 'text', required: true, mappedField: '' }
+      { id: Date.now(), questionText: "New Question...", options: [], type: 'text', required: true, mappedField: '', action: 'NONE' }
     ]);
   };
 
@@ -155,7 +155,19 @@ const AdminChatbotFlow = () => {
                             <option value="userInterest">Interests</option>
                             <option value="budget">Budget Tier</option>
                             <option value="travelers">Head Count</option>
+                            <option value="duration">Travel Duration</option>
                           </select>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-3">
+                            <label className="text-[9px] font-black text-primary uppercase tracking-[0.2em] ml-1">Intelligent Action</label>
+                            <select value={step.action || 'NONE'} onChange={(e) => handleFlowFieldChange(index, 'action', e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-xs font-black uppercase tracking-widest appearance-none cursor-pointer text-primary">
+                                <option value="NONE">No Action</option>
+                                <option value="RECOMMEND_TOURS">Suggest Flagship Tours</option>
+                                <option value="SAVE_LEAD">Save Priority Lead</option>
+                                <option value="FINISH">End Conversation</option>
+                            </select>
                         </div>
                       </div>
                       {step.type === 'options' && (

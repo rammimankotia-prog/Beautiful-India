@@ -2,15 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
+import { calculateTourMatches } from '../utils/matchmaking';
 
-/**
- * Auto-generated from: bharatbot_recommended_tours_view/code.html
- * Group: ai | Path: /bharatbot/recommendations
- */
 const BharatBotRecommendedToursView = () => {
     const location = useLocation();
     const capturedData = location.state || {};
-    const { userName = 'Explorer', userInterest = 'Adventure', budget = 'Standard', travelers = '2' } = capturedData;
+    const { userName = 'Explorer', userInterest = 'Adventure' } = capturedData;
     const [recommendedTours, setRecommendedTours] = useState([]);
     const [loading, setLoading] = useState(true);
     const { formatPrice } = useCurrency();
@@ -41,12 +38,8 @@ const BharatBotRecommendedToursView = () => {
                 // Filter out paused/draft
                 const activeTours = allToursList.filter(t => t.status !== 'paused' && t.status !== 'draft');
 
-                // Find tours that match the interest (case-insensitive) or just take first 3 if none match
-                const matches = activeTours.filter(t =>
-                    t.nature?.toLowerCase().includes(userInterest.toLowerCase()) ||
-                    t.theme?.toLowerCase().includes(userInterest.toLowerCase()) ||
-                    t.title?.toLowerCase().includes(userInterest.toLowerCase())
-                );
+                // Use the Intelligent Matchmaking Engine
+                const matches = calculateTourMatches(capturedData, activeTours);
 
                 setRecommendedTours(matches.length > 0 ? matches : activeTours.slice(0, 3));
                 setLoading(false);
@@ -56,95 +49,91 @@ const BharatBotRecommendedToursView = () => {
             }
         };
         fetchRecommendedTours();
-    }, [userInterest]);
+    }, [capturedData]);
 
     return (
-        <div data-page="bharatbot_recommended_tours_view">
-            <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-                <div className="layout- flex h-full grow flex-col">
-                    {/* Navigation Bar */}
+        <div data-page="bharatbot_recommended_tours_view" className="bg-[#f8fafc] dark:bg-slate-950 min-h-screen py-12 px-4">
+            <div className="max-w-6xl mx-auto space-y-12">
+                {/* Header Section */}
+                <div className="text-center space-y-4 animate-in fade-in slide-in-from-top-4 duration-700">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">
+                        <span className="material-symbols-outlined text-sm">auto_awesome</span> Intelligent Matching Complete
+                    </div>
+                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-none">
+                        Curated for {userName}
+                    </h1>
+                    <p className="text-slate-500 dark:text-slate-400 font-bold italic text-lg">
+                        We've analyzed our flagship catalog to find your perfect Indian expedition.
+                    </p>
+                </div>
 
-                    {/* Main Content Area (Chat Style) */}
-                    <main className="flex-1 flex flex-col   w-full px-4 py-8">
-                        <div className="flex flex-col gap-8">
-                            {/* Chat Header */}
-                            <div className="text-center space-y-2">
-                                <h1 className="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-extrabold tracking-tight">Bharat Bot: Your Personalized Recommendations</h1>
-                                <p className="text-slate-500 dark:text-slate-400">Based on your recent travel survey and interests</p>
-                            </div>
-                            {/* Bot Message */}
-                            <div className="flex items-start gap-4">
-                                <div className="bg-primary/10 rounded-full p-2 shrink-0">
-                                    <span className="material-symbols-outlined text-primary">smart_toy</span>
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-20 gap-4">
+                        <div className="size-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                        <p className="text-slate-400 font-black uppercase tracking-widest text-xs">Finalizing Rankings...</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {recommendedTours.map((tour, index) => (
+                            <Link 
+                                key={tour.id} 
+                                to={`/tour/${tour.id}`} 
+                                className="group bg-white dark:bg-slate-900 rounded-[32px] overflow-hidden shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 transition-all hover:-translate-y-2 hover:shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-700"
+                                style={{ animationDelay: `${index * 150}ms` }}
+                            >
+                                <div className="h-64 relative overflow-hidden">
+                                    <img src={tour.image} alt={tour.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                    <div className="absolute top-4 left-4 flex gap-2">
+                                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm">
+                                            <span className="material-symbols-outlined text-sm text-primary fill-primary">verified</span>
+                                            <span className="text-[10px] font-black text-slate-900 tracking-widest uppercase">{tour.matchScore}% Match</span>
+                                        </div>
+                                    </div>
+                                    <div className="absolute bottom-4 left-4 right-4">
+                                        <p className="text-white/80 text-[10px] font-black uppercase tracking-[0.2em] mb-1">{tour.nature || tour.theme}</p>
+                                        <h3 className="text-xl font-black text-white leading-tight">{tour.title}</h3>
+                                    </div>
                                 </div>
-                                <div className="flex flex-col gap-2 ">
-                                    <div className="bg-white dark:bg-slate-800 border border-primary/10 shadow-sm rounded-xl rounded-tl-none p-5">
-                                        <p className="text-slate-700 dark:text-slate-200 leading-relaxed">
-                                            Great to meet you, <strong>{userName}</strong>! Based on your preference for <strong>{userInterest}</strong> and your budget for a <strong>{budget}</strong> experience for <strong>{travelers}</strong> traveler(s), I've curated these exclusive tour packages just for you. Which one sparks your wanderlust?
+                                <div className="p-6 space-y-6">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Starting from</p>
+                                            <p className="text-2xl font-black text-primary">{formatPrice(tour.price || tour.pricing?.perPrice, true)}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Duration</p>
+                                            <p className="text-lg font-black text-slate-800 dark:text-slate-100">{tour.duration}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
+                                        <span className="material-symbols-outlined text-primary">psychology</span>
+                                        <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 italic">
+                                            Matches your preference for <span className="text-primary font-black uppercase">{userInterest}</span>
                                         </p>
                                     </div>
-                                    <span className="text-xs text-slate-400 font-medium ml-1">Bharat Bot • Just now</span>
-                                </div>
-                            </div>
-
-                            {loading ? (
-                                <div className="text-center py-20 text-slate-400 font-bold">Bharat Bot is curating your matches...</div>
-                            ) : (
-                                /* Horizontal Carousel */
-                                <div className="relative w-full overflow-hidden">
-                                    <div className="flex overflow-x-auto gap-6 pb-6 scrollbar-hide snap-x px-2">
-                                        {recommendedTours.map(tour => {
-                                            const detailUrl = `/tour/${tour.id}`;
-                                            
-                                            return (
-                                            <Link key={tour.id} to={detailUrl} className="min-w-[320px] max-w-[320px] snap-center bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md border border-primary/5 hover:shadow-xl transition-shadow group block">
-                                                <div className="h-48 w-full bg-slate-200 relative overflow-hidden">
-                                                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={tour.image} alt={tour.title} />
-                                                    {tour.popular && (
-                                                        <div className="absolute top-3 left-3">
-                                                            <span className="bg-primary/90 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Bestseller</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="p-5 flex flex-col gap-3">
-                                                    <div>
-                                                        <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100 truncate">{tour.title}</h3>
-                                                        <p className="text-primary font-bold text-xl">{formatPrice(tour.price, true)} <span className="text-xs font-normal text-slate-400">/ person</span></p>
-                                                    </div>
-                                                    <div className="flex items-center gap-2 bg-primary/5 dark:bg-primary/20 p-2 rounded-lg">
-                                                        <span className="material-symbols-outlined text-primary text-sm">auto_awesome</span>
-                                                        <p className="text-[12px] font-semibold text-primary">Top Match for {userInterest}</p>
-                                                    </div>
-                                                    <div className="w-full border border-primary text-primary group-hover:bg-primary group-hover:text-white py-2 rounded-lg text-sm font-bold transition-all text-center">View Details</div>
-                                                </div>
-                                            </Link>
-                                            );
-                                        })}
+                                    <div className="flex items-center justify-center gap-2 py-4 bg-primary text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] shadow-lg shadow-primary/20 group-hover:bg-primary/90 transition-colors">
+                                        View Expedition <span className="material-symbols-outlined text-sm">arrow_forward</span>
                                     </div>
                                 </div>
-                            )}
+                            </Link>
+                        ))}
+                    </div>
+                )}
 
-                            {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-4">
-                                <Link className="w-full sm:w-auto min-w-[200px] h-14 px-8 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2" to="/tours">
-                                    <span>See All Matches</span>
-                                    <span className="material-symbols-outlined">chevron_right</span>
-                                </Link>
-                            </div>
-                        </div>
-                    </main>
+                {/* Secondary Actions */}
+                <div className="flex flex-col items-center gap-6 pt-12">
+                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Not quite what you're looking for?</p>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <Link to="/tours" className="px-10 py-4 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-black uppercase tracking-widest text-[10px] rounded-2xl hover:border-primary transition-all shadow-sm">
+                            Browse All Expeditions
+                        </Link>
+                        <Link to="/bharatbot" className="px-10 py-4 bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20">
+                            Restart Matchmaker
+                        </Link>
+                    </div>
                 </div>
             </div>
-            <style dangerouslySetInnerHTML={{
-                __html: `
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-    }
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-` }} />
         </div>
     );
 };

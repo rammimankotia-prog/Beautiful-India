@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const BharatBotTourMatchmakerChatbot = () => {
@@ -9,7 +9,16 @@ const BharatBotTourMatchmakerChatbot = () => {
     const [step, setStep] = useState(1);
     const [capturedData, setCapturedData] = useState({});
     const [isBotTyping, setIsBotTyping] = useState(false);
-    const [typingText, setTypingText] = useState('');
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, isBotTyping, isAnalyzing]);
 
     useEffect(() => {
         // Fetch Flow
@@ -22,7 +31,7 @@ const BharatBotTourMatchmakerChatbot = () => {
                     setTimeout(() => {
                         setIsBotTyping(false);
                         setMessages([{ id: 1, sender: 'bot', text: data[0].questionText }]);
-                    }, 1500);
+                    }, 1200);
                 }
             })
             .catch(err => console.error("Error fetching chatflow:", err));
@@ -34,51 +43,29 @@ const BharatBotTourMatchmakerChatbot = () => {
             .catch(() => {});
     }, []);
 
-    const validateInput = (config, val) => {
-        if (config.required && !val) return "This field is required.";
-        if (config.type === 'email' && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(val)) return "Please enter a valid email address.";
-        if (config.type === 'phone' && !/^\d{10,}$/.test(val.replace(/\D/g,''))) return "Please enter a valid phone number.";
-        if (config.type === 'date') {
-            const date = new Date(val);
-            if (isNaN(date.getTime())) return "Please enter a valid date.";
-            if (date < new Date().setHours(0,0,0,0)) return "Date cannot be in the past.";
-        }
-        return null;
-    };
-
     const handleNextStep = (text, userChoice = null) => {
         const userInput = userChoice || text;
+        if (!userInput) return;
+
         const currentStepConfig = flowSteps[step - 1];
-
-        const error = validateInput(currentStepConfig || {}, userInput);
-        if (error) {
-            alert(error);
-            return;
-        }
-
         const newMessages = [...messages, { id: Date.now(), sender: 'user', text: userInput }];
         setMessages(newMessages);
         setIsBotTyping(true);
 
-        // Check if it's a manual Q&A match first (simple lexical match for now)
-        const manualMatch = manualQs.find(mq => mq.question.toLowerCase().includes(userInput.toLowerCase()) || userInput.toLowerCase().includes(mq.question.toLowerCase()));
-        
-        if (manualMatch) {
-            setTimeout(() => {
-                setIsBotTyping(false);
-                setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: manualMatch.answer }]);
-            }, 1500);
-            return;
-        }
-
         setTimeout(() => {
-            const currentStepConfig = flowSteps[step - 1];
             let newData = { ...capturedData };
-            
             if (currentStepConfig?.mappedField) {
                 newData[currentStepConfig.mappedField] = userInput;
             }
             setCapturedData(newData);
+
+            // Check for triggered action
+            if (currentStepConfig?.action === 'RECOMMEND_TOURS') {
+                setIsBotTyping(false);
+                setIsAnalyzing(true);
+                handleViewRecommendations(newData);
+                return;
+            }
 
             let nextStepNum = step + 1;
             if (nextStepNum <= flowSteps.length) {
@@ -93,76 +80,76 @@ const BharatBotTourMatchmakerChatbot = () => {
                     setIsBotTyping(false);
                     setStep(nextStepNum);
                     setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: botResponse }]);
-                 }, 1000);
+                 }, 800);
             } else {
                 setIsBotTyping(false);
             }
         }, 500);
     };
 
-    const handleViewRecommendations = async () => {
-        // Submit Lead to Backend
-        try {
-            // Mocked for static site
-            console.log('Lead submitted (mock):', {
-                ...capturedData,
-                source: 'Bharat Bot',
-                timestamp: new Date().toISOString()
-            });
-        } catch (error) {
-            console.error("Error submitting lead:", error);
-        }
-
-        // Navigate with state
-        navigate('/bharatbot/recommendations', { state: capturedData });
+    const handleViewRecommendations = async (finalData) => {
+        // Intelligence Loop
+        setTimeout(() => {
+            navigate('/bharatbot/recommendations', { state: finalData || capturedData });
+        }, 3500);
     };
 
     return (
-        <div data-page="bharatbot_tour_matchmaker_chatbot">
+        <div data-page="bharatbot_tour_matchmaker_chatbot" className="bg-[#fdfcfb] dark:bg-slate-950 min-h-screen">
             <div className="layout- flex h-full grow flex-col">
-                <main className="flex-1 flex justify-center py-10 px-4 bg-sand-50 dark:bg-slate-900/50">
-                    <div className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-primary/10 h-[700px]">
-                        {/* Chat Header */}
-                        <div className="bg-primary px-8 py-6 flex items-center justify-between text-white">
-                            <div className="flex items-center gap-4">
-                                <div className="size-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm border border-white/30">
-                                    <span className="material-symbols-outlined text-3xl">smart_toy</span>
+                <main className="flex-1 flex justify-center items-center py-6 px-4 md:py-12">
+                    <div className="w-full max-w-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl rounded-[40px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] flex flex-col overflow-hidden border border-white/40 dark:border-slate-800/40 h-[750px] relative">
+                        
+                        {/* Premium Header */}
+                        <div className="px-10 py-8 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/50">
+                            <div className="flex items-center gap-5">
+                                <div className="relative">
+                                    <div className="size-14 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/20 rotate-3 transition-transform hover:rotate-0">
+                                        <span className="material-symbols-outlined text-3xl text-white">explore</span>
+                                    </div>
+                                    <div className="absolute -bottom-1 -right-1 size-4 bg-green-500 rounded-full border-4 border-white dark:border-slate-900"></div>
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-bold tracking-tight">Bharat Bot</h2>
-                                    <p className="text-white/80 text-[10px] flex items-center gap-1 uppercase font-black tracking-widest">
-                                        <span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block animate-pulse"></span> Online
-                                    </p>
+                                    <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none mb-1.5">Bharat Bot</h2>
+                                    <div className="flex items-center gap-2">
+                                        <div className="flex gap-0.5">
+                                            {[1,2,3,4,5].map(i => <span key={i} className="material-symbols-outlined text-[10px] text-amber-400 fill-amber-400">star</span>)}
+                                        </div>
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Specialist Curator</span>
+                                    </div>
                                 </div>
                             </div>
+                            <Link to="/tours" className="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-primary transition-colors">
+                                <span className="material-symbols-outlined">close</span>
+                            </Link>
                         </div>
 
-                        {/* Progress Bar */}
-                        <div className="px-8 py-4 border-b border-slate-50 dark:border-slate-800">
-                            <div className="flex justify-between items-center mb-1.5">
-                                <p className="text-primary font-black text-[10px] uppercase tracking-widest">Matching Progress</p>
-                                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Step {step} of {Math.max(4, flowSteps.length)}</p>
-                            </div>
-                            <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                                <div className="bg-primary h-full transition-all duration-700 ease-out" style={{ width: `${(step/Math.max(4, flowSteps.length))*100}%` }}></div>
-                            </div>
+                        {/* Progress Tracker */}
+                        <div className="px-10 py-5 bg-slate-50/30 dark:bg-slate-800/20 border-b border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
+                             <div className="flex gap-2">
+                                {[...Array(Math.max(4, flowSteps.length))].map((_, i) => (
+                                    <div key={i} className={`h-1 rounded-full transition-all duration-700 ${i < step ? 'w-8 bg-primary' : 'w-4 bg-slate-200 dark:bg-slate-800'}`}></div>
+                                ))}
+                             </div>
+                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Matching Module 1.0</span>
                         </div>
 
-                        {/* Chat Area */}
-                        <div className="flex-1 p-6 space-y-6 overflow-y-auto bg-slate-50/30 dark:bg-slate-900/30">
+                        {/* Chat Canvas */}
+                        <div className="flex-1 p-8 space-y-8 overflow-y-auto scroll-smooth custom-scrollbar">
                             {messages.map(msg => (
-                                <div key={msg.id} className={`flex items-end gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                                    <div className={`size-8 rounded-full flex items-center justify-center shrink-0 ${msg.sender === 'bot' ? 'bg-primary/10 text-primary' : 'bg-sunset/10 text-sunset'}`}>
-                                        <span className="material-symbols-outlined text-sm">{msg.sender === 'bot' ? 'smart_toy' : 'person'}</span>
+                                <div key={msg.id} className={`flex items-start gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+                                    <div className={`size-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
+                                        msg.sender === 'bot' 
+                                        ? 'bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-primary' 
+                                        : 'bg-primary text-white'
+                                    }`}>
+                                        <span className="material-symbols-outlined text-xl">{msg.sender === 'bot' ? 'smart_toy' : 'person'}</span>
                                     </div>
-                                    <div className={`flex flex-col gap-1 max-w-[80%]`}>
-                                        <span className={`text-[9px] font-black text-slate-400 uppercase tracking-widest ${msg.sender === 'user' ? 'text-right' : 'ml-1'}`}>
-                                            {msg.sender === 'bot' ? 'Bharat Bot' : 'You'}
-                                        </span>
-                                        <div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm border border-primary/5 ${
+                                    <div className={`flex flex-col gap-2 max-w-[80%]`}>
+                                        <div className={`p-5 rounded-[24px] text-[15px] leading-relaxed shadow-sm transition-all hover:shadow-md ${
                                             msg.sender === 'bot' 
-                                            ? 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-bl-none' 
-                                            : 'bg-primary text-white rounded-br-none font-medium'
+                                            ? 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-none border border-slate-100 dark:border-slate-700/50' 
+                                            : 'bg-slate-900 border-none text-white rounded-tr-none font-medium'
                                         }`}>
                                             {msg.text}
                                         </div>
@@ -171,11 +158,11 @@ const BharatBotTourMatchmakerChatbot = () => {
                             ))}
 
                             {isBotTyping && (
-                                <div className="flex items-end gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                    <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                        <span className="material-symbols-outlined text-sm animate-bounce">smart_toy</span>
+                                <div className="flex items-start gap-4 animate-in fade-in duration-300">
+                                    <div className="size-10 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shrink-0">
+                                        <span className="material-symbols-outlined text-xl text-primary animate-pulse">smart_toy</span>
                                     </div>
-                                    <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl rounded-bl-none shadow-sm border border-primary/5 flex gap-1">
+                                    <div className="bg-white dark:bg-slate-800 p-5 rounded-[24px] rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700/50 flex gap-1.5">
                                         <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                                         <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                                         <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce"></div>
@@ -183,67 +170,71 @@ const BharatBotTourMatchmakerChatbot = () => {
                                 </div>
                             )}
 
-                            {/* Dynamic Options Area */}
-                            {flowSteps.length > 0 && Math.min(step, flowSteps.length) === step && (!flowSteps[step-1].options || flowSteps[step-1].options.length === 0) && (
-                                <div className="ml-11 flex flex-col gap-3">
-                                    <input 
-                                        type={flowSteps[step-1].type || 'text'}
-                                        className="bg-white dark:bg-slate-800 border-2 border-primary/10 rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary shadow-sm"
-                                        placeholder={`Enter your ${flowSteps[step-1].mappedField || 'answer'}...`}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter' && e.target.value) {
-                                                handleNextStep(e.target.value);
-                                                e.target.value = '';
-                                            }
-                                        }}
-                                    />
-                                    <p className="text-[10px] text-slate-400 italic">Press Enter to continue</p>
+                            {isAnalyzing && (
+                                <div className="flex flex-col items-center justify-center py-10 gap-6 animate-in zoom-in-95 duration-700">
+                                    <div className="relative">
+                                        <div className="size-24 rounded-full border-4 border-primary/10 border-t-primary animate-spin"></div>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-3xl text-primary animate-bounce">auto_awesome</span>
+                                        </div>
+                                    </div>
+                                    <div className="text-center space-y-2">
+                                        <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest">Analyzing Expedition Catalog</h3>
+                                        <p className="text-sm text-slate-400 font-bold italic">Cross-referencing {capturedData.userInterest || 'adventure'} archetypes with your preferences...</p>
+                                    </div>
                                 </div>
                             )}
-
-                            {flowSteps.length > 0 && step < flowSteps.length && flowSteps[step-1].options.length > 0 && (
-                                <div className="flex flex-wrap gap-3 ml-11">
-                                    {flowSteps[step-1].options.map(choice => (
-                                        <button 
-                                            key={choice}
-                                            onClick={() => handleNextStep('', choice)}
-                                            className="px-6 py-2.5 rounded-full bg-white dark:bg-slate-800 border-2 border-primary/20 text-primary text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm"
-                                        >
-                                            {choice}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-
-                            {flowSteps.length > 0 && step === flowSteps.length && flowSteps[step-1].options.length > 0 && (
-                                <div className="ml-11">
-                                    <button 
-                                        onClick={handleViewRecommendations}
-                                        className="flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-opacity shadow-lg"
-                                    >
-                                        {flowSteps[step-1].options[0]} <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                                    </button>
-                                </div>
-                            )}
+                            <div ref={messagesEndRef} />
                         </div>
 
-                        {/* Chat Footer */}
-                        <div className="p-6 border-t border-slate-50 dark:border-slate-800 bg-white dark:bg-slate-900">
-                            <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 p-2 rounded-xl">
-                                <input 
-                                    className="flex-1 bg-transparent border-none focus:ring-0 text-sm placeholder:text-slate-400 font-medium" 
-                                    placeholder="Type a message..." 
-                                    type="text"
-                                    disabled={step > 0}
-                                />
-                                <button disabled={step > 0} className="bg-primary text-white size-10 rounded-lg flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-50">
-                                    <span className="material-symbols-outlined text-xl">send</span>
-                                </button>
-                            </div>
+                        {/* Interactive Zone */}
+                        <div className="p-8 border-t border-slate-100 dark:border-slate-800/50 bg-white/50 dark:bg-slate-900/50">
+                            {flowSteps.length > 0 && Math.min(step, flowSteps.length) === step && !isAnalyzing && (
+                                <div className="space-y-4">
+                                    {(!flowSteps[step-1].options || flowSteps[step-1].options.length === 0) ? (
+                                        <div className="relative group">
+                                            <input 
+                                                autoFocus
+                                                type={flowSteps[step-1].type || 'text'}
+                                                className="w-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 pr-16 text-sm font-bold shadow-sm focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none"
+                                                placeholder={`Type your ${flowSteps[step-1].mappedField || 'answer'}...`}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' && e.target.value) {
+                                                        handleNextStep(e.target.value);
+                                                        e.target.value = '';
+                                                    }
+                                                }}
+                                            />
+                                            <button className="absolute right-4 top-1/2 -translate-y-1/2 size-10 bg-primary text-white rounded-2xl flex items-center justify-center hover:scale-105 transition-transform">
+                                                <span className="material-symbols-outlined">arrow_forward</span>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-wrap gap-2 justify-center">
+                                            {flowSteps[step-1].options.map(choice => (
+                                                <button 
+                                                    key={choice}
+                                                    onClick={() => handleNextStep('', choice)}
+                                                    className="px-8 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black uppercase tracking-widest hover:border-primary hover:bg-primary/5 transition-all shadow-sm active:scale-95"
+                                                >
+                                                    {choice}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </main>
             </div>
+
+            <style dangerouslySetInnerHTML={{ __html: `
+                .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+                .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; }
+            `}} />
         </div>
     );
 };

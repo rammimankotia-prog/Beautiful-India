@@ -27,6 +27,7 @@ const AdminCategorizationSettings = lazy(() => import('./pages/AdminCategorizati
 const AdminThemeManagement = lazy(() => import('./pages/AdminThemeManagement'));
 const AdminTrainQueries = lazy(() => import('./pages/AdminTrainQueries'));
 const AdminUserManagement = lazy(() => import('./pages/AdminUserManagement'));
+const AdminSupportSettings = lazy(() => import('./pages/AdminSupportSettings'));
 const BookingCancellationConfirmationEmail = lazy(() => import('./pages/BookingCancellationConfirmationEmail'));
 const BookingCancellationRequestForm = lazy(() => import('./pages/BookingCancellationRequestForm'));
 const BookingConfirmationSuccess1 = lazy(() => import('./pages/BookingConfirmationSuccess1'));
@@ -137,6 +138,7 @@ export const routes = [
       { path: 'bike-tours', element: Loadable(AdminBikeTourDashboard)() },
       { path: 'bike-tours/new', element: Loadable(AdminBikeTourForm)() },
       { path: 'bike-tours/edit/:id', element: Loadable(AdminBikeTourForm)() },
+      { path: 'support', element: Loadable(AdminSupportSettings)() },
     ]
   },
   { path: '/emails/cancel-confirm', element: Loadable(BookingCancellationConfirmationEmail)() },
