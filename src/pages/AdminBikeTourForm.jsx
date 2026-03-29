@@ -250,6 +250,16 @@ const AdminBikeTourForm = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Type *</label>
+                            <select 
+                                name="tourType" value={formData.tourType} onChange={handleChange} required
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                            >
+                                <option value="Bicycle">Bicycle / Cycling Tour</option>
+                                <option value="Bike">Motorbike / Bike Tour</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Country *</label>
                             <input 
                                 type="text" name="country" value={formData.country} onChange={handleChange} required

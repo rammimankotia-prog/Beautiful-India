@@ -177,7 +177,7 @@ const BikeTourListingPage = () => {
                                                 onClick={() => updateFilter('tourType', filters.tourType === type ? '' : type)}
                                                 className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter border transition-all ${filters.tourType === type ? 'bg-slate-900 text-white border-slate-900' : 'border-slate-200 text-slate-400 hover:border-primary'}`}
                                             >
-                                                {type}
+                                                {type === 'Bicycle' ? 'Cycling' : 'Motorbike'}
                                             </button>
                                         ))}
                                     </div>

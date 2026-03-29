@@ -5,6 +5,7 @@ const AdminBikeTourDashboard = () => {
     const [tours, setTours] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('All');
+    const [typeFilter, setTypeFilter] = useState('All');
     const [toastMsg, setToastMsg] = useState('');
 
     const showToast = (msg) => {
@@ -65,11 +66,17 @@ const AdminBikeTourDashboard = () => {
     };
 
     const filteredTours = tours.filter(tour => {
-        if (activeTab === 'All') return true;
-        if (activeTab === 'Active') return tour.status === 'active';
-        if (activeTab === 'Drafts') return tour.status === 'draft';
-        if (activeTab === 'Paused') return tour.status === 'paused';
-        return true;
+        // Status Filter
+        let passesStatus = true;
+        if (activeTab === 'Active') passesStatus = tour.status === 'active';
+        else if (activeTab === 'Drafts') passesStatus = tour.status === 'draft';
+        else if (activeTab === 'Paused') passesStatus = tour.status === 'paused';
+
+        // Type Filter
+        let passesType = true;
+        if (typeFilter !== 'All') passesType = tour.tourType === typeFilter;
+
+        return passesStatus && passesType;
     });
 
     return (
@@ -100,6 +107,15 @@ const AdminBikeTourDashboard = () => {
                     >
                         <span className="material-symbols-outlined">refresh</span>
                     </button>
+                    <select 
+                        value={typeFilter}
+                        onChange={(e) => setTypeFilter(e.target.value)}
+                        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-600 outline-none focus:border-primary shadow-sm"
+                    >
+                        <option value="All">All Types</option>
+                        <option value="Bicycle">Bicycle Tour</option>
+                        <option value="Bike">Motorbike Tour</option>
+                    </select>
                     <Link to="/admin/bike-tours/new" className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-black hover:bg-primary-dark transition-all text-sm shadow-lg shadow-primary/20">
                         <span className="material-symbols-outlined font-black">add</span>
                         New Bike Tour
@@ -136,6 +152,7 @@ const AdminBikeTourDashboard = () => {
                                 <thead>
                                     <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
                                         <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Tour Details</th>
+                                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Type</th>
                                         <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Pricing Model</th>
                                         <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Difficulty</th>
                                         <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
@@ -159,6 +176,13 @@ const AdminBikeTourDashboard = () => {
                                                         </span>
                                                     </div>
                                                 </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-widest ${
+                                                    tour.tourType === 'Bike' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-700'
+                                                }`}>
+                                                    {tour.tourType || 'Bicycle'}
+                                                </span>
                                             </td>
                                             <td className="px-8 py-6">
                                                 <div className="flex flex-col gap-1">
