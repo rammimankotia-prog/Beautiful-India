@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 
 const BharatDarshanBanner = () => {
   return (
-    <section className="hero-banner" style={{
+    <section className="hero-banner hidden md:flex" style={{
       position: 'relative',
       width: 'calc(100% + 160px)',
       marginLeft: '-80px',
       minHeight: 520,
       background: 'linear-gradient(135deg, #f0fdf9 0%, #e6f7f5 55%, #fef9f0 100%)',
-      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',

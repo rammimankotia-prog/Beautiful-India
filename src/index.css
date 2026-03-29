@@ -169,3 +169,35 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+/* Mobile Hamburger Button Animation */
+.hamburger-btn {
+  @apply relative w-10 h-10 flex flex-col justify-center items-center gap-1.5 focus:outline-none z-50;
+}
+
+.hamburger-line {
+  @apply block w-6 h-0.5 bg-slate-200 rounded-full transition-all duration-300 ease-in-out;
+}
+
+.hamburger-btn.open .hamburger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger-btn.open .hamburger-line:nth-child(2) {
+  @apply opacity-0;
+}
+
+.hamburger-btn.open .hamburger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Glassmorphism Panel for Mobile Menu */
+.glass-panel {
+  @apply bg-slate-900/60 backdrop-blur-3xl border-l border-white/5;
+}
+
+/* Global Responsive Utilities */
+@media (max-width: 767px) {
+  .hero-banner {
+    display: none !important;
+  }
+}

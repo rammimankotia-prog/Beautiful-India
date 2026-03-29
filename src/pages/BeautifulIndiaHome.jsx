@@ -43,7 +43,7 @@ const BeautifulIndiaHome = () => {
             </Helmet>
 
             {/* ── Hero (TravelTriangle-style) ──────────────────────────── */}
-            <div className="hero-banner" style={{
+            <div className="hero-banner hidden md:flex" style={{
                 position: 'relative',
                 minHeight: 500,
                 borderRadius: 20,
@@ -51,7 +51,6 @@ const BeautifulIndiaHome = () => {
                 marginBottom: 56,
                 background: 'linear-gradient(135deg, #f0fdf9 0%, #e6f7f5 50%, #fef9f0 100%)',
                 boxShadow: '0 8px 40px rgba(0,109,119,0.12)',
-                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
             }}>

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useAuth } from '../context/AuthContext';
 import SignInModal from './SignInModal';
+import settingsData from '../data/settings.json';
 
 const Header = () => {
     const location = useLocation();
@@ -14,6 +15,19 @@ const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isToursDropdownOpen, setIsToursDropdownOpen] = useState(false);
     const [isMobileToursOpen, setIsMobileToursOpen] = useState(false);
+    const [settings, setSettings] = useState(settingsData);
+
+    useEffect(() => {
+        // Fetch latest settings from API
+        const fetchSettings = async () => {
+             try {
+                 const res = await fetch(`${import.meta.env.BASE_URL}api-save-settings.php`);
+                 const data = await res.json();
+                 if (data && data.whatsapp) setSettings(data);
+             } catch (err) {}
+        };
+        fetchSettings();
+    }, []);
 
     const navLinks = [
         { name: 'Home', path: '/' },
@@ -190,7 +204,7 @@ const Header = () => {
                 />
                 
                 {/* Content */}
-                <div className={`absolute right-0 top-0 bottom-0 w-[280px] glass-panel shadow-[-20px_0_50px_rgba(0,0,0,0.3)] transition-transform duration-500 ease-out p-0 flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                <div className={`absolute right-0 top-0 bottom-0 w-[280px] glass-panel shadow-[-20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-out p-0 flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     
                     {/* Drawer Header */}
                     <div className="flex justify-between items-center p-6 border-b border-white/5 bg-white/5">
@@ -325,11 +339,11 @@ const Header = () => {
                         <div className="flex flex-col gap-3">
                             <div className="flex items-center gap-3 text-slate-400">
                                 <span className="material-symbols-outlined text-[18px]">call</span>
-                                <span className="text-[13px] font-bold">+91 60051 59433</span>
+                                <span className="text-[13px] font-bold">{settings.whatsapp}</span>
                             </div>
                             <div className="flex items-center gap-3 text-slate-400">
                                 <span className="material-symbols-outlined text-[18px]">mail</span>
-                                <span className="text-[13px] font-bold truncate">info@beautifulindia.com</span>
+                                <span className="text-[13px] font-bold truncate">{settings.supportEmail}</span>
                             </div>
                         </div>
                     </div>
