@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import QueryModal from '../components/QueryModal';
+import ConsultSpecialistModal from '../components/ConsultSpecialistModal';
 
 const BikeTourDetailView = () => {
     const { slug } = useParams();
@@ -8,6 +9,7 @@ const BikeTourDetailView = () => {
     const [loading, setLoading] = useState(true);
     const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('overview');
+    const [relatedTours, setRelatedTours] = useState([]);
 
     const fetchTour = async () => {
         setLoading(true);
@@ -29,6 +31,13 @@ const BikeTourDetailView = () => {
                         console.error('Schema injection failed', e);
                     }
                 }
+
+                // Fetch related tours (same type or destination)
+                const relatedRes = await fetch(`/api/v1/bike-tours?tourType=${data.tourType}`);
+                if (relatedRes.ok) {
+                    const relatedData = await relatedRes.json();
+                    setRelatedTours(relatedData.filter(t => t._id !== data._id).slice(0, 3));
+                }
             }
         } catch (error) {
             console.error('Error fetching bike tour:', error);
@@ -39,6 +48,7 @@ const BikeTourDetailView = () => {
 
     useEffect(() => {
         fetchTour();
+        window.scrollTo(0, 0);
         return () => {
             const schemaScript = document.getElementById('tour-schema');
             if (schemaScript) schemaScript.remove();
@@ -47,210 +57,244 @@ const BikeTourDetailView = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-                <div className="w-12 h-12 border-4 border-slate-200 border-t-primary rounded-full animate-spin"></div>
-                <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px]">Preparing your adventure...</p>
+            <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+                <div className="w-16 h-16 border-8 border-slate-100 border-t-primary rounded-full animate-spin"></div>
+                <p className="text-slate-400 font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Charting the course...</p>
             </div>
         );
     }
 
     if (!tour) {
         return (
-            <div className="text-center py-40 space-y-6">
-                <span className="material-symbols-outlined text-7xl text-slate-200">sentiment_dissatisfied</span>
-                <h2 className="text-3xl font-black text-slate-800">Tour Not Found</h2>
-                <Link to="/tours/bike-tours" className="inline-block px-8 py-3 bg-primary text-white rounded-full font-black uppercase text-xs tracking-widest">Back to Listings</Link>
+            <div className="text-center py-60 space-y-10">
+                <div className="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto">
+                    <span className="material-symbols-outlined text-6xl text-slate-200">explore</span>
+                </div>
+                <div className="space-y-4">
+                    <h2 className="text-4xl font-serif font-black text-slate-800">The Path is Missing</h2>
+                    <p className="text-slate-500 font-medium">This adventure is currently being re-charted.</p>
+                </div>
+                <Link to="/tours/bike-tours" className="inline-block px-12 py-5 bg-primary text-white rounded-full font-black uppercase text-xs tracking-[4px] shadow-2xl shadow-primary/30 hover:bg-slate-900 transition-all">Back to Fleet</Link>
             </div>
         );
     }
 
     return (
-        <div className="bg-white dark:bg-slate-950 min-h-screen pb-20">
-            {/* Gallery Section */}
-            <section className="max-w-[1400px] mx-auto px-6 pt-10 grid grid-cols-1 md:grid-cols-4 gap-4 h-[500px]">
-                <div className="md:col-span-2 h-full rounded-[32px] overflow-hidden shadow-2xl group relative">
-                    <img src={tour.mainImage} alt={tour.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                    <div className="absolute bottom-10 left-10 right-10">
-                        <span className="px-4 py-1.5 bg-primary text-white rounded-full text-[10px] font-black uppercase tracking-[4px] mb-4 inline-block">Featured Voyage</span>
-                        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight">{tour.title}</h1>
-                    </div>
-                </div>
-                <div className="hidden md:grid grid-cols-2 grid-rows-2 col-span-2 gap-4 h-full">
-                    {(tour.images?.slice(1, 5) || []).map((img, i) => (
-                        <div key={i} className="rounded-[24px] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 group relative">
-                            <img src={img} alt={`Gallery ${i}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+        <div className="bg-white dark:bg-slate-950 min-h-screen pb-40">
+            {/* Scroll Progress Bar */}
+            <div className="scroll-progress"></div>
+
+            {/* Premium Hero / Gallery */}
+            <section className="relative h-[85vh] overflow-hidden group">
+                <img 
+                    src={tour.mainImage} 
+                    alt={tour.title} 
+                    className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[3s] ease-out" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90"></div>
+                
+                <div className="absolute inset-x-0 bottom-0 py-20">
+                    <div className="max-w-[1400px] mx-auto px-10 space-y-8 animate-fade-up">
+                        <div className="flex gap-4">
+                            <span className="px-6 py-2 bg-primary text-white rounded-full text-[10px] font-black uppercase tracking-[6px] shadow-xl shadow-primary/20">
+                                {tour.tourType === 'Bike' ? 'Motorbike' : 'Cycling'}
+                            </span>
+                            <span className="px-6 py-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full text-[10px] font-black uppercase tracking-[6px]">
+                                {tour.duration}
+                            </span>
                         </div>
-                    ))}
-                    {(!tour.images || tour.images.length < 5) && [1,2,3,4].slice(tour.images?.length - 1 || 0).map(i => (
-                         <div key={i} className="rounded-[24px] bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-slate-300">
-                             <span className="material-symbols-outlined text-4xl">image</span>
-                         </div>
-                    ))}
+                        <h1 className="text-5xl md:text-8xl font-serif font-black text-white leading-[1.1] tracking-tighter max-w-4xl">
+                            {tour.title}
+                        </h1>
+                        <p className="text-white/60 text-xl font-medium tracking-[8px] uppercase">{tour.destination}</p>
+                    </div>
                 </div>
             </section>
 
             {/* Main Content Layout */}
-            <main className="max-w-[1400px] mx-auto px-6 mt-16 grid grid-cols-1 lg:grid-cols-3 gap-16">
-                {/* Left Side: Details */}
-                <div className="lg:col-span-2 space-y-16">
-                    {/* Tour Meta */}
-                    <div className="flex flex-wrap gap-8 items-center border-b border-slate-100 dark:border-slate-800 pb-10">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                                <span className="material-symbols-outlined">schedule</span>
+            <main className="max-w-[1400px] mx-auto px-10 mt-24">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
+                    {/* Left Side: Editorial Storytelling */}
+                    <div className="lg:col-span-2 space-y-24">
+                        {/* Highlights Grid */}
+                        <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div className="space-y-6">
+                                <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">The Vibe</h2>
+                                <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white leading-tight italic">
+                                    Conquer the terrain with <span className="text-primary italic">unrivaled style.</span>
+                                </h3>
                             </div>
-                            <div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Duration</p>
-                                <p className="text-sm font-black text-slate-800 dark:text-white uppercase">{tour.duration}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
-                                <span className="material-symbols-outlined">network_check</span>
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Difficulty</p>
-                                <p className="text-sm font-black text-slate-800 dark:text-white uppercase">{tour.difficulty || 'Moderate'}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                                <span className="material-symbols-outlined">directions_bike</span>
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tour Type</p>
-                                <p className="text-sm font-black text-slate-800 dark:text-white uppercase">{tour.tourType || 'Bicycle'}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Highlights Section */}
-                    {tour.highlights?.length > 0 && (
-                        <section className="space-y-8">
-                            <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">Experience <span className="text-primary italic">Highlights</span></h2>
-                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {tour.highlights.map((h, i) => (
-                                    <li key={i} className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900 p-6 rounded-[24px] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
-                                        <span className="material-symbols-outlined text-primary font-black">check_circle</span>
-                                        <p className="text-slate-600 dark:text-slate-300 font-bold leading-relaxed">{h}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        </section>
-                    )}
-
-                    {/* Main Description (HTML Article) */}
-                    <section className="space-y-8 prose dark:prose-invert max-w-none prose-h2:text-3xl prose-h2:font-black prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-p:font-medium">
-                        <div dangerouslySetInnerHTML={{ __html: tour.content }} />
-                    </section>
-
-                    {/* Equipment Section */}
-                    {tour.equipment?.length > 0 && (
-                        <section className="p-10 bg-slate-900 rounded-[40px] text-white space-y-10 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 opacity-10 blur-2xl">
-                                <span className="material-symbols-outlined text-[300px]">pedal_bike</span>
-                            </div>
-                            <h2 className="text-3xl font-black tracking-tight relative z-10">Professional <span className="text-primary">Gear</span> Included</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 relative z-10">
-                                {tour.equipment.map((item, i) => (
-                                    <div key={i} className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-primary">
-                                            <span className="material-symbols-outlined text-xl">verified</span>
+                            <div className="grid grid-cols-1 gap-6">
+                                {tour.highlights?.slice(0, 3).map((h, i) => (
+                                    <div key={i} className="flex gap-6 items-center p-6 bg-slate-50 dark:bg-slate-900/50 rounded-[32px] border border-slate-100 dark:border-slate-800 animate-fade-up" style={{ animationDelay: `${i * 100}ms` }}>
+                                        <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                                            <span className="material-symbols-outlined font-black">star</span>
                                         </div>
-                                        <span className="font-black uppercase tracking-widest text-xs">{item}</span>
+                                        <p className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-widest">{h}</p>
                                     </div>
                                 ))}
                             </div>
                         </section>
-                    )}
 
-                    {/* Places Covered */}
-                    {tour.coveredPlaces?.length > 0 && (
-                        <section className="space-y-8">
-                            <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">The <span className="text-primary italic">Route</span> We Cycle</h2>
-                            <div className="flex flex-wrap gap-4">
-                                {tour.coveredPlaces.map((place, i) => (
-                                    <React.Fragment key={i}>
-                                        <div className="px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
-                                            <p className="text-sm font-black text-slate-700 dark:text-slate-200">{place}</p>
-                                        </div>
-                                        {i < tour.coveredPlaces.length - 1 && (
-                                            <div className="flex items-center text-slate-300">
-                                                <span className="material-symbols-outlined">trending_flat</span>
-                                            </div>
-                                        )}
-                                    </React.Fragment>
+                        {/* Editorial Body */}
+                        <section className="article-content max-w-none">
+                            <div dangerouslySetInnerHTML={{ __html: tour.content }} />
+                        </section>
+
+                        {/* Interactive Itinerary / Tabs */}
+                        <section className="space-y-12">
+                            <div className="flex gap-10 border-b border-slate-100 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar">
+                                {['At a Glance', 'Inclusions', 'Equipment'].map((tab) => (
+                                    <button 
+                                        key={tab}
+                                        onClick={() => setActiveTab(tab.toLowerCase())}
+                                        className={`text-[10px] font-black uppercase tracking-[6px] pb-4 transition-all whitespace-nowrap ${activeTab === tab.toLowerCase() ? 'text-primary border-b-2 border-primary' : 'text-slate-300 hover:text-slate-900'}`}
+                                    >
+                                        {tab}
+                                    </button>
                                 ))}
                             </div>
-                        </section>
-                    )}
-                </div>
 
-                {/* Right Side: Sticky Booking Widget */}
-                <div className="lg:col-span-1">
-                    <div className="sticky top-24 bg-white dark:bg-slate-900 rounded-[40px] p-8 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-8">
-                        <div className="space-y-2">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[4px]">Private Experience</p>
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-4xl font-black text-slate-800 dark:text-white">₹{tour.pricing?.perPerson || 'Custom'}</span>
-                                <span className="text-slate-400 font-bold text-sm italic">per person</span>
-                            </div>
-                        </div>
-
-                        <div className="space-y-6">
-                            <div className="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-4">
-                                <div className="flex items-center gap-3 text-emerald-600">
-                                    <span className="material-symbols-outlined text-sm">bolt</span>
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Instant Confirmation Available</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-slate-500">
-                                    <span className="material-symbols-outlined text-sm">history_edu</span>
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Free Cancellation (24h Notice)</span>
-                                </div>
-                            </div>
-
-                            <button 
-                                onClick={() => setIsQueryModalOpen(true)}
-                                className="w-full py-5 bg-primary text-white rounded-[24px] font-black text-sm uppercase tracking-[2px] shadow-xl shadow-primary/30 hover:bg-black transition-all transform hover:-translate-y-1 active:translate-y-0"
-                            >
-                                Check Availability
-                            </button>
-
-                            <div className="text-center">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Connect with an Expert</p>
-                                <div className="flex justify-center gap-6 mt-4">
-                                    <a href="https://wa.me/91XXXXXXXXXX" className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm">
-                                        <i className="fa-brands fa-whatsapp text-lg"></i>
-                                    </a>
-                                    <a href="tel:+91XXXXXXXXXX" className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm">
-                                        <span className="material-symbols-outlined text-lg">call</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* What's Included Quick Look */}
-                        {tour.whatsIncluded?.length > 0 && (
-                            <div className="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-4">
-                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">What's Included</h4>
-                                <div className="grid grid-cols-2 gap-3">
-                                    {tour.whatsIncluded.slice(0, 4).map((item, i) => (
-                                        <div key={i} className="flex items-center gap-2 text-slate-500">
-                                            <span className="material-symbols-outlined text-[14px]">done</span>
-                                            <span className="text-[10px] font-bold uppercase tracking-tight">{item}</span>
+                            <div className="animate-fade-up">
+                                {activeTab === 'at a glance' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="p-10 bg-slate-900 rounded-[48px] text-white space-y-6">
+                                            <h4 className="text-2xl font-serif italic text-primary">The Route</h4>
+                                            <div className="space-y-6 pt-4">
+                                                {tour.coveredPlaces?.map((place, i) => (
+                                                    <div key={i} className="flex items-center gap-6">
+                                                        <span className="text-primary font-serif font-black text-2xl">0{i+1}</span>
+                                                        <span className="text-xs font-black uppercase tracking-[4px]">{place}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    ))}
+                                        <div className="p-10 bg-primary/5 rounded-[48px] space-y-6 border border-primary/10">
+                                            <h4 className="text-2xl font-serif italic text-primary">Essential Skills</h4>
+                                            <div className="space-y-4">
+                                                <p className="text-sm font-bold text-slate-600 dark:text-slate-300 leading-relaxed italic">
+                                                    This is a <span className="text-primary font-black uppercase tracking-widest px-2">{tour.difficulty}</span> voyage. Suitable for riders with intermediate to advanced skills who crave rugged beauty and physical challenge.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                {activeTab === 'inclusions' && (
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                        {tour.whatsIncluded?.map((item, i) => (
+                                            <div key={i} className="p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex items-center gap-4">
+                                                <span className="material-symbols-outlined text-emerald-500 font-black">check_circle</span>
+                                                <span className="text-[10px] font-black uppercase tracking-tighter text-slate-600 dark:text-slate-300">{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                {activeTab === 'equipment' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        {tour.equipment?.map((item, i) => (
+                                            <div key={i} className="flex justify-between items-center p-8 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+                                                <span className="text-xs font-black uppercase tracking-widest">{item}</span>
+                                                <span className="material-symbols-outlined text-primary">verified</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* Right Side: Floating High-Status Widget */}
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-24 glass-card rounded-[64px] p-12 space-y-12">
+                            <div className="space-y-4 border-b border-black/5 dark:border-white/5 pb-10">
+                                <p className="text-[10px] font-black text-primary uppercase tracking-[8px]">Availability Limited</p>
+                                <div className="flex flex-col">
+                                    <span className="text-6xl font-serif font-black text-slate-900 dark:text-white">₹{tour.pricing?.perPerson?.toLocaleString() || 'Custom'}</span>
+                                    <span className="text-slate-400 font-bold text-sm italic mt-2">Premium Individual Cabin / Ride</span>
                                 </div>
                             </div>
-                        )}
+
+                            <div className="space-y-10">
+                                <div className="space-y-6">
+                                    <div className="flex items-center gap-4 text-emerald-600">
+                                        <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-[14px] font-black">verified_user</span>
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Guaranteed Best Price</span>
+                                    </div>
+                                    <div className="flex items-center gap-4 text-slate-500">
+                                        <div className="w-8 h-8 bg-slate-50 rounded-full flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-[14px] font-black">history</span>
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Flexible Re-scheduling</span>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    onClick={() => setIsQueryModalOpen(true)}
+                                    className="w-full py-6 bg-slate-900 dark:bg-primary text-white rounded-full font-black text-sm uppercase tracking-[4px] shadow-2xl hover:bg-slate-800 dark:hover:bg-white dark:hover:text-primary transition-all group overflow-hidden relative"
+                                >
+                                    <span className="relative z-10">Initiate Inquiry</span>
+                                    <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+                                </button>
+
+                                <div className="text-center pt-6">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[4px] mb-6 underline decoration-primary/30 underline-offset-8">Talk to an Adventurer</p>
+                                    <div className="flex justify-center gap-10">
+                                        <a href="https://wa.me/916005159433" className="group flex flex-col items-center gap-2">
+                                            <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-xl group-hover:-translate-y-2">
+                                                <i className="fa-brands fa-whatsapp text-2xl"></i>
+                                            </div>
+                                            <span className="text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">WhatsApp</span>
+                                        </a>
+                                        <a href="tel:+916005159433" className="group flex flex-col items-center gap-2">
+                                            <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-xl group-hover:-translate-y-2">
+                                                <span className="material-symbols-outlined text-2xl font-black">call</span>
+                                            </div>
+                                            <span className="text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Call Instantly</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                {/* Related Voyages */}
+                {relatedTours.length > 0 && (
+                    <section className="mt-40 pt-40 border-t border-slate-100 dark:border-slate-800 space-y-16">
+                        <div className="flex justify-between items-end">
+                            <div className="space-y-4">
+                                <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Discover More</h2>
+                                <h3 className="text-5xl font-serif font-black leading-tight">Similar <span className="text-primary italic">Expeditions</span></h3>
+                            </div>
+                            <Link to="/tours/bike-tours" className="px-10 py-4 border border-slate-200 dark:border-slate-800 rounded-full text-[10px] font-black uppercase tracking-[4px] hover:bg-slate-900 hover:text-white transition-all">View All Voyages</Link>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                            {relatedTours.map((t, index) => (
+                                <Link 
+                                    key={t._id} 
+                                    to={`/tours/bike-tours/${t.slug}`} 
+                                    className="group space-y-6"
+                                >
+                                    <div className="aspect-[16/10] rounded-[40px] overflow-hidden shadow-xl group-hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] transition-all duration-700">
+                                        <img src={t.mainImage} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
+                                    </div>
+                                    <div className="space-y-2 px-4">
+                                        <p className="text-primary text-[10px] font-black uppercase tracking-[4px]">{t.destination}</p>
+                                        <h4 className="text-2xl font-serif font-black text-slate-800 dark:text-white group-hover:text-primary transition-colors">{t.title}</h4>
+                                        <p className="text-slate-400 font-black text-xs">₹{t.pricing?.perPerson?.toLocaleString() || 'Custom'}</p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
             </main>
 
-            {/* Query Modal */}
-            <QueryModal isOpen={isQueryModalOpen} onClose={() => setIsQueryModalOpen(false)} tourTitle={tour.title} />
+            {/* Consult Specialist Modal */}
+            <ConsultSpecialistModal isOpen={isQueryModalOpen} onClose={() => setIsQueryModalOpen(false)} tourTitle={tour.title} />
         </div>
     );
 };

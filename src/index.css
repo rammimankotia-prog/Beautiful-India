@@ -30,7 +30,7 @@
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
@@ -38,12 +38,21 @@
     }
   }
 
-  @keyframes zoom-in {
-    from {
-      transform: scale(1);
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
     }
-    to {
-      transform: scale(1.05);
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
     }
   }
 }

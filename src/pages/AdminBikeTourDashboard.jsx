@@ -6,7 +6,18 @@ const AdminBikeTourDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('All');
     const [typeFilter, setTypeFilter] = useState('All');
+    const [leads, setLeads] = useState([]);
     const [toastMsg, setToastMsg] = useState('');
+
+    const fetchLeads = async () => {
+        try {
+            const response = await fetch('/api-save-leads.php');
+            const data = await response.json();
+            setLeads(data || []);
+        } catch (error) {
+            console.error('Error fetching leads:', error);
+        }
+    };
 
     const showToast = (msg) => {
         setToastMsg(msg);
@@ -29,6 +40,7 @@ const AdminBikeTourDashboard = () => {
 
     useEffect(() => {
         fetchTours();
+        fetchLeads();
     }, []);
 
     const handleDelete = async (id) => {
@@ -91,35 +103,53 @@ const AdminBikeTourDashboard = () => {
                 </div>
             )}
 
-            {/* Header */}
-            <div className="flex flex-wrap justify-between items-center gap-6">
-                <div>
-                    <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2 flex items-center gap-3">
-                        <span className="material-symbols-outlined text-4xl">pedal_bike</span>
-                        Bicycle Tours
-                    </h1>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold italic">Manage your premium bicycle tour modules and cycling adventures.</p>
+            {/* Performance Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span className="material-symbols-outlined font-black">tour</span>
+                        </div>
+                        <span className="text-[10px] font-black text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-lg tracking-widest uppercase">Live</span>
+                    </div>
+                    <h3 className="text-3xl font-black text-slate-800 dark:text-white">{tours.length}</h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Total Expeditions</p>
                 </div>
-                <div className="flex items-center gap-4">
-                    <button 
-                        onClick={fetchTours}
-                        className="flex items-center justify-center w-10 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 hover:bg-slate-50 transition-all shadow-sm"
-                    >
-                        <span className="material-symbols-outlined">refresh</span>
-                    </button>
-                    <select 
-                        value={typeFilter}
-                        onChange={(e) => setTypeFilter(e.target.value)}
-                        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-600 outline-none focus:border-primary shadow-sm"
-                    >
-                        <option value="All">All Types</option>
-                        <option value="Bicycle">Bicycle Tour</option>
-                        <option value="Bike">Motorbike Tour</option>
-                    </select>
-                    <Link to="/admin/bike-tours/new" className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-black hover:bg-primary-dark transition-all text-sm shadow-lg shadow-primary/20">
-                        <span className="material-symbols-outlined font-black">add</span>
-                        New Bike Tour
-                    </Link>
+
+                <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span className="material-symbols-outlined font-black">person_pin_circle</span>
+                        </div>
+                        <div className="flex flex-col items-end">
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">Bicycle: {tours.filter(t => t.tourType === 'Bicycle').length}</span>
+                            <span className="text-[10px] font-black text-indigo-500 uppercase tracking-tighter">Bike: {tours.filter(t => t.tourType === 'Bike').length}</span>
+                        </div>
+                    </div>
+                    <h3 className="text-3xl font-black text-slate-800 dark:text-white">Distribution</h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Tour Type Mix</p>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span className="material-symbols-outlined font-black">group</span>
+                        </div>
+                        <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg tracking-widest uppercase">Inbound</span>
+                    </div>
+                    <h3 className="text-3xl font-black text-slate-800 dark:text-white">{leads.length}</h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Total Leads</p>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span className="material-symbols-outlined font-black">priority_high</span>
+                        </div>
+                        <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded-lg tracking-widest uppercase">Action Required</span>
+                    </div>
+                    <h3 className="text-3xl font-black text-slate-800 dark:text-white">{leads.filter(l => l.status === 'High Priority' || l.status === 'New').length}</h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Priority Leads</p>
                 </div>
             </div>
 
