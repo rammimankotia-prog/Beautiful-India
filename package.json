@@ -13,7 +13,8 @@
     "deploy": "gh-pages -d dist",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sitemap": "node scripts/generate-sitemap.cjs"
   },
   "dependencies": {
     "dotenv": "^17.3.1",
