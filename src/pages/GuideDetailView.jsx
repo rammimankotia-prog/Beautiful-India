@@ -195,7 +195,7 @@ const GuideDetailView = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/60 via-transparent to-transparent hidden lg:block"></div>
         
-        <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-12 lg:px-24 pb-20 max-w-7xl mx-auto w-full">
+        <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-12 lg:px-20 xl:px-32 pb-20 max-w-screen-2xl mx-auto w-full">
           <div className="animate-fade-up">
             <div className="flex flex-wrap gap-4 mb-8">
               <span className="bg-primary/90 text-white text-[10px] font-black px-5 py-2 rounded-xl uppercase tracking-[0.2em] backdrop-blur-xl border border-white/20">
@@ -240,7 +240,7 @@ const GuideDetailView = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 relative">
+      <main className="max-w-screen-2xl mx-auto px-6 md:px-12 lg:px-20 xl:px-32 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 relative">
           
         {/* Left Column: Social Floating (Desktop only) */}
         <div className="hidden xl:block xl:col-span-1">
@@ -255,7 +255,7 @@ const GuideDetailView = () => {
         </div>
 
         {/* Article Body */}
-        <article className="lg:col-span-11 xl:col-span-7">
+        <article className="lg:col-span-11 xl:col-span-7 2xl:col-span-8">
           <div 
             className="article-content max-w-none animate-fade-up"
             dangerouslySetInnerHTML={{ __html: formatContent(guide.content) }} 
@@ -294,7 +294,7 @@ const GuideDetailView = () => {
         </article>
 
         {/* Sidebar */}
-        <aside className="lg:col-span-11 xl:col-span-4 space-y-16">
+        <aside className="lg:col-span-11 xl:col-span-4 2xl:col-span-3 space-y-16">
           
           {/* Expert Advice Card */}
           <div className="bg-slate-900 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden group">
@@ -356,7 +356,7 @@ const GuideDetailView = () => {
       {/* Related Tours Section */}
       {relatedTours.length > 0 && (
         <section className="bg-slate-50 dark:bg-slate-900/20 py-32 px-6 overflow-hidden">
-          <div className="max-w-7xl mx-auto">
+        <div className="max-w-screen-2xl mx-auto">
              <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
                 <div className="animate-fade-up">
                   <p className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-4">Curated Experiences</p>

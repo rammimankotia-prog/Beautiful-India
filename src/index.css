@@ -82,9 +82,16 @@ body {
 
 /* Article Typography Styling */
 .article-content {
-  @apply text-slate-800 dark:text-slate-200 font-sans;
+  @apply text-slate-800 dark:text-slate-200 font-sans mx-auto;
   font-size: 1.125rem; /* 18px */
   line-height: 1.9;
+}
+
+.article-content > p, 
+.article-content > ul, 
+.article-content > ol, 
+.article-content > blockquote {
+  @apply max-w-[850px] mx-auto lg:mx-0;
 }
 
 .article-content > p:first-of-type::first-letter {
@@ -93,11 +100,11 @@ body {
 }
 
 .article-content p {
-  @apply mb-10 font-normal leading-relaxed;
+  @apply mb-10 font-normal leading-relaxed text-lg lg:text-xl;
 }
 
 .article-content h1, .article-content h2, .article-content h3, .article-content h4 {
-  @apply font-serif font-black text-slate-900 dark:text-white mt-20 mb-10 tracking-tight;
+  @apply font-serif font-black text-slate-900 dark:text-white mt-24 mb-10 tracking-tight max-w-[1000px];
   line-height: 1.2;
 }
 
