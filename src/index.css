@@ -1,27 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&family=Montserrat:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
-
 
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #006D77;
-  --color-accent: #FFDDD2;
-  --color-background-light: #EDF6F9;
-  --color-background-dark: #0B1A1C;
-  --color-text-main: #2C3E50;
-  --color-text-muted: #7F8C8D;
+  --color-primary: #0D9488;
+  --color-primary-dark: #0F766E;
+  --color-secondary: #6366F1;
+  --color-accent: #F59E0B;
+  --color-background-light: #F8FAFC;
+  --color-background-dark: #020617;
+  --color-text-main: #0F172A;
+  --color-text-muted: #64748B;
   
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
   --font-display: "Montserrat", sans-serif;
+
+  @keyframes scroll-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes zoom-in {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
 }
 
 :root {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 body {
-  @apply bg-background-light text-text-main;
+  @apply bg-background-light text-text-main transition-colors duration-500;
 }
 
 .material-symbols-outlined {
@@ -32,96 +64,92 @@ body {
   'opsz' 24
 }
 
-/* Hide hero banner on mobile */
-@media (max-width: 768px) {
-  .hero-banner {
-    display: none !important;
-  }
+/* Scroll Progress Bar */
+.scroll-progress {
+  @apply fixed top-0 left-0 w-full h-1 z-[100] origin-left bg-primary;
+  animation: scroll-progress linear;
+  animation-timeline: scroll();
 }
 
-/* Hamburger Menu Animation */
-.hamburger-btn {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 24px;
-  height: 24px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  z-index: 70;
+/* Animations */
+.animate-fade-up {
+  animation: fade-up 0.8s ease-out forwards;
 }
 
-.hamburger-line {
-  width: 24px;
-  height: 2px;
-  background: #CBD5E1;
-  border-radius: 10px;
-  transition: all 0.3s linear;
-  position: relative;
-  transform-origin: 1px;
+.animate-zoom-in {
+  animation: zoom-in 10s ease-out forwards;
 }
 
-.hamburger-btn.open .hamburger-line:first-child {
-  transform: rotate(45deg);
-  background: #fff;
-}
-
-.hamburger-btn.open .hamburger-line:nth-child(2) {
-  opacity: 0;
-  transform: translateX(20px);
-}
-
-.hamburger-btn.open .hamburger-line:nth-child(3) {
-  transform: rotate(-45deg);
-  background: #fff;
-}
-
-/* Glassmorphism Utilities */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.8) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Article Typography Styling (Replaces Tailwind Typography Plugin) */
+/* Article Typography Styling */
 .article-content {
-  @apply text-slate-700 dark:text-slate-300;
+  @apply text-slate-800 dark:text-slate-200 font-sans;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.9;
+}
+
+.article-content > p:first-of-type::first-letter {
+  @apply float-left text-7xl font-serif font-black mr-4 mt-2 text-primary dark:text-teal-400;
+  line-height: 0.8;
 }
 
 .article-content p {
-  @apply mb-10 leading-[2.0] font-normal text-slate-700 dark:text-slate-300;
+  @apply mb-10 font-normal leading-relaxed;
 }
 
-.article-content h1, .article-content h2, .article-content h3, .article-content h4, .article-content h5, .article-content h6 {
-  @apply font-bold text-slate-900 dark:text-white mt-12 mb-6 tracking-tight;
+.article-content h1, .article-content h2, .article-content h3, .article-content h4 {
+  @apply font-serif font-black text-slate-900 dark:text-white mt-20 mb-10 tracking-tight;
   line-height: 1.2;
 }
 
-.article-content h1 { @apply text-4xl lg:text-5xl; }
-.article-content h2 { @apply text-3xl lg:text-4xl; }
+.article-content h1 { @apply text-4xl lg:text-7xl; }
+.article-content h2 { @apply text-3xl lg:text-5xl; }
 .article-content h3 { @apply text-2xl lg:text-3xl; }
 .article-content h4 { @apply text-xl lg:text-2xl; }
 
 .article-content a {
-  @apply text-teal-600 dark:text-teal-400 font-bold underline hover:no-underline transition-all;
+  @apply text-primary dark:text-teal-400 font-semibold underline decoration-primary/30 underline-offset-4 hover:decoration-primary transition-all;
 }
 
 .article-content blockquote {
-  @apply border-l-4 border-teal-500 bg-teal-50/50 dark:bg-teal-900/10 p-8 my-10 rounded-r-2xl italic text-lg text-slate-800 dark:text-slate-200;
+  @apply border-l-4 border-primary bg-primary/5 dark:bg-primary/10 px-10 py-12 my-12 rounded-r-3xl italic text-2xl font-serif text-slate-900 dark:text-slate-100 relative;
+}
+
+.article-content blockquote::before {
+  content: '“';
+  @apply absolute top-4 left-4 text-7xl text-primary/10 font-serif leading-none;
 }
 
 .article-content ul, .article-content ol {
-  @apply my-10 pl-6 space-y-4;
+  @apply my-10 pl-8 space-y-6;
 }
 
 .article-content li {
-  @apply leading-[1.8];
+  @apply relative pl-2 leading-relaxed;
+}
+
+.article-content ul li::before {
+  content: '';
+  @apply absolute -left-6 top-3 w-2.5 h-2.5 rounded-full bg-primary/30;
 }
 
 .article-content img {
-  @apply rounded-3xl shadow-2xl my-16 w-full object-cover;
+  @apply rounded-[3rem] shadow-2xl my-20 w-full object-cover border-8 border-white dark:border-slate-800/50 hover:scale-[1.01] transition-transform duration-1000;
 }
 
+.article-content figcaption {
+  @apply text-center text-sm text-slate-500 dark:text-slate-400 mt-6 font-sans italic;
+}
+
+/* Glassmorphism Panels */
+.glass-card {
+  @apply bg-white/70 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 dark:border-slate-800/50 shadow-2xl;
+}
+
+/* Custom Hide Scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

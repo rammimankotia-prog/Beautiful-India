@@ -18,15 +18,12 @@
     "timestamp": "2026-03-10T10:46:03.364Z"
   },
   {
-    "id": "2",
-    "createdAt": "2026-03-11T06:21:46.110Z",
+    "id": "4",
+    "createdAt": "2026-03-11T10:08:19.324Z",
     "status": "New",
     "emailSent": true,
-    "name": "Raman",
-    "phone": "8860081990",
-    "to": "",
-    "interest": "Bharat Darshan",
-    "source": "Bharat Darshan Page"
+    "source": "Wanderbot",
+    "timestamp": "2026-03-11T10:08:19.281Z"
   },
   {
     "id": "3",
@@ -46,13 +43,5 @@
     "foodPreference": "Non-Veg",
     "cabPreference": "Private",
     "timestamp": "2026-03-11T06:37:29.692Z"
-  },
-  {
-    "id": "4",
-    "createdAt": "2026-03-11T10:08:19.324Z",
-    "status": "New",
-    "emailSent": true,
-    "source": "Wanderbot",
-    "timestamp": "2026-03-11T10:08:19.281Z"
   }
 ]

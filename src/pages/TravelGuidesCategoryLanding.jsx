@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
  */
 const TravelGuidesCategoryLanding = () => {
   const [guides, setGuides] = useState([]);
+  const [randomTours, setRandomTours] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
@@ -30,6 +31,18 @@ const TravelGuidesCategoryLanding = () => {
         console.error("Error fetching guides:", err);
         setIsLoaded(true);
       });
+
+    // 2. Fetch Tours List for Sidebar
+    fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        const activeTours = data.filter(t => t.status === 'active');
+        if (activeTours.length > 0) {
+          const shuffled = [...activeTours].sort(() => 0.5 - Math.random());
+          setRandomTours(shuffled.slice(0, 2));
+        }
+      })
+      .catch(err => console.error("Error fetching tours:", err));
   }, []);
 
 
@@ -505,91 +518,147 @@ const TravelGuidesCategoryLanding = () => {
         }
         .tip-card:hover .tip-read-more { gap: 7px; }
 
-        /* Sidebar */
+        /* Sidebar Redesign - Premium Glassmorphism */
         .sidebar-widget {
-          border-radius: 20px;
+          border-radius: 24px;
           padding: 24px;
-          margin-bottom: 24px;
+          margin-bottom: 30px;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .sidebar-widget-header {
           display: flex;
           align-items: center;
-          gap: 10px;
-          margin-bottom: 20px;
-          font-size: 1.05rem;
-          font-weight: 800;
+          gap: 12px;
+          margin-bottom: 24px;
+          font-size: 1.15rem;
+          font-weight: 900;
           color: #0f172a;
+          letter-spacing: -0.02em;
         }
         .dark .sidebar-widget-header { color: #f1f5f9; }
         .sidebar-widget-icon {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
           background: linear-gradient(135deg, #7c3aed, #3b82f6);
           display: flex;
           align-items: center;
           justify-content: center;
           color: #fff;
-          font-size: 18px !important;
+          font-size: 20px !important;
+          box-shadow: 0 8px 20px rgba(124, 58, 237, 0.25);
         }
 
-        /* Featured Tour Card */
+        /* Featured Tour Card - Premium Modern Face */
         .featured-tour-card {
-          border-radius: 14px;
+          position: relative;
+          background: #fff;
+          border-radius: 20px;
           overflow: hidden;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
           text-decoration: none;
           color: inherit;
           display: block;
-          transition: transform 0.3s;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 1px solid rgba(0,0,0,0.04);
+          box-shadow: 0 4px 15px rgba(0,0,0,0.04);
         }
-        .featured-tour-card:hover { transform: translateY(-3px); }
+        .dark .featured-tour-card {
+          background: rgba(30, 41, 59, 0.6);
+          border-color: rgba(255,255,255,0.08);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .featured-tour-card:hover {
+          transform: translateY(-8px) scale(1.02);
+          box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.18);
+          border-color: rgba(124, 58, 237, 0.3);
+        }
         .featured-tour-img-wrap {
           position: relative;
-          aspect-ratio: 16/9;
+          aspect-ratio: 16/10;
           overflow: hidden;
-          border-radius: 14px;
-          margin-bottom: 12px;
         }
         .featured-tour-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.5s;
+          transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .featured-tour-card:hover .featured-tour-img { transform: scale(1.06); }
+        .featured-tour-card:hover .featured-tour-img {
+          transform: scale(1.15);
+        }
         .tour-label {
           position: absolute;
-          bottom: 10px;
-          left: 10px;
-          background: linear-gradient(135deg, #7c3aed, #3b82f6);
+          top: 12px;
+          left: 12px;
+          background: rgba(15, 23, 42, 0.8);
+          backdrop-filter: blur(8px);
           color: #fff;
           font-size: 10px;
           font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: 0.08em;
-          padding: 4px 10px;
-          border-radius: 6px;
+          letter-spacing: 0.1em;
+          padding: 6px 14px;
+          border-radius: 100px;
+          border: 1px solid rgba(255,255,255,0.25);
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        .featured-tour-body {
+          padding: 18px 20px 20px;
         }
         .featured-tour-title {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #0f172a;
-          margin-bottom: 6px;
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #1e293b;
+          margin-bottom: 8px;
           transition: color 0.2s;
-          line-height: 1.35;
+          line-height: 1.4;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
         .dark .featured-tour-title { color: #f1f5f9; }
         .featured-tour-card:hover .featured-tour-title { color: #7c3aed; }
-        .featured-tour-meta {
+        
+        .featured-tour-meta-row {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          margin-top: 15px;
         }
-        .featured-tour-info { font-size: 11.5px; color: #94a3b8; }
-        .featured-tour-price { font-size: 1rem; font-weight: 800; color: #7c3aed; }
-        .tour-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 16px 0; }
-        .dark .tour-divider { background: rgba(255,255,255,0.06); }
+        .featured-tour-info {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 12.5px;
+          font-weight: 600;
+          color: #64748b;
+        }
+        .dark .featured-tour-info { color: #94a3b8; }
+        
+        .featured-tour-price-box {
+          text-align: right;
+        }
+        .featured-tour-price-label {
+          display: block;
+          font-size: 10px;
+          color: #94a3b8;
+          text-transform: uppercase;
+          font-weight: 800;
+          line-height: 1;
+          margin-bottom: 2px;
+        }
+        .featured-tour-price {
+          font-size: 1.25rem;
+          font-weight: 900;
+          color: #7c3aed;
+          letter-spacing: -0.02em;
+        }
+        .tour-divider { display: none; }
 
         /* Tags */
         .tag {
@@ -961,45 +1030,52 @@ const TravelGuidesCategoryLanding = () => {
           <aside style={{ width: '100%', maxWidth: '320px', flexShrink: 0 }}>
 
             {/* Curated Tours Widget */}
-            <div className="sidebar-widget" style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.04), rgba(59,130,246,0.04))', border: '1.5px solid rgba(124,58,237,0.12)' }}>
+            <div className="sidebar-widget">
               <div className="sidebar-widget-header">
                 <span className="material-symbols-outlined sidebar-widget-icon">auto_awesome</span>
                 Curated Tours for You
               </div>
 
-              <Link to="/tour/golden-triangle-delhi-agra-jaipur" className="featured-tour-card">
-                <div className="featured-tour-img-wrap">
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGCFXThfsSoiPSdQX5-y98NOuiBEIH70C7PxkszGP8xEA6jtTg46KE2jIOqyEsodJiVJqFNbdNwqDd0T_oEtBuqMDJ3JFjUlVXpWGbsT4U_D_2BaVDwf3Rt3CySyF8eyvwo6iLaqXlICQq5T5F-1bhIiOgD7i1KZnKtxFwcCVEFG1P6Ou_lcK2sfiXbak6XEzw98y5aXKgBqMfpB0w3rrdapUkY7Cl463xw_fpXRxJw6S09wHlPn5IbdOCJbMjqW42VaKXA8Laakgm"
-                    className="featured-tour-img"
-                    alt="Tokyo tour"
-                  />
-                  <span className="tour-label">⭐ Top Rated</span>
+              {randomTours.length > 0 ? (
+                randomTours.map((tour, idx) => (
+                  <React.Fragment key={tour.slug}>
+                    <Link to={`/tour/${tour.slug}`} className="featured-tour-card">
+                      <div className="featured-tour-img-wrap">
+                        <img
+                          src={tour.image}
+                          className="featured-tour-img"
+                          alt={tour.title}
+                        />
+                        <span className="tour-label">
+                          <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                            {idx === 0 ? "hotel_class" : "trending_up"}
+                          </span>
+                          {idx === 0 ? "Top Rated" : "Trending"}
+                        </span>
+                      </div>
+                      <div className="featured-tour-body">
+                        <h4 className="featured-tour-title">{tour.title}</h4>
+                        <div className="featured-tour-meta-row">
+                          <span className="featured-tour-info">
+                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
+                            {tour.duration}
+                          </span>
+                          <div className="featured-tour-price-box">
+                            <span className="featured-tour-price-label">Starting from</span>
+                            <span className="featured-tour-price">
+                              ₹{parseInt(tour.price).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </React.Fragment>
+                ))
+              ) : (
+                <div className="p-4 text-center text-gray-500 text-sm">
+                  Discovering best tours for you...
                 </div>
-                <h4 className="featured-tour-title">Tokyo Neon Nights Adventure</h4>
-                <div className="featured-tour-meta">
-                  <span className="featured-tour-info">🗓 7 Days • Tokyo, Japan</span>
-                  <span className="featured-tour-price">$1,299</span>
-                </div>
-              </Link>
-
-              <div className="tour-divider" />
-
-              <div className="featured-tour-card">
-                <div className="featured-tour-img-wrap">
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXyJ-GXJB9QBvVkb10N4fJSvc900W3zP5lh5Klg9DEz8QANmEaRIoL3Z2xzelgp-kepgotyfoQGuQ1XVRmqzgRDdoRD_amFh5_GFaYK5MyOVUMib4rZTaWqCRTgESYFLYO_xggUjrYQXaE9gmr_7bj0fe-8-iA7OKWLoT9195Z3oawk-ZdB4rb2TOog28NdrHyBj3vccbeL6vUuLsy4Fz6aibr9WCmM1JgfRlZC_UhXyOLSQQTI8c6kfi2WY47OEkWZKEFq1GH1IiL"
-                    className="featured-tour-img"
-                    alt="Swiss Alps tour"
-                  />
-                  <span className="tour-label">🏔 Trending</span>
-                </div>
-                <h4 className="featured-tour-title">Swiss Alp Panorama Rail Tour</h4>
-                <div className="featured-tour-meta">
-                  <span className="featured-tour-info">🗓 5 Days • Interlaken, Swiss</span>
-                  <span className="featured-tour-price">$849</span>
-                </div>
-              </div>
+              )}
 
               <Link to="/tours" className="view-tours-btn">
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>map</span>

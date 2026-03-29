@@ -26,6 +26,7 @@ const Header = () => {
             ]
         },
         { name: 'Destinations', path: '/guides' },
+        { name: 'Bicycle Tours', path: '/tours/bike-tours', isNew: true },
         { name: 'About Us', path: '/about' },
         { name: 'Contact', path: '/contact' }
     ];
@@ -89,6 +90,9 @@ const Header = () => {
                             className={`relative text-[15px] font-medium transition-colors ${isActive ? 'text-white font-bold' : 'text-slate-300 hover:text-white'}`}
                         >
                             {link.name}
+                            {link.isNew && (
+                                <span className="absolute -top-3 -right-6 px-1.5 py-0.5 bg-primary text-[8px] font-black text-white rounded-md animate-pulse uppercase tracking-tighter shadow-sm border border-white/10">NEW</span>
+                            )}
                             {isActive && (
                                 <div className="absolute -bottom-[22px] left-0 right-0 h-0.5 bg-primary"></div>
                             )}
@@ -254,12 +258,15 @@ const Header = () => {
                                         key={link.name} 
                                         to={link.path}
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className={`flex items-center gap-3 text-[16px] font-bold py-3 px-3 rounded-xl transition-all ${isActive ? 'bg-primary/10 text-primary' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+                                        className={`flex items-center gap-3 text-[16px] font-bold py-3 px-3 rounded-xl transition-all relative ${isActive ? 'bg-primary/10 text-primary' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
                                     >
                                         <span className="material-symbols-outlined text-[22px]">
-                                            {link.name === 'Home' ? 'home' : link.name === 'Destinations' ? 'map' : link.name === 'About Us' ? 'info' : 'mail'}
+                                            {link.name === 'Home' ? 'home' : link.name === 'Destinations' ? 'map' : link.name === 'Bicycle Tours' ? 'pedal_bike' : link.name === 'About Us' ? 'info' : 'mail'}
                                         </span>
                                         {link.name}
+                                        {link.isNew && (
+                                            <span className="ml-auto px-2 py-0.5 bg-primary text-[9px] font-black text-white rounded-md uppercase tracking-widest">New</span>
+                                        )}
                                     </Link>
                                 )
                             })}

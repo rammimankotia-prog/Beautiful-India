@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import connectDB from './src/config/db.js';
 
 import tourRoutes from './src/routes/tourRoutes.js';
+import bikeTourRoutes from './src/routes/bikeTourRoutes.js';
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ const saveData = (filename, data) => fs.writeFileSync(path.join(__dirname, 'src/
 
 // API Routes
 app.use('/api/v1/tours', tourRoutes);
+app.use('/api/v1/bike-tours', bikeTourRoutes);
 
 app.get('/api/bookings', (req, res) => res.json(getData('bookings.json')));
 app.post('/api/bookings', (req, res) => { saveData('bookings.json', req.body); res.json({ success: true }); });

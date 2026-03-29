@@ -21,6 +21,8 @@ const AdminOverviewDashboard = lazy(() => import('./pages/AdminOverviewDashboard
 const AdminQueryManagement = lazy(() => import('./pages/AdminQueryManagement'));
 const AdminArticleManagementDashboard = lazy(() => import('./pages/AdminArticleManagementDashboard'));
 const AdminNewArticleUploadForm = lazy(() => import('./pages/AdminNewArticleUploadForm'));
+const AdminBikeTourDashboard = lazy(() => import('./pages/AdminBikeTourDashboard'));
+const AdminBikeTourForm = lazy(() => import('./pages/AdminBikeTourForm'));
 const AdminCategorizationSettings = lazy(() => import('./pages/AdminCategorizationSettings'));
 const AdminThemeManagement = lazy(() => import('./pages/AdminThemeManagement'));
 const AdminTrainQueries = lazy(() => import('./pages/AdminTrainQueries'));
@@ -79,6 +81,8 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AboutUsPage = lazy(() => import('./pages/AboutUsPage'));
 const FestivalsPage = lazy(() => import('./pages/FestivalsPage'));
 const ToursByTrain = lazy(() => import('./pages/ToursByTrain'));
+const BikeTourListingPage = lazy(() => import('./pages/BikeTourListingPage'));
+const BikeTourDetailView = lazy(() => import('./pages/BikeTourDetailView'));
 const TrainBookingPage = lazy(() => import('./pages/TrainBookingPage'));
 const TrainBookingSuccessPage = lazy(() => import('./pages/TrainBookingSuccessPage'));
 
@@ -103,6 +107,8 @@ export const routes = [
   { path: '/privacy', element: Loadable(PrivacyPolicyLayout)() },
   { path: '/terms', element: Loadable(TermsOfServiceLayout)() },
   { path: '/tours/detail', element: Loadable(TourDetailView)() },
+  { path: '/tours/bike-tours', element: Loadable(BikeTourListingPage)() },
+  { path: '/tours/bike-tours/:slug', element: Loadable(BikeTourDetailView)() },
   { path: '/tours/:id', element: Loadable(TourDetailView)() },
   { path: '/tour/:id', element: Loadable(TourDetailView)() },
   { path: '/tours/:destination/:stateRegion/:subregion/:title', element: Loadable(TourDetailView)() },
@@ -128,6 +134,9 @@ export const routes = [
       { path: 'chatbot-flow', element: Loadable(AdminChatbotFlow)() },
       { path: 'train-queries', element: Loadable(AdminTrainQueries)() },
       { path: 'themes', element: Loadable(AdminThemeManagement)() },
+      { path: 'bike-tours', element: Loadable(AdminBikeTourDashboard)() },
+      { path: 'bike-tours/new', element: Loadable(AdminBikeTourForm)() },
+      { path: 'bike-tours/edit/:id', element: Loadable(AdminBikeTourForm)() },
     ]
   },
   { path: '/emails/cancel-confirm', element: Loadable(BookingCancellationConfirmationEmail)() },
