@@ -181,7 +181,7 @@ const AboutUsPage = () => {
 
 
       {/* ════ HERO ════ */}
-      <section className="relative h-[90vh] min-h-[560px] flex items-end overflow-hidden">
+      <section className="hero-banner hidden md:flex relative h-[90vh] min-h-[560px] items-end overflow-hidden">
         {/* Full bleed background */}
         <div className="absolute inset-0">
           <img

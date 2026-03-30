@@ -315,7 +315,7 @@ const BharatDarshanPage = () => {
       `}</style>
       
       <section
-        className="hero-banner relative overflow-hidden flex items-center justify-center"
+        className="hero-banner hidden md:flex relative overflow-hidden items-center justify-center"
         style={{
           minHeight: 540,
           background: 'linear-gradient(135deg, #f0fdf9 0%, #e6f7f5 55%, #fef9f0 100%)',
