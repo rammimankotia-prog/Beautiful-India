@@ -11,9 +11,14 @@ const AdminBikeTourDashboard = () => {
 
     const fetchLeads = async () => {
         try {
+            // Only try to fetch PHP leads if we're not in a dev environment that leaks PHP source
+            const isDev = window.location.hostname === 'localhost';
+            if (isDev) return; 
+
             const response = await fetch('/api-save-leads.php');
+            if (!response.ok) return;
             const data = await response.json();
-            setLeads(data || []);
+            setLeads(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching leads:', error);
         }
@@ -27,12 +32,22 @@ const AdminBikeTourDashboard = () => {
     const fetchTours = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/v1/bike-tours/admin');
+            const isDev = window.location.hostname === 'localhost';
+            const targetUrl = isDev 
+                ? '/api/v1/bike-tours/admin' 
+                : '/data/bike-tours.json?t=' + Date.now();
+                
+            const response = await fetch(targetUrl);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Server responded with ${response.status}`);
+            }
             const data = await response.json();
-            setTours(data);
+            setTours(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching bike tours:', error);
-            showToast('❌ Failed to load tours');
+            showToast(`❌ Error: ${error.message}`);
+            setTours([]); // Fallback to empty
         } finally {
             setLoading(false);
         }
@@ -47,37 +62,82 @@ const AdminBikeTourDashboard = () => {
         if (!window.confirm('Are you sure you want to delete this bicycle tour?')) return;
 
         try {
-            const response = await fetch(`/api/v1/bike-tours/admin/${id}`, {
-                method: 'DELETE'
-            });
-            if (response.ok) {
-                setTours(tours.filter(t => t._id !== id));
-                showToast('🗑️ Tour deleted successfully');
+            const isDev = window.location.hostname === 'localhost';
+            const updatedTours = tours.filter(t => (t._id || t.id) !== id);
+
+            if (isDev) {
+                // Node.js Delete
+                const response = await fetch(`/api/v1/bike-tours/admin/${id}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    setTours(updatedTours);
+                    showToast('🗑️ Tour deleted successfully');
+                } else {
+                    throw new Error('Failed to delete on server');
+                }
             } else {
-                throw new Error('Failed to delete');
+                // PHP Persistence (Save the entire list)
+                const response = await fetch('/api-save-bike-tours.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTours)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    setTours(updatedTours);
+                    showToast('🗑️ Tour deleted successfully');
+                } else {
+                    throw new Error(result.error || 'Failed to save to server');
+                }
             }
         } catch (error) {
-            showToast('❌ Deletion failed');
+            console.error('Delete Error:', error);
+            showToast(`❌ Deletion failed: ${error.message}`);
         }
     };
 
     const handleStatusUpdate = async (id, newStatus) => {
         try {
-            const response = await fetch(`/api/v1/bike-tours/admin/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            });
-            if (response.ok) {
-                setTours(tours.map(t => t._id === id ? { ...t, status: newStatus } : t));
-                showToast(`✅ Status updated to ${newStatus}`);
+            const isDev = window.location.hostname === 'localhost';
+            const updatedTours = tours.map(t => (t._id || t.id) === id ? { ...t, status: newStatus } : t);
+
+            if (isDev) {
+                // Node.js Update
+                const response = await fetch(`/api/v1/bike-tours/admin/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (response.ok) {
+                    setTours(updatedTours);
+                    showToast(`✅ Status updated to ${newStatus}`);
+                } else {
+                    throw new Error('Update failed');
+                }
+            } else {
+                // PHP Persistence (Save the entire list)
+                const response = await fetch('/api-save-bike-tours.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTours)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    setTours(updatedTours);
+                    showToast(`✅ Status updated to ${newStatus}`);
+                } else {
+                    throw new Error(result.error || 'Failed to save to server');
+                }
             }
         } catch (error) {
-            showToast('❌ Status update failed');
+            console.error('Status Error:', error);
+            showToast(`❌ Status update failed: ${error.message}`);
         }
     };
 
-    const filteredTours = tours.filter(tour => {
+    const filteredTours = Array.isArray(tours) ? tours.filter(tour => {
+        if (!tour) return false;
         // Status Filter
         let passesStatus = true;
         if (activeTab === 'Active') passesStatus = tour.status === 'active';
@@ -89,7 +149,7 @@ const AdminBikeTourDashboard = () => {
         if (typeFilter !== 'All') passesType = tour.tourType === typeFilter;
 
         return passesStatus && passesType;
-    });
+    }) : [];
 
     return (
         <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500">
@@ -209,11 +269,13 @@ const AdminBikeTourDashboard = () => {
                                         <tr key={tour._id} className="hover:bg-slate-50/50 transition-colors group">
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-4">
-                                                    <img 
-                                                        src={tour.mainImage} 
-                                                        alt={tour.title} 
-                                                        className="w-14 h-10 rounded-lg object-cover shadow-sm bg-slate-100" 
-                                                    />
+                                                    {tour.mainImage && (
+                                                        <img 
+                                                            src={tour.mainImage} 
+                                                            alt={tour.title} 
+                                                            className="w-14 h-10 rounded-lg object-cover shadow-sm bg-slate-100" 
+                                                        />
+                                                    )}
                                                     <div className="flex flex-col">
                                                         <span className="text-sm font-black text-slate-800 dark:text-slate-100">{tour.title}</span>
                                                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
@@ -260,10 +322,10 @@ const AdminBikeTourDashboard = () => {
                                             </td>
                                             <td className="px-8 py-6 text-right">
                                                 <div className="flex justify-end gap-2 text-slate-300">
-                                                    <Link to={`/admin/bike-tours/edit/${tour._id}`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 hover:text-primary transition-all">
+                                                    <Link to={`/admin/bike-tours/edit/${tour._id || tour.id}`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 hover:text-primary transition-all">
                                                         <span className="material-symbols-outlined text-[20px]">edit</span>
                                                     </Link>
-                                                    <button onClick={() => handleDelete(tour._id)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all">
+                                                    <button onClick={() => handleDelete(tour._id || tour.id)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all">
                                                         <span className="material-symbols-outlined text-[20px]">delete</span>
                                                     </button>
                                                 </div>

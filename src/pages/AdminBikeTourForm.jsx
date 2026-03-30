@@ -42,11 +42,19 @@ const AdminBikeTourForm = () => {
     useEffect(() => {
         const fetchTours = async () => {
             try {
-                const response = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
+                // Determine environment-aware URL
+                const isDev = window.location.hostname === 'localhost';
+                const targetUrl = isDev 
+                    ? `/api/v1/bike-tours${isEdit ? '/admin' : ''}?t=${Date.now()}`
+                    : `/data/bike-tours.json?t=${Date.now()}`;
+                
+                const response = await fetch(targetUrl);
                 if (!response.ok) return;
                 const data = await response.json();
+                
                 if (isEdit) {
-                    const matched = data.find(t => String(t.id) === String(id) || String(t.slug) === String(id));
+                    // Match by id or slug
+                    const matched = data.find(t => String(t.id) === String(id) || String(t.slug) === String(id) || String(t._id) === String(id));
                     if (matched) setFormData(matched);
                 }
             } catch (error) {
@@ -158,41 +166,59 @@ const AdminBikeTourForm = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            // Fetch latest tours to sync
-            let tours = [];
-            try {
-                const res = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
-                if (res.ok) tours = await res.json();
-            } catch (err) {
-                console.error("Error fetching existing tours:", err);
-            }
-
-            const tourToSave = { ...formData };
-            if (!isEdit) {
-                tourToSave.id = tourToSave.slug || Date.now().toString();
-            }
-
-            let updatedTours;
-            if (isEdit) {
-                updatedTours = tours.map(t => (String(t.id) === String(id) || String(t.slug) === String(id)) ? tourToSave : t);
-                if (!tours.find(t => String(t.id) === String(id) || String(t.slug) === String(id))) {
-                    updatedTours = [...tours, tourToSave];
+            const isDev = window.location.hostname === 'localhost';
+            
+            if (isDev) {
+                // Using Node.js Backend API
+                const url = isEdit ? `/api/v1/bike-tours/admin/${formData._id || id}` : '/api/v1/bike-tours/admin';
+                const method = isEdit ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
+                    navigate('/admin/bike-tours');
+                } else {
+                    throw new Error(result.message || 'Server error');
                 }
             } else {
-                updatedTours = [...tours, tourToSave];
-            }
+                // Fallback to PHP/JSON file persistence for production (legacy mode)
+                let tours = [];
+                try {
+                    const res = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
+                    if (res.ok) tours = await res.ok ? await res.json() : [];
+                } catch (err) {
+                    console.error("Error fetching existing tours:", err);
+                }
 
-            const response = await fetch('/api/save-bike-tours', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedTours)
-            });
-            const result = await response.json();
-            if (result.success) {
-                alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
-                navigate('/admin/bike-tours');
-            } else {
-                throw new Error(result.error || 'Failed to save');
+                const tourToSave = { ...formData };
+                if (!isEdit) {
+                    tourToSave.id = tourToSave.slug || Date.now().toString();
+                }
+
+                let updatedTours;
+                if (isEdit) {
+                    updatedTours = tours.map(t => (String(t.id) === String(id) || String(t.slug) === String(id)) ? tourToSave : t);
+                } else {
+                    updatedTours = [...tours, tourToSave];
+                }
+
+                const response = await fetch('/api/save-bike-tours', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTours)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
+                    navigate('/admin/bike-tours');
+                } else {
+                    throw new Error(result.error || 'Failed to save');
+                }
             }
         } catch (error) {
             alert('Error: ' + error.message);
