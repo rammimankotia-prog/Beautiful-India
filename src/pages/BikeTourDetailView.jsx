@@ -223,8 +223,8 @@ const BikeTourDetailView = () => {
                             <div dangerouslySetInnerHTML={{ __html: tour.content }} />
                         </section>
 
-                        {/* Live Route Map (Conditional) */}
-                        {tour.slug === 'delhi-bicycle-tour' && (
+                        {/* Live Route Map (Dynamic based on slug) */}
+                        {['delhi-bicycle-tour', 'leh-and-leh-grand-circuit'].includes(tour.slug) && (
                             <section className="space-y-8 py-8">
                                 <div className="space-y-4">
                                     <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Live Tracking</h2>
@@ -234,9 +234,9 @@ const BikeTourDetailView = () => {
                                 </div>
                                 <div className="w-full bg-white dark:bg-slate-900 rounded-[20px] p-2 border border-slate-100 dark:border-slate-800 shadow-2xl">
                                     <iframe
-                                      src="/delhi_tour_complete.html"
+                                      src={tour.slug === 'leh-and-leh-grand-circuit' ? '/leh_tour_complete.html' : '/delhi_tour_complete.html'}
                                       className="w-full h-[500px] md:h-[900px] border-none rounded-2xl"
-                                      title="Imperial Heart Bicycle Tour">
+                                      title={`${tour.title} Route Map`}>
                                     </iframe>
                                 </div>
                             </section>
