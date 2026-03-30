@@ -1,10 +1,22 @@
-import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
+import { useAuth } from '../context/AuthContext';
 
 const AdminLayout = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
+
+  // Auth Guard
+  useEffect(() => {
+    if (!user) {
+      navigate('/signin', { state: { from: location } });
+    }
+  }, [user, navigate, location]);
+
+  if (!user) return null; // Prevent flicker before redirect
 
   return (
     <div className="relative flex h-screen w-full flex-col group/design-root overflow-hidden bg-slate-50 dark:bg-slate-950 font-sans">

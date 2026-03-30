@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const AdminSidebar = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -60,11 +61,21 @@ const AdminSidebar = () => {
           </Link>
         ))}
       </nav>
-      <div className="p-6 border-t border-slate-100 dark:border-slate-800">
+      <div className="p-6 border-t border-slate-100 dark:border-slate-800 space-y-4">
         <Link to="/" className="flex items-center gap-2.5 px-3 py-2 text-[10px] font-black text-slate-400 hover:text-primary transition-colors uppercase tracking-[0.2em]">
            <span className="material-symbols-outlined text-[18px]">open_in_new</span>
            Launch Website
         </Link>
+        <button 
+          onClick={() => {
+            logout();
+            navigate('/signin');
+          }}
+          className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[10px] font-black text-red-500 hover:bg-red-50 rounded-xl transition-all uppercase tracking-[0.2em]"
+        >
+           <span className="material-symbols-outlined text-[18px]">logout</span>
+           Sign Out
+        </button>
       </div>
     </aside>
   );

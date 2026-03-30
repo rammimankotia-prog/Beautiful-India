@@ -80,6 +80,7 @@ const WelcomeEmailTemplate = lazy(() => import('./pages/WelcomeEmailTemplate'));
 const BharatDarshanPage = lazy(() => import('./pages/BharatDarshanPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AboutUsPage = lazy(() => import('./pages/AboutUsPage'));
+const SignInPage = lazy(() => import('./pages/SignInPage'));
 const FestivalsPage = lazy(() => import('./pages/FestivalsPage'));
 const ToursByTrain = lazy(() => import('./pages/ToursByTrain'));
 const BikeTourListingPage = lazy(() => import('./pages/BikeTourListingPage'));
@@ -103,6 +104,7 @@ export const routes = [
   { path: '/sitemap', element: Loadable(NavigationHub)() },
   { path: '/contact', element: Loadable(ContactPage)() },
   { path: '/about', element: Loadable(AboutUsPage)() },
+  { path: '/signin', element: Loadable(SignInPage)() },
   { path: '/festivals', element: Loadable(FestivalsPage)() },
   { path: '/', element: Loadable(BharatDarshanPage)() },
   { path: '/privacy', element: Loadable(PrivacyPolicyLayout)() },

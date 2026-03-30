@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useAuth } from '../context/AuthContext';
 import SignInModal from './SignInModal';
@@ -9,6 +9,7 @@ const Header = () => {
     const location = useLocation();
     const currentPath = location.pathname;
     const { currency, setCurrency, currencies } = useCurrency();
+    const navigate = useNavigate();
     const { user, logout } = useAuth();
     const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -164,6 +165,7 @@ const Header = () => {
                                         onClick={() => {
                                             logout();
                                             setIsUserMenuOpen(false);
+                                            navigate('/signin');
                                         }}
                                         className="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
                                     >
@@ -326,7 +328,10 @@ const Header = () => {
                                 <img src={user.avatar} alt="Avatar" className="w-12 h-12 rounded-full border-2 border-primary/50 p-0.5 bg-white" />
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-black text-white truncate">{user.name}</p>
-                                    <button onClick={logout} className="text-xs text-red-500 font-black hover:text-red-400 flex items-center gap-1 mt-0.5">
+                                    <button onClick={() => {
+                                            logout();
+                                            navigate('/signin');
+                                        }} className="text-xs text-red-500 font-black hover:text-red-400 flex items-center gap-1 mt-0.5">
                                         Sign Out <span className="material-symbols-outlined text-[14px]">logout</span>
                                     </button>
                                 </div>
