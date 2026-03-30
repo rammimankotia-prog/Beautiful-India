@@ -46,43 +46,60 @@ if (!file_exists(dirname($public_file))) { mkdir(dirname($public_file), 0777, tr
 if (!file_exists(dirname($src_file)) && file_exists(dirname(__DIR__) . '/src')) { mkdir(dirname($src_file), 0777, true); }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 2. Capture and validate inbound JSON
+    // 2. Capture and validate inbound JSON 
     $inbound_json = file_get_contents("php://input");
-    $data = json_decode($inbound_json, true);
+    $payload = json_decode($inbound_json, true);
     
-    if ($data !== null) {
+    if ($payload !== null) {
+        // Read existing guides
+        $target = file_exists($src_file) ? $src_file : $public_file;
+        $existing_data = file_exists($target) ? json_decode(file_get_contents($target), true) : [];
+        if (!is_array($existing_data)) { $existing_data = []; }
+
+        $final_data = [];
+
+        // MODE A: Full-list Overwrite (Safe Delete Action)
+        if (isset($payload['isDeleteAction']) && isset($payload['updatedList'])) {
+            $final_data = $payload['updatedList'];
+        } 
+        // MODE B: Atomic Single Update
+        else if (isset($payload['id'])) {
+            $found = false;
+            foreach ($existing_data as &$guide) {
+                if (strval($guide['id']) === strval($payload['id'])) {
+                    $guide = array_merge($guide, $payload);
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $existing_data[] = $payload;
+            }
+            $final_data = $existing_data;
+        } 
+        else {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Invalid payload format."]);
+            exit;
+        }
+
         // Pretty print for readability
-        $formatted_json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $formatted_json = json_encode($final_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         
-        // 3. Persist to BOTH locations if locally in dev, or just public if in live
         $public_success = file_put_contents($public_file, $formatted_json);
-        $src_success = true; // Default to true if src doesn't exist (live)
-        
+        $src_success = true; 
         if (file_exists(dirname(__DIR__) . '/src')) {
             $src_success = file_put_contents($src_file, $formatted_json);
         }
         
-        if ($src_success !== false && $public_success !== false) {
-            header('Content-Type: application/json');
-            echo json_encode([
-                "success" => true, 
-                "message" => "Guides successfully synchronized to server.",
-                "count" => count($data)
-            ]);
-        } else {
-            http_response_code(500);
-            header('Content-Type: application/json');
-            echo json_encode([
-                "success" => false, 
-                "message" => "Server file write error. Check permissions on /src/data and /public/data."
-            ]);
-        }
+        header('Content-Type: application/json');
+        echo json_encode(["success" => true, "message" => "Sync completed."]);
     } else {
         http_response_code(400);
-        header('Content-Type: application/json');
-        echo json_encode(["success" => false, "message" => "Invalid JSON payload provided."]);
+        echo json_encode(["success" => false, "message" => "Missing data."]);
     }
-} else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+}
+ else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // 4. GET requests should return the current master source
     $target = file_exists($src_file) ? $src_file : $public_file;
     if (file_exists($target)) {

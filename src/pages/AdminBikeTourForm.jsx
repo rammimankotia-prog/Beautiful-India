@@ -40,7 +40,6 @@ const AdminBikeTourForm = () => {
     });
 
     useEffect(() => {
-    useEffect(() => {
         const fetchTours = async () => {
             try {
                 const response = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
@@ -55,7 +54,6 @@ const AdminBikeTourForm = () => {
             }
         };
         fetchTours();
-    }, [id, isEdit]);
     }, [id, isEdit]);
 
     // Auto-generate slug from title
