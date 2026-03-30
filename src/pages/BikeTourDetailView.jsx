@@ -223,6 +223,25 @@ const BikeTourDetailView = () => {
                             <div dangerouslySetInnerHTML={{ __html: tour.content }} />
                         </section>
 
+                        {/* Live Route Map (Conditional) */}
+                        {tour.slug === 'delhi-bicycle-tour' && (
+                            <section className="space-y-8 py-8">
+                                <div className="space-y-4">
+                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Live Tracking</h2>
+                                    <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white leading-tight italic">
+                                        Interactive <span className="text-primary italic">Route Map</span>
+                                    </h3>
+                                </div>
+                                <div className="w-full bg-white dark:bg-slate-900 rounded-[20px] p-2 border border-slate-100 dark:border-slate-800 shadow-2xl">
+                                    <iframe
+                                      src="/delhi_tour_complete.html"
+                                      className="w-full h-[500px] md:h-[900px] border-none rounded-2xl"
+                                      title="Imperial Heart Bicycle Tour">
+                                    </iframe>
+                                </div>
+                            </section>
+                        )}
+
                         {/* Interactive Itinerary / Tabs */}
                         <section className="space-y-12">
                             <div className="flex gap-10 border-b border-slate-100 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar">
