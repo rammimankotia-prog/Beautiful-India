@@ -9,6 +9,7 @@
   RewriteRule ^api/save-leads$ api-save-leads.php [L]
   RewriteRule ^api/train-queries$ api-train-queries.php [L]
   RewriteRule ^api/save-review$ api-save-review.php [L]
+  RewriteRule ^api/save-bike-tours/?$ api-save-bike-tours.php [L]
 
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f

@@ -40,18 +40,22 @@ const AdminBikeTourForm = () => {
     });
 
     useEffect(() => {
-        if (isEdit) {
-            const fetchTour = async () => {
-                try {
-                    const response = await fetch(`/api/v1/bike-tours/${id}`);
-                    const data = await response.json();
-                    setFormData(data);
-                } catch (error) {
-                    console.error('Error fetching bike tour:', error);
+    useEffect(() => {
+        const fetchTours = async () => {
+            try {
+                const response = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
+                if (!response.ok) return;
+                const data = await response.json();
+                if (isEdit) {
+                    const matched = data.find(t => String(t.id) === String(id) || String(t.slug) === String(id));
+                    if (matched) setFormData(matched);
                 }
-            };
-            fetchTour();
-        }
+            } catch (error) {
+                console.error('Error fetching bike tours:', error);
+            }
+        };
+        fetchTours();
+    }, [id, isEdit]);
     }, [id, isEdit]);
 
     // Auto-generate slug from title
@@ -156,19 +160,41 @@ const AdminBikeTourForm = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const url = isEdit ? `/api/v1/bike-tours/admin/${id}` : '/api/v1/bike-tours/admin';
-            const method = isEdit ? 'PUT' : 'POST';
-            const response = await fetch(url, {
-                method,
+            // Fetch latest tours to sync
+            let tours = [];
+            try {
+                const res = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
+                if (res.ok) tours = await res.json();
+            } catch (err) {
+                console.error("Error fetching existing tours:", err);
+            }
+
+            const tourToSave = { ...formData };
+            if (!isEdit) {
+                tourToSave.id = tourToSave.slug || Date.now().toString();
+            }
+
+            let updatedTours;
+            if (isEdit) {
+                updatedTours = tours.map(t => (String(t.id) === String(id) || String(t.slug) === String(id)) ? tourToSave : t);
+                if (!tours.find(t => String(t.id) === String(id) || String(t.slug) === String(id))) {
+                    updatedTours = [...tours, tourToSave];
+                }
+            } else {
+                updatedTours = [...tours, tourToSave];
+            }
+
+            const response = await fetch('/api/save-bike-tours', {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(updatedTours)
             });
-            if (response.ok) {
-                alert(isEdit ? 'Tour updated successfully!' : 'Tour created successfully!');
+            const result = await response.json();
+            if (result.success) {
+                alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
                 navigate('/admin/bike-tours');
             } else {
-                const err = await response.json();
-                throw new Error(err.message || 'Failed to save');
+                throw new Error(result.error || 'Failed to save');
             }
         } catch (error) {
             alert('Error: ' + error.message);
@@ -425,14 +451,24 @@ const AdminBikeTourForm = () => {
                             />
                         ) : (
                             <div className="space-y-4">
-                                <textarea 
-                                    name="content" value={formData.content} onChange={handleChange}
-                                    className="w-full h-64 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] p-5 text-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-primary"
-                                    placeholder="Write your tour description here. Use HTML mode for complex formatting."
+                                <div 
+                                    className="w-full min-h-[400px] bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-[32px] p-8 md:p-12 overflow-y-auto prose dark:prose-invert max-w-none shadow-inner"
+                                    dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-slate-400 italic">No content yet. Switch to Source Code to paste HTML.</p>' }}
                                 />
-                                <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3 items-start">
-                                    <span className="material-symbols-outlined text-amber-500">lightbulb</span>
-                                    <p className="text-[11px] text-amber-700 font-bold italic">PRO TIP: Switch to Source Code mode to paste rich editorial layouts directly from your CMS or content writer.</p>
+                                <div className="p-6 bg-primary/5 rounded-[24px] border border-primary/10 flex gap-4 items-center">
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                        <span className="material-symbols-outlined">visibility</span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Live Preview Mode</p>
+                                        <p className="text-[11px] text-slate-500 font-bold italic mt-0.5">Showing exact rendered layout. Switch to Source Code to edit the HTML structure.</p>
+                                    </div>
+                                    <button 
+                                        type="button" onClick={() => setIsHtmlMode(true)}
+                                        className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-[10px] font-black uppercase hover:border-primary transition-all"
+                                    >
+                                        Edit Source
+                                    </button>
                                 </div>
                             </div>
                         )}
