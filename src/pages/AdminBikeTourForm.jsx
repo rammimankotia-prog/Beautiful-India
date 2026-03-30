@@ -43,7 +43,7 @@ const AdminBikeTourForm = () => {
         const fetchTours = async () => {
             try {
                 // Determine environment-aware URL
-                const isDev = window.location.hostname === 'localhost';
+                const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 const targetUrl = isDev 
                     ? `/api/v1/bike-tours${isEdit ? '/admin' : ''}?t=${Date.now()}`
                     : `/data/bike-tours.json?t=${Date.now()}`;
@@ -166,7 +166,7 @@ const AdminBikeTourForm = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const isDev = window.location.hostname === 'localhost';
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             
             if (isDev) {
                 // Using Node.js Backend API

@@ -14,14 +14,29 @@ const BikeTourDetailView = () => {
     const fetchTour = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/v1/bike-tours/slug/${slug}`);
-            if (response.ok) {
-                const data = await response.json();
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            
+            let data = null;
+            if (isDev) {
+                const response = await fetch(`/api/v1/bike-tours/slug/${slug}`);
+                if (response.ok) data = await response.json();
+            } else {
+                const response = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
+                if (response.ok) {
+                    const allTours = await response.json();
+                    data = allTours.find(t => t.slug === slug);
+                }
+            }
+
+            if (data) {
                 setTour(data);
                 
                 // Inject Schema Markup
                 if (data.schemaMarkup) {
                     try {
+                        const oldSchema = document.getElementById('tour-schema');
+                        if (oldSchema) oldSchema.remove();
+
                         const script = document.createElement('script');
                         script.type = 'application/ld+json';
                         script.text = data.schemaMarkup;
@@ -33,10 +48,17 @@ const BikeTourDetailView = () => {
                 }
 
                 // Fetch related tours (same type or destination)
-                const relatedRes = await fetch(`/api/v1/bike-tours?tourType=${data.tourType}`);
+                const relatedUrl = isDev 
+                    ? `/api/v1/bike-tours?tourType=${data.tourType}` 
+                    : `/data/bike-tours.json?t=${Date.now()}`;
+
+                const relatedRes = await fetch(relatedUrl);
                 if (relatedRes.ok) {
-                    const relatedData = await relatedRes.json();
-                    setRelatedTours(relatedData.filter(t => t._id !== data._id).slice(0, 3));
+                    let relatedData = await relatedRes.json();
+                    if (!isDev) {
+                        relatedData = relatedData.filter(t => t.tourType === data.tourType && t.slug !== slug && t.status === 'active');
+                    }
+                    setRelatedTours(relatedData.slice(0, 3));
                 }
             }
         } catch (error) {

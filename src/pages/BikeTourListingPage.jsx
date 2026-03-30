@@ -69,12 +69,28 @@ const BikeTourListingPage = () => {
     const fetchTours = async () => {
         setLoading(true);
         try {
-            const query = new URLSearchParams(filters).toString();
-            const response = await fetch(`/api/v1/bike-tours?${query}`);
-            const data = await response.json();
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const targetUrl = isDev 
+                ? `/api/v1/bike-tours?${new URLSearchParams(filters).toString()}` 
+                : `/data/bike-tours.json?t=${Date.now()}`;
+
+            const response = await fetch(targetUrl);
+            if (!response.ok) throw new Error('Network response was not ok');
+            let data = await response.json();
+            
+            // Client-side filtering for production JSON
+            if (!isDev) {
+                if (filters.country) data = data.filter(t => t.country === filters.country);
+                if (filters.destination) data = data.filter(t => t.destination === filters.destination);
+                if (filters.tourType) data = data.filter(t => t.tourType === filters.tourType);
+                // Only show active tours in production
+                data = data.filter(t => t.status === 'active');
+            }
+            
             setTours(data);
         } catch (error) {
             console.error('Error fetching bike tours:', error);
+            setTours([]); // Prevent UI crash
         } finally {
             setLoading(false);
         }

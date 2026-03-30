@@ -12,7 +12,7 @@ const AdminBikeTourDashboard = () => {
     const fetchLeads = async () => {
         try {
             // Only try to fetch PHP leads if we're not in a dev environment that leaks PHP source
-            const isDev = window.location.hostname === 'localhost';
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             if (isDev) return; 
 
             const response = await fetch('/api-save-leads.php');
@@ -32,10 +32,10 @@ const AdminBikeTourDashboard = () => {
     const fetchTours = async () => {
         setLoading(true);
         try {
-            const isDev = window.location.hostname === 'localhost';
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             const targetUrl = isDev 
                 ? '/api/v1/bike-tours/admin' 
-                : '/data/bike-tours.json?t=' + Date.now();
+                : `/data/bike-tours.json?t=${Date.now()}`;
                 
             const response = await fetch(targetUrl);
             if (!response.ok) {
