@@ -218,24 +218,7 @@ const BikeTourDetailView = () => {
                             </div>
                         </section>
 
-                        {/* Live Route Map (Dynamic based on slug) */}
-                        {['delhi-bicycle-tour', 'leh-and-leh-grand-circuit'].includes(tour.slug) && (
-                            <section className="space-y-8 pt-8">
-                                <div className="space-y-4">
-                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Interactive Route</h2>
-                                    <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white leading-tight italic">
-                                        {tour.slug === 'leh-and-leh-grand-circuit' ? 'The Grand Circuit, Mapped' : 'Live Tracking'}
-                                    </h3>
-                                </div>
-                                <div className="w-full bg-white dark:bg-slate-900 rounded-[20px] p-2 border border-slate-100 dark:border-slate-800 shadow-2xl">
-                                    <iframe
-                                      src={tour.slug === 'leh-and-leh-grand-circuit' ? '/leh_tour_complete.html' : '/delhi_tour_complete.html'}
-                                      className="w-full h-[500px] md:h-[900px] border-none rounded-2xl"
-                                      title={`${tour.title} Route Map`}>
-                                    </iframe>
-                                </div>
-                            </section>
-                        )}
+
 
                         {/* Editorial Body */}
                         <section className="article-content max-w-none">
@@ -258,7 +241,8 @@ const BikeTourDetailView = () => {
 
                             <div className="animate-fade-up">
                                 {activeTab === 'at a glance' && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-12">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="p-10 bg-slate-900 rounded-[48px] text-white space-y-6">
                                             <h4 className="text-2xl font-serif italic text-primary">The Route</h4>
                                             <div className="space-y-6 pt-4">
@@ -278,6 +262,26 @@ const BikeTourDetailView = () => {
                                                 </p>
                                             </div>
                                         </div>
+                                        </div>
+
+                                        {/* Embedded Live Route Map */}
+                                        {['delhi-bicycle-tour', 'leh-and-leh-grand-circuit'].includes(tour.slug) && (
+                                            <div className="space-y-8 pt-8 mt-12 border-t border-slate-100 dark:border-slate-800">
+                                                <div className="space-y-4">
+                                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Interactive Route</h2>
+                                                    <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white leading-tight italic">
+                                                        {tour.slug === 'leh-and-leh-grand-circuit' ? 'The Grand Circuit, Mapped' : 'Live Tracking'}
+                                                    </h3>
+                                                </div>
+                                                <div className="w-full bg-white dark:bg-slate-900 rounded-[20px] p-2 border border-slate-100 dark:border-slate-800 shadow-2xl">
+                                                    <iframe
+                                                      src={tour.slug === 'leh-and-leh-grand-circuit' ? '/leh_tour_complete.html' : '/delhi_tour_complete.html'}
+                                                      className="w-full h-[500px] md:h-[600px] border-none rounded-2xl"
+                                                      title={`${tour.title} Route Map`}>
+                                                    </iframe>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                                 {activeTab === 'inclusions' && (
