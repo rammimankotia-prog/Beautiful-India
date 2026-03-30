@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Grand Circuit, Mapped</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        #map-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); /* very subtle border */
+        }
+
+        /* Header UI overlay matching screenshot */
+        .map-header {
+            background-color: #f8f9fa; /* slightly off-white */
+            padding: 24px 32px;
+            z-index: 1000;
+            position: relative;
+            border-bottom: 2px solid rgba(0,0,0,0.03);
+            /* Ensure it lays at the top of the flex container */
+        }
+
+        .map-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: #0f172a;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .map-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #64748b;
+            font-weight: 400;
+            margin: 0 0 24px 0;
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Marker Styles */
+        .custom-marker {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            box-shadow: 0 8px 16px -4px rgba(0,0,0,0.3), 0 4px 8px -2px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        /* Adding the little triangle at the bottom of the pin */
+        .custom-marker::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid white;
+        }
+        
+        /* Using absolute center inner triangle for color matching */
+        .custom-marker::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            z-index: 10;
+        }
+
+        /* Color classes */
+        .marker-green { background-color: #1a6442; border-color: white; }
+        .marker-green::before { border-top: 6px solid #1a6442; }
+
+        .marker-red { background-color: #b73229; border-color: white; }
+        .marker-red::before { border-top: 6px solid #b73229; }
+
+        .marker-blue { background-color: #3b5998; border-color: white; }
+        .marker-blue::before { border-top: 6px solid #3b5998; }
+
+        .marker-orange { background-color: #d18a30; border-color: white; }
+        .marker-orange::before { border-top: 6px solid #d18a30; }
+
+        .legend-dot.green { background-color: #1a6442; }
+        .legend-dot.red { background-color: #b73229; }
+        .legend-dot.blue { background-color: #3b5998; }
+        .legend-dot.orange { background-color: #d18a30; }
+
+        #map {
+            flex-grow: 1; /* take up the rest of the height */
+            width: 100%;
+            background-color: #e5e3df; /* common leaflet background color */
+        }
+
+        /* Custom Popup styling */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            padding: 4px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        }
+        .leaflet-popup-content {
+            margin: 12px 16px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+        }
+        .popup-title {
+            font-weight: 900;
+            font-size: 16px;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .popup-desc {
+            font-size: 12px;
+            color: #64748b;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Subtle attribution */
+        .leaflet-control-attribution {
+            background: rgba(255,255,255,0.8) !important;
+            border-radius: 4px 0 0 0;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map-container">
+    <div class="map-header">
+        <h1 class="map-title">The Grand Circuit, Mapped</h1>
+        <p class="map-subtitle">Click any marker to explore that day's stop. The dashed line traces your full 900 km circuit.</p>
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot green"></div> Start / Finish</div>
+            <div class="legend-item"><div class="legend-dot red"></div> Overnight Stops</div>
+            <div class="legend-item"><div class="legend-dot blue"></div> Scenic Highlights</div>
+            <div class="legend-item"><div class="legend-dot orange"></div> High Passes</div>
+        </div>
+    </div>
+    <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    // Initialize map focused on Ladakh region
+    const map = L.map('map', {
+        zoomControl: true,
+        scrollWheelZoom: false // disable scroll wheel to prevent getting stuck while scrolling the page
+    }).setView([34.1, 77.8], 8);
+
+    // Light, neutral map tiles similar to the screenshot
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abcd',
+        maxZoom: 14
+    }).addTo(map);
+
+    // Locations details
+    const locations = {
+        leh: { coords: [34.1526, 77.5771], label: 'F', classes: 'marker-green', name: 'Leh', desc: 'Start / Finish' },
+        khardungLa: { coords: [34.2787, 77.6047], label: 'K', classes: 'marker-orange', name: 'Khardung La', desc: 'High Pass (5,359m)' },
+        nubra: { coords: [34.5459, 77.5606], label: 'N', classes: 'marker-red', name: 'Nubra Valley', desc: 'Overnight Stop' },
+        turtuk: { coords: [34.8485, 76.8267], label: 'T', classes: 'marker-red', name: 'Turtuk', desc: 'Overnight Stop' },
+        changLa: { coords: [34.0450, 77.9304], label: 'C', classes: 'marker-orange', name: 'Chang La', desc: 'High Pass (5,360m)' },
+        pangong: { coords: [33.722, 78.435], label: 'P', classes: 'marker-blue', name: 'Pangong Tso', desc: 'Scenic Highlight' },
+        tsoMoriri: { coords: [32.946, 78.261], label: 'M', classes: 'marker-blue', name: 'Tso Moriri', desc: 'Scenic Highlight' }
+    };
+
+    // Construct dashed polyline following the flow
+    const routeCoordinates = [
+        locations.leh.coords,
+        locations.khardungLa.coords,
+        locations.nubra.coords,
+        locations.turtuk.coords,
+        locations.nubra.coords, // Back to nubra
+        locations.changLa.coords,
+        locations.pangong.coords,
+        locations.tsoMoriri.coords,
+        locations.leh.coords
+    ];
+
+    // Add polyline formatting matching screenshot (heavy dashed brownish/red line)
+    L.polyline(routeCoordinates, {
+        color: '#b75b5b',
+        weight: 3,
+        dashArray: '10, 10', // Dashed styling
+        opacity: 0.8,
+        lineJoin: 'round'
+    }).addTo(map);
+
+    // Function to create custom divIcon
+    function createCustomIcon(label, classes) {
+        return L.divIcon({
+            className: 'custom-icon', // Wrapper class
+            html: `<div class="custom-marker ${classes}">${label}</div>`,
+            iconSize: [32, 40], // Size including the little triangle
+            iconAnchor: [16, 40], // Anchor exactly at bottom center
+            popupAnchor: [0, -40] // Pop up slightly above the marker
+        });
+    }
+
+    // Add Markers to Map
+    Object.values(locations).forEach(loc => {
+        const marker = L.marker(loc.coords, {
+            icon: createCustomIcon(loc.label, loc.classes)
+        }).addTo(map);
+
+        // Bind custom styled popup
+        marker.bindPopup(`
+            <h3 class="popup-title">${loc.name}</h3>
+            <p class="popup-desc">${loc.desc}</p>
+        `);
+    });
+
+    // Fit map bounds to show all markers with some padding
+    map.fitBounds(L.polyline(routeCoordinates).getBounds(), { padding: [50, 50] });
+
+</script>
+</body>
+</html>
