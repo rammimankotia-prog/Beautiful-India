@@ -218,18 +218,13 @@ const BikeTourDetailView = () => {
                             </div>
                         </section>
 
-                        {/* Editorial Body */}
-                        <section className="article-content max-w-none">
-                            <div dangerouslySetInnerHTML={{ __html: tour.content }} />
-                        </section>
-
                         {/* Live Route Map (Dynamic based on slug) */}
                         {['delhi-bicycle-tour', 'leh-and-leh-grand-circuit'].includes(tour.slug) && (
-                            <section className="space-y-8 py-8">
+                            <section className="space-y-8 pt-8">
                                 <div className="space-y-4">
-                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Live Tracking</h2>
+                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Interactive Route</h2>
                                     <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white leading-tight italic">
-                                        Interactive <span className="text-primary italic">Route Map</span>
+                                        {tour.slug === 'leh-and-leh-grand-circuit' ? 'The Grand Circuit, Mapped' : 'Live Tracking'}
                                     </h3>
                                 </div>
                                 <div className="w-full bg-white dark:bg-slate-900 rounded-[20px] p-2 border border-slate-100 dark:border-slate-800 shadow-2xl">
@@ -241,6 +236,11 @@ const BikeTourDetailView = () => {
                                 </div>
                             </section>
                         )}
+
+                        {/* Editorial Body */}
+                        <section className="article-content max-w-none">
+                            <div dangerouslySetInnerHTML={{ __html: tour.content }} />
+                        </section>
 
                         {/* Interactive Itinerary / Tabs */}
                         <section className="space-y-12">
