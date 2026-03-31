@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "slug": "leh-and-leh-grand-circuit",
+    "title": "Leh and Leh Grand Circuit",
+    "subtitle": "The Ultimate Himalayan Loop",
+    "content": "<article><h1>Leh Grand Circuit</h1><div class=\"space-y-6 pt-8\"><div class=\"flex items-center gap-4 p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800\"><div class=\"w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center\"><span class=\"material-symbols-outlined text-primary\">explore</span></div><div><h4 class=\"text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white\">The Route</h4><p class=\"text-xs text-slate-500 font-medium\">Starting in Leh, we loop through the highest passes in the world.</p></div></div><p>Join us for the most epic bike tour in the Himalayas. This circuit covers Khardung La, Nubra Valley, Turtuk, Pangong Tso, and Tso Moriri.</p></div></article>",
+    "duration": "10 Days",
+    "coveredPlaces": [
+      "Leh",
+      "Khardung La",
+      "Nubra Valley",
+      "Turtuk",
+      "Pangong Tso",
+      "Tso Moriri"
+    ],
+    "destination": "Ladakh",
+    "country": "India",
+    "mainImage": "/ladakh-bike-expedition.png",
+    "status": "active",
+    "tourType": "Bicycle",
+    "difficulty": "Challenging"
+  }
+]

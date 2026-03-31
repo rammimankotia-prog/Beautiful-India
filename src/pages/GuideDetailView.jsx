@@ -184,6 +184,7 @@ const GuideDetailView = () => {
           <img 
             src={guide.image} 
             alt={guide.title}
+            fetchpriority="high"
             className="w-full h-full object-cover animate-zoom-in"
             style={{ 
               objectPosition: `${guide.imagePositionX || 50}% ${guide.imagePositionY || 50}%` 
@@ -297,17 +298,17 @@ const GuideDetailView = () => {
         <aside className="lg:col-span-11 xl:col-span-4 2xl:col-span-3 space-y-16">
           
           {/* Expert Advice Card */}
-          <div className="bg-slate-900 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/40 to-secondary/40 opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+          <div className="bg-slate-900 dark:bg-slate-900/80 rounded-[3rem] p-12 text-white shadow-[0_40px_100px_-20px_rgba(13,148,136,0.2)] relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/40 to-secondary/40 opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
             <div className="relative z-10">
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-md border border-white/20 group-hover:rotate-6 transition-transform">
-                <TrendingUp size={32} className="text-white" />
+              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-10 backdrop-blur-md border border-white/20 group-hover:rotate-6 transition-transform">
+                <TrendingUp size={32} className="text-primary" />
               </div>
-              <h3 className="text-3xl font-serif font-black mb-6 leading-tight">Plan your <span className="text-primary italic">dream trip</span> with us.</h3>
-              <p className="text-slate-300 font-medium mb-10 leading-relaxed text-lg">Our destination experts can craft a personalized itinerary based on this guide.</p>
+              <h3 className="text-4xl font-serif font-black mb-8 leading-[1.1] tracking-tighter">Plan your <span className="text-primary italic border-b-2 border-primary/30">dream trip</span> with us.</h3>
+              <p className="text-slate-400 font-medium mb-12 leading-relaxed text-lg">Our destination experts can craft a personalized itinerary based on this guide.</p>
               <button 
                 onClick={() => setIsQueryModalOpen(true)}
-                className="w-full bg-white text-slate-900 font-black py-5 rounded-2xl hover:bg-primary hover:text-white transition-all shadow-2xl uppercase tracking-widest text-sm translate-y-0 active:scale-95 group-hover:-translate-y-1"
+                className="w-full bg-primary text-white font-black py-6 rounded-[2rem] hover:bg-white hover:text-slate-900 transition-all shadow-2xl uppercase tracking-[0.2em] text-[10px] translate-y-0 active:scale-95 group-hover:-translate-y-1"
               >
                 Let's Start Planning
               </button>
@@ -417,13 +418,13 @@ const GuideDetailView = () => {
           <h2 className="text-5xl md:text-7xl font-serif font-black text-slate-900 dark:text-white mb-8 tracking-tighter">Travel <span className="text-primary italic">Inside Out.</span></h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed font-medium">Join our community of 50,000+ explorers and receive hand-picked guides and exclusive offers every week.</p>
           
-          <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto p-2 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+          <div className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto p-3 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl rounded-[2.5rem] border border-white/20 dark:border-slate-800 shadow-2xl">
             <input 
               type="email" 
               placeholder="Email address" 
               className="flex-1 px-8 py-5 bg-transparent outline-none text-slate-900 dark:text-white font-bold placeholder:text-slate-400 placeholder:font-black placeholder:uppercase placeholder:text-[10px] placeholder:tracking-widest"
             />
-            <button className="bg-slate-900 dark:bg-primary text-white font-black px-10 py-5 rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest text-xs">
+            <button className="bg-slate-900 dark:bg-primary text-white font-black px-12 py-5 rounded-[2rem] shadow-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-[0.2em] text-[10px]">
               Subscribe
             </button>
           </div>

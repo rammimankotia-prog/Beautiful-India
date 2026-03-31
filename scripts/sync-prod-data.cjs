@@ -10,7 +10,8 @@ const FILES_TO_SYNC = [
   { name: 'tours.json', key: 'id' },
   { name: 'bookings.json', key: 'id' },
   { name: 'reviews.json', key: 'id' },
-  { name: 'leads.json', key: 'email' }
+  { name: 'leads.json', key: 'email' },
+  { name: 'bike-tours.json', key: 'slug' }
 ];
 
 async function fetchRemoteData(fileName) {
