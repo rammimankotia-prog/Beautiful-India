@@ -7,6 +7,7 @@ const AdminTrainQueries = () => {
   const [loading, setLoading] = useState(true);
   const [selectedQuery, setSelectedQuery] = useState(null);
   const [filter, setFilter] = useState('All');
+  const [processing, setProcessing] = useState(false);
 
   const fetchQueries = () => {
     setLoading(true);
@@ -20,6 +21,50 @@ const AdminTrainQueries = () => {
         console.error("Fetch error:", err);
         setLoading(false);
       });
+  };
+
+  const updateQueryStatus = (id, newStatus) => {
+    if (!id || processing) return;
+    setProcessing(true);
+    fetch(`${import.meta.env.BASE_URL}api/train-queries`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status: newStatus })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setQueries(prev => prev.map(q => q.id === id ? { ...q, status: newStatus } : q));
+          if (selectedQuery && selectedQuery.id === id) {
+            setSelectedQuery(prev => ({ ...prev, status: newStatus }));
+          }
+        } else {
+          alert("Failed to update status: " + (data.message || "Unknown error"));
+        }
+      })
+      .catch(err => alert("Error updating status"))
+      .finally(() => setProcessing(false));
+  };
+
+  const handleDelete = (id) => {
+    if (!id || processing) return;
+    if (!window.confirm("Permanently delete this query? This action cannot be undone.")) return;
+    
+    setProcessing(true);
+    fetch(`${import.meta.env.BASE_URL}api/train-queries?id=${id}`, {
+      method: 'DELETE'
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setQueries(prev => prev.filter(q => q.id !== id));
+          setSelectedQuery(null);
+        } else {
+          alert("Failed to delete query: " + (data.message || "Unknown error"));
+        }
+      })
+      .catch(err => alert("Error deleting query"))
+      .finally(() => setProcessing(false));
   };
 
   useEffect(() => {
@@ -250,18 +295,32 @@ const AdminTrainQueries = () => {
 
                 </div>
 
-                <div className="px-8 py-5 bg-white border-t border-slate-100 flex justify-between items-center shrink-0">
-                   <div className="flex items-center gap-4">
-                      <select className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-black outline-none focus:border-[#006D77] transition-all cursor-pointer">
-                         <option>New</option>
-                         <option>Contacted</option>
-                         <option>Closed</option>
-                      </select>
-                   </div>
-                   <button onClick={() => setSelectedQuery(null)} className="px-8 py-2.5 bg-slate-900 text-white rounded-xl font-black text-xs hover:bg-black transition-all shadow-xl">
-                      CLOSE VIEW
-                   </button>
-                </div>
+                 <div className="px-8 py-5 bg-white border-t border-slate-100 flex justify-between items-center shrink-0">
+                    <div className="flex items-center gap-4">
+                       <select 
+                         value={selectedQuery.status}
+                         disabled={processing}
+                         onChange={(e) => updateQueryStatus(selectedQuery.id, e.target.value)}
+                         className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-black outline-none focus:border-[#006D77] transition-all cursor-pointer disabled:opacity-50"
+                       >
+                          <option value="New">New</option>
+                          <option value="Contacted">Contacted</option>
+                          <option value="Closed">Closed</option>
+                       </select>
+                    </div>
+                    <div className="flex gap-3">
+                       <button 
+                          disabled={processing}
+                          onClick={() => handleDelete(selectedQuery.id)}
+                          className="px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl font-black text-xs hover:bg-red-100 transition-all disabled:opacity-50"
+                       >
+                          DELETE QUERY
+                       </button>
+                       <button onClick={() => setSelectedQuery(null)} className="px-8 py-2.5 bg-slate-900 text-white rounded-xl font-black text-xs hover:bg-black transition-all shadow-xl">
+                          CLOSE VIEW
+                       </button>
+                    </div>
+                 </div>
              </div>
           </div>
         )}
