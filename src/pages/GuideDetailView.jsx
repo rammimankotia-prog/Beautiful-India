@@ -527,10 +527,10 @@ const GuideDetailView = () => {
       )}
 
       {/* ── Main Content ── */}
-      <main className="max-w-screen-2xl mx-auto px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32 py-16 lg:py-24 grid grid-cols-1 xl:grid-cols-12 gap-12 xl:gap-20 relative">
+      <main className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-10 lg:px-14 xl:px-10 py-12 lg:py-20 grid grid-cols-1 xl:grid-cols-12 gap-8 xl:gap-10 relative">
 
         {/* Left: Desktop Social Float */}
-        <div className="hidden xl:flex xl:col-span-1 flex-col items-center">
+        <div className="hidden xl:flex xl:col-span-1 flex-col items-center pt-2">
           <div className="sticky top-32 flex flex-col items-center gap-4">
             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest rotate-180 [writing-mode:vertical-lr] mb-2">
               Share Story
@@ -563,7 +563,7 @@ const GuideDetailView = () => {
         </div>
 
         {/* Center: Article Body */}
-        <article className="xl:col-span-7 2xl:col-span-8" ref={articleRef}>
+        <article className="xl:col-span-8 min-w-0" ref={articleRef}>
           <div
             className="article-content animate-fade-up"
             dangerouslySetInnerHTML={{ __html: processedContent }}
@@ -611,7 +611,7 @@ const GuideDetailView = () => {
         </article>
 
         {/* Right: Sidebar */}
-        <aside className="xl:col-span-4 2xl:col-span-3">
+        <aside className="xl:col-span-3 min-w-0">
           <div className="sticky top-28 space-y-8">
 
             {/* Expert Advice CTA */}
