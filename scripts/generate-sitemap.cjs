@@ -26,8 +26,10 @@ const STATIC_ROUTES = [
 ];
 
 function generateUrlEntry(path, priority = '0.7', changefreq = 'weekly') {
+  const lastmod = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   return `  <url>
     <loc>${BASE_URL}${path}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`;
