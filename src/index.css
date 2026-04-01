@@ -106,7 +106,7 @@ body {
 }
 
 .article-content p {
-  @apply mb-8 font-normal leading-relaxed;
+  @apply mb-6 font-normal leading-relaxed;
   font-size: inherit;
 }
 
@@ -140,9 +140,20 @@ body {
 /* Single-column lists — no more columns-2 breaking on mobile */
 .article-content ul,
 .article-content ol {
-  @apply my-8 pl-6 space-y-3;
+  @apply my-6 pl-6 space-y-2;
   list-style: none;
   columns: 1;
+}
+
+/* Force standard narrow gaps for any layout containers inside content to prevent broken large gaps from server-side data */
+.article-content .flex-col,
+.article-content [class*="gap-"],
+.article-content [class*="space-y-"] {
+  gap: 1rem !important;
+}
+.article-content .flex-col > * + *,
+.article-content [class*="space-y-"] > * + * {
+  margin-top: 1rem !important;
 }
 
 .article-content ol {

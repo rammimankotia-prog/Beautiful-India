@@ -401,7 +401,7 @@ const GuideDetailView = () => {
       </button>
 
       {/* ── Hero ── */}
-      <header className="relative w-full h-[88vh] min-h-[620px] overflow-hidden">
+      <header className="relative w-full h-[65vh] min-h-[500px] overflow-hidden">
         <div className="absolute inset-0 w-full h-full">
           <img
             src={guide.image}
@@ -416,7 +416,7 @@ const GuideDetailView = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/70 via-transparent to-transparent hidden lg:block"></div>
 
-        <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-12 lg:px-20 xl:px-32 pb-20 max-w-screen-2xl mx-auto w-full">
+        <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 lg:px-20 xl:px-32 pt-20 pb-12 max-w-screen-2xl mx-auto w-full">
           <div className="animate-fade-up">
             {/* Badges */}
             <div className="flex flex-wrap gap-3 mb-8">
@@ -647,12 +647,12 @@ const GuideDetailView = () => {
                     Contents
                   </h3>
                 </div>
-                <nav className="space-y-1">
+                <nav className="flex flex-col gap-1">
                   {tocHeadings.map((h, i) => (
                     <button
                       key={h.id}
                       onClick={() => scrollToSection(h.id)}
-                      className={`flex items-start gap-3 w-full text-left py-2.5 px-4 rounded-xl text-sm transition-all group/toc
+                      className={`flex items-start gap-3 w-full text-left py-1.5 px-4 rounded-xl text-sm transition-all group/toc
                         ${activeSection === h.id
                           ? 'bg-primary/10 text-primary font-bold'
                           : 'text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-primary/5'
