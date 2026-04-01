@@ -12,6 +12,11 @@ const TravelGuidesCategoryLanding = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  const [destPage, setDestPage] = useState(1);
+  const [tipsPage, setTipsPage] = useState(1);
+  const DEST_PER_PAGE = 12;
+  const TIPS_PER_PAGE = 5;
 
   useEffect(() => {
     // 1. Fetch Master List from Server with cache-busting
@@ -24,7 +29,13 @@ const TravelGuidesCategoryLanding = () => {
     })
       .then(res => res.json())
       .then(data => {
-        setGuides(data);
+        // Sort newest first by date string
+        const sorted = [...data].sort((a, b) => {
+          const dateA = a.date ? new Date(a.date) : new Date(0);
+          const dateB = b.date ? new Date(b.date) : new Date(0);
+          return dateB - dateA;
+        });
+        setGuides(sorted);
         setIsLoaded(true);
       })
       .catch(err => {
@@ -63,6 +74,51 @@ const TravelGuidesCategoryLanding = () => {
   const destinationGuides = filteredGuides.filter(g => g.type === 'destination');
   const tipGuides = filteredGuides.filter(g => g.type === 'tip');
   const journalGuides = filteredGuides.filter(g => g.type === 'blog' || !g.type);
+
+  // Pagination Logic
+  const totalDestPages = Math.ceil(destinationGuides.length / DEST_PER_PAGE) || 1;
+  const totalTipsPages = Math.ceil(tipGuides.length / TIPS_PER_PAGE) || 1;
+
+  const paginatedDestinations = destinationGuides.slice((destPage - 1) * DEST_PER_PAGE, destPage * DEST_PER_PAGE);
+  const paginatedTips = tipGuides.slice((tipsPage - 1) * TIPS_PER_PAGE, tipsPage * TIPS_PER_PAGE);
+
+  const handleDestPageChange = (newPage) => {
+    setDestPage(newPage);
+    setTimeout(() => {
+      window.scrollTo({ top: document.querySelector('.destination-section')?.offsetTop - 100, behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleTipsPageChange = (newPage) => {
+    setTipsPage(newPage);
+    setTimeout(() => {
+      window.scrollTo({ top: document.querySelector('.tips-section')?.offsetTop - 100, behavior: 'smooth' });
+    }, 100);
+  };
+
+  const PaginationControl = ({ current, total, onChange }) => (
+    <div className="flex justify-center items-center gap-6 mt-8 mb-4">
+      <button 
+        onClick={() => onChange(Math.max(1, current - 1))}
+        disabled={current === 1}
+        className="pagination-btn"
+      >
+        <span className="material-symbols-outlined">chevron_left</span>
+      </button>
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Page</span>
+        <span className="text-lg font-black text-violet-600 leading-none">{current}</span>
+        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">of {total}</span>
+      </div>
+      <button 
+        onClick={() => onChange(Math.min(total, current + 1))}
+        disabled={current === total}
+        className="pagination-btn"
+      >
+        <span className="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+  );
 
   const trendingTags = [
     { label: 'Adventure', icon: '🏔️' },
@@ -268,6 +324,40 @@ const TravelGuidesCategoryLanding = () => {
           box-shadow: 0 4px 15px rgba(124,58,237,0.35);
         }
 
+        .pagination-btn {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #fff;
+          border: 1px solid rgba(0,0,0,0.06);
+          color: #64748b;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .dark .pagination-btn {
+          background: rgba(15,23,42,0.6);
+          border-color: rgba(255,255,255,0.08);
+          color: #94a3b8;
+        }
+        .pagination-btn:hover:not(:disabled) {
+          border-color: #7c3aed;
+          color: #7c3aed;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(124,58,237,0.15);
+        }
+        .pagination-btn:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+          background: #f8fafc;
+        }
+        .dark .pagination-btn:disabled {
+          background: rgba(0,0,0,0.2);
+        }
+
         /* Section Header */
         .section-header {
           display: flex;
@@ -313,7 +403,7 @@ const TravelGuidesCategoryLanding = () => {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
           gap: 24px;
-          margin-bottom: 3.5rem;
+          margin-bottom: 1.5rem;
         }
         .dest-card {
           background: #fff;
@@ -381,6 +471,10 @@ const TravelGuidesCategoryLanding = () => {
           color: #0f172a;
           line-height: 1.35;
           transition: color 0.2s;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
         .dark .dest-card-title { color: #f1f5f9; }
         .dest-card:hover .dest-card-title { color: #7c3aed; }
@@ -430,7 +524,7 @@ const TravelGuidesCategoryLanding = () => {
         }
 
         /* Tip Cards */
-        .tips-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 3.5rem; }
+        .tips-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 1.5rem; }
         .tip-card {
           display: flex;
           gap: 20px;
@@ -658,7 +752,6 @@ const TravelGuidesCategoryLanding = () => {
           color: #7c3aed;
           letter-spacing: -0.02em;
         }
-        .tour-divider { display: none; }
 
         /* Tags */
         .tag {
@@ -806,7 +899,6 @@ const TravelGuidesCategoryLanding = () => {
             onError={e => { e.target.src = 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80'; }}
           />
           <div className="guides-hero-overlay" />
-          {/* Floating particles */}
           <div className="guides-hero-particles">
             {[...Array(12)].map((_, i) => (
               <div key={i} className="particle" style={{
@@ -840,20 +932,6 @@ const TravelGuidesCategoryLanding = () => {
               />
               <button className="hero-search-btn">Search</button>
             </div>
-            <div className="hero-stats">
-              <div className="hero-stat">
-                <span className="hero-stat-num">150+</span>
-                <span className="hero-stat-label">Destinations</span>
-              </div>
-              <div className="hero-stat">
-                <span className="hero-stat-num">500+</span>
-                <span className="hero-stat-label">Expert Tips</span>
-              </div>
-              <div className="hero-stat">
-                <span className="hero-stat-num">98%</span>
-                <span className="hero-stat-label">Satisfaction</span>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -863,7 +941,11 @@ const TravelGuidesCategoryLanding = () => {
             <button
               key={f.id}
               className={`filter-pill ${activeFilter === f.id ? 'active' : ''}`}
-              onClick={() => setActiveFilter(f.id)}
+              onClick={() => {
+                setActiveFilter(f.id);
+                setDestPage(1);
+                setTipsPage(1);
+              }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{f.icon}</span>
               {f.label}
@@ -871,13 +953,12 @@ const TravelGuidesCategoryLanding = () => {
           ))}
         </div>
 
-        {/* ── Layout: Main + Sidebar ── */}
         <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-
+          
           {/* ── Main Content ── */}
           <div style={{ flex: 1, minWidth: 0 }}>
 
-            {/* Travel Journal (New Section for Blogs) */}
+            {/* Traveler's Journal (Blog Section) */}
             {(activeFilter === 'all' || activeFilter === 'blog') && journalGuides.length > 0 && (
               <section className="mb-14">
                 <div className="section-header">
@@ -888,12 +969,7 @@ const TravelGuidesCategoryLanding = () => {
                 </div>
                 <div className="destination-grid">
                   {journalGuides.map((guide, index) => (
-                    <Link
-                      to={`/guides/${guide.id}`}
-                      key={guide.id}
-                      className="dest-card border-none ring-1 ring-slate-200 dark:ring-white/10"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
+                    <Link to={`/guides/${guide.id}`} key={guide.id} className="dest-card" style={{ animationDelay: `${index * 0.1}s` }}>
                       <div className="dest-card-img-wrap">
                         <img className="dest-card-img" src={guide.image} alt={guide.title} />
                         <div className="dest-card-overlay" />
@@ -902,19 +978,12 @@ const TravelGuidesCategoryLanding = () => {
                       <div className="dest-card-body">
                         <h3 className="dest-card-title">{guide.title}</h3>
                         <div className="dest-card-meta">
-                          <span>
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>history_edu</span>
-                            Editorial
-                          </span>
-                          <span>
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>calendar_today</span>
-                            {guide.date}
-                          </span>
+                          <span><span className="material-symbols-outlined" style={{ fontSize: '14px' }}>history_edu</span> Editorial</span>
+                          <span><span className="material-symbols-outlined" style={{ fontSize: '14px' }}>calendar_today</span> {guide.date}</span>
                         </div>
                         <p className="dest-card-desc">{guide.description || guide.content?.substring(0, 100) + '...'}</p>
                         <div className="dest-card-cta">
-                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>menu_book</span>
-                          Read Journal
+                          Read Journal <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
                         </div>
                       </div>
                     </Link>
@@ -923,27 +992,18 @@ const TravelGuidesCategoryLanding = () => {
               </section>
             )}
 
-            {/* Popular Destinations */}
+            {/* Popular Destinations (Paginated) */}
             {(activeFilter === 'all' || activeFilter === 'destination') && (
-              <section>
+              <section className="destination-section">
                 <div className="section-header">
                   <h2 className="section-title">
                     <span className="section-title-bar" />
                     Popular Destinations
                   </h2>
-                  <a href="#" className="view-all-link">
-                    View All
-                    <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
-                  </a>
                 </div>
                 <div className="destination-grid">
-                  {destinationGuides.map((guide, index) => (
-                    <Link
-                      to={`/guides/${guide.id}`}
-                      key={guide.id}
-                      className="dest-card"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
+                  {paginatedDestinations.map((guide, index) => (
+                    <Link to={`/guides/${guide.id}`} key={guide.id} className="dest-card" style={{ animationDelay: `${index * 0.1}s` }}>
                       <div className="dest-card-img-wrap">
                         <img className="dest-card-img" src={guide.image} alt={guide.title} />
                         <div className="dest-card-overlay" />
@@ -952,19 +1012,12 @@ const TravelGuidesCategoryLanding = () => {
                       <div className="dest-card-body">
                         <h3 className="dest-card-title">{guide.title}</h3>
                         <div className="dest-card-meta">
-                          <span>
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
-                            {guide.readTime}
-                          </span>
-                          <span>
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>calendar_today</span>
-                            {guide.date}
-                          </span>
+                          <span><span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span> {guide.readTime}</span>
+                          <span><span className="material-symbols-outlined" style={{ fontSize: '14px' }}>calendar_today</span> {guide.date}</span>
                         </div>
                         <p className="dest-card-desc">{guide.description}</p>
                         <div className="dest-card-cta">
-                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>menu_book</span>
-                          Read Guide
+                          Read Guide <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
                         </div>
                       </div>
                     </Link>
@@ -976,26 +1029,24 @@ const TravelGuidesCategoryLanding = () => {
                     </div>
                   )}
                 </div>
+                {totalDestPages > 1 && (
+                  <PaginationControl current={destPage} total={totalDestPages} onChange={handleDestPageChange} />
+                )}
               </section>
             )}
 
-            {/* Travel Tips */}
+            {/* Travel Tips & Hacks (Paginated) */}
             {(activeFilter === 'all' || activeFilter === 'tip') && (
-              <section>
+              <section className="tips-section" style={{ marginTop: '3rem' }}>
                 <div className="section-header">
                   <h2 className="section-title">
                     <span className="section-title-bar" />
-                    Travel Tips &amp; Hacks
+                    Travel Tips & Hacks
                   </h2>
                 </div>
                 <div className="tips-list">
-                  {tipGuides.map((tip, index) => (
-                    <Link
-                      to={`/guides/${tip.id}`}
-                      key={tip.id}
-                      className="tip-card"
-                      style={{ animationDelay: `${index * 0.12}s` }}
-                    >
+                  {paginatedTips.map((tip, index) => (
+                    <Link to={`/guides/${tip.id}`} key={tip.id} className="tip-card" style={{ animationDelay: `${index * 0.12}s` }}>
                       <div className="tip-card-img-wrap">
                         <img className="tip-card-img" src={tip.image} alt={tip.title} />
                       </div>
@@ -1004,12 +1055,10 @@ const TravelGuidesCategoryLanding = () => {
                         <p className="tip-card-desc">{tip.description}</p>
                         <div className="tip-card-footer">
                           <span className="tip-read-time">
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>timer</span>
-                            {tip.readTime}
+                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>timer</span> {tip.readTime} • {tip.date}
                           </span>
                           <span className="tip-read-more">
-                            Read More
-                            <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>arrow_forward</span>
+                            Read More <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>arrow_forward</span>
                           </span>
                         </div>
                       </div>
@@ -1022,102 +1071,65 @@ const TravelGuidesCategoryLanding = () => {
                     </div>
                   )}
                 </div>
+                {totalTipsPages > 1 && (
+                  <PaginationControl current={tipsPage} total={totalTipsPages} onChange={handleTipsPageChange} />
+                )}
               </section>
             )}
           </div>
 
           {/* ── Sidebar ── */}
           <aside style={{ width: '100%', maxWidth: '320px', flexShrink: 0 }}>
-
             {/* Curated Tours Widget */}
             <div className="sidebar-widget">
               <div className="sidebar-widget-header">
                 <span className="material-symbols-outlined sidebar-widget-icon">auto_awesome</span>
-                Curated Tours for You
+                Curated Tours
               </div>
-
-              {randomTours.length > 0 ? (
-                randomTours.map((tour, idx) => (
-                  <React.Fragment key={tour.slug}>
-                    <Link to={`/tour/${tour.slug}`} className="featured-tour-card">
-                      <div className="featured-tour-img-wrap">
-                        <img
-                          src={tour.image}
-                          className="featured-tour-img"
-                          alt={tour.title}
-                        />
-                        <span className="tour-label">
-                          <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
-                            {idx === 0 ? "hotel_class" : "trending_up"}
-                          </span>
-                          {idx === 0 ? "Top Rated" : "Trending"}
-                        </span>
-                      </div>
-                      <div className="featured-tour-body">
-                        <h4 className="featured-tour-title">{tour.title}</h4>
-                        <div className="featured-tour-meta-row">
-                          <span className="featured-tour-info">
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
-                            {tour.duration}
-                          </span>
-                          <div className="featured-tour-price-box">
-                            <span className="featured-tour-price-label">Starting from</span>
-                            <span className="featured-tour-price">
-                              ₹{parseInt(tour.price).toLocaleString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </React.Fragment>
-                ))
-              ) : (
-                <div className="p-4 text-center text-gray-500 text-sm">
-                  Discovering best tours for you...
-                </div>
-              )}
-
-              <Link to="/tours" className="view-tours-btn">
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>map</span>
-                View All Tours
-              </Link>
+              {randomTours.map((tour, idx) => (
+                <Link to={`/tour/${tour.slug}`} key={tour.slug} className="featured-tour-card">
+                  <div className="featured-tour-img-wrap">
+                    <img src={tour.image} className="featured-tour-img" alt={tour.title} />
+                    <span className="tour-label">
+                      <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>{idx === 0 ? "hotel_class" : "trending_up"}</span>
+                      {idx === 0 ? "Top Rated" : "Trending"}
+                    </span>
+                  </div>
+                  <div className="featured-tour-body">
+                    <h4 className="featured-tour-title">{tour.title}</h4>
+                    <div className="featured-tour-meta-row">
+                      <span className="featured-tour-info"><span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span> {tour.duration}</span>
+                      <span className="featured-tour-price">₹{parseInt(tour.price).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+              <Link to="/tours" className="view-tours-btn">View All Tours</Link>
             </div>
 
-            {/* Trending Tags Widget */}
-            <div className="sidebar-widget" style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+            {/* Trending Tags */}
+            <div className="sidebar-widget" style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)' }}>
               <div className="sidebar-widget-header">
                 <span className="material-symbols-outlined sidebar-widget-icon">local_fire_department</span>
                 Trending Tags
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {trendingTags.map(tag => (
-                  <span key={tag.label} className="tag">
-                    {tag.icon} {tag.label}
-                  </span>
+                  <span key={tag.label} className="tag">{tag.icon} {tag.label}</span>
                 ))}
               </div>
             </div>
 
-            {/* Newsletter Widget */}
+            {/* Newsletter */}
             <div className="newsletter-widget">
-              <div className="newsletter-glow-1" />
-              <div className="newsletter-glow-2" />
-              <div style={{ position: 'relative', zIndex: 10 }}>
-                <span className="material-symbols-outlined newsletter-icon">mail</span>
-                <h3 className="newsletter-title">Get Inspired Weekly</h3>
-                <p className="newsletter-sub">
-                  Travel hacks, secret destinations, and curated itineraries — straight to your inbox.
-                </p>
-                <input
-                  className="newsletter-input"
-                  placeholder="Enter your email address"
-                  type="email"
-                />
-                <button className="newsletter-btn">✈ Join the Club</button>
-              </div>
+              <span className="material-symbols-outlined newsletter-icon">mail</span>
+              <h3 className="newsletter-title">Get Inspired Weekly</h3>
+              <p className="newsletter-sub">Travel hacks and secret destinations straight to your inbox.</p>
+              <input className="newsletter-input" placeholder="Enter your email" type="email" />
+              <button className="newsletter-btn">✈ Join the Club</button>
             </div>
-
           </aside>
+
         </div>
       </main>
     </div>
