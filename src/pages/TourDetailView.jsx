@@ -10,7 +10,9 @@ const Thumb = ({ img, className = '', large = false, tourTitle = '' }) => (
   <div className={`relative overflow-hidden rounded-2xl group cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 ${className}`}>
     <div
       className="absolute inset-0 bg-center bg-cover transition-transform duration-700 ease-out group-hover:scale-110"
-      style={{ backgroundImage: `url('${img?.url || ''}')` }}
+      style={{ 
+        backgroundImage: `url('${(img?.url?.startsWith('/') ? (import.meta.env.BASE_URL + img.url.slice(1)) : img?.url) || ''}')` 
+      }}
     />
     <div className={`absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent transition-opacity duration-300 ${large ? 'opacity-80' : 'opacity-0 group-hover:opacity-100'}`} />
     {(img?.caption || tourTitle) && (
@@ -697,7 +699,9 @@ const TourDetailView = () => {
                           {count >= 4 ? <Thumb img={userPhotos[3]} tourTitle={tour?.title} className="h-full hidden md:block" /> : <div className="h-full rounded-2xl bg-slate-100 hidden md:block" />}
                           <div className="relative overflow-hidden rounded-2xl cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 h-full hidden md:block">
                             <div className="absolute inset-0 bg-center bg-cover transition-transform duration-700 group-hover:scale-110"
-                              style={{ backgroundImage: `url('${(userPhotos[4] || userPhotos[count - 1])?.url || ''}')` }} />
+                              style={{ 
+                                backgroundImage: `url('${(userPhotos[4] || userPhotos[count - 1])?.url?.startsWith('/') ? (import.meta.env.BASE_URL + (userPhotos[4] || userPhotos[count - 1])?.url.slice(1)) : (userPhotos[4] || userPhotos[count - 1])?.url || ''}')` 
+                              }} />
                             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/60 transition-colors duration-300 flex flex-col items-center justify-center gap-1">
                               <span className="material-symbols-outlined text-white text-3xl">photo_library</span>
                               <span className="text-white font-bold text-sm">
@@ -725,7 +729,9 @@ const TourDetailView = () => {
                               <div className="relative w-full h-24 rounded-xl overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow duration-300">
                                 <div
                                   className="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110"
-                                  style={{ backgroundImage: `url('${img.url}')` }}
+                                  style={{ 
+                                    backgroundImage: `url('${img.url?.startsWith('/') ? (import.meta.env.BASE_URL + img.url.slice(1)) : img.url}')` 
+                                  }}
                                 />
                                 <div className="absolute top-1.5 left-1.5 w-5 h-5 bg-black/60 text-white text-[9px] font-black rounded-full flex items-center justify-center">
                                   {i + 1}

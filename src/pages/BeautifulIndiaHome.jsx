@@ -66,7 +66,14 @@ const BeautifulIndiaHome = () => {
                                  onMouseEnter={e => e.currentTarget.style.boxShadow='0 8px 30px rgba(0,109,119,0.18)'}
                                  onMouseLeave={e => e.currentTarget.style.boxShadow='0 2px 12px rgba(0,0,0,0.07)'}>
                                 <div style={{ position:'relative', width:'100%', paddingTop:'75%', overflow:'hidden' }}>
-                                    <div style={{ position:'absolute', inset:0, backgroundImage:`url(${tour.image})`, backgroundSize:'cover', backgroundPosition:'center', transition:'transform .4s' }}
+                                    <div style={{ 
+                                        position:'absolute', 
+                                        inset:0, 
+                                        backgroundImage:`url(${tour.image?.startsWith('/') ? (import.meta.env.BASE_URL + tour.image.slice(1)) : tour.image})`, 
+                                        backgroundSize:'cover', 
+                                        backgroundPosition:'center', 
+                                        transition:'transform .4s' 
+                                    }}
                                          onMouseEnter={e => e.currentTarget.style.transform='scale(1.08)'}
                                          onMouseLeave={e => e.currentTarget.style.transform='scale(1)'} />
                                     <div style={{ position:'absolute', top:12, right:12, background:'rgba(255,255,255,0.92)', borderRadius:50, padding:'4px 10px', display:'flex', alignItems:'center', gap:4 }}>
