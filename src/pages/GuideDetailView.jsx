@@ -89,6 +89,22 @@ const injectHeadingIds = (html) => {
 };
 
 /* ─────────────────────────────────────────────
+   Stable device fingerprint — no login required
+───────────────────────────────────────────── */
+const getOrCreateDeviceId = () => {
+  const KEY = 'bi_device_id';
+  let did = localStorage.getItem(KEY);
+  if (!did) {
+    did = 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+    localStorage.setItem(KEY, did);
+  }
+  return did;
+};
+
+const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const SAVED_GUIDES_API = `${API_BASE}/api-saved-guides.php`;
+
+/* ─────────────────────────────────────────────
    Main Component
 ───────────────────────────────────────────── */
 const GuideDetailView = () => {
@@ -162,11 +178,25 @@ const GuideDetailView = () => {
     fetchData();
   }, [id]);
 
-  /* ── Bookmark state from localStorage ── */
+  /* ── Bookmark state: localStorage (instant) + server sync ── */
   useEffect(() => {
     if (!id) return;
-    const saved = JSON.parse(localStorage.getItem('savedGuides') || '[]');
-    setIsSaved(saved.includes(id));
+    // 1. Immediate: check localStorage so UI is instant
+    const localSaved = JSON.parse(localStorage.getItem('savedGuides') || '[]');
+    setIsSaved(localSaved.includes(id));
+
+    // 2. Background: authoritative sync from server
+    const deviceId = getOrCreateDeviceId();
+    fetch(`${SAVED_GUIDES_API}?deviceId=${encodeURIComponent(deviceId)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.saved) {
+          // Merge server list into localStorage
+          localStorage.setItem('savedGuides', JSON.stringify(data.saved));
+          setIsSaved(data.saved.includes(id));
+        }
+      })
+      .catch(() => { /* silently fall back to localStorage */ });
   }, [id]);
 
   /* ─────────────── Loading / Not-found states ─────────────── */
@@ -282,18 +312,36 @@ const GuideDetailView = () => {
     }
   };
 
-  const handleBookmark = () => {
-    const saved = JSON.parse(localStorage.getItem('savedGuides') || '[]');
-    let updated;
-    if (isSaved) {
-      updated = saved.filter((s) => s !== id);
-      showToast('Removed from saved guides');
-    } else {
-      updated = [...saved, id];
-      showToast('Guide saved!');
+  const handleBookmark = async () => {
+    const action = isSaved ? 'remove' : 'save';
+    const nextSaved = !isSaved;
+
+    // 1. Optimistic UI update
+    setIsSaved(nextSaved);
+    const localSaved = JSON.parse(localStorage.getItem('savedGuides') || '[]');
+    const updatedLocal = action === 'save'
+      ? [...new Set([...localSaved, id])]
+      : localSaved.filter((s) => s !== id);
+    localStorage.setItem('savedGuides', JSON.stringify(updatedLocal));
+    showToast(nextSaved ? 'Guide saved!' : 'Removed from saved guides');
+
+    // 2. Persist to server
+    const deviceId = getOrCreateDeviceId();
+    try {
+      const res = await fetch(SAVED_GUIDES_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deviceId, slug: id, action }),
+      });
+      const data = await res.json();
+      if (data?.saved) {
+        // Keep localStorage in sync with server truth
+        localStorage.setItem('savedGuides', JSON.stringify(data.saved));
+      }
+    } catch {
+      // Server unavailable — localStorage already updated as fallback
+      console.warn('[Bookmark] Server sync failed, using localStorage only');
     }
-    localStorage.setItem('savedGuides', JSON.stringify(updated));
-    setIsSaved(!isSaved);
   };
 
   const handleSubscribe = (e) => {
