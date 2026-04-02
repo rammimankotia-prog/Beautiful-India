@@ -881,7 +881,7 @@
     "id": "golden-triangle-tour"
   },
   {
-    "id": "old-new-delhi-city-tour",
+    "id": "3",
     "title": "Old & New Delhi City Tour",
     "description": "Experience the perfect blend of history and modernity in India's capital.",
     "destination": "India",
@@ -918,10 +918,10 @@
         "description": "Lotus Temple and Akshardham Temple visit."
       }
     ],
-    "slug": "old-new-delhi-city-tour"
+    "slug": "3"
   },
   {
-    "id": "mumbai-city-of-dreams",
+    "id": "4",
     "title": "Mumbai City of Dreams",
     "description": "Explore the bustling metropolis and the home of Bollywood.",
     "destination": "India",
@@ -963,10 +963,10 @@
         "description": "Transfer to airport."
       }
     ],
-    "slug": "mumbai-city-of-dreams"
+    "slug": "4"
   },
   {
-    "id": "cultural-kolkata",
+    "id": "5",
     "title": "Cultural Kolkata",
     "description": "The intellectual and cultural heart of India.",
     "destination": "India",
@@ -1003,10 +1003,10 @@
         "description": "Explore the colonial architecture of North Kolkata."
       }
     ],
-    "slug": "cultural-kolkata"
+    "slug": "5"
   },
   {
-    "id": "chennai-heritage-tour",
+    "id": "6",
     "title": "Chennai Heritage Tour",
     "description": "Discover the gateway to South Indian culture.",
     "destination": "India",
@@ -1043,10 +1043,10 @@
         "description": "Shopping at T-Nagar and airport drop."
       }
     ],
-    "slug": "chennai-heritage-tour"
+    "slug": "6"
   },
   {
-    "id": "himachal-explorer",
+    "id": "7",
     "title": "Himachal Explorer",
     "description": "Breathtaking views of Shimla and Manali.",
     "destination": "India",
@@ -1098,10 +1098,10 @@
         "description": "Back to Delhi."
       }
     ],
-    "slug": "himachal-explorer"
+    "slug": "7"
   },
   {
-    "id": "royal-rajasthan",
+    "id": "8",
     "title": "Royal Rajasthan",
     "description": "Walk through the palaces of Jaipur and Udaipur.",
     "destination": "India",
@@ -1158,10 +1158,10 @@
         "description": "Airport transfer."
       }
     ],
-    "slug": "royal-rajasthan"
+    "slug": "8"
   },
   {
-    "id": "ladakh-adventure",
+    "id": "9",
     "title": "Ladakh Adventure",
     "description": "The land of high passes and crystal blue lakes.",
     "destination": "India",
@@ -1223,10 +1223,10 @@
         "description": "Transfer to KBR airport."
       }
     ],
-    "slug": "ladakh-adventure"
+    "slug": "9"
   },
   {
-    "id": "goa-beach-holiday",
+    "id": "10",
     "title": "Goa Beach Holiday",
     "description": "Sun, sand, and seafood in North & South Goa.",
     "destination": "India",
@@ -1268,10 +1268,10 @@
         "description": "Beach yoga and farewell."
       }
     ],
-    "slug": "goa-beach-holiday"
+    "slug": "10"
   },
   {
-    "id": "spiritual-uttarakhand",
+    "id": "11",
     "title": "Spiritual Uttarakhand",
     "description": "Journey through Rishikesh and Haridwar.",
     "destination": "India",
@@ -1318,10 +1318,10 @@
         "description": "Return to Dehradun."
       }
     ],
-    "slug": "spiritual-uttarakhand"
+    "slug": "11"
   },
   {
-    "id": "andaman-bliss",
+    "id": "12",
     "title": "Andaman Bliss",
     "description": "Explore the pristine islands of Havelock and Neil.",
     "destination": "India",
@@ -1373,6 +1373,6 @@
         "description": "Drop at airport."
       }
     ],
-    "slug": "andaman-bliss"
+    "slug": "12"
   }
 ]
