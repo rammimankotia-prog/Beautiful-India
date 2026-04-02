@@ -227,7 +227,7 @@ const AdminTourManagementDashboard = () => {
                                      <div className="w-12 h-10 rounded-lg bg-cover bg-center shadow-sm" style={{ backgroundImage: `url('${tour.image}')` }}></div>
                                      <div className="flex flex-col">
                                         <span className="text-sm font-black text-slate-800 dark:text-slate-100">{tour.title}</span>
-                                        <span className="text-[10px] font-bold text-slate-400">{tour.id}</span>
+                                        <span className="text-[10px] font-bold text-slate-400">{tour.slug || tour.id}</span>
                                      </div>
                                   </div>
                                </td>
@@ -259,8 +259,8 @@ const AdminTourManagementDashboard = () => {
                                   </select>
                                </td>
                                <td className="px-8 py-6 text-right">
-                                  <div className="flex justify-end gap-2 text-slate-300">
-                                     <Link to={`/admin/tours/edit/${tour.id}`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 hover:text-[#0a6c75] transition-all">
+                                   <div className="flex justify-end gap-2 text-slate-300">
+                                     <Link to={`/admin/tours/edit/${tour.slug || tour.id}`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 hover:text-[#0a6c75] transition-all">
                                         <span className="material-symbols-outlined text-[20px]">edit</span>
                                      </Link>
                                      <button onClick={() => handleDelete(tour.id)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all">
