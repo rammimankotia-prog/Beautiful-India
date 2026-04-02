@@ -82,7 +82,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 sm:p-0">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
@@ -90,7 +90,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
       ></div>
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[95vh] flex flex-col">
+      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] sm:max-h-[95vh] flex flex-col">
         
         {/* Header Decor */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-teal-500 via-indigo-500 to-teal-500"></div>
@@ -118,13 +118,13 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
             </div>
           </div>
         ) : (
-            <div className="flex-1 overflow-y-auto p-6 sm:p-10 custom-scrollbar">
-              <div className="mb-8 pr-6">
-                <span className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 dark:bg-teal-900/20 dark:text-teal-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
+            <div className="flex-1 overflow-y-auto min-h-0 p-5 sm:p-10 custom-scrollbar">
+              <div className="mb-6 sm:mb-8 pr-6">
+                <span className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 dark:bg-teal-900/20 dark:text-teal-400 px-3 sm:px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-3 sm:mb-4">
                   <Smartphone size={14} />
                   Consult a Specialist
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight mb-2 tracking-tight">
+                <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight mb-2 tracking-tight">
                   Let's plan your journey to {topic || 'India'}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
@@ -132,10 +132,10 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                 </p>
               </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Name */}
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Full Name *</label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Full Name *</label>
                 <div className="relative group">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                   <input 
@@ -145,15 +145,15 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                     placeholder="Enter your full name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-2xl text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
+                    className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
                   />
                 </div>
               </div>
 
               {/* Email & Phone */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Email Address *</label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Email Address *</label>
                   <div className="relative group">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                     <input 
@@ -163,12 +163,12 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                       placeholder="you@email.com"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-2xl text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
+                      className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Phone Number *</label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Phone Number *</label>
                   <div className="relative group">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                     <input 
@@ -178,37 +178,37 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                       placeholder="+91 00000 00000"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-2xl text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
+                      className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Message */}
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Custom Requirements</label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Custom Requirements</label>
                 <div className="relative group">
-                  <MessageSquare className="absolute left-4 top-5 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
+                  <MessageSquare className="absolute left-4 top-4 sm:top-5 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                   <textarea 
                     name="message"
                     rows={3}
                     placeholder="Tell us about your travel plans..."
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-2xl text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm resize-none"
+                    className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm resize-none"
                   ></textarea>
                 </div>
               </div>
 
               {/* WhatsApp Consent */}
-              <label className="flex items-center gap-3 cursor-pointer group bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border-2 border-transparent hover:border-emerald-500/20 transition-all">
-                <div className="relative flex items-center">
+              <label className="flex items-start sm:items-center gap-3 cursor-pointer group bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 border-transparent hover:border-emerald-500/20 transition-all">
+                <div className="relative mt-0.5 sm:mt-0 flex items-center shrink-0">
                   <input 
                     type="checkbox"
                     name="whatsappConsent"
                     checked={formData.whatsappConsent}
                     onChange={handleChange}
-                    className="w-6 h-6 border-2 border-slate-300 rounded-lg checked:bg-emerald-500 checked:border-emerald-500 transition-all appearance-none cursor-pointer"
+                    className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-slate-300 rounded-lg checked:bg-emerald-500 checked:border-emerald-500 transition-all appearance-none cursor-pointer"
                   />
                   {formData.whatsappConsent && (
                     <CheckCircle className="absolute inset-0 m-auto text-white" size={14} strokeWidth={4} />
@@ -230,7 +230,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
               <button 
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full h-16 bg-slate-900 dark:bg-teal-600 text-white rounded-[1.25rem] font-black text-sm uppercase tracking-[0.2em] shadow-2xl shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:grayscale"
+                className="w-full h-14 sm:h-16 bg-slate-900 dark:bg-teal-600 text-white rounded-xl sm:rounded-[1.25rem] font-black text-xs sm:text-sm uppercase tracking-[0.2em] shadow-2xl shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:grayscale"
               >
                 {status === 'loading' ? (
                   <>
