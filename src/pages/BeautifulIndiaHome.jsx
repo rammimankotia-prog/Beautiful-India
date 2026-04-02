@@ -58,7 +58,7 @@ const BeautifulIndiaHome = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {displayedTours.map(tour => {
-                        const detailUrl = `/tour/${tour.id}`;
+                        const detailUrl = `/tour/${tour.slug || tour.id}`;
                         
                         return (
                         <Link key={tour.id} to={detailUrl} style={{ textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', height:'100%' }}>

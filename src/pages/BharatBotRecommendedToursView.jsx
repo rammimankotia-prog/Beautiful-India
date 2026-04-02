@@ -77,7 +77,7 @@ const BharatBotRecommendedToursView = () => {
                         {recommendedTours.map((tour, index) => (
                             <Link 
                                 key={tour.id} 
-                                to={`/tour/${tour.id}`} 
+                                to={`/tour/${tour.slug || tour.id}`} 
                                 className="group bg-white dark:bg-slate-900 rounded-[32px] overflow-hidden shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 transition-all hover:-translate-y-2 hover:shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-700"
                                 style={{ animationDelay: `${index * 150}ms` }}
                             >

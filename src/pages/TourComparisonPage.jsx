@@ -126,7 +126,7 @@ const TourComparisonPage = () => {
                  
                  {/* Tour Image/Title Columns */}
                  {toursToCompare.map(tour => {
-                    const detailUrl = `/tour/${tour.id}`;
+                    const detailUrl = `/tour/${tour.slug || tour.id}`;
 
                     return (
                         <th key={`header-${tour.id}`} className="p-6 align-top w-1/4 min-w-[250px] relative border-r border-slate-200 last:border-r-0">

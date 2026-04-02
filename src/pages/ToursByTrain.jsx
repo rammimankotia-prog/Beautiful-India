@@ -336,7 +336,7 @@ const ToursByTrain = () => {
                                                     <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Starts at</div>
                                                     <div className="text-[22px] font-black text-slate-900">{formatPrice(tour.price, true)}</div>
                                                 </div>
-                                                <Link to={`/tour/${tour.id}`} className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-amber-400 group-hover:text-slate-900 transition-all duration-300">
+                                                <Link to={`/tour/${tour.slug || tour.id}`} className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-amber-400 group-hover:text-slate-900 transition-all duration-300">
                                                     <span className="material-symbols-outlined font-black">arrow_outward</span>
                                                 </Link>
                                             </div>

@@ -544,7 +544,7 @@ const ToursDiscoveryFiltering1 = () => {
                                         ].filter(Boolean).join(', ');
                                         const themeTag = tour.nature || tour.theme || 'Adventure';
                                         
-                                        const detailUrl = `/tour/${tour.id}`;
+                                        const detailUrl = `/tour/${tour.slug || tour.id}`;
 
                                         return (
                                             <div

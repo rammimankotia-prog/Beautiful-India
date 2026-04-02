@@ -91,7 +91,7 @@ const ToursDiscoveryFiltering4 = () => {
             [1, 2].map(i => <div key={i} className="h-64 bg-gray-100 animate-pulse rounded-sm"></div>)
         ) : (
             tours.map(tour => {
-                const detailUrl = `/tour/${tour.id}`;
+                const detailUrl = `/tour/${tour.slug || tour.id}`;
 
                 return (
                     <article key={tour.id} className="group">
@@ -107,7 +107,7 @@ const ToursDiscoveryFiltering4 = () => {
                         <p className="text-neutral-500 dark:text-neutral-400 text-sm leading-relaxed line-clamp-2">{tour.description}</p>
                         <div className="pt-4 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800">
                           <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-tighter">By Bharat Darshan</span>
-                          <Link className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-100 hover:text-primary transition-colors" to={detailUrl}>Read More</Link>
+                          <Link className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-100 hover:text-primary transition-colors" to={`/tour/${tour.slug || tour.id}`}>Read More</Link>
                         </div>
                       </div>
                     </article>

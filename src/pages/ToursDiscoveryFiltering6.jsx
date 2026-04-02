@@ -133,7 +133,7 @@ const ToursDiscoveryFiltering6 = () => {
         tours.map(tour => {
             const displayState = Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : tour.stateRegion;
             const displayDest = Array.isArray(tour.destination) ? tour.destination.join(', ') : tour.destination;
-            const detailUrl = `/tour/${tour.id}`;
+            const detailUrl = `/tour/${tour.slug || tour.id}`;
 
             return (
                 <Link key={tour.id} to={detailUrl} className="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 group hover:shadow-md transition-shadow block">

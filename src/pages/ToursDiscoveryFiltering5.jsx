@@ -141,7 +141,7 @@ const ToursDiscoveryFiltering5 = () => {
         [1, 2, 3].map(i => <div key={i} className="h-64 bg-gray-100 animate-pulse rounded-xl"></div>)
     ) : (
         tours.map(tour => {
-            const detailUrl = `/tour/${tour.id}`;
+            const detailUrl = `/tour/${tour.slug || tour.id}`;
 
             return (
                 <Link key={tour.id} to={detailUrl} className="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 group hover:shadow-md transition-shadow block">
