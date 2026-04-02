@@ -55,7 +55,16 @@ const AdminBikeTourForm = () => {
                 if (isEdit) {
                     // Match by id or slug
                     const matched = data.find(t => String(t.id) === String(id) || String(t.slug) === String(id) || String(t._id) === String(id));
-                    if (matched) setFormData(matched);
+                    if (matched) {
+                        setFormData(prev => ({
+                            ...prev,
+                            ...matched,
+                            pricing: {
+                                ...prev.pricing,
+                                ...(matched.pricing || {})
+                            }
+                        }));
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching bike tours:', error);
@@ -329,31 +338,31 @@ const AdminBikeTourForm = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Per Person Price</label>
-                            <input 
-                                type="number" name="pricing.perPerson" value={formData.pricing.perPerson} onChange={handleChange}
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                            />
+                                <input 
+                                    type="number" name="pricing.perPerson" value={formData.pricing?.perPerson || 0} onChange={handleChange}
+                                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Per Couple Price</label>
-                            <input 
-                                type="number" name="pricing.perCouple" value={formData.pricing.perCouple} onChange={handleChange}
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                            />
+                                <input 
+                                    type="number" name="pricing.perCouple" value={formData.pricing?.perCouple || 0} onChange={handleChange}
+                                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Group Price / Min Persons</label>
                             <div className="flex gap-2">
-                                <input 
-                                    type="number" name="pricing.perGroup.price" value={formData.pricing.perGroup.price} onChange={handleChange}
-                                    className="w-2/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                    placeholder="Price"
-                                />
-                                <input 
-                                    type="number" name="pricing.perGroup.minPersons" value={formData.pricing.perGroup.minPersons} onChange={handleChange}
-                                    className="w-1/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                    placeholder="Min"
-                                />
+                                    <input 
+                                        type="number" name="pricing.perGroup.price" value={formData.pricing?.perGroup?.price || 0} onChange={handleChange}
+                                        className="w-2/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                        placeholder="Price"
+                                    />
+                                    <input 
+                                        type="number" name="pricing.perGroup.minPersons" value={formData.pricing?.perGroup?.minPersons || 0} onChange={handleChange}
+                                        className="w-1/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                        placeholder="Min"
+                                    />
                             </div>
                         </div>
                     </div>
@@ -373,9 +382,9 @@ const AdminBikeTourForm = () => {
                                     <label key={item} className="flex items-center gap-3 cursor-pointer group">
                                         <div 
                                             onClick={() => handleEquipmentToggle(item)}
-                                            className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.equipment.includes(item) ? 'bg-primary border-primary' : 'border-slate-300'}`}
+                                            className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.equipment?.includes(item) ? 'bg-primary border-primary' : 'border-slate-300'}`}
                                         >
-                                            {formData.equipment.includes(item) && <span className="material-symbols-outlined text-white text-[14px]">check</span>}
+                                            {formData.equipment?.includes(item) && <span className="material-symbols-outlined text-white text-[14px]">check</span>}
                                         </div>
                                         <span className="text-sm font-bold text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">{item}</span>
                                     </label>
@@ -388,7 +397,7 @@ const AdminBikeTourForm = () => {
                                 <button type="button" onClick={() => addToArray('coveredPlaces')} className="text-[10px] font-black text-primary uppercase hover:underline">+ Add Place</button>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                {formData.coveredPlaces.map((place, i) => (
+                                {formData.coveredPlaces?.map((place, i) => (
                                     <div key={i} className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
                                         <input 
                                             type="text" value={place} onChange={(e) => handleArrayChange('coveredPlaces', i, e.target.value)}
@@ -422,7 +431,7 @@ const AdminBikeTourForm = () => {
 
                         {formData.images.length > 0 && (
                             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                                {formData.images.map((img, i) => (
+                                {formData.images?.map((img, i) => (
                                     <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 group">
                                         <img src={img} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">

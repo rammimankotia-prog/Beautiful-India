@@ -322,7 +322,7 @@ const AdminBikeTourDashboard = () => {
                                             </td>
                                             <td className="px-8 py-6 text-right">
                                                 <div className="flex justify-end gap-2 text-slate-300">
-                                                    <Link to={`/admin/bike-tours/edit/${tour._id || tour.id}`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 hover:text-primary transition-all">
+                                                    <Link to={`/admin/bike-tours/edit/${tour.slug || tour._id || tour.id}`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 hover:text-primary transition-all">
                                                         <span className="material-symbols-outlined text-[20px]">edit</span>
                                                     </Link>
                                                     <button onClick={() => handleDelete(tour._id || tour.id)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all">
