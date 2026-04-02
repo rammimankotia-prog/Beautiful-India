@@ -80,9 +80,19 @@ const BikeTourListingPage = () => {
             
             // Client-side filtering for production JSON
             if (!isDev) {
-                if (filters.country) data = data.filter(t => t.country === filters.country);
-                if (filters.destination) data = data.filter(t => t.destination === filters.destination);
-                if (filters.tourType) data = data.filter(t => t.tourType === filters.tourType);
+                if (filters.country) data = data.filter(t => t.country?.toLowerCase() === filters.country.toLowerCase());
+                if (filters.destination) data = data.filter(t => t.destination?.toLowerCase() === filters.destination.toLowerCase());
+                if (filters.tourType) {
+                    // Resilient mapping: 'Bike' filter matches 'Bike' or 'Motorbike', 
+                    // 'Bicycle' filter matches 'Bicycle' or 'Cycling'
+                    const fLow = filters.tourType.toLowerCase();
+                    data = data.filter(t => {
+                        const tLow = t.tourType?.toLowerCase() || '';
+                        if (fLow === 'bike' || fLow === 'motorbike') return tLow === 'bike' || tLow === 'motorbike';
+                        if (fLow === 'bicycle' || fLow === 'cycling') return tLow === 'bicycle' || tLow === 'cycling';
+                        return tLow === fLow;
+                    });
+                }
                 // Only show active tours in production
                 data = data.filter(t => t.status === 'active');
             }

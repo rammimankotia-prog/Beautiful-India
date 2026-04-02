@@ -214,7 +214,10 @@ const AdminBikeTourForm = () => {
                 let tours = [];
                 try {
                     const res = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
-                    if (res.ok) tours = await res.ok ? await res.json() : [];
+                    if (res.ok) {
+                        const existingData = await res.json();
+                        tours = Array.isArray(existingData) ? existingData : [];
+                    }
                 } catch (err) {
                     console.error("Error fetching existing tours:", err);
                 }
@@ -323,13 +326,16 @@ const AdminBikeTourForm = () => {
                                 placeholder="e.g. Ladakh"
                             />
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Type *</label>
+                         <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Type *</label>
+                                <span className="text-[10px] font-black text-primary uppercase">Bike = Motorbike / Bicycle = Cycling</span>
+                            </div>
                             <select 
                                 name="tourType" value={formData.tourType} onChange={handleChange} required
                                 className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
                             >
-                                <option value="Bicycle">Bicycle / Cycling Tour</option>
+                                <option value="Bicycle">Bicycle / Cycling Tour (Default)</option>
                                 <option value="Bike">Motorbike / Bike Tour</option>
                             </select>
                         </div>
