@@ -81,10 +81,10 @@ const PilgrimageCard = ({ tour, index }) => {
                     <div>
                         <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[2px] mb-1">Starting from</p>
                         <p className="text-2xl font-black text-slate-900 dark:text-white">
-                            {tour.tour_price_single ? (
+                            {(tour.tour_price_single || tour.price) ? (
                                 <>
                                     <span className="text-sm mr-1 text-primary">₹</span>
-                                    {Number(tour.tour_price_single).toLocaleString('en-IN')}
+                                    {Number(tour.tour_price_single || tour.price).toLocaleString('en-IN')}
                                 </>
                             ) : 'Quote'}
                         </p>

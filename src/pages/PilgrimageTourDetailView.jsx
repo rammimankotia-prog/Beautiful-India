@@ -175,6 +175,12 @@ const PilgrimageTourDetailView = () => {
                             <h3 className="text-xs font-black uppercase tracking-[3px] text-slate-400 mb-6">Investment in Devotion</h3>
                             
                             <div className="space-y-6">
+                                {tour.price && !tour.tour_price_single && (
+                                    <div className="flex justify-between items-center pb-6 border-b border-slate-100 dark:border-slate-800">
+                                        <span className="text-slate-600 dark:text-slate-300 font-medium">Base Price</span>
+                                        <span className="text-2xl font-black text-slate-900 dark:text-white">₹{Number(tour.price).toLocaleString('en-IN')}</span>
+                                    </div>
+                                )}
                                 {tour.tour_price_single && (
                                     <div className="flex justify-between items-center pb-6 border-b border-slate-100 dark:border-slate-800">
                                         <span className="text-slate-600 dark:text-slate-300 font-medium">Per Individual</span>
@@ -237,9 +243,9 @@ const PilgrimageTourDetailView = () => {
             <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 shadow-[0_-20px_40px_rgba(0,0,0,0.05)] transform lg:hidden">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Starting Form</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Starting From</p>
                         <p className="text-2xl font-black text-slate-900 dark:text-white">
-                           {tour.tour_price_single ? `₹${Number(tour.tour_price_single).toLocaleString('en-IN')}` : 'Quote'}
+                           {(tour.tour_price_single || tour.price) ? `₹${Number(tour.tour_price_single || tour.price).toLocaleString('en-IN')}` : 'Quote'}
                         </p>
                     </div>
                     <button className="px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-full font-black uppercase tracking-widest text-xs transition-colors shadow-lg shadow-orange-600/30 flex items-center gap-2">

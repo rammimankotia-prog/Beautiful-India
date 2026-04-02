@@ -9,6 +9,7 @@ const initialFormState = {
     status: 'draft',
     tour_destination: [],
     tour_type: [],
+    price: '',
     tour_price_single: '',
     tour_price_couple: '',
     tour_price_group: '',
@@ -262,6 +263,16 @@ const AdminPilgrimageTourForm = () => {
                                         value={formData.slug} 
                                         onChange={(e) => handleChange('slug', e.target.value)}
                                         className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 font-mono text-sm outline-none focus:border-[#0a6c75] text-slate-600 dark:text-slate-300"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Base Price / Starting Price (₹) *</label>
+                                    <input 
+                                        type="number" 
+                                        value={formData.price || ''} 
+                                        onChange={(e) => handleChange('price', e.target.value)}
+                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 font-mono text-sm outline-none focus:border-[#0a6c75] text-slate-600 dark:text-slate-300"
+                                        placeholder="e.g. 25000"
                                     />
                                 </div>
                             </div>
