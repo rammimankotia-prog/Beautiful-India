@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import AdminLayout from '../components/AdminLayout';
 import { useAuth } from '../context/AuthContext';
 
 const initialFormState = {
@@ -200,11 +199,10 @@ const AdminPilgrimageTourForm = () => {
         }
     };
 
-    if (loading) return <AdminLayout><div className="p-10 text-center animate-pulse">Loading Devotional Journey...</div></AdminLayout>;
+    if (loading) return <div className="p-10 text-center animate-pulse">Loading Devotional Journey...</div>;
 
     return (
-        <AdminLayout>
-            <div className="max-w-6xl mx-auto space-y-6 pb-20">
+        <div className="max-w-6xl mx-auto space-y-6 pb-20 p-6 lg:p-10 animate-in fade-in duration-500">
                 {/* Header Area */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 shadow-sm border-t-4 border-[#0a6c75]">
                     <div>
@@ -523,7 +521,6 @@ const AdminPilgrimageTourForm = () => {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
     );
 };
 

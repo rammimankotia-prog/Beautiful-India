@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AdminLayout from '../components/AdminLayout';
+
 import { useAuth } from '../context/AuthContext';
 
 const AdminPilgrimageTourDashboard = () => {
@@ -86,8 +86,7 @@ const AdminPilgrimageTourDashboard = () => {
     ).sort((a, b) => new Date(b.created || 0) - new Date(a.created || 0));
 
     return (
-        <AdminLayout>
-            <div className="max-w-7xl mx-auto space-y-8">
+        <div className="max-w-7xl mx-auto space-y-8 p-6 lg:p-10 animate-in fade-in duration-500">
                 {/* Header section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6">
                     <div>
@@ -213,7 +212,6 @@ const AdminPilgrimageTourDashboard = () => {
                     )}
                 </div>
             </div>
-        </AdminLayout>
     );
 };
 
