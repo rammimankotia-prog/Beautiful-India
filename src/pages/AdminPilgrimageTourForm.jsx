@@ -113,6 +113,12 @@ const AdminPilgrimageTourForm = () => {
         handleChange('tour_gallery', arr);
     };
 
+    const updateImage = (index, value) => {
+        const arr = [...formData.tour_gallery];
+        arr[index] = value;
+        handleChange('tour_gallery', arr);
+    };
+
     const handleDragStart = (e, index) => {
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setData('imageIndex', index.toString());
@@ -505,7 +511,12 @@ const AdminPilgrimageTourForm = () => {
                                             <img src={img} alt="thumb" className="w-full h-full object-cover" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs font-mono text-slate-500 truncate">{img}</p>
+                                            <input 
+                                                type="text" 
+                                                value={img} 
+                                                onChange={(e) => updateImage(idx, e.target.value)}
+                                                className="w-full bg-transparent text-xs font-mono text-slate-700 dark:text-slate-300 outline-none border-b border-transparent focus:border-[#0a6c75] transition-colors py-1"
+                                            />
                                         </div>
                                         <button onClick={() => removeImage(idx)} className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg shrink-0">
                                             <span className="material-symbols-outlined text-[18px]">delete</span>
