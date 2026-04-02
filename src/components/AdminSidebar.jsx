@@ -12,6 +12,7 @@ const AdminSidebar = () => {
     { name: 'Overview', path: '/admin/overview', icon: 'space_dashboard' },
     { name: 'Manage Tours', path: '/admin/tours', icon: 'tour' },
     { name: 'Bike Tours', path: '/admin/bike-tours', icon: 'pedal_bike' },
+    { name: 'Pilgrimages', path: '/admin/pilgrimages', icon: 'temple_hindu' },
     { name: 'Train Queries', path: '/admin/train-queries', icon: 'train' },
     { name: 'Leads & Queries', path: '/admin/leads', icon: 'leaderboard' },
     { name: 'Bookings', path: '/admin/bookings', icon: 'group' },

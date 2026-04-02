@@ -87,7 +87,10 @@ const BikeTourListingPage = lazy(() => import('./pages/BikeTourListingPage'));
 const BikeTourDetailView = lazy(() => import('./pages/BikeTourDetailView'));
 const TrainBookingPage = lazy(() => import('./pages/TrainBookingPage'));
 const TrainBookingSuccessPage = lazy(() => import('./pages/TrainBookingSuccessPage'));
-
+const PilgrimageToursListingPage = lazy(() => import('./pages/PilgrimageToursListingPage'));
+const PilgrimageTourDetailView = lazy(() => import('./pages/PilgrimageTourDetailView'));
+const AdminPilgrimageTourDashboard = lazy(() => import('./pages/AdminPilgrimageTourDashboard'));
+const AdminPilgrimageTourForm = lazy(() => import('./pages/AdminPilgrimageTourForm'));
 // Helper to wrap lazy components in Suspense with localized fallback
 const Loadable = (Component) => (props) => (
   <Suspense fallback={<LoadingSpinner />}>
@@ -140,6 +143,9 @@ export const routes = [
       { path: 'bike-tours', element: Loadable(AdminBikeTourDashboard)() },
       { path: 'bike-tours/new', element: Loadable(AdminBikeTourForm)() },
       { path: 'bike-tours/edit/:id', element: Loadable(AdminBikeTourForm)() },
+      { path: 'pilgrimages', element: Loadable(AdminPilgrimageTourDashboard)() },
+      { path: 'pilgrimages/create', element: Loadable(AdminPilgrimageTourForm)() },
+      { path: 'pilgrimages/edit/:slug', element: Loadable(AdminPilgrimageTourForm)() },
       { path: 'support', element: Loadable(AdminSupportSettings)() },
     ]
   },
@@ -196,5 +202,7 @@ export const routes = [
   { path: '/tours/tours-by-train', element: Loadable(ToursByTrain)() },
   { path: '/booking/train', element: Loadable(TrainBookingPage)() },
   { path: '/booking/train-success', element: Loadable(TrainBookingSuccessPage)() },
+  { path: '/pilgrimage-tours', element: Loadable(PilgrimageToursListingPage)() },
+  { path: '/pilgrimage-tours/:slug', element: Loadable(PilgrimageTourDetailView)() },
   { path: '/:regionSlug', element: Loadable(ToursDiscoveryFiltering1)() }
 ];

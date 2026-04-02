@@ -1,0 +1,1378 @@
+[
+  {
+    "slug": "kashmir-train-tour-package",
+    "title": "Kashmir Train Tour Package ",
+    "description": "Starting Price: ₹22,000 – ₹30,000 per person (approx.) depending on hotel category and season.",
+    "destination": "India",
+    "stateRegion": [
+      "Kashmir",
+      "Jammu and Kashmir"
+    ],
+    "subregion": [
+      "Sonmarg",
+      "Srinagar",
+      "Sonamarg"
+    ],
+    "duration": "3 days",
+    "bestTimeToVisit": "Jan- July & Sep - Dec",
+    "price": "15000",
+    "priceBasis": "per_package",
+    "pricePerPerson": "15000",
+    "pricePerCouple": "",
+    "pricePerGroup": "",
+    "groupSize": 10,
+    "minPersons": 2,
+    "status": "active",
+    "order": 1,
+    "theme": "family",
+    "nature": "private",
+    "style": "budget",
+    "priceCategory": "budget",
+    "image": "/images/tours/kashmir-train-hero.png",
+    "images": [
+      {
+        "url": "/images/tours/kashmir-train-hero.png",
+        "caption": "Luxury Vistadome Train"
+      },
+      {
+        "url": "/images/tours/kashmir-train-view.png",
+        "caption": "Valley View from Train"
+      }
+    ],
+    "inclusions": [
+      "Hotel / Houseboat stay",
+      "Breakfast & Dinner",
+      "Private cab for sightseeing",
+      "Airport pickup & drop",
+      "Shikara ride on Dal Lake"
+    ],
+    "exclusions": [
+      "Flights / train tickets",
+      "Gondola tickets in Gulmarg",
+      "Pony rides & personal expenses"
+    ],
+    "highlights": [
+      "Best Time to Visit Kashmir:",
+      "🌸 March–May (flowers & pleasant weather)",
+      "🌿 June–August (green valleys)",
+      "❄️ December–February (snowfall)"
+    ],
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival in Srinagar",
+        "description": "Pickup from airport\n\nVisit Dal Lake and enjoy Shikara Ride\n\nExplore Mughal Gardens\n\nNight stay in Houseboat / Hotel",
+        "tags": []
+      },
+      {
+        "day": 2,
+        "title": "Srinagar → Gulmarg",
+        "description": "Drive to Gulmarg (snow destination)\n\nGondola cable car ride\n\nSnow activities like skiing\n\nReturn to Srinagar hotel",
+        "tags": []
+      },
+      {
+        "day": 3,
+        "title": "Srinagar → Pahalgam",
+        "description": "Scenic drive to Pahalgam\n\nVisit Betaab Valley & Lidder River\n\nHorse riding and local sightseeing\n\nNight stay in Pahalgam",
+        "tags": []
+      },
+      {
+        "day": 4,
+        "title": "Pahalgam → Sonamarg",
+        "description": "Visit glaciers and snow points\n\nPhotography and sightseeing\n\nReturn to Srinagar",
+        "tags": []
+      },
+      {
+        "day": 5,
+        "title": "Srinagar Local Sightseeing",
+        "description": "Shalimar Bagh\n\nNishat Bagh\n\nLocal markets & Kashmiri handicrafts",
+        "tags": []
+      }
+    ],
+    "faq": [
+      {
+        "question": "What is the best time to visit Kashmir?",
+        "answer": "The best time to visit Kashmir Valley depends on your preference:\n\n🌸 March – May: Spring season with flowers and pleasant weather.\n\n🌿 June – August: Perfect for sightseeing and family trips.\n\n❄️ December – February: Ideal for snowfall and winter sports."
+      },
+      {
+        "question": "How many days are enough for a Kashmir trip?",
+        "answer": "A 5 to 7 days trip is ideal to explore major places like Srinagar, Gulmarg, Pahalgam, and Sonamarg."
+      },
+      {
+        "question": "Is Kashmir safe for tourists?",
+        "answer": "Yes, Kashmir is generally safe for tourists. Popular tourist areas like Srinagar, Gulmarg, and Pahalgam are regularly visited by travelers from India and abroad."
+      }
+    ],
+    "bookingStart": "2026-03-23",
+    "bookingEnd": "",
+    "availableFrom": "2026-03-23",
+    "availableTo": "",
+    "cityPath": "Srinagar 1D-Pahalgam 1D - Sonmarg-1D",
+    "isDayTour": false,
+    "hotelCategory": [
+      "3_star"
+    ],
+    "accommodationType": "mixed",
+    "mixedAccommodations": [
+      "hotel",
+      "houseboat"
+    ],
+    "mealPlan": [
+      "breakfast"
+    ],
+    "tourFeatures": [
+      "accommodation",
+      "sightseeing",
+      "stay",
+      "transfers"
+    ],
+    "transport": "train",
+    "mixedTransports": [],
+    "homePagePlacements": [
+      "Travel by Train"
+    ],
+    "noBookingEnd": true,
+    "noAvailableTo": true,
+    "id": "kashmir-train-tour-package"
+  },
+  {
+    "id": "kerala-tour-package",
+    "title": "Kerala Tour Package",
+    "description": "A Kerala tour offers beautiful backwaters, hill stations, beaches, and wildlife. Popular destinations include Munnar, Alleppey, Thekkady, and Kochi",
+    "destination": "Asia",
+    "stateRegion": "Kerala",
+    "subregion": "Kochi",
+    "duration": "6 Days",
+    "price": 18000,
+    "priceBasis": "per_package",
+    "minPersons": 2,
+    "status": "active",
+    "order": 2,
+    "theme": "adventure",
+    "nature": "private",
+    "style": "budget",
+    "priceCategory": "low",
+    "image": "/images/tours/kerala-houseboat-hero.png",
+    "inclusions": [
+      "Hotel / Houseboat accommodation",
+      "Breakfast & Dinner",
+      "Private cab for sightseeing",
+      "Airport pickup & drop"
+    ],
+    "exclusions": [
+      "Flights / train tickets",
+      "Entry tickets to parks & monuments",
+      "Personal expenses"
+    ],
+    "highlights": [
+      "Kerala Tour Itinerary (5 Nights / 6 Days)"
+    ],
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Day 1 – Arrival in Kochi",
+        "description": "Arrival at Kochi Airport\n\nVisit Fort Kochi\n\nSee Chinese Fishing Nets & local markets\n\nOvernight stay in Kochi"
+      },
+      {
+        "day": 2,
+        "title": "Kochi → Munnar",
+        "description": "Drive to Munnar (famous for tea gardens)\n\nVisit waterfalls and scenic viewpoints\n\nEvening free for local sightseeing\n\nOvernight stay in Munnar"
+      },
+      {
+        "day": 3,
+        "title": "Munnar Sightseeing",
+        "description": "Visit Eravikulam National Park\n\nTea Museum visit\n\nPhoto points and tea plantations"
+      }
+    ],
+    "faq": [
+      {
+        "question": "What is the best time to visit Kerala?",
+        "answer": "The best time to visit Kerala is from October to March, when the weather is pleasant and ideal for sightseeing."
+      },
+      {
+        "question": "How many days are enough for a Kerala trip?",
+        "answer": "A 5 to 7 days tour is ideal to explore major destinations like Munnar, Alleppey, Thekkady, and Kochi."
+      }
+    ],
+    "images": [
+      {
+        "url": "/images/tours/kerala-houseboat-hero.png",
+        "caption": "Alleppey Houseboat"
+      }
+    ],
+    "transport": "train",
+    "slug": "kerala-tour-package"
+  },
+  {
+    "id": "romantic-maldives-escape",
+    "title": "Romantic Maldives Escape",
+    "description": "Experience the ultimate romantic getaway with crystal clear waters and overwater villas.",
+    "destination": "International",
+    "stateRegion": "Maldives",
+    "duration": "6 days",
+    "price": 120000,
+    "priceBasis": "per_package",
+    "minPersons": 2,
+    "status": "active",
+    "order": 5,
+    "theme": "honeymoon",
+    "nature": "honeymoon",
+    "style": "luxury",
+    "priceCategory": "high",
+    "transport": "flight",
+    "image": "/images/tours/maldives-overwater-hero.png",
+    "inclusions": [
+      "Flights",
+      "Water Villa",
+      "Meals",
+      "Transfers"
+    ],
+    "exclusions": [
+      "Personal expenses"
+    ],
+    "highlights": [
+      "Overwater Villa",
+      "Candlelight Dinner"
+    ],
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival",
+        "description": "Arrive in Male and transfer to resort."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "/images/tours/maldives-overwater-hero.png",
+        "caption": "Overwater Villas"
+      }
+    ],
+    "slug": "romantic-maldives-escape"
+  },
+  {
+    "id": "goa-family-vacation",
+    "title": "Goa Family Vacation",
+    "description": "A fun-filled family holiday exploring the beaches, forts, and culture of Goa.",
+    "destination": "India",
+    "stateRegion": "Goa",
+    "duration": "5 days",
+    "price": 45000,
+    "priceBasis": "per_package",
+    "minPersons": 4,
+    "status": "active",
+    "order": 6,
+    "theme": "family",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "transport": "mixed",
+    "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&q=80&w=800",
+    "inclusions": [
+      "Hotel",
+      "Breakfast",
+      "Sightseeing"
+    ],
+    "exclusions": [
+      "Flights",
+      "Other meals"
+    ],
+    "highlights": [
+      "Beach activities",
+      "Fort Aguada"
+    ],
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival",
+        "description": "Check-in and relax at the beach."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&q=80&w=800"
+      }
+    ],
+    "slug": "goa-family-vacation"
+  },
+  {
+    "id": "ladakh-bike-expedition",
+    "title": "Ladakh Bike Expedition",
+    "description": "A thrilling biking adventure through the rugged terrains of Leh and Ladakh.",
+    "destination": "India",
+    "stateRegion": "Ladakh",
+    "duration": "10 days",
+    "price": 38000,
+    "priceBasis": "per_person",
+    "minPersons": 1,
+    "status": "active",
+    "order": 7,
+    "theme": "adventure",
+    "nature": "solo",
+    "style": "standard",
+    "priceCategory": "medium",
+    "transport": "mixed",
+    "image": "/images/tours/ladakh-bike-hero.png",
+    "inclusions": [
+      "Bike Rental",
+      "Accommodation",
+      "Meals"
+    ],
+    "exclusions": [
+      "Fuel",
+      "Flights"
+    ],
+    "highlights": [
+      "Khardung La",
+      "Pangong Lake"
+    ],
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Leh Arrival",
+        "description": "Acclimatization."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "/images/tours/ladakh-bike-hero.png",
+        "caption": "Adventure in Ladakh"
+      }
+    ],
+    "slug": "ladakh-bike-expedition"
+  },
+  {
+    "id": "ranthambore-jungle-safari",
+    "title": "Ranthambore Jungle Safari",
+    "description": "Encounter majestic Bengal tigers and diverse wildlife in Ranthambore.",
+    "destination": "India",
+    "stateRegion": "Rajasthan",
+    "duration": "3 days",
+    "price": 28000,
+    "priceBasis": "per_package",
+    "minPersons": 2,
+    "status": "active",
+    "order": 8,
+    "theme": "wildlife",
+    "nature": "private",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "transport": "mixed",
+    "image": "https://images.unsplash.com/photo-1534152912693-41bb3805f7ee?auto=format&fit=crop&q=80&w=800",
+    "inclusions": [
+      "Safari permits",
+      "Resort stay",
+      "Meals"
+    ],
+    "exclusions": [
+      "Camera fees",
+      "Transport to Ranthambore"
+    ],
+    "highlights": [
+      "Tiger tracking",
+      "Fort visit"
+    ],
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival",
+        "description": "Check-in to resort, afternoon safari."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1534152912693-41bb3805f7ee?auto=format&fit=crop&q=80&w=800"
+      }
+    ],
+    "slug": "ranthambore-jungle-safari"
+  },
+  {
+    "id": "varanasi-photography-tour",
+    "title": "Varanasi Photography Tour",
+    "description": "Capture the soul of India along the sacred ghats of the Ganges.",
+    "destination": "India",
+    "stateRegion": "Uttar Pradesh",
+    "duration": "4 days",
+    "price": 22000,
+    "priceBasis": "per_person",
+    "minPersons": 1,
+    "status": "active",
+    "order": 9,
+    "theme": "photography",
+    "nature": "solo",
+    "style": "budget",
+    "priceCategory": "low",
+    "transport": "mixed",
+    "image": "https://images.unsplash.com/photo-1561361513-3335b11a43a1?auto=format&fit=crop&q=80&w=800",
+    "inclusions": [
+      "Guesthouse",
+      "Guide",
+      "Boat rides"
+    ],
+    "exclusions": [
+      "Meals",
+      "Camera gear"
+    ],
+    "highlights": [
+      "Ganga Aarti",
+      "Morning boat ride"
+    ],
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival",
+        "description": "Settle in and evening Aarti photography."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1561361513-3335b11a43a1?auto=format&fit=crop&q=80&w=800"
+      }
+    ],
+    "slug": "varanasi-photography-tour"
+  },
+  {
+    "id": "andaman-beach-retreat",
+    "title": "Andaman Beach Retreat",
+    "description": "A relaxing escape to the pristine beaches and cerulean waters of the Andaman Islands.",
+    "destination": "India",
+    "stateRegion": "Andaman Islands",
+    "duration": "6 days",
+    "price": 55000,
+    "priceBasis": "per_package",
+    "minPersons": 2,
+    "status": "active",
+    "order": 10,
+    "theme": "beach",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "transport": "flight",
+    "image": "/images/tours/andaman-beach-hero.png",
+    "inclusions": [
+      "Hotels",
+      "Ferry transfers",
+      "Breakfast"
+    ],
+    "exclusions": [
+      "Flights",
+      "Other meals"
+    ],
+    "highlights": [
+      "Radhanagar Beach",
+      "Scuba Diving"
+    ],
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Port Blair Arrival",
+        "description": "Cellular Jail visit and Light & Sound show."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "/images/tours/andaman-beach-hero.png",
+        "caption": "Radhanagar Beach"
+      }
+    ],
+    "slug": "andaman-beach-retreat"
+  },
+  {
+    "id": "rajasthan-heritage-tour",
+    "title": "Rajasthan Heritage Tour",
+    "description": "Immerse yourself in the rich culture, grand forts, and royal history of Rajasthan.",
+    "destination": "India",
+    "stateRegion": "Rajasthan",
+    "duration": "8 days",
+    "price": 75000,
+    "priceBasis": "per_package",
+    "minPersons": 2,
+    "status": "active",
+    "order": 11,
+    "theme": "cultural",
+    "nature": "private",
+    "style": "luxury",
+    "priceCategory": "high",
+    "transport": "mixed",
+    "image": "https://images.unsplash.com/photo-1599661559886-9dc4626156e7?auto=format&fit=crop&q=80&w=800",
+    "inclusions": [
+      "Heritage Hotels",
+      "Private Car",
+      "Breakfast"
+    ],
+    "exclusions": [
+      "Entry fees",
+      "Tips"
+    ],
+    "highlights": [
+      "Amer Fort",
+      "City Palace",
+      "Desert Safari"
+    ],
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Jaipur Arrival",
+        "description": "Check-in and local market visit."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1599661559886-9dc4626156e7?auto=format&fit=crop&q=80&w=800"
+      }
+    ],
+    "slug": "rajasthan-heritage-tour"
+  },
+  {
+    "id": "himalayan-trekking-expedition",
+    "title": "Himalayan Trekking Expedition",
+    "description": "Conquer the trails of Himachal Pradesh with this guided trekking experience.",
+    "destination": "India",
+    "stateRegion": "Himachal Pradesh",
+    "duration": "7 days",
+    "price": 25000,
+    "priceBasis": "per_person",
+    "minPersons": 1,
+    "status": "active",
+    "order": 12,
+    "theme": "trekking",
+    "nature": "group",
+    "style": "budget",
+    "priceCategory": "low",
+    "transport": "mixed",
+    "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800",
+    "inclusions": [
+      "Tents",
+      "Meals on trek",
+      "Guides"
+    ],
+    "exclusions": [
+      "Backpacks",
+      "Transport to base camp"
+    ],
+    "highlights": [
+      "Alpine meadows",
+      "Camping under stars"
+    ],
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Manali Arrival",
+        "description": "Meet team, gear check."
+      }
+    ],
+    "faq": [],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800"
+      }
+    ],
+    "slug": "himalayan-trekking-expedition"
+  },
+  {
+    "slug": "tajmahal-same-day-tour",
+    "title": "Tajmahal Same Day Tour",
+    "description": "A same-day tour from Delhi to Agra by train is one of the most efficient ways to see the Taj Mahal, especially using the Gatimaan Express, which is the fastest and most popular option for this route.",
+    "destination": "India",
+    "stateRegion": "Uttar Pradesh",
+    "subregion": [
+      "Agra"
+    ],
+    "duration": "1 Day",
+    "bestTimeToVisit": "Anytime ",
+    "price": "6000",
+    "priceBasis": "per_person",
+    "pricePerPerson": "6000",
+    "pricePerCouple": "",
+    "pricePerGroup": "",
+    "groupSize": 10,
+    "minPersons": 2,
+    "status": "active",
+    "order": 3,
+    "theme": "photography",
+    "nature": "private",
+    "style": "",
+    "priceCategory": "premium",
+    "image": "/images/tours/taj-mahal-hero.png",
+    "images": [
+      {
+        "url": "/images/tours/taj-mahal-hero.png",
+        "caption": "Taj Mahal at Sunrise"
+      }
+    ],
+    "inclusions": [
+      "Transportation",
+      "Breakfast",
+      "Local Guide at Monument"
+    ],
+    "exclusions": [
+      "Monument Tickets",
+      "Lunch/Dinner",
+      "Any Kind of Personal Expense"
+    ],
+    "highlights": [
+      "Book in Advance: Gatimaan Express tickets (Executive or AC Chair Car) sell out quickly. Use the IRCTC website or apps like Ixigo/ConfirmTkt.",
+      "Monuments Tickets: Buy your entry tickets online at the ASI Payumoney portal to skip the long physical queues.",
+      "Stay Alert: Agra Cantt has many \"guides\" and \"touts.\" It is often better to book a government-approved guide or use a reputable tour aggregator (like Viator or Klook) if you want a seamless experience with transfers included.",
+      "ID Proof: Carry a physical copy or a clear digital version of your Aadhaar or Passport for train travel and monument entry."
+    ],
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Delhi to Agra & Agra to Delhi",
+        "description": "- **07:30 AM:** Reach Hazrat Nizamuddin Station.\n\n- **08:10 AM:** Board the Gatimaan Express. Breakfast is served on board (included in the ticket).\n\n- **09:50 AM**: Arrive at Agra Cantt (AGC). You can hire a pre-paid taxi or an auto-rickshaw directly from the station.\n\n- **10:30 AM **– 01:00 PM: Explore the Taj Mahal. (Approx. 2.5 hours).\n\n- ** 01:30 PM:** Lunch at a local restaurant. Popular spots include Pinch of Spice or the Salt Cafe.\n\n- **02:30 PM **– 04:00 PM: Visit Agra Fort, a massive red sandstone UNESCO site.\n\n- **04:00 PM** – 05:00 PM: Quick stop at Itmad-ud-Daulah (Baby Taj) or sunset view from Mehtab Bagh across the river.\n\n- **05:50 PM**: Board the return Gatimaan Express. Dinner is served on board.\n\n- **07:30 PM:** Arrive back in Delhi.",
+        "tags": [
+          "Tajmahal",
+          "Agra fort",
+          "Baby Taj"
+        ],
+        "services": [
+          "train",
+          "transfer",
+          "breakfast"
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "question": "How do I book tickets and how early should I do it?",
+        "answer": "The Agent in Bharat Darshan will book the train tickets for you."
+      },
+      {
+        "question": "What about the seat style and class?",
+        "answer": "The CC (AC Chair Car) or EC (Executive Class) tier for air-conditioned, comfortable seating."
+      },
+      {
+        "question": "On what day raajmahal is closed ?",
+        "answer": "The Taj Mahal is closed every Friday. Do not book a same-day trip on a Friday."
+      }
+    ],
+    "bookingStart": "2026-03-18",
+    "bookingEnd": "",
+    "availableFrom": "2026-03-18",
+    "availableTo": "",
+    "cityPath": "Delhi - Agra - Delhi",
+    "isDayTour": false,
+    "hotelCategory": [
+      "day_tour",
+      "4_star"
+    ],
+    "accommodationType": "houseboat",
+    "mixedAccommodations": [],
+    "mealPlan": [
+      "lunch"
+    ],
+    "tourFeatures": [
+      "transfers",
+      "sightseeing"
+    ],
+    "transport": "train",
+    "mixedTransports": [],
+    "homePagePlacements": [
+      "Travel by Train"
+    ],
+    "noBookingEnd": true,
+    "noAvailableTo": true,
+    "id": "tajmahal-same-day-tour"
+  },
+  {
+    "slug": "golden-triangle-tour",
+    "title": "Golden Triangle Tour",
+    "description": "Experience the magic of India's most iconic route wrapped in world-class luxury. This 6-day Golden Triangle journey takes you through the bustling historical heart of Delhi, the architectural marvels of Agra, and the vibrant royal heritage of Jaipur. Designed for those who want to experience India's rich history without compromising on comfort,.",
+    "destination": "India",
+    "stateRegion": [
+      "Delhi"
+    ],
+    "subregion": [
+      "Jaipur",
+      "Agra",
+      "Delhi"
+    ],
+    "duration": "05 Nights / 06 Days",
+    "bestTimeToVisit": "Anytime",
+    "price": "98900",
+    "priceBasis": "per_person",
+    "pricePerPerson": "",
+    "pricePerCouple": "98900",
+    "pricePerGroup": "",
+    "groupSize": 10,
+    "minPersons": 2,
+    "status": "active",
+    "order": 0,
+    "theme": "family",
+    "nature": "group",
+    "style": "luxury",
+    "priceCategory": "premium",
+    "image": "/images/tours/golden-triangle-hero.png",
+    "images": [
+      {
+        "url": "/images/tours/golden-triangle-hero.png",
+        "caption": "Hawa Mahal, Jaipur"
+      }
+    ],
+    "inclusions": [
+      "5 Nights accommodation at Taj Group properties.",
+      "Daily buffet breakfast.",
+      "All airport transfers, inter-city travel, and sightseeing in an air-conditioned Toyota Innova with an English-speaking driver.",
+      "English-speaking local tour guides for sightseeing.",
+      "A rickshaw ride in Old Delhi (Chandni Chowk).",
+      "Unlimited mineral water during travel.",
+      "All applicable hotel, transport, and government taxes."
+    ],
+    "exclusions": [
+      "Any meals other than those specified.",
+      "Expenses of personal nature such as tips, telephone calls, laundry, liquor etc.",
+      "Entrance fees during sightseeing are around $ 120 USD Per Person.",
+      "Elephant ride at Amer fort rampart subject to additional charges of $ 45 USD per Elephant for 2 persons.",
+      "Any other item not specified."
+    ],
+    "highlights": [
+      "Exclusive Accommodations: Experience unparalleled luxury with five consecutive nights at the world-renowned Taj Group of Hotels.",
+      "Delhi's Dual Charm: Explore the capital's vibrant contrasts, from a thrilling rickshaw ride in Old Delhi to the majestic Qutub Minar.",
+      "Mughal Masterpieces: Witness the breathtaking beauty of the Taj Mahal and uncover the history of the massive Agra Fort.",
+      "Rajput Royalty: Marvel at Rajasthan's architectural marvels, including Jaipur's Amber Fort and the mesmerizing 3,500-step Chand Baori.",
+      "Seamless Travel: Enjoy a completely stress-free journey with private air-conditioned transport and expert English-speaking local guides."
+    ],
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Welcome to New Delhi",
+        "description": "Upon arriving at the Delhi International Airport, you will be warmly greeted by a representative holding a personalized placard. From the airport, enjoy a private transfer to your luxury accommodation for the next two nights, the Taj Palace, Delhi. The remainder of your day is entirely at your leisure to relax, overcome jet lag, and enjoy the hotel’s world-class amenities.\n",
+        "tags": [
+          "Taj palace Delhi"
+        ],
+        "services": [
+          "stay",
+          "transfer",
+          "sightseeing"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "The Contrasts of Old and New Delhi",
+        "description": "After a delicious breakfast, embark on a full-day guided tour exploring the rich tapestry of India's capital.\nYour morning begins in the winding alleys of Old Delhi. Visit the grand Jama Masjid (India's largest mosque), followed by a thrilling rickshaw ride through the vibrant, aromatic spice markets of Chandni Chowk.\n\nTransitioning into the afternoon, you will explore the historical monuments of New Delhi. Highlights include the imposing Red Fort, Raj Ghat (the peaceful memorial to Mahatma Gandhi), and the stunning Mughal architecture of Humayun's Tomb. Conclude the day with visits to the striking Lotus Temple, the towering 12th-century Qutub Minar, and a drive past the stately Parliament House, President's House, and India Gate.\n\n• Overnight at Taj Palace, Delhi.",
+        "tags": [
+          "Jama Masjid",
+          "Chandni Chowk",
+          "Red Fort",
+          "Rajghat",
+          "Humayun's Tomb",
+          "Lotus Temple",
+          "Qutub Minar"
+        ],
+        "services": [
+          "breakfast",
+          "stay",
+          "transfer",
+          "sightseeing"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Journey to the Mughal Capital, Agra",
+        "description": "Following breakfast, you will be chauffeured to the historic city of Agra. Upon arrival, check into the luxurious Taj Hotel & Convention Centre.\nOnce you are refreshed, head out to witness one of the world's most spectacular architectural wonders—the Taj Mahal. Built by Emperor Shah Jahan as a timeless monument of love for his wife, its beauty is truly unmatched \n\nContinue your historical dive with a visit to the massive red sandstone walls of Agra Fort, and finish the day at the delicate Tomb of Itimad-ud-Daulah. Often referred to as the \"Baby Taj,\" this intricately carved tomb is considered the architectural draft for the Taj Mahal itself.\n\n• Overnight at Taj Hotel & Convention Centre, Agra.",
+        "tags": [
+          "Tajmahal",
+          "Tomb of Itimad-ud-Daulah"
+        ],
+        "services": [
+          "stay",
+          "transfer",
+          "breakfast",
+          "sightseeing"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Agra to Jaipur via Fatehpur Sikri and Chand Baori",
+        "description": "Early risers have the option to return to the Taj Mahal at sunrise, a highly recommended experience to see the marble bathed in golden light. Return to your hotel for breakfast before checking out and beginning your drive to Jaipur, the famed \"Pink City.\"\n\nAlong the way, you will make two fascinating historical stops. First, explore Fatehpur Sikri, the perfectly preserved, deserted red sandstone capital of Emperor Akbar. Next, visit the awe-inspiring Chand Baori in the village of Abhaneri. Plunging 100 feet into the ground with 3,500 narrow, geometric steps, it is one of India's deepest and most visually striking stepwells.\n\nArrive in Jaipur and check into your royal residence, the Taj Jai Mahal Palace. The evening is yours to relax.\n• Overnight at Taj Jai Mahal Palace, Jaipur.",
+        "tags": [
+          "Fatehpur Sikri",
+          "Chand Baori"
+        ],
+        "services": [
+          "breakfast",
+          "stay",
+          "transfer",
+          "sightseeing"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Exploring the Pink City",
+        "description": "After breakfast, dive into the royal heritage of Rajasthan. Start by ascending the rugged Aravalli Hills to explore the majestic 16th-century Amber Fort (an optional elephant ride to the ramparts is available).\n\nAs you head back into the city, pause for photos at the picturesque Jal Mahal (Water Palace) floating in Man Sagar Lake, and the iconic, multi-windowed Hawa Mahal (Palace of Winds).\n\nIn the afternoon, visit the opulent City Palace and Museum, a magnificent blend of Rajasthani and Mughal architecture designed by Jaipur's founder, Jai Singh. Next door, explore the fascinating Jantar Mantar, a UNESCO-listed open-air astronomical observatory. Spend your late afternoon wandering Jaipur’s bustling local markets, world-renowned for vibrant handicrafts, textiles, and exquisite gold and diamond jewelry.\n\n• Overnight at Taj Jai Mahal Palace, Jaipur.",
+        "tags": [
+          "Man Sagar Lake",
+          "Hawa Mahal"
+        ],
+        "services": [
+          "breakfast",
+          "transfer",
+          "sightseeing",
+          "stay"
+        ]
+      },
+      {
+        "day": 6,
+        "title": "Jaipur to Delhi & Departure",
+        "description": "On your final morning, enjoy a relaxed breakfast before visiting the serene Birla Temple and the fascinating Galta Ji (Monkey Temple), known for its natural springs and resident macaque population.\n\nFollowing your morning exploration, you will be driven back to the Delhi International Airport in your private air-conditioned vehicle, arriving in time for your onward journey with unforgettable memories of India.",
+        "tags": [
+          "Birla Temple",
+          "Delhi International Airport"
+        ],
+        "services": [
+          "breakfast",
+          "transfer"
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "question": "",
+        "answer": ""
+      }
+    ],
+    "bookingStart": "2026-03-23",
+    "bookingEnd": "",
+    "availableFrom": "2026-03-23",
+    "availableTo": "",
+    "cityPath": "Delhi → Agra → Jaipur → Delhi",
+    "isDayTour": false,
+    "hotelCategory": [
+      "5_star"
+    ],
+    "accommodationType": "hotel",
+    "mixedAccommodations": [],
+    "mealPlan": [
+      "breakfast"
+    ],
+    "tourFeatures": [
+      "accommodation",
+      "sightseeing",
+      "stay",
+      "transfers"
+    ],
+    "transport": "car",
+    "mixedTransports": [],
+    "homePagePlacements": [
+      "Recommended Tour Packages"
+    ],
+    "noBookingEnd": true,
+    "noAvailableTo": true,
+    "_lastAutoSlug": "golden-triangle-tour",
+    "id": "golden-triangle-tour"
+  },
+  {
+    "id": "3",
+    "title": "Old & New Delhi City Tour",
+    "description": "Experience the perfect blend of history and modernity in India's capital.",
+    "destination": "India",
+    "stateRegion": "Delhi",
+    "duration": "3 days",
+    "price": 8500,
+    "priceBasis": "per_person",
+    "minPersons": 1,
+    "status": "active",
+    "order": 3,
+    "theme": "cultural",
+    "nature": "private",
+    "style": "standard",
+    "priceCategory": "low",
+    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "AC Vehicle, Guide, Monument entrance fees",
+    "exclusions": "Meals, Personal expenses",
+    "highlights": "Red Fort, Qutub Minar, Lotus Temple, Chandni Chowk",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Historical Old Delhi",
+        "description": "Visit Jama Masjid and Rickshaw ride in Chandni Chowk."
+      },
+      {
+        "day": 2,
+        "title": "Lutyens' Delhi",
+        "description": "India Gate, Rashtrapati Bhavan, and Qutub Minar."
+      },
+      {
+        "day": 3,
+        "title": "Modern Delhi",
+        "description": "Lotus Temple and Akshardham Temple visit."
+      }
+    ],
+    "slug": "3"
+  },
+  {
+    "id": "4",
+    "title": "Mumbai City of Dreams",
+    "description": "Explore the bustling metropolis and the home of Bollywood.",
+    "destination": "India",
+    "stateRegion": "Mumbai",
+    "duration": "4 days",
+    "price": 12000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 4,
+    "theme": "adventure",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Hotel stay, Local transport, Breakfast",
+    "exclusions": "Lunch & Dinner, Airfare",
+    "highlights": "Gateway of India, Marine Drive, Elephanta Caves",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival & Marine Drive",
+        "description": "Check-in and evening walk at Queen's Necklace."
+      },
+      {
+        "day": 2,
+        "title": "Elephanta & Colaba",
+        "description": "Ferry to Elephanta Caves and shopping at Colaba Causeway."
+      },
+      {
+        "day": 3,
+        "title": "Bollywood Tour",
+        "description": "Behind the scenes tour of a film studio."
+      },
+      {
+        "day": 4,
+        "title": "Departure",
+        "description": "Transfer to airport."
+      }
+    ],
+    "slug": "4"
+  },
+  {
+    "id": "5",
+    "title": "Cultural Kolkata",
+    "description": "The intellectual and cultural heart of India.",
+    "destination": "India",
+    "stateRegion": "Kolkata",
+    "duration": "3 days",
+    "price": 7500,
+    "priceBasis": "per_person",
+    "minPersons": 1,
+    "status": "active",
+    "order": 5,
+    "theme": "cultural",
+    "nature": "private",
+    "style": "standard",
+    "priceCategory": "low",
+    "image": "https://images.unsplash.com/photo-1558431382-bb7b38c290b7?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Guide, Meals, Entry fees",
+    "exclusions": "Personal shopping",
+    "highlights": "Victoria Memorial, Howrah Bridge, Dakshineswar Temple",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "City of Palaces",
+        "description": "Victoria Memorial and St. Paul's Cathedral."
+      },
+      {
+        "day": 2,
+        "title": "Temples & Bridges",
+        "description": "Howrah Bridge and Dakshineswar Kali Temple."
+      },
+      {
+        "day": 3,
+        "title": "Heritage Walk",
+        "description": "Explore the colonial architecture of North Kolkata."
+      }
+    ],
+    "slug": "5"
+  },
+  {
+    "id": "6",
+    "title": "Chennai Heritage Tour",
+    "description": "Discover the gateway to South Indian culture.",
+    "destination": "India",
+    "stateRegion": "Chennai",
+    "duration": "3 days",
+    "price": 9000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 6,
+    "theme": "pilgrimage",
+    "nature": "private",
+    "style": "standard",
+    "priceCategory": "low",
+    "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Hotel stay, Sightseeing, Breakfast",
+    "exclusions": "Entry fees, Guide",
+    "highlights": "Marina Beach, Kapaleeshwarar Temple, Santhome Cathedral",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Beach & Temples",
+        "description": "Marina Beach sunset and Kapaleeshwarar Temple."
+      },
+      {
+        "day": 2,
+        "title": "Heritage Museums",
+        "description": "Government Museum and Fort St. George."
+      },
+      {
+        "day": 3,
+        "title": "Departure",
+        "description": "Shopping at T-Nagar and airport drop."
+      }
+    ],
+    "slug": "6"
+  },
+  {
+    "id": "7",
+    "title": "Himachal Explorer",
+    "description": "Breathtaking views of Shimla and Manali.",
+    "destination": "India",
+    "stateRegion": "Himachal Pradesh",
+    "duration": "6 days",
+    "price": 18500,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 7,
+    "theme": "adventure",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Hotels, Sightseeing, Food (MAP)",
+    "exclusions": "Adventure activities",
+    "highlights": "Rohtang Pass, Solang Valley, Ridge Road",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Delhi to Shimla",
+        "description": "Scenic drive from Delhi."
+      },
+      {
+        "day": 2,
+        "title": "Shimla Sightseeing",
+        "description": "The Ridge, Jakhoo Temple, Mall Road."
+      },
+      {
+        "day": 3,
+        "title": "Shimla to Manali",
+        "description": "Drive via Kullu Valley."
+      },
+      {
+        "day": 4,
+        "title": "Manali Local",
+        "description": "Hadimba Temple, Vashisht Springs."
+      },
+      {
+        "day": 5,
+        "title": "Rohtang Pass",
+        "description": "Snow point excursion."
+      },
+      {
+        "day": 6,
+        "title": "Return",
+        "description": "Back to Delhi."
+      }
+    ],
+    "slug": "7"
+  },
+  {
+    "id": "8",
+    "title": "Royal Rajasthan",
+    "description": "Walk through the palaces of Jaipur and Udaipur.",
+    "destination": "India",
+    "stateRegion": "Rajasthan",
+    "duration": "7 days",
+    "price": 24000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 8,
+    "theme": "luxury",
+    "nature": "private",
+    "style": "luxury",
+    "priceCategory": "high",
+    "image": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Luxury Heritage Hotels, Private Chauffeur, Guides",
+    "exclusions": "Alcohol, Tips",
+    "highlights": "Amer Fort, City Palace, Lake Pichola",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival Jaipur",
+        "description": "Check-in and evening at Chokhi Dhani."
+      },
+      {
+        "day": 2,
+        "title": "Amber Fort & Pink City",
+        "description": "Elephant ride and shopping."
+      },
+      {
+        "day": 3,
+        "title": "Jaipur to Jodhpur",
+        "description": "Drive to the Blue City."
+      },
+      {
+        "day": 4,
+        "title": "Mehrangarh Fort",
+        "description": "Explore the mighty fort."
+      },
+      {
+        "day": 5,
+        "title": "Jodhpur to Udaipur",
+        "description": "Enroute Ranakpur Temples."
+      },
+      {
+        "day": 6,
+        "title": "Udaipur Lakes",
+        "description": "Boat ride and City Palace."
+      },
+      {
+        "day": 7,
+        "title": "Departure",
+        "description": "Airport transfer."
+      }
+    ],
+    "slug": "8"
+  },
+  {
+    "id": "9",
+    "title": "Ladakh Adventure",
+    "description": "The land of high passes and crystal blue lakes.",
+    "destination": "India",
+    "stateRegion": "Ladakh",
+    "duration": "8 days",
+    "price": 32000,
+    "priceBasis": "per_person",
+    "minPersons": 4,
+    "status": "active",
+    "order": 9,
+    "theme": "trekking",
+    "nature": "group",
+    "style": "comfort",
+    "priceCategory": "high",
+    "image": "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Inner Line Permits, Oxygen backup, Camps/Hotels",
+    "exclusions": "Warm gear, Bike rentals",
+    "highlights": "Pangong Lake, Nubra Valley, Khardung La",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival Leh",
+        "description": "Mandatory acclimatization day."
+      },
+      {
+        "day": 2,
+        "title": "Leh Local",
+        "description": "Shanti Stupa, Leh Palace."
+      },
+      {
+        "day": 3,
+        "title": "Nubra Valley",
+        "description": "Cross Khardung La Pass."
+      },
+      {
+        "day": 4,
+        "title": "Hunder & Diskit",
+        "description": "Double humped camel ride."
+      },
+      {
+        "day": 5,
+        "title": "Pangong Lake",
+        "description": "Drive along the Shyok River."
+      },
+      {
+        "day": 6,
+        "title": "Pangong to Leh",
+        "description": "Return via Chang La."
+      },
+      {
+        "day": 7,
+        "title": "Magnetic Hill",
+        "description": "Visit Sangam and Pathar Sahib."
+      },
+      {
+        "day": 8,
+        "title": "Departure",
+        "description": "Transfer to KBR airport."
+      }
+    ],
+    "slug": "9"
+  },
+  {
+    "id": "10",
+    "title": "Goa Beach Holiday",
+    "description": "Sun, sand, and seafood in North & South Goa.",
+    "destination": "India",
+    "stateRegion": "Goa",
+    "duration": "4 days",
+    "price": 11500,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 10,
+    "theme": "honeymoon",
+    "nature": "private",
+    "style": "comfort",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Resort stay, Island tour, Scooty rental",
+    "exclusions": "Water sports",
+    "highlights": "Baga Beach, Old Goa, Dudhsagar Falls",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Welcome to Goa",
+        "description": "Check-in at Baga/Calangute."
+      },
+      {
+        "day": 2,
+        "title": "North Goa",
+        "description": "Fort Aguada, Beaches, Night Markets."
+      },
+      {
+        "day": 3,
+        "title": "South Goa & Heritage",
+        "description": "Old Goa Churches, Miramar Beach."
+      },
+      {
+        "day": 4,
+        "title": "Departure",
+        "description": "Beach yoga and farewell."
+      }
+    ],
+    "slug": "10"
+  },
+  {
+    "id": "11",
+    "title": "Spiritual Uttarakhand",
+    "description": "Journey through Rishikesh and Haridwar.",
+    "destination": "India",
+    "stateRegion": "Uttarakhand",
+    "duration": "5 days",
+    "price": 13500,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 11,
+    "theme": "pilgrimage",
+    "nature": "group",
+    "style": "standard",
+    "priceCategory": "medium",
+    "image": "https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Ganga Aarti, Rafting, Transport",
+    "exclusions": "Pony rides",
+    "highlights": "Triveni Ghat, Ram Jhula, Neelkanth Temple",
+    "isFeatured": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Haridwar Arrival",
+        "description": "Evening Ganga Aarti."
+      },
+      {
+        "day": 2,
+        "title": "Haridwar to Rishikesh",
+        "description": "Check-in at ashram/camp."
+      },
+      {
+        "day": 3,
+        "title": "Adventure Day",
+        "description": "Rafting and Bungee jumping."
+      },
+      {
+        "day": 4,
+        "title": "Temples & Yoga",
+        "description": "Beatles Ashram, Local Markets."
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "description": "Return to Dehradun."
+      }
+    ],
+    "slug": "11"
+  },
+  {
+    "id": "12",
+    "title": "Andaman Bliss",
+    "description": "Explore the pristine islands of Havelock and Neil.",
+    "destination": "India",
+    "stateRegion": "Andaman Islands",
+    "duration": "6 days",
+    "price": 38000,
+    "priceBasis": "per_person",
+    "minPersons": 2,
+    "status": "active",
+    "order": 12,
+    "theme": "honeymoon",
+    "nature": "private",
+    "style": "luxury",
+    "priceCategory": "high",
+    "image": "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?auto=format&fit=crop&w=1200&q=80",
+    "inclusions": "Private Cab, Scuba Intro, Ferry tickets",
+    "exclusions": "Flights to Port Blair",
+    "highlights": "Radhanagar Beach, Cellular Jail, Coral Safari",
+    "isFeatured": true,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Port Blair Arrival",
+        "description": "Cellular Jail Light & Sound show."
+      },
+      {
+        "day": 2,
+        "title": "Havelock Island",
+        "description": "Ferry ride and Radhanagar Beach."
+      },
+      {
+        "day": 3,
+        "title": "Scuba & Snorkeling",
+        "description": "Elephant Beach activities."
+      },
+      {
+        "day": 4,
+        "title": "Neil Island",
+        "description": "Laxmanpur & Bharatpur Beach."
+      },
+      {
+        "day": 5,
+        "title": "Return Port Blair",
+        "description": "Chidiya Tapu sunset."
+      },
+      {
+        "day": 6,
+        "title": "Departure",
+        "description": "Drop at airport."
+      }
+    ],
+    "slug": "12"
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "id": "pk_1001",
+    "slug": "kedarnath-yatra-express",
+    "title": "Kedarnath Yatra Express 2026",
+    "status": "published",
+    "createdAt": "2026-04-02T10:00:00Z",
+    "taxonomies": {
+      "destination": "Uttarakhand",
+      "type": "Himalayan Pilgrimage"
+    },
+    "meta": {
+      "price_single": 15000,
+      "price_couple": 28000,
+      "price_group": 12500,
+      "dates": "May 2026 - Oct 2026",
+      "is_ongoing": true,
+      "city_path": "Haridwar ➔ Rishikesh ➔ Guptkashi ➔ Kedarnath",
+      "batch_status": "Almost Full"
+    },
+    "seo": {
+      "meta_title": "Kedarnath Yatra Tour Package - Book Now",
+      "meta_description": "Join the holy Kedarnath Yatra. Comprehensive packages starting from ₹15,000.",
+      "json_ld_schema": "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"TouristTrip\",\n  \"name\": \"Kedarnath Yatra Express\"\n}"
+    },
+    "content": {
+      "visual_html": "<h2>The Sacred Journey to Kedarnath</h2><p>Embark on the ultimate spiritual journey to one of the holiest shrines of Lord Shiva. This package includes full board and transportation from Haridwar.</p>",
+      "raw_html": "<h2>The Sacred Journey to Kedarnath</h2><p>Embark on the ultimate spiritual journey to one of the holiest shrines of Lord Shiva. This package includes full board and transportation from Haridwar.</p>"
+    },
+    "gallery": [
+      "/images/beautiful_india_hero.jpg",
+      "/images/india_couple_hero.png"
+    ],
+    "featuredImage": "/images/uttarakhand.png"
+  }
+]

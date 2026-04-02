@@ -200,6 +200,25 @@ const Footer = () => {
                         </div>
                     </div>
 
+                    {/* Pilgrimages */}
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
+                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">Pilgrimages</span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
+                            {[
+                                { label: "Kedarnath Yatra Express 2026", slug: "kedarnath-yatra-express" },
+                                { label: "Chardham Yatra", slug: "chardham-yatra" },
+                                { label: "Vaishno Devi", slug: "vaishno-devi" }
+                            ].map((tour, i, arr) => (
+                                <React.Fragment key={i}>
+                                    <Link to={`/pilgrimage-tours/${tour.slug}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{tour.label}</Link>
+                                    {i < arr.length - 1 && <span className="text-gray-700">|</span>}
+                                </React.Fragment>
+                            ))}
+                            <span className="text-gray-700">|</span>
+                            <Link to="/pilgrimage-tours" className="text-primary hover:text-white font-bold whitespace-nowrap transition-colors italic">View All Pilgrimages</Link>
+                        </div>
+                    </div>
+
                     {/* Blogs */}
                     <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
                         <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">Explore Travel Blogs</span>

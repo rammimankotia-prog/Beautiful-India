@@ -42,6 +42,7 @@ const Header = () => {
         },
         { name: 'Destinations', path: '/guides' },
         { name: 'Bicycle Tours', path: '/tours/bike-tours', isNew: true },
+        { name: 'Pilgrimages', path: '/pilgrimage-tours', isNew: true },
         { name: 'About Us', path: '/about' },
         { name: 'Contact', path: '/contact' }
     ];
@@ -277,7 +278,7 @@ const Header = () => {
                                         className={`flex items-center gap-3 text-[16px] font-bold py-3 px-3 rounded-xl transition-all relative ${isActive ? 'bg-primary/10 text-primary' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
                                     >
                                         <span className="material-symbols-outlined text-[22px]">
-                                            {link.name === 'Home' ? 'home' : link.name === 'Destinations' ? 'map' : link.name === 'Bicycle Tours' ? 'pedal_bike' : link.name === 'About Us' ? 'info' : 'mail'}
+                                            {link.name === 'Home' ? 'home' : link.name === 'Destinations' ? 'map' : link.name === 'Bicycle Tours' ? 'pedal_bike' : link.name === 'Pilgrimages' ? 'temple_hindu' : link.name === 'About Us' ? 'info' : 'mail'}
                                         </span>
                                         {link.name}
                                         {link.isNew && (
