@@ -265,8 +265,8 @@ const AdminBikeTourDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                    {filteredTours.length > 0 ? filteredTours.map(tour => (
-                                        <tr key={tour._id} className="hover:bg-slate-50/50 transition-colors group">
+                                    {filteredTours.length > 0 ? filteredTours.map((tour, index) => (
+                                        <tr key={tour.slug || tour._id || tour.id || index} className="hover:bg-slate-50/50 transition-colors group">
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-4">
                                                     {tour.mainImage && (

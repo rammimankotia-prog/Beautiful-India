@@ -42,6 +42,11 @@ const AdminBikeTourForm = () => {
     useEffect(() => {
         const fetchTours = async () => {
             try {
+                if (id === 'undefined') {
+                    setLoading(false);
+                    return;
+                }
+
                 // Determine environment-aware URL
                 const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 const targetUrl = isDev 
@@ -52,13 +57,23 @@ const AdminBikeTourForm = () => {
                 if (!response.ok) return;
                 const data = await response.json();
                 
-                if (isEdit) {
+                if (isEdit && Array.isArray(data)) {
                     // Match by id or slug
-                    const matched = data.find(t => String(t.id) === String(id) || String(t.slug) === String(id) || String(t._id) === String(id));
+                    const matched = data.find(t => 
+                        (t.id && String(t.id) === String(id)) || 
+                        (t.slug && String(t.slug) === String(id)) || 
+                        (t._id && String(t._id) === String(id))
+                    );
+
                     if (matched) {
                         setFormData(prev => ({
                             ...prev,
                             ...matched,
+                            coveredPlaces: Array.isArray(matched.coveredPlaces) ? matched.coveredPlaces : prev.coveredPlaces,
+                            equipment: Array.isArray(matched.equipment) ? matched.equipment : prev.equipment,
+                            images: Array.isArray(matched.images) ? matched.images : prev.images,
+                            highlights: Array.isArray(matched.highlights) ? matched.highlights : prev.highlights,
+                            whatsIncluded: Array.isArray(matched.whatsIncluded) ? matched.whatsIncluded : prev.whatsIncluded,
                             pricing: {
                                 ...prev.pricing,
                                 ...(matched.pricing || {})
