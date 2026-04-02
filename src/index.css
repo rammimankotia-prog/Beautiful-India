@@ -92,22 +92,21 @@ body {
 /* Article Typography Styling */
 .article-content {
   @apply text-slate-700 dark:text-slate-300 font-sans mb-16;
+  /* Width is controlled by the grid column — no ch cap needed */
+  max-width: 100%;
   font-size: 1.125rem;
-  line-height: 1.8;
+  line-height: 1.85;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .article-content > p:first-of-type::first-letter {
-  @apply float-left text-6xl font-serif font-black mr-3 mt-1 text-primary dark:text-teal-400;
-  line-height: 0.85;
+  @apply float-left text-7xl font-serif font-black mr-4 mt-2 text-primary dark:text-teal-400;
+  line-height: 0.8;
 }
 
 .article-content p {
-  @apply mb-5 font-normal;
-  font-size: inherit;
-  line-height: 1.8;
+  @apply mb-8 font-normal leading-[1.85];
 }
 
 .article-content h1,

@@ -58,20 +58,32 @@ const Toast = ({ toast }) => {
 /* ─────────────────────────────────────────────
    Extract h2 headings from HTML content for ToC
 ───────────────────────────────────────────── */
+const decodeEntities = (text) => {
+  if (!text) return '';
+  const entities = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+  };
+  return text.replace(/&[#0-9a-z]+;/gi, (match) => entities[match] || match);
+};
+
 const extractHeadings = (html) => {
   if (!html) return [];
   const matches = [...html.matchAll(/<h2[^>]*id="([^"]*)"[^>]*>(.*?)<\/h2>/gi)];
   if (matches.length > 0) {
     return matches.map((m) => ({
       id: m[1],
-      text: m[2].replace(/<[^>]*>/g, ''),
+      text: decodeEntities(m[2].replace(/<[^>]*>/g, '')),
     }));
   }
   // Fallback: extract text without ids
   const fallback = [...html.matchAll(/<h2[^>]*>(.*?)<\/h2>/gi)];
   return fallback.map((m, i) => ({
     id: `section-${i}`,
-    text: m[1].replace(/<[^>]*>/g, ''),
+    text: decodeEntities(m[1].replace(/<[^>]*>/g, '')),
   }));
 };
 
@@ -261,10 +273,29 @@ const GuideDetailView = () => {
 
   const formatContent = (content) => {
     if (!content) return '';
-    if (/< (p|div|h[1-6]|ul|ol|li|blockquote|section|article)/i.test(content)) {
-      return injectHeadingIds(content);
+
+    // ── Step 1: Normalise embedded newlines ──────────────────────────────
+    // The JSON often contains literal \n (and \n + leading spaces) embedded
+    // inside prose paragraphs, causing fragmented line rendering.  Replace
+    // every newline that is NOT followed by another newline (paragraph break)
+    // with a single space so prose flows naturally.
+    let normalised = content
+      // Replace \n followed by optional whitespace that is NOT another \n
+      .replace(/\n(?!\n)\s*/g, ' ')
+      // Collapse runs of spaces produced by the above
+      .replace(/ {2,}/g, ' ')
+      // Restore proper paragraph boundaries (we used \n\n in the original)
+      // After the first replace, \n\n → ' \n' → needs re-normalisation:
+      // Actually handle double-newlines that survived as a sentinel
+      .replace(/\n+/g, '\n\n');
+
+    // ── Step 2: If already HTML, just inject IDs and return ──────────────
+    if (/<(p|div|h[1-6]|ul|ol|li|blockquote|section|article)/i.test(normalised)) {
+      return injectHeadingIds(normalised);
     }
-    const html = content
+
+    // ── Step 3: Markdown-style plain text → HTML ─────────────────────────
+    const html = normalised
       .split(/\n\s*\n/)
       .map((para) => {
         let text = para.trim();
@@ -272,7 +303,7 @@ const GuideDetailView = () => {
         text = text
           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
           .replace(/\*(.*?)\*/g, '<em>$1</em>')
-          .replace(/\n/g, '<br />');
+          .replace(/\n/g, ' ');
         if (text.startsWith('>')) return `<blockquote>${text.substring(1).trim()}</blockquote>`;
         return `<p>${text}</p>`;
       })
@@ -280,7 +311,47 @@ const GuideDetailView = () => {
     return injectHeadingIds(html);
   };
 
-  const processedContent = formatContent(guide.content);
+  /* ─── Inject contextual inline images for specific guides ─── */
+  const injectInlineImages = (html, slug) => {
+    if (!html || !slug) return html;
+    const imageMap = {
+      'almora-travel-guide-kumaon-himalayas': [
+        {
+          after: /id="section-0"/i,
+          img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&h=500&fit=crop&auto=format',
+          caption: 'The Himalayan panorama from Almora\'s Bright End Corner at dawn',
+        },
+        {
+          after: /id="section-2"/i,
+          img: 'https://images.unsplash.com/photo-1609766857033-0c36571b4bdf?w=900&h=500&fit=crop&auto=format',
+          caption: 'The ancient temple complex at Jageshwar, nestled in deodar cedar forest',
+        },
+        {
+          after: /id="section-4"/i,
+          img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=900&h=500&fit=crop&auto=format',
+          caption: 'Lala Bazaar — Almora\'s stone-paved traditional market',
+        },
+      ],
+    };
+    const injections = imageMap[slug];
+    if (!injections) return html;
+    let result = html;
+    injections.forEach(({ after, img, caption }) => {
+      const match = result.match(after);
+      if (!match) return;
+      const idx = result.indexOf(match[0]);
+      // Find end of the h2 tag
+      const endOfH2 = result.indexOf('</h2>', idx) + 5;
+      const imageHtml = `<figure style="margin:2.5rem 0"><img src="${img}" alt="${caption}" loading="lazy" /><figcaption>${caption}</figcaption></figure>`;
+      result = result.slice(0, endOfH2) + imageHtml + result.slice(endOfH2);
+    });
+    return result;
+  };
+
+  const processedContent = injectInlineImages(
+    formatContent(guide.content),
+    guide.slug || id
+  );
   const tocHeadings = extractHeadings(processedContent);
   const dynamicReadTime = calculateReadTime(guide.content);
   const pageUrl = window.location.href;
@@ -527,10 +598,10 @@ const GuideDetailView = () => {
       )}
 
       {/* ── Main Content ── */}
-      <main className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-10 lg:px-14 xl:px-10 py-12 lg:py-20 grid grid-cols-1 xl:grid-cols-12 gap-8 xl:gap-10 relative">
+      <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-10 lg:px-14 xl:px-10 py-12 lg:py-20 grid grid-cols-1 xl:grid-cols-12 gap-8 xl:gap-12 relative">
 
         {/* Left: Desktop Social Float */}
-        <div className="hidden xl:flex xl:col-span-1 flex-col items-center pt-2">
+        <div className="hidden xl:flex xl:col-span-1 flex-col items-center pt-2 shrink-0">
           <div className="sticky top-32 flex flex-col items-center gap-4">
             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest rotate-180 [writing-mode:vertical-lr] mb-2">
               Share Story
@@ -569,49 +640,59 @@ const GuideDetailView = () => {
             dangerouslySetInnerHTML={{ __html: processedContent }}
           />
 
-          {/* Mobile share + bookmark row */}
-          <div className="xl:hidden mt-16 pt-10 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-8">
+          {/* Mobile Share + Bookmark Row */}
+          <div className="xl:hidden mt-20 pt-12 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-8">
             <button
               onClick={handleBookmark}
-              className={`flex items-center gap-3 font-serif text-lg font-bold transition-colors ${isSaved ? 'text-primary' : 'text-slate-700 dark:text-white'}`}
+              className={`flex items-center gap-4 group/savetour transition-all ${isSaved ? 'text-primary' : 'text-slate-900 dark:text-white'}`}
             >
-              {isSaved ? <BookmarkCheck size={22} className="text-primary" /> : <Bookmark size={22} />}
-              {isSaved ? 'Guide Saved' : 'Save for later'}
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border transition-all ${isSaved ? 'bg-primary border-primary text-white shadow-lg' : 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-400 group-hover/savetour:bg-primary group-hover/savetour:text-white'}`}>
+                {isSaved ? <BookmarkCheck size={22} /> : <Bookmark size={22} />}
+              </div>
+              <div className="flex flex-col">
+                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Personal Bookmark</p>
+                 <p className="font-serif text-lg font-bold leading-none">{isSaved ? 'Guide Saved' : 'Save for Later'}</p>
+              </div>
             </button>
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Share:</span>
-              {shareButtons.map(({ Icon, label, action }) => (
-                <button
-                  key={label}
-                  onClick={action}
-                  aria-label={label}
-                  className="w-11 h-11 rounded-2xl flex items-center justify-center bg-slate-50 dark:bg-slate-900 text-slate-500 hover:bg-primary hover:text-white transition-all"
-                >
-                  <Icon size={18} />
-                </button>
-              ))}
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest hidden sm:block">Spread the word:</span>
+              <div className="flex gap-3">
+                {shareButtons.map(({ Icon, label, action }) => (
+                  <button
+                    key={label}
+                    onClick={action}
+                    aria-label={label}
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-50 dark:bg-slate-900 text-slate-500 hover:bg-primary hover:text-white hover:shadow-lg transition-all"
+                  >
+                    <Icon size={18} />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Mid-article Partner Spotlight */}
-          <div className="my-20 glass-card rounded-[2.5rem] p-10 md:p-14 text-center relative overflow-hidden group border border-slate-100 dark:border-slate-800">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-150 pointer-events-none"></div>
-            <p className="text-[10px] text-slate-400 uppercase tracking-[0.3em] font-black mb-5">Partner Spotlight</p>
-            <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-8 max-w-xl mx-auto">
-              Explore curated local experiences — handpicked by our destination experts just for this guide.
+          <div className="my-24 glass-card rounded-[3rem] p-12 md:p-16 text-center relative overflow-hidden group border border-slate-100 dark:border-slate-800 shadow-[0_40px_100px_-20px_rgba(13,148,136,0.12)]">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-150 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/5 rounded-full blur-3xl -ml-32 -mb-32 transition-transform duration-1000 group-hover:scale-150 pointer-events-none"></div>
+            
+            <p className="text-[10px] text-primary uppercase tracking-[0.4em] font-black mb-6">Partner Spotlight</p>
+            <h3 className="text-3xl font-serif font-black text-slate-900 dark:text-white mb-6 leading-tight">Authentic Local Experiences</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
+              Ready to see this for yourself? Our destination experts have handpicked the best local partners and hidden gems just for this guide.
             </p>
             <button
               onClick={() => setIsQueryModalOpen(true)}
-              className="inline-flex items-center gap-3 bg-primary text-white font-black px-10 py-4 rounded-2xl shadow-xl hover:bg-primary-dark hover:scale-[1.03] active:scale-95 transition-all uppercase tracking-widest text-[10px]"
+              className="inline-flex items-center gap-4 bg-primary text-white font-black px-12 py-5 rounded-[1.5rem] shadow-2xl hover:bg-primary-dark hover:scale-[1.03] active:scale-95 transition-all uppercase tracking-widest text-[11px]"
             >
-              <Sparkles size={16} />
-              Explore Local Experiences
+              <Sparkles size={18} />
+              Book Local Adventure
             </button>
           </div>
         </article>
 
         {/* Right: Sidebar */}
-        <aside className="xl:col-span-3 min-w-0">
+        <aside className="xl:col-span-3 min-w-0 shrink-0">
           <div className="sticky top-28 space-y-8">
 
             {/* Expert Advice CTA */}
