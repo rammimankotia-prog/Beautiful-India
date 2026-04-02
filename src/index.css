@@ -111,10 +111,15 @@ body {
 }
 
 .article-content h1,
-.article-content h2,
+.article-content h2 {
+  @apply font-serif font-black text-slate-900 dark:text-white mt-10 mb-4 tracking-tight;
+  line-height: 1.2;
+  scroll-margin-top: 100px;
+}
+
 .article-content h3,
 .article-content h4 {
-  @apply font-serif font-black text-slate-900 dark:text-white mt-16 mb-6 tracking-tight;
+  @apply font-serif font-black text-slate-900 dark:text-white mt-8 mb-3 tracking-tight;
   line-height: 1.2;
   scroll-margin-top: 100px;
 }
