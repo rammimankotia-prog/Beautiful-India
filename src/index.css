@@ -93,11 +93,10 @@ body {
 .article-content {
   @apply text-slate-700 dark:text-slate-300 font-sans mb-16;
   font-size: 1.125rem;
-  line-height: 2;
+  line-height: 1.8;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  max-width: 85ch;
 }
 
 .article-content > p:first-of-type::first-letter {
@@ -106,8 +105,9 @@ body {
 }
 
 .article-content p {
-  @apply mb-6 font-normal leading-relaxed;
+  @apply mb-5 font-normal;
   font-size: inherit;
+  line-height: 1.8;
 }
 
 .article-content h1,
@@ -145,15 +145,17 @@ body {
   columns: 1;
 }
 
-/* Force standard narrow gaps for any layout containers inside content to prevent broken large gaps from server-side data */
-.article-content .flex-col,
-.article-content [class*="gap-"],
-.article-content [class*="space-y-"] {
-  gap: 1rem !important;
-}
-.article-content .flex-col > * + *,
-.article-content [class*="space-y-"] > * + * {
-  margin-top: 1rem !important;
+/* Constrain only truly large gaps from server-side HTML data — only fire for gap values above a threshold */
+.article-content [class*="gap-20"],
+.article-content [class*="gap-24"],
+.article-content [class*="gap-28"],
+.article-content [class*="gap-32"],
+.article-content [class*="space-y-20"],
+.article-content [class*="space-y-24"],
+.article-content [class*="space-y-28"],
+.article-content [class*="space-y-32"] {
+  gap: 0.5rem !important;
+  row-gap: 0.5rem !important;
 }
 
 .article-content ol {
@@ -161,8 +163,17 @@ body {
 }
 
 .article-content li {
-  @apply relative pl-8 leading-relaxed;
+  @apply relative pl-8;
   font-size: inherit;
+  line-height: 1.6;
+}
+
+/* Prevent large paragraph margins inside list items (e.g. CMS-wrapped TOC anchors) */
+.article-content li p,
+.article-content li > p:first-child,
+.article-content li > p:last-child {
+  margin-bottom: 0.25rem !important;
+  line-height: 1.5;
 }
 
 /* Custom teal bullet */
