@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
+import { Helmet } from 'react-helmet-async';
 
 // Helper: Normalize slugs for fuzzy matching
 const fuzzySlug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -107,6 +108,7 @@ const ItineraryDayCard = ({ item, defaultOpen, renderRichText }) => {
 const TourDetailView = () => {
   const { title, id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -527,8 +529,42 @@ const TourDetailView = () => {
   const availableMonths = getAvailableMonths();
 
 
+  const tourUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, '')}${location.pathname}`;
+  const tourImages = Array.isArray(tour.images) ? tour.images.map(img => typeof img === 'string' ? img : img.url) : (tour.image ? [tour.image] : []);
+
+  const tourSchema = {
+    "@context": "https://schema.org",
+    "@type": "Trip",
+    "name": tour.title,
+    "description": tour.description || tour.metaDescription || tour.title,
+    "image": tourImages,
+    "itinerary": tour.itinerary?.map(d => ({
+      "@type": "City",
+      "name": d.title
+    })),
+    "offers": {
+      "@type": "Offer",
+      "price": displayPrice.amount,
+      "priceCurrency": "INR",
+      "url": tourUrl,
+      "availability": "https://schema.org/InStock"
+    },
+    "provider": {
+      "@type": "TravelAgency",
+      "name": "The Beautiful India",
+      "url": "https://bhaktikishakti.com"
+    }
+  };
+
   return (
     <div data-page="tour_detail_view" style={{ colorScheme: 'light' }}>
+      <Helmet>
+        <title>{tour.title} | The Beautiful India</title>
+        <meta name="description" content={tour.description || tour.metaDescription || tour.title} />
+        <script type="application/ld+json">
+          {JSON.stringify(tourSchema)}
+        </script>
+      </Helmet>
       {/* Sticky Navigation Bar (Desktop Only) */}
       <div className={`fixed top-0 left-0 w-full bg-white border-b border-slate-100 z-[90] transition-all duration-500 shadow-xl overflow-hidden hidden md:block ${showSticky ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}`}>
         <div className="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between">

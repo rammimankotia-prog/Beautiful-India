@@ -142,31 +142,6 @@ const TrainBookingPage = () => {
     }
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://bhaktikishakti.com"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Booking",
-        "item": "https://bhaktikishakti.com/booking"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Train Booking",
-        "item": "https://bhaktikishakti.com/booking/train"
-      }
-    ]
-  };
-
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 py-12 px-4 md:px-10 font-sans text-slate-900 transition-colors duration-300">
       <Helmet>
@@ -190,9 +165,6 @@ const TrainBookingPage = () => {
         {/* Schema Markup */}
         <script type="application/ld+json">
           {JSON.stringify(schemaData)}
-        </script>
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
         </script>
       </Helmet>
       <div className="max-w-5xl mx-auto">

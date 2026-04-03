@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import QueryModal from '../components/QueryModal';
 import ConsultSpecialistModal from '../components/ConsultSpecialistModal';
 import BikeTourMap from '../components/BikeTourMap';
 
 const BikeTourDetailView = () => {
     const { slug } = useParams();
+    const location = useLocation();
     const [tour, setTour] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
@@ -36,21 +38,7 @@ const BikeTourDetailView = () => {
             if (data) {
                 setTour(data);
                 
-                // Inject Schema Markup
-                if (data.schemaMarkup) {
-                    try {
-                        const oldSchema = document.getElementById('tour-schema');
-                        if (oldSchema) oldSchema.remove();
-
-                        const script = document.createElement('script');
-                        script.type = 'application/ld+json';
-                        script.text = data.schemaMarkup;
-                        script.id = 'tour-schema';
-                        document.head.appendChild(script);
-                    } catch (e) {
-                        console.error('Schema injection failed', e);
-                    }
-                }
+                // Schema injection is now handled by Helmet in render
 
                 // Fetch related tours (same type or destination)
                 const relatedUrl = isDev 
@@ -95,10 +83,6 @@ const BikeTourDetailView = () => {
     useEffect(() => {
         fetchTour();
         window.scrollTo(0, 0);
-        return () => {
-            const schemaScript = document.getElementById('tour-schema');
-            if (schemaScript) schemaScript.remove();
-        };
     }, [slug]);
 
     if (loading) {
@@ -125,8 +109,19 @@ const BikeTourDetailView = () => {
         );
     }
 
+    const tourUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, '')}${location.pathname}`;
+
     return (
         <div className="bg-white dark:bg-slate-950 min-h-screen pb-40">
+            <Helmet>
+                <title>{tour.title} | The Beautiful India</title>
+                <meta name="description" content={tour.subtitle || tour.title} />
+                {tour.schemaMarkup && (
+                    <script type="application/ld+json">
+                        {tour.schemaMarkup}
+                    </script>
+                )}
+            </Helmet>
             {/* Scroll Progress Bar */}
             <div className="scroll-progress"></div>
 

@@ -440,6 +440,33 @@ const GuideDetailView = () => {
     { Icon: LinkIcon, label: 'Copy link', action: handleCopyLink },
   ];
 
+  const guideUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, '')}${location.pathname}`;
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": guide.title,
+    "description": guide.description || guide.title,
+    "image": guide.image,
+    "author": {
+      "@type": "Person",
+      "name": guide.author || "Travel Expert"
+    },
+    "datePublished": guide.date || new Date().toISOString(),
+    "publisher": {
+      "@type": "Organization",
+      "name": "The Beautiful India",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bhaktikishakti.com/logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": guideUrl
+    }
+  };
+
   /* ═══════════════════════════════════════════════
      RENDER
   ═══════════════════════════════════════════════ */
@@ -448,6 +475,9 @@ const GuideDetailView = () => {
       <Helmet>
         <title>{guide.seoTitle || `${guide.title} | The Beautiful India`}</title>
         <meta name="description" content={guide.metaDescription || guide.description || guide.title} />
+        <script type="application/ld+json">
+          {JSON.stringify(articleSchema)}
+        </script>
         <meta property="og:title" content={guide.seoTitle || guide.title} />
         <meta property="og:image" content={guide.image} />
         <meta property="og:url" content={pageUrl} />
