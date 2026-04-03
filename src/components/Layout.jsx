@@ -1,16 +1,16 @@
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, Outlet } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Header from './Header';
 import Footer from './Footer';
-import TripPlannerWidget from './TripPlannerWidget';
 import AdSenseScript from './AdSenseScript';
 
 const Layout = () => {
     const location = useLocation();
     const isAdminPage = location.pathname.startsWith('/admin');
 
-    const pathSegments = location.pathname.split('/').filter(p => p !== '');
+    // Breadcrumb logic
+    const pathnames = location.pathname.split('/').filter((x) => x);
     const itemListElement = [
         {
             "@type": "ListItem",
@@ -20,10 +20,10 @@ const Layout = () => {
         }
     ];
 
-    let currentUrl = "https://bhaktikishakti.com";
-    pathSegments.forEach((segment, index) => {
-        currentUrl += `/${segment}`;
-        const name = segment.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    pathnames.forEach((name, index) => {
+        const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
+        const currentUrl = `https://bhaktikishakti.com${routeTo}`;
+        
         itemListElement.push({
             "@type": "ListItem",
             "position": index + 2,
@@ -60,8 +60,6 @@ const Layout = () => {
             <div className="float-element">
                 <Footer />
             </div>
-            {/* Floating Chat Widget - only on non-admin pages */}
-            {!isAdminPage && <TripPlannerWidget />}
         </div>
     );
 };

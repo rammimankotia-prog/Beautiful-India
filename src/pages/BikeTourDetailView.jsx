@@ -248,136 +248,121 @@ const BikeTourDetailView = () => {
                         {/* Interactive Itinerary / Tabs */}
                         <section className="space-y-12">
                             <div className="flex gap-10 border-b border-slate-100 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar">
-                                {['At a Glance', 'Inclusions', 'Equipment'].map((tab) => (
+                                {['overview', 'itinerary', 'map'].map(tab => (
                                     <button 
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab.toLowerCase())}
-                                        className={`text-[10px] font-black uppercase tracking-[6px] pb-4 transition-all whitespace-nowrap ${activeTab === tab.toLowerCase() ? 'text-primary border-b-2 border-primary' : 'text-slate-300 hover:text-slate-900'}`}
+                                        key={tab} 
+                                        onClick={() => setActiveTab(tab)}
+                                        className={`pb-4 text-[10px] font-black uppercase tracking-[4px] transition-all relative ${activeTab === tab ? 'text-primary' : 'text-slate-400'}`}
                                     >
                                         {tab}
+                                        {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full animate-in slide-in-from-left duration-500"></div>}
                                     </button>
                                 ))}
                             </div>
 
                             <div className="animate-fade-up">
-                                {activeTab === 'at a glance' && (
-                                    <div className="space-y-12">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div className="p-10 bg-slate-900 rounded-[48px] text-white space-y-6">
-                                            <h4 className="text-2xl font-serif italic text-primary">The Route</h4>
-                                            <div className="space-y-6 pt-4">
-                                                {tour.coveredPlaces?.map((place, i) => (
-                                                    <div key={i} className="flex items-center gap-6">
-                                                        <span className="text-primary font-serif font-black text-2xl">0{i+1}</span>
-                                                        <span className="text-xs font-black uppercase tracking-[4px]">{place}</span>
+                                {activeTab === 'overview' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-slate-600 dark:text-slate-400">
+                                        <div className="space-y-6 bg-slate-50 dark:bg-slate-900/50 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800">
+                                            <h4 className="text-slate-900 dark:text-white font-serif font-black text-2xl italic">Overview</h4>
+                                            <p className="leading-relaxed font-medium">This expedition is designed for those who seek the extraordinary. From the highest motorable passes to the most serene valley floors, experience India like never before.</p>
+                                        </div>
+                                        <div className="space-y-8 bg-slate-50 dark:bg-slate-900/50 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800">
+                                            <h4 className="text-slate-900 dark:text-white font-serif font-black text-2xl italic">Details</h4>
+                                            <div className="space-y-4">
+                                                <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Duration</span>
+                                                    <span className="text-slate-900 dark:text-white font-black">{tour.duration}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Region</span>
+                                                    <span className="text-slate-900 dark:text-white font-black">{tour.destination}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center pb-4">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Ideal For</span>
+                                                    <span className="text-slate-900 dark:text-white font-black">Advanced Riders</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                {activeTab === 'itinerary' && (
+                                    <div className="bg-slate-50 dark:bg-slate-900/50 p-10 md:p-16 rounded-[60px] border border-slate-100 dark:border-slate-800">
+                                        <div className="space-y-12">
+                                            <h4 className="text-4xl font-serif font-black text-slate-900 dark:text-white italic mb-10">The Journey Map</h4>
+                                            <div className="grid gap-8">
+                                                {tour.itinerary?.map((item, idx) => (
+                                                    <div key={idx} className="flex gap-10 group/item">
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center font-black text-primary border border-slate-200 dark:border-slate-700 shadow-lg group-hover/item:bg-primary group-hover/item:text-white transition-all">{idx + 1}</div>
+                                                            <div className="w-px flex-1 bg-slate-200 dark:bg-slate-700 my-4"></div>
+                                                        </div>
+                                                        <div className="grow pb-12">
+                                                            <h5 className="text-xl font-serif font-black text-slate-800 dark:text-white group-hover/item:text-primary transition-colors mb-4 italic">{item.title}</h5>
+                                                            <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{item.description}</p>
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className="p-10 bg-primary/5 rounded-[48px] space-y-6 border border-primary/10">
-                                            <h4 className="text-2xl font-serif italic text-primary">Essential Skills</h4>
-                                            <div className="space-y-4">
-                                                <p className="text-sm font-bold text-slate-600 dark:text-slate-300 leading-relaxed italic">
-                                                    This is a <span className="text-primary font-black uppercase tracking-widest px-2">{tour.difficulty}</span> voyage. Suitable for riders with intermediate to advanced skills who crave rugged beauty and physical challenge.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        </div>
-
-                                        {/* Embedded Live Route Map */}
-                                        {['delhi-bicycle-tour', 'leh-and-leh-grand-circuit'].includes(tour.slug) && (
-                                            <div className="space-y-8 pt-8 mt-12 border-t border-slate-100 dark:border-slate-800">
-                                                <div className="space-y-4">
-                                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Interactive Route</h2>
-                                                    <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white leading-tight italic">
-                                                        {tour.slug === 'leh-and-leh-grand-circuit' ? 'The Grand Circuit, Mapped' : 'Live Tracking'}
-                                                    </h3>
-                                                </div>
-                                                <div className="w-full bg-white dark:bg-slate-900 rounded-[20px] p-2 border border-slate-100 dark:border-slate-800 shadow-2xl">
-                                                    <BikeTourMap slug={tour.slug} title={tour.title} />
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 )}
-                                {activeTab === 'inclusions' && (
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                        {tour.whatsIncluded?.map((item, i) => (
-                                            <div key={i} className="p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex items-center gap-4">
-                                                <span className="material-symbols-outlined text-emerald-500 font-black">check_circle</span>
-                                                <span className="text-[10px] font-black uppercase tracking-tighter text-slate-600 dark:text-slate-300">{item}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                                {activeTab === 'equipment' && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        {tour.equipment?.map((item, i) => (
-                                            <div key={i} className="flex justify-between items-center p-8 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
-                                                <span className="text-xs font-black uppercase tracking-widest">{item}</span>
-                                                <span className="material-symbols-outlined text-primary">verified</span>
-                                            </div>
-                                        ))}
+                                {activeTab === 'map' && (
+                                    <div className="rounded-[60px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-2xl h-[600px] bg-slate-50">
+                                        <BikeTourMap tourSlug={tour.slug} />
                                     </div>
                                 )}
                             </div>
                         </section>
                     </div>
 
-                    {/* Right Side: Floating High-Status Widget */}
+                    {/* Right Side: Interaction & Pricing */}
                     <div className="lg:col-span-1">
-                        <div className="sticky top-24 bg-white dark:bg-slate-900 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] dark:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 rounded-[40px] md:rounded-[64px] p-8 md:p-14 space-y-10 md:space-y-12">
-                            <div className="space-y-4 border-b border-black/5 dark:border-white/5 pb-8 md:pb-10">
-                                <div className="flex items-center gap-2 text-primary">
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                                    <p className="text-[10px] font-black uppercase tracking-[8px]">Limited Availability</p>
+                        <div className="sticky top-32 space-y-10">
+                            {/* Booking Card */}
+                            <div className="bg-slate-900 dark:bg-slate-900 rounded-[48px] p-12 text-white shadow-2xl space-y-10 relative overflow-hidden group/book">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover/book:scale-150 transition-transform duration-1000"></div>
+                                
+                                <div className="space-y-4 relative z-10">
+                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Pricing</h2>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-6xl font-serif font-black">₹{tour.pricing?.perPerson?.toLocaleString() || 'Custom'}</span>
+                                        <span className="text-primary font-black uppercase tracking-widest text-[9px]">/ Person</span>
+                                    </div>
+                                    <p className="text-white/40 text-xs font-bold leading-relaxed">{tour.pricing?.inclusions || 'Inclusive of bike, fuel, stay, and expert mechanics.'}</p>
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-5xl md:text-7xl font-serif font-black text-slate-900 dark:text-white">₹{tour.pricing?.perPerson?.toLocaleString() || 'Custom'}</span>
-                                    <span className="text-slate-400 font-bold text-xs md:text-sm italic mt-2">Premium Individual Cabin / Ride</span>
+
+                                <div className="space-y-6 relative z-10">
+                                    <button 
+                                        onClick={() => setIsQueryModalOpen(true)}
+                                        className="w-full py-6 bg-primary text-white rounded-full font-black uppercase text-xs tracking-[4px] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 outline-none"
+                                    >
+                                        Reserve My Slot
+                                    </button>
+                                    <p className="text-center text-[9px] font-black uppercase tracking-[4px] text-white/40">Limited Availability</p>
+                                </div>
+
+                                <div className="pt-10 border-t border-white/5 space-y-6 relative z-10">
+                                    <div className="flex items-center gap-6">
+                                        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-sm">support_agent</span>
+                                        </div>
+                                        <div className="space-y-0.5">
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-primary">Personal Expert</p>
+                                            <p className="text-xs font-bold">24/7 Ground Support</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="space-y-10">
-                                <div className="space-y-6">
-                                    <div className="flex items-center gap-4 text-emerald-600">
-                                        <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center">
-                                            <span className="material-symbols-outlined text-[14px] font-black">verified_user</span>
-                                        </div>
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Guaranteed Best Price</span>
-                                    </div>
-                                    <div className="flex items-center gap-4 text-slate-500">
-                                        <div className="w-8 h-8 bg-slate-50 rounded-full flex items-center justify-center">
-                                            <span className="material-symbols-outlined text-[14px] font-black">history</span>
-                                        </div>
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Flexible Re-scheduling</span>
-                                    </div>
+                            {/* Trust Badge / Quick Info */}
+                            <div className="bg-slate-50 dark:bg-slate-900/50 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800 flex items-center gap-6">
+                                <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-primary shadow-sm">
+                                    <span className="material-symbols-outlined font-black">verified</span>
                                 </div>
-
-                                <button 
-                                    onClick={() => setIsQueryModalOpen(true)}
-                                    className="w-full py-6 bg-slate-900 dark:bg-primary text-white rounded-full font-black text-sm uppercase tracking-[4px] shadow-2xl hover:bg-slate-800 dark:hover:bg-white dark:hover:text-primary transition-all group overflow-hidden relative"
-                                >
-                                    <span className="relative z-10">Initiate Inquiry</span>
-                                    <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
-                                </button>
-
-                                <div className="text-center pt-4 md:pt-6">
-                                    <p className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[4px] mb-6 underline decoration-primary/30 underline-offset-8">Talk to an Adventurer</p>
-                                    <div className="flex justify-center gap-6 md:gap-10">
-                                        <a href="https://wa.me/916005159433" className="group flex flex-col items-center gap-3">
-                                            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center hover:bg-emerald-600 dark:hover:bg-emerald-500 hover:text-white dark:hover:text-white transition-all shadow-xl group-hover:-translate-y-2 group-hover:shadow-emerald-500/30">
-                                                <i className="fa-brands fa-whatsapp text-xl md:text-2xl"></i>
-                                            </div>
-                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity dark:text-slate-300">WhatsApp</span>
-                                        </a>
-                                        <a href="tel:+916005159433" className="group flex flex-col items-center gap-3">
-                                            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 flex items-center justify-center hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white transition-all shadow-xl group-hover:-translate-y-2 group-hover:shadow-blue-500/30">
-                                                <span className="material-symbols-outlined text-xl md:text-2xl font-black">call</span>
-                                            </div>
-                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity dark:text-slate-300">Call Instantly</span>
-                                        </a>
-                                    </div>
+                                <div>
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Certified Fleet</p>
+                                    <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Premium Equipment</p>
                                 </div>
                             </div>
                         </div>
