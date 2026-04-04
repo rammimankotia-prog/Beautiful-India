@@ -7,6 +7,7 @@ const AdminOverviewDashboard = () => {
         totalBookings: 0,
         totalLeads: 0,
         totalReviews: 0,
+        totalTrainQueries: 0,
         revenue: 0
     });
     const [activities, setActivities] = useState([]);
@@ -17,21 +18,24 @@ const AdminOverviewDashboard = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [bookingsRes, leadsRes, reviewsRes] = await Promise.all([
+                const [bookingsRes, leadsRes, reviewsRes, trainRes] = await Promise.all([
                     fetch(`${import.meta.env.BASE_URL}data/bookings.json`),
                     fetch(`${import.meta.env.BASE_URL}data/leads.json`),
-                    fetch(`${import.meta.env.BASE_URL}data/reviews.json`)
+                    fetch(`${import.meta.env.BASE_URL}data/reviews.json`),
+                    fetch(`${import.meta.env.BASE_URL}data/train_queries.json`)
                 ]);
 
                 const bookings = await bookingsRes.json();
                 const leads = await leadsRes.json();
                 const reviews = await reviewsRes.json();
+                const trainQueries = await trainRes.json();
 
                 const totalRevenue = bookings.reduce((sum, b) => sum + (parseFloat(b.amount || b.price) || 0), 0);
                 setStats({
                     totalBookings: bookings.length,
                     totalLeads: leads.length,
                     totalReviews: reviews.length,
+                    totalTrainQueries: trainQueries.length,
                     revenue: totalRevenue
                 });
 
@@ -62,6 +66,15 @@ const AdminOverviewDashboard = () => {
                         time: r.createdAt,
                         icon: 'grade',
                         color: 'bg-amber-500'
+                    })),
+                    ...trainQueries.map(t => ({
+                        id: `t-${t.id}`,
+                        type: 'train',
+                        title: `Train Inquiry: ${t.journeyDetails?.fromStation} to ${t.journeyDetails?.toStation}`,
+                        user: t.passengers?.[0]?.firstName || 'Guest',
+                        time: t.timestamp,
+                        icon: 'train',
+                        color: 'bg-orange-500'
                     }))
                 ];
 
@@ -91,11 +104,12 @@ const AdminOverviewDashboard = () => {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
                 {[
                     { label: 'Total Revenue', value: formatPrice(stats.revenue, true), icon: 'payments', color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/20' },
                     { label: 'Total Bookings', value: stats.totalBookings, icon: 'receipt_long', color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/20' },
                     { label: 'Fresh Leads', value: stats.totalLeads, icon: 'campaign', color: 'text-purple-600', bg: 'bg-purple-50 dark:bg-purple-950/20' },
+                    { label: 'Train Queries', value: stats.totalTrainQueries, icon: 'train', color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-950/20' },
                     { label: 'User Feedback', value: stats.totalReviews, icon: 'grade', color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/20' }
                 ].map((stat, idx) => (
                     <div key={idx} className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">

@@ -12,6 +12,19 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 const AdminNewTourUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+
+  // ─── Normalization Helpers (Synced with Discovery Page) ───
+  const normalizeBucket = (s) => {
+      const val = String(s || "").toLowerCase().trim();
+      if (val === 'kashmir' || val === 'jammu' || val === 'jammu and kashmir' || val === 'jammu & kashmir') return 'jammu and kashmir';
+      return val;
+  };
+
+  const displayState = (s) => {
+      const val = normalizeBucket(s);
+      if (val === 'jammu and kashmir') return 'Jammu and Kashmir';
+      return String(s || "").trim();
+  };
   const [searchParams] = useSearchParams();
   const isEdit = Boolean(id);
   const typeParam = searchParams.get("type");
@@ -91,7 +104,7 @@ const AdminNewTourUploadForm = () => {
         "Kasol",
         "Spiti Valley",
       ],
-      Kashmir: ["Srinagar", "Gulmarg", "Pahalgam", "Sonamarg"],
+      "Jammu and Kashmir": ["Srinagar", "Gulmarg", "Pahalgam", "Sonamarg"],
       Kerala: ["Munnar", "Alleppey", "Wayanad"],
       Ladakh: ["Leh", "Pangong Lake", "Nubra Valley"],
       Goa: ["North Goa", "South Goa"],
@@ -129,7 +142,7 @@ const AdminNewTourUploadForm = () => {
   // Emoji map for state quick-picks — fallback icon for custom destinations
   const DEST_ICON_MAP = {
     "Himachal Pradesh": "🏔️",
-    Kashmir: "❄️",
+    "Jammu and Kashmir": "❄️",
     Rajasthan: "🏯",
     Kerala: "🌿",
     Ladakh: "🚵",
@@ -147,7 +160,6 @@ const AdminNewTourUploadForm = () => {
     "West Bengal": "🐯",
     "Madhya Pradesh": "🐘",
     "Uttar Pradesh": "🕌",
-    Jammu: "❄️",
     Puducherry: "🌊",
     Darjeeling: "🍵",
     Coorg: "☕",
@@ -394,6 +406,35 @@ const AdminNewTourUploadForm = () => {
           tourToSave[field] = [];
         }
       });
+
+      // ─── Regional Normalization Safety Net ───
+      if (tourToSave.stateRegion) {
+        const rawRegions = Array.isArray(tourToSave.stateRegion) 
+          ? tourToSave.stateRegion 
+          : [tourToSave.stateRegion];
+        
+        // Flatten comma-separated strings and trim
+        let flatRegions = [];
+        rawRegions.forEach(r => {
+          if (typeof r === 'string' && r.includes(',')) {
+            flatRegions = flatRegions.concat(r.split(',').map(s => s.trim()));
+          } else {
+            flatRegions.push(String(r || "").trim());
+          }
+        });
+
+        // Map all variants to "Jammu and Kashmir" and deduplicate
+        const normalizedRegions = [...new Set(flatRegions.map(r => displayState(r)).filter(Boolean))];
+        tourToSave.stateRegion = normalizedRegions;
+      }
+
+      if (tourToSave.subregion) {
+        const subs = Array.isArray(tourToSave.subregion) 
+          ? tourToSave.subregion 
+          : [tourToSave.subregion];
+        tourToSave.subregion = [...new Set(subs.map(s => String(s).trim()))].filter(Boolean);
+      }
+
 
       // Generate ID from title slug (e.g. "Golden Triangle Tour" → "golden-triangle-tour")
       // NEW tours: always derive a fresh slug from the title — prevents numeric/timestamp IDs.
@@ -1542,15 +1583,24 @@ const AdminNewTourUploadForm = () => {
                             : formData.stateRegion
                               ? [formData.stateRegion]
                               : [];
-                          const isSelected = currentStates.includes(stateName);
+                          
+                          const normalizedState = displayState(stateName);
+                          const isSelected = currentStates.some(s => displayState(s) === normalizedState);
+
                           return (
                             <button
                               key={stateName}
                               type="button"
                               onClick={() => {
-                                const newStates = isSelected
-                                  ? currentStates.filter((s) => s !== stateName)
-                                  : [...currentStates, stateName];
+                                let newStates;
+                                if (isSelected) {
+                                  newStates = currentStates.filter((s) => displayState(s) !== normalizedState);
+                                } else {
+                                  // Add normalized version and deduplicate
+                                  const updated = [...currentStates, normalizedState];
+                                  newStates = [...new Set(updated.map(displayState))];
+                                }
+
                                 setFormData((prev) => ({
                                   ...prev,
                                   destination: "India",

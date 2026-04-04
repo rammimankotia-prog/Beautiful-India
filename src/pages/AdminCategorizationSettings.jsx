@@ -22,6 +22,19 @@ const DISPLAY_NAMES = {
 
 const OBJECT_CATEGORIES = ['themes', 'hotelCategories', 'accommodationTypes', 'transports'];
 
+// ─── Normalization Helpers (Synced with Discovery Page) ───
+const normalizeBucket = (s) => {
+    const val = String(s || "").toLowerCase().trim();
+    if (val === 'kashmir' || val === 'jammu and kashmir' || val === 'jammu & kashmir') return 'jammu and kashmir';
+    return val;
+};
+
+const displayState = (s) => {
+    const val = normalizeBucket(s);
+    if (val === 'jammu and kashmir') return 'Jammu and Kashmir';
+    return String(s).trim();
+};
+
 const AdminCategorizationSettings = () => {
   const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
   const [newItems, setNewItems] = useState({ 
@@ -52,13 +65,22 @@ const AdminCategorizationSettings = () => {
   };
 
   const handleAdd = (key, value) => {
-    const val = (value || newItems[key] || '').trim();
+    let val = (value || newItems[key] || '').trim();
     if (!val) return;
     
+    // Normalize if it's a state or destination
+    if (key === 'states' || key === 'destinations') {
+        val = displayState(val);
+    }
+    
     const currentList = categories[key] || [];
-    const exists = currentList.some(item => 
-      typeof item === 'string' ? item === val : item.value === val || item.label === val
-    );
+    const exists = currentList.some(item => {
+      const itemVal = typeof item === 'string' ? item : item.label;
+      if (key === 'states' || key === 'destinations') {
+          return displayState(itemVal) === displayState(val);
+      }
+      return itemVal === val;
+    });
     
     if (exists) { showToast(`⚠️ "${val}" already exists`); return; }
     

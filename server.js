@@ -34,8 +34,24 @@ app.use(express.json({ limit: '200mb' }));
 app.use(express.urlencoded({ limit: '200mb', extended: true }));
 
 // Helper to read/write JSON files
-const getData = (filename) => JSON.parse(fs.readFileSync(path.join(__dirname, 'src/data', filename), 'utf8'));
-const saveData = (filename, data) => fs.writeFileSync(path.join(__dirname, 'src/data', filename), JSON.stringify(data, null, 2));
+const getData = (filename) => {
+    const srcPath = path.join(__dirname, 'src/data', filename);
+    const publicPath = path.join(__dirname, 'public/data', filename);
+    if (fs.existsSync(srcPath)) return JSON.parse(fs.readFileSync(srcPath, 'utf8'));
+    if (fs.existsSync(publicPath)) return JSON.parse(fs.readFileSync(publicPath, 'utf8'));
+    return [];
+};
+
+const saveData = (filename, data) => {
+    const srcPath = path.join(__dirname, 'src/data', filename);
+    const publicPath = path.join(__dirname, 'public/data', filename);
+    const jsonStr = JSON.stringify(data, null, 2);
+    
+    fs.writeFileSync(srcPath, jsonStr, 'utf8');
+    if (fs.existsSync(path.dirname(publicPath))) {
+        fs.writeFileSync(publicPath, jsonStr, 'utf8');
+    }
+};
 
 // API Routes
 app.use('/api/v1/tours', tourRoutes);
@@ -67,6 +83,44 @@ app.post('/api/train-queries', (req, res) => {
     saveData('train_queries.json', queries);
     res.json({ success: true, query: newQuery });
 });
+
+app.patch('/api/train-queries', (req, res) => {
+    try {
+        const { id, status } = req.body;
+        if (!id || !status) return res.status(400).json({ success: false, message: 'ID and status required' });
+        
+        const queries = getData('train_queries.json');
+        const index = queries.findIndex(q => q.id === id);
+        if (index !== -1) {
+            queries[index].status = status;
+            saveData('train_queries.json', queries);
+            res.json({ success: true, message: 'Status updated' });
+        } else {
+            res.status(404).json({ success: false, message: 'Query not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.delete('/api/train-queries', (req, res) => {
+    try {
+        const id = req.query.id || req.body.id;
+        if (!id) return res.status(400).json({ success: false, message: 'ID required' });
+        
+        const queries = getData('train_queries.json');
+        const filtered = queries.filter(q => q.id !== id);
+        if (filtered.length < queries.length) {
+            saveData('train_queries.json', filtered);
+            res.json({ success: true, message: 'Query deleted' });
+        } else {
+            res.status(404).json({ success: false, message: 'Query not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 
 app.get('/api/agents', (req, res) => res.json(getData('agents.json')));
 app.post('/api/agents', (req, res) => { saveData('agents.json', req.body); res.json({ success: true }); });

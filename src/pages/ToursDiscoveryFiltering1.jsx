@@ -4,12 +4,25 @@ import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
 
 // Smarter slug matching
+const normalizeBucket = (s) => {
+    const val = String(s || "").toLowerCase().trim();
+    if (val === 'kashmir' || val === 'jammu' || val === 'jammu and kashmir' || val === 'jammu & kashmir') return 'jammu and kashmir';
+    return val;
+};
+
+const displayState = (s) => {
+    const val = normalizeBucket(s);
+    if (val === 'jammu and kashmir') return 'Jammu and Kashmir';
+    return String(s || "").trim();
+};
+
 const findTourBySlug = (tours, slug) => {
     if (!slug) return null;
     const decoded = decodeURIComponent(slug).toLowerCase();
+
     let match = tours.find(t => {
         const regions = Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion];
-        return regions.some(r => r && r.toLowerCase().replace(/\s+/g, '-') === decoded);
+        return regions.some(r => r && normalizeBucket(r).replace(/\s+/g, '-') === decoded);
     });
     if (match) return match;
     match = tours.find(t => {
@@ -66,7 +79,10 @@ const FilterPanel = ({
                     onChange={(e) => { setDestination(e.target.value); setStateRegion('All States'); }}
                 >
                     <option>Any Destination</option>
-                    {[...new Set(tours.map(t => t.destination).filter(Boolean))].map(dest => (
+                    {[...new Set(tours.map(t => {
+                        const d = Array.isArray(t.destination) ? t.destination[0] : t.destination;
+                        return d ? d.trim() : null;
+                    }).filter(Boolean))].sort().map(dest => (
                         <option key={dest} value={dest}>{dest}</option>
                     ))}
                 </select>
@@ -85,9 +101,20 @@ const FilterPanel = ({
                         onChange={(e) => setStateRegion(e.target.value)}
                     >
                         <option>All States</option>
-                        {[...new Set(tours.filter(t => t.destination === destination).map(t => t.stateRegion).filter(Boolean))].map(state => (
-                            <option key={state} value={state}>{state}</option>
-                        ))}
+                        {(() => {
+                            const states = tours
+                                .filter(t => {
+                                    const tourDest = Array.isArray(t.destination) ? t.destination : [t.destination];
+                                    return tourDest.some(d => d && d.toLowerCase() === destination.toLowerCase());
+                                })
+                                .flatMap(t => Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion])
+                                .filter(Boolean)
+                                .map(displayState);
+                            
+                            return [...new Set(states)].sort((a, b) => a.localeCompare(b)).map(state => (
+                                <option key={state} value={state}>{state}</option>
+                            ));
+                        })()}
                     </select>
                     <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-xl">expand_more</span>
                 </div>
@@ -234,12 +261,30 @@ const ToursDiscoveryFiltering1 = () => {
         const urlTheme = searchParams.get('theme');
         const urlDest = searchParams.get('destination');
         if (urlTheme) setThemeFilters([urlTheme]);
-        // ?destination= param always maps to a stateRegion filter
-        // (footer links use this format for all domestic regions and cities)
-        if (urlDest) {
-            setStateRegion(urlDest);
+        
+        if (urlDest && allTours.length > 0) {
+            const normVal = normalizeBucket(urlDest);
+
+            const matchingTour = allTours.find(t => {
+                const regions = (Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion]).map(normalizeBucket);
+                const dests = (Array.isArray(t.destination) ? t.destination : [t.destination]).map(normalizeBucket);
+                return regions.includes(normVal) || dests.includes(normVal);
+            });
+
+            if (matchingTour) {
+                const tourDest = Array.isArray(matchingTour.destination) ? matchingTour.destination[0] : matchingTour.destination;
+                setDestination(tourDest || 'India');
+                setStateRegion(displayState(normVal));
+            } else {
+                if (normVal === 'jammu and kashmir') {
+                    setDestination('India');
+                    setStateRegion('Jammu and Kashmir');
+                } else {
+                    setStateRegion(urlDest);
+                }
+            }
         }
-    }, []);
+    }, [searchParams, allTours]);
 
     // Synchronize local tours state with DataContext
     useEffect(() => {
@@ -250,9 +295,10 @@ const ToursDiscoveryFiltering1 = () => {
             if (regionSlug) {
                 const matchedTour = findTourBySlug(activeTours, regionSlug);
                 if (matchedTour) {
-                    setDestination(matchedTour.destination || 'Any Destination');
+                    const tourDest = Array.isArray(matchedTour.destination) ? matchedTour.destination[0] : matchedTour.destination;
+                    setDestination(tourDest || 'Any Destination');
                     const targetState = Array.isArray(matchedTour.stateRegion) ? matchedTour.stateRegion[0] : matchedTour.stateRegion;
-                    setStateRegion(targetState || 'All States');
+                    setStateRegion(displayState(targetState) || 'All States');
                     const targetSub = Array.isArray(matchedTour.subregion) ? matchedTour.subregion[0] : matchedTour.subregion;
                     setSubregion(targetSub || 'All subregions');
                 }
@@ -325,11 +371,10 @@ const ToursDiscoveryFiltering1 = () => {
 
         if (stateRegion !== 'All States') {
             const tourState = tour.stateRegion;
-            // Defensive: ensure stateRegion is string before calling .toLowerCase()
-            const filterState = String(stateRegion).toLowerCase();
+            const filterState = normalizeBucket(stateRegion);
             const stateMatch = Array.isArray(tourState)
-                ? tourState.some(s => s && String(s).toLowerCase() === filterState)
-                : (tourState && String(tourState).toLowerCase() === filterState);
+                ? tourState.some(s => s && normalizeBucket(s) === filterState)
+                : (tourState && normalizeBucket(tourState) === filterState);
             if (!stateMatch) return false;
         }
 
@@ -372,7 +417,13 @@ const ToursDiscoveryFiltering1 = () => {
         return true;
     });
 
-    const processedTours = filteredTours.slice(0, visibleCount);
+    const sortedTours = [...filteredTours].sort((a, b) => {
+        const orderA = a.order !== undefined && a.order !== null ? Number(a.order) : 999;
+        const orderB = b.order !== undefined && b.order !== null ? Number(b.order) : 999;
+        return orderA - orderB;
+    });
+
+    const processedTours = sortedTours.slice(0, visibleCount);
 
     const activeFilterCount = themeFilters.length + durationFilters.length +
         (travelStyle !== 'Any' ? 1 : 0) +
