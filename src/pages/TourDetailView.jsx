@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 /**
  * Auto-generated from: tour_detail_view/code.html
@@ -41,17 +42,24 @@ const TourDetailView = () => {
     if (dataLoading || !tours) return;
 
     setLoading(true);
-    // Find the tour whose slug matches the :title or :id parameter
+    // Find the tour whose slug OR id matches the :title or :id parameter
     const lookupSlug = title || id;
-    const matchedTour = tours.find(t => t.slug === lookupSlug);
+    const matchedTour = tours.find(t => 
+      t.slug === lookupSlug || 
+      t.id === lookupSlug || 
+      (t.title && t.title.toLowerCase().replace(/\s+/g, '-') === lookupSlug?.toLowerCase())
+    );
 
     if (matchedTour) {
       setTour(matchedTour);
       setError(null);
     } else {
-      // If no match found by slug, show error
-      if (!title && !id && tours.length > 0) setTour(tours[0]);
-      else setError('Tour not found');
+      // If no match found, show error or fallback if no params provided
+      if (!title && !id && tours.length > 0) {
+        setTour(tours[0]);
+      } else {
+        setError('Tour not found');
+      }
     }
     setAllTours(tours);
     setLoading(false);
@@ -126,9 +134,44 @@ const TourDetailView = () => {
         .filter(t => t.id !== (tour?.id) && (t.destination === tour?.destination))
         .slice(0, 4);
 
-  if (loading || dataLoading) return <div className="p-20 text-center font-bold text-2xl animate-pulse text-primary">Loading your adventure...</div>;
-  if (error || dataError) return <div className="p-20 text-center text-red-500 font-bold text-2xl">Error: {error || dataError}</div>;
-  if (!tour || (tour.status === 'paused')) return <div className="p-20 text-center font-bold text-2xl">Tour not found or currently unavailable</div>;
+  if (loading || dataLoading) return <LoadingSpinner />;
+  
+  if (error || dataError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 text-center px-4">
+        <span className="material-symbols-outlined text-red-500 text-6xl opacity-20">error</span>
+        <div>
+          <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-2">Something went wrong</h2>
+          <p className="text-slate-500 font-bold italic">{error || dataError}</p>
+        </div>
+        <button 
+          onClick={() => window.location.reload()}
+          className="px-6 h-12 bg-primary text-white rounded-xl font-black hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (!tour || (tour.status === 'paused')) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 text-center px-4">
+        <span className="material-symbols-outlined text-slate-200 dark:text-slate-800 text-8xl">map</span>
+        <div>
+          <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2 uppercase">Tour Destination Found?</h2>
+          <p className="text-slate-500 font-bold italic max-w-md mx-auto">This specific trail seems to be hidden. Let's get you back on track to explore more of Beautiful India.</p>
+        </div>
+        <Link 
+          to="/tours"
+          className="px-8 h-12 bg-primary text-white rounded-xl flex items-center gap-2 font-black hover:bg-primary/90 active:scale-95 transition-all shadow-lg shadow-primary/30"
+        >
+          <span className="material-symbols-outlined">explore</span>
+          Browse All Tours
+        </Link>
+      </div>
+    );
+  }
 
   // Build itinerary from tour data or fall back to defaults
   const itinerary = tour.itinerary && tour.itinerary.length > 0

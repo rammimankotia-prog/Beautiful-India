@@ -33,9 +33,10 @@ export const safeCacheTours = (key, tours) => {
       console.warn(`[Storage] Quota exceeded for "${key}". Attempting to save light version...`);
       
       try {
-        // Attempt 2: Light save (strip large base64 strings)
+        // Attempt 2: Light save (strip large data)
         const lightTours = tours.map(tour => ({
           ...tour,
+          // Strip base64 images
           image: (typeof tour.image === 'string' && tour.image.startsWith('data:image/')) 
             ? 'cached://base64-stripped' 
             : tour.image,
@@ -47,14 +48,25 @@ export const safeCacheTours = (key, tours) => {
                 }
                 return img;
               })
-            : tour.images
+            : tour.images,
+          // Strip large text if still failing (handled by the try-catch loop if we were more advanced, 
+          // but here we just do a more aggressive strip in one go)
+          description: tour.description?.length > 500 ? (tour.description.substring(0, 500) + '...') : tour.description,
+          itinerary: Array.isArray(tour.itinerary) && tour.itinerary.length > 5 ? tour.itinerary.slice(0, 5) : tour.itinerary
         }));
 
         localStorage.setItem(key, JSON.stringify(lightTours));
         console.info(`[Storage] Successfully saved light version to "${key}".`);
       } catch (innerE) {
-        console.error(`[Storage] Even light version failed for "${key}". Clearing cache.`, innerE);
+        console.error(`[Storage] Even light version failed for "${key}". Selective clearing.`, innerE);
+        
+        // Instead of clearing EVERYTHING, just clear this key and maybe oldest large key
         localStorage.removeItem(key);
+        
+        // Also clear any large articles cache as it's less critical than tours
+        if (key === STORAGE_KEYS.TOURS) {
+          localStorage.removeItem(STORAGE_KEYS.ARTICLES);
+        }
       }
     } else {
       console.error(`[Storage] Unexpected error while saving to "${key}":`, e);
