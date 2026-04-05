@@ -261,7 +261,7 @@ const GuideDetailView = () => {
 
   const formatContent = (content) => {
     if (!content) return '';
-    if (/< (p|div|h[1-6]|ul|ol|li|blockquote|section|article)/i.test(content)) {
+    if (/<(p|div|h[1-6]|ul|ol|li|blockquote|section|article)/i.test(content)) {
       return injectHeadingIds(content);
     }
     const html = content
