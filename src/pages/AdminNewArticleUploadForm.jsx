@@ -19,6 +19,68 @@ import {
   ExternalLink
 } from 'lucide-react';
 
+const slugify = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')     // Replace spaces with -
+      .replace(/[^\w-]+/g, '')  // Remove all non-word chars
+      .replace(/--+/g, '-')     // Replace multiple - with single -
+      .replace(/^-+/, '')       // Trim - from start of text
+      .replace(/-+$/, '');      // Trim - from end of text
+  };
+
+/* ─────────────────────────────────────────────
+   HTML Content Processing (Mirrors GuideDetailView)
+───────────────────────────────────────────── */
+const formatContent = (content) => {
+  if (!content) return '';
+  
+  // If it's already HTML (contains common tags), just inject IDs for ToC
+  if (/<(p|div|h[1-6]|ul|ol|li|blockquote|section|article)/i.test(content)) {
+    return injectHeadingIds(content);
+  }
+
+  // Otherwise, treat as raw text and convert to smart HTML
+  const html = content
+    .split(/\n\s*\n/)
+    .map((para) => {
+      let text = para.trim();
+      if (!text) return '';
+      
+      // Basic formatting
+      text = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br />');
+
+      // Bullets (Simple conversion for raw text)
+      if (text.startsWith('* ') || text.startsWith('- ')) {
+        const items = text.split(/\n[*|-]\s/).map(i => i.replace(/^[*|-]\s/, ''));
+        return `<ul class="my-6 space-y-2">` + items.map(i => `<li>${i}</li>`).join('') + `</ul>`;
+      }
+
+      // Blockquote
+      if (text.startsWith('>')) return `<blockquote>${text.substring(1).trim()}</blockquote>`;
+      
+      return `<p>${text}</p>`;
+    })
+    .join('');
+    
+  return injectHeadingIds(html);
+};
+
+const injectHeadingIds = (html) => {
+  if (!html) return '';
+  let counter = 0;
+  return html.replace(/<h2([^>]*)>/gi, (match, attrs) => {
+    if (/id="/i.test(attrs)) return match;
+    const id = `section-${counter++}`;
+    return `<h2${attrs} id="${id}">`;
+  });
+};
+
 const AdminNewArticleUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -26,7 +88,7 @@ const AdminNewArticleUploadForm = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [error, setError] = useState(null);
-  const [isHtmlMode, setIsHtmlMode] = useState(false);
+  const [isHtmlMode, setIsHtmlMode] = useState(true); // Professionals default to HTML mode
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -68,17 +130,7 @@ const AdminNewArticleUploadForm = () => {
 
   const [slugEdited, setSlugEdited] = useState(false);
 
-  const slugify = (text) => {
-    return text
-      .toString()
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')     // Replace spaces with -
-      .replace(/[^\w-]+/g, '')  // Remove all non-word chars
-      .replace(/--+/g, '-')     // Replace multiple - with single -
-      .replace(/^-+/, '')       // Trim - from start of text
-      .replace(/-+$/, '');      // Trim - from end of text
-  };
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -134,6 +186,29 @@ const AdminNewArticleUploadForm = () => {
       insertFormatting(`<a href="${url}" target="_blank">`, "</a>");
     }
   };
+
+  const handleAddTemplate = () => {
+    const template = `<h2>Introduction</h2>
+<p>Start your amazing story here. Give your readers a reason to keep scrolling.</p>
+
+<h2>Top Highlights</h2>
+<ul>
+  <li><strong>First Highlight:</strong> Describe why this is a must-see.</li>
+  <li><strong>Hidden Gem:</strong> Share something only locals know.</li>
+  <li><strong>Travel Tip:</strong> A quick hack for a smoother trip.</li>
+</ul>
+
+<div class="bg-teal-50 dark:bg-teal-900/10 border-l-4 border-teal-500 p-6 my-10 italic text-lg">
+  "This is a spotlight block. Use it for critical advice, emotional quotes, or 'Pro Tips'."
+</div>
+
+<h2>Practical Information</h2>
+<p>When to go, how to reach, and where to stay. Make it helpful!</p>`;
+    
+    if (formData.content && !confirm("Replace current content with template?")) return;
+    setFormData(prev => ({ ...prev, content: template }));
+  };
+
 
   useEffect(() => {
     if (id) {
@@ -559,6 +634,11 @@ const AdminNewArticleUploadForm = () => {
                 <Code size={16} className="text-slate-600 dark:text-slate-300 group-hover:text-teal-600" />
               </button>
               
+              <button type="button" onClick={handleAddTemplate} className="p-2 hover:bg-teal-500 hover:text-white rounded-xl transition-all group shadow-sm hover:shadow-md flex items-center gap-2 px-3 text-teal-600" title="Load High-Quality Template">
+                <Sparkles size={16} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Load Template</span>
+              </button>
+              
               <button 
                 type="button" 
                 onClick={() => {
@@ -601,12 +681,15 @@ const AdminNewArticleUploadForm = () => {
               />
             ) : (
               <div 
-                className="w-full min-h-[500px] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-[32px] p-10 overflow-auto shadow-inner"
+                className="w-full min-h-[600px] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-[32px] p-10 overflow-auto shadow-inner"
               >
-                <div 
-                  className="article-content"
-                  dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-slate-400 italic">No content to preview...</p>' }}
-                />
+                {/* Desktop Preview Frame Mimic */}
+                <div className="max-w-screen-md mx-auto">
+                  <div 
+                    className="article-content"
+                    dangerouslySetInnerHTML={{ __html: formatContent(formData.content) || '<p class="text-slate-400 italic">No content to preview...</p>' }}
+                  />
+                </div>
               </div>
             )}
           </div>
