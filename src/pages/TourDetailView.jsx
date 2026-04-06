@@ -501,7 +501,49 @@ const TourDetailView = () => {
                               <h4 className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mb-1">
                                 Day {item.day}: {item.title}
                               </h4>
-                              <div className="text-text-secondary-light dark:text-text-secondary-dark leading-relaxed prose prose-sm dark:prose-invert" dangerouslySetInnerHTML={{ __html: formatContent(item.description) }} />
+                              <div className={`text-text-secondary-light dark:text-text-secondary-dark leading-relaxed prose prose-sm dark:prose-invert ${item.tags || (item.services && item.services.length) ? 'mb-3' : ''}`} dangerouslySetInnerHTML={{ __html: formatContent(item.description) }} />
+                              
+                              {/* Highlight Tags */}
+                              {item.tags && (
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                  {(typeof item.tags === 'string' ? item.tags.split(',') : item.tags).map((tag, tIdx) => {
+                                    const cleanTag = tag.trim();
+                                    if (!cleanTag) return null;
+                                    return (
+                                      <span key={tIdx} className="inline-flex items-center gap-1 bg-primary/5 text-primary border border-primary/20 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">
+                                        <span className="material-symbols-outlined text-[12px]">label</span>
+                                        {cleanTag}
+                                      </span>
+                                    );
+                                  })}
+                                </div>
+                              )}
+
+                              {/* Services Included */}
+                              {item.services && Array.isArray(item.services) && item.services.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                  {item.services.map((svcId, sIdx) => {
+                                    const serviceMap = {
+                                      breakfast: { icon: 'free_breakfast', label: 'Breakfast', color: 'text-amber-600 dark:text-amber-500' },
+                                      lunch: { icon: 'lunch_dining', label: 'Lunch', color: 'text-green-600 dark:text-green-500' },
+                                      dinner: { icon: 'dinner_dining', label: 'Dinner', color: 'text-orange-600 dark:text-orange-500' },
+                                      stay: { icon: 'hotel', label: 'Stay', color: 'text-blue-600 dark:text-blue-500' },
+                                      transfer: { icon: 'airport_shuttle', label: 'Transfer', color: 'text-purple-600 dark:text-purple-500' },
+                                      sightseeing: { icon: 'photo_camera', label: 'Sightseeing', color: 'text-teal-600 dark:text-teal-500' },
+                                      flight: { icon: 'flight', label: 'Flight', color: 'text-sky-600 dark:text-sky-500' },
+                                      train: { icon: 'train', label: 'Train', color: 'text-indigo-600 dark:text-indigo-500' }
+                                    };
+                                    const svc = serviceMap[svcId.toLowerCase()];
+                                    if (!svc) return null;
+                                    return (
+                                      <div key={sIdx} className={`flex items-center gap-1 text-[11px] font-semibold ${svc.color} bg-slate-50 dark:bg-slate-900/50 px-2 py-1 rounded-md border border-slate-200 dark:border-slate-800 shadow-sm`}>
+                                        <span className="material-symbols-outlined text-[14px]">{svc.icon}</span>
+                                        {svc.label}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
