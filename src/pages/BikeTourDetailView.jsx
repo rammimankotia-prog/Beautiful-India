@@ -416,16 +416,22 @@ const BikeTourDetailView = () => {
             </main>
 
             {/* Mobile Sticky Bottom Booking Bar */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 px-6 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 lg:hidden z-40 flex items-center justify-between shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.5)]">
-                <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-0.5">Price from</p>
-                    <p className="font-serif font-black text-xl text-slate-900 dark:text-white">₹{tour.pricing?.perPerson?.toLocaleString() || 'Custom'}</p>
+            <div className="fixed bottom-0 left-0 right-0 p-5 px-8 bg-white/95 dark:bg-slate-950/95 backdrop-blur-3xl border-t border-slate-100 dark:border-white/5 lg:hidden z-40 flex items-center justify-between shadow-[0_-20px_50px_rgba(0,0,0,0.15)] animate-in slide-in-from-bottom duration-700">
+                <div className="flex flex-col">
+                    <p className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400 mb-0.5">Starting From</p>
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-light text-primary -mt-1.5">₹</span>
+                        <span className="font-serif font-black text-2xl text-slate-900 dark:text-white tracking-tighter">
+                            {tour.pricing?.perPerson?.toLocaleString() || 'Custom'}
+                        </span>
+                    </div>
                 </div>
                 <button 
                     onClick={() => setIsQueryModalOpen(true)} 
-                    className="px-8 py-3 bg-slate-900 dark:bg-primary text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all outline-none"
+                    className="px-8 py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/20 active:scale-90 transition-all outline-none flex items-center gap-2 group"
                 >
-                    Book Now
+                    Reserve Now
+                    <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">trending_flat</span>
                 </button>
             </div>
 
