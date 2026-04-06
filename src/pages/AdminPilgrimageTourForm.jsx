@@ -18,7 +18,10 @@ const initialFormState = {
     tour_dates_ongoing: 'false',
     tour_city_path: '',
     tour_gallery: [],
-    tour_itinerary: []
+    tour_itinerary: [],
+    tour_transport: [],
+    tour_hotels: [],
+    tour_meals: []
 };
 
 const AdminPilgrimageTourForm = () => {
@@ -62,6 +65,9 @@ const AdminPilgrimageTourForm = () => {
         tour_price_group: nested.meta?.price_group || '',
         tour_dates_ongoing: nested.meta?.is_ongoing ? 'true' : 'false',
         tour_city_path: nested.meta?.city_path || '',
+        tour_transport: nested.meta?.transport_options || [],
+        tour_hotels: nested.meta?.hotel_options || [],
+        tour_meals: nested.meta?.meal_options || [],
         tour_gallery: nested.gallery || [],
         tour_itinerary: nested.itinerary || [],
         created: nested.createdAt
@@ -306,6 +312,17 @@ const AdminPilgrimageTourForm = () => {
         handleChange(field, arr);
     };
 
+    const handleCheckboxToggle = (field, value) => {
+        setFormData(prev => {
+            const current = Array.isArray(prev[field]) ? prev[field] : [];
+            if (current.includes(value)) {
+                return { ...prev, [field]: current.filter(v => v !== value) };
+            } else {
+                return { ...prev, [field]: [...current, value] };
+            }
+        });
+    };
+
     // --- Save ---
     const mapFlattenToNested = (flat) => ({
         id: flat.id || `pk_${Date.now()}`,
@@ -325,7 +342,10 @@ const AdminPilgrimageTourForm = () => {
             dates: (flat.tour_dates_start && flat.tour_dates_end) ? `${flat.tour_dates_start} - ${flat.tour_dates_end}` : '',
             is_ongoing: flat.tour_dates_ongoing === 'true',
             city_path: flat.tour_city_path,
-            batch_status: flat.status === 'publish' ? 'Open' : 'Draft'
+            batch_status: flat.status === 'publish' ? 'Open' : 'Draft',
+            transport_options: flat.tour_transport || [],
+            hotel_options: flat.tour_hotels || [],
+            meal_options: flat.tour_meals || []
         },
         seo: {
             meta_title: flat.title,
@@ -494,6 +514,79 @@ const AdminPilgrimageTourForm = () => {
                                             placeholder="0.00"
                                         />
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Package Inclusions (Transport, Hotels, Meals) */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+                        <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <span className="material-symbols-outlined text-primary">verified</span>
+                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Package Inclusions</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {/* Transport */}
+                            <div className="space-y-4">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Transport</h3>
+                                <div className="space-y-3">
+                                    {['Private Car', 'Tempo Traveller', 'Bus', 'Train', 'Flight'].map(opt => (
+                                        <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+                                            <div className="relative flex items-center">
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={formData.tour_transport?.includes(opt)}
+                                                    onChange={() => handleCheckboxToggle('tour_transport', opt)}
+                                                    className="peer w-5 h-5 rounded border-2 border-slate-200 dark:border-slate-700 checked:bg-orange-500 checked:border-orange-500 appearance-none transition-all cursor-pointer"
+                                                />
+                                                <span className="material-symbols-outlined absolute text-white text-[14px] left-[3px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none">check</span>
+                                            </div>
+                                            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors">{opt}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            {/* Hotel */}
+                            <div className="space-y-4">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Hotels</h3>
+                                <div className="space-y-3">
+                                    {['3-Star Hotel', '4-Star Premium', '5-Star Luxury', 'Heritage Property', 'Dharamshala'].map(opt => (
+                                        <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+                                            <div className="relative flex items-center">
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={formData.tour_hotels?.includes(opt)}
+                                                    onChange={() => handleCheckboxToggle('tour_hotels', opt)}
+                                                    className="peer w-5 h-5 rounded border-2 border-slate-200 dark:border-slate-700 checked:bg-orange-500 checked:border-orange-500 appearance-none transition-all cursor-pointer"
+                                                />
+                                                <span className="material-symbols-outlined absolute text-white text-[14px] left-[3px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none">check</span>
+                                            </div>
+                                            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors">{opt}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Meal Plan */}
+                            <div className="space-y-4">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Meals</h3>
+                                <div className="space-y-3">
+                                    {['CP (Breakfast Only)', 'MAP (Breakfast & Dinner)', 'AP (All Meals)', 'Pure Veg / Jain'].map(opt => (
+                                        <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+                                            <div className="relative flex items-center">
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={formData.tour_meals?.includes(opt)}
+                                                    onChange={() => handleCheckboxToggle('tour_meals', opt)}
+                                                    className="peer w-5 h-5 rounded border-2 border-slate-200 dark:border-slate-700 checked:bg-orange-500 checked:border-orange-500 appearance-none transition-all cursor-pointer"
+                                                />
+                                                <span className="material-symbols-outlined absolute text-white text-[14px] left-[3px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none">check</span>
+                                            </div>
+                                            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors">{opt}</span>
+                                        </label>
+                                    ))}
                                 </div>
                             </div>
                         </div>
