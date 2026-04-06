@@ -8,6 +8,8 @@ const AdminQueryManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewChatQuery, setViewChatQuery] = useState(null);
+  const [manageQuery, setManageQuery] = useState(null);
+  const [isSavingManage, setIsSavingManage] = useState(false);
 
   const fetchQueries = () => {
     setLoading(true);
@@ -29,14 +31,26 @@ const AdminQueryManagement = () => {
     fetchQueries();
   }, []);
 
+  const updateQueryOnServer = async (updatedQuery) => {
+    try {
+      const resp = await fetch(`${import.meta.env.BASE_URL}api-save-leads.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedQuery)
+      });
+      if (resp.ok) {
+        setQueries(prev => prev.map(q => q.id === updatedQuery.id ? updatedQuery : q));
+      }
+    } catch (e) { console.error("Failed to update query:", e); }
+  };
+
   const handleStatusUpdate = (id, newStatus) => {
-    console.log("Query status update (mocked):", id, newStatus);
-    setQueries(prev => prev.map(q => q.id === id ? { ...q, status: newStatus } : q));
+    const target = queries.find(q => q.id === id);
+    if(target) updateQueryOnServer({ ...target, status: newStatus });
   };
 
   const handleDelete = (id) => {
     if (!window.confirm("Are you sure you want to delete this query?")) return;
-    console.log("Query deleted (mocked):", id);
     setQueries(prev => prev.filter(q => q.id !== id));
   };
 
@@ -232,6 +246,13 @@ const AdminQueryManagement = () => {
                     </td>
                     <td className="px-8 py-6 text-right">
                        <div className="flex justify-end gap-2">
+                           <button
+                             onClick={() => setManageQuery(q)}
+                             className="w-10 h-10 rounded-xl hover:bg-orange-50 text-orange-600 transition-all flex items-center justify-center border border-transparent hover:border-orange-200"
+                             title="Manage Services"
+                           >
+                             <span className="material-symbols-outlined text-[20px]">edit_square</span>
+                           </button>
                            {q.chatLog && (
                              <button
                                onClick={() => setViewChatQuery(q)}
@@ -301,6 +322,106 @@ const AdminQueryManagement = () => {
                           </div>
                       </div>
                   ))}
+               </div>
+             </div>
+          </div>
+        )}
+
+        {/* Manage Query Modal */}
+        {manageQuery && (
+          <div className="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+             <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-xl flex flex-col overflow-hidden max-h-[90vh] border border-slate-200">
+               <div className="px-8 py-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center z-10">
+                  <div className="flex items-center gap-4">
+                     <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
+                        <span className="material-symbols-outlined">edit_document</span>
+                     </div>
+                     <div>
+                        <h3 className="font-black text-xl text-slate-800">Manage Inquiry</h3>
+                        <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">{manageQuery.name || 'Anonymous'}</p>
+                     </div>
+                  </div>
+                  <button onClick={() => setManageQuery(null)} className="text-slate-400 hover:text-slate-600 transition-colors w-10 h-10 bg-white rounded-full flex justify-center items-center shadow-sm border border-slate-200">
+                     <span className="material-symbols-outlined text-[20px]">close</span>
+                  </button>
+               </div>
+               
+               <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-6">
+                  <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-black tracking-widest text-slate-400">Transport Option</label>
+                          <select 
+                             value={manageQuery.cabPreference || ''} 
+                             onChange={(e) => setManageQuery({...manageQuery, cabPreference: e.target.value})}
+                             className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 transition-all text-sm"
+                          >
+                             <option value="">None Selected</option>
+                             <option value="Private Car">Private Car</option>
+                             <option value="Tempo Traveller">Tempo Traveller</option>
+                             <option value="Bus">Bus</option>
+                             <option value="Train">Train</option>
+                             <option value="Flight">Flight</option>
+                          </select>
+                      </div>
+                      <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-black tracking-widest text-slate-400">Hotel Accommodation</label>
+                          <select 
+                             value={manageQuery.hotelRating || ''} 
+                             onChange={(e) => setManageQuery({...manageQuery, hotelRating: e.target.value})}
+                             className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 transition-all text-sm"
+                          >
+                             <option value="">None Selected</option>
+                             <option value="3-Star Hotel">3-Star Hotel</option>
+                             <option value="4-Star Premium">4-Star Premium</option>
+                             <option value="5-Star Luxury">5-Star Luxury</option>
+                             <option value="Heritage Property">Heritage Property</option>
+                             <option value="Dharamshala">Dharamshala/Ashram</option>
+                          </select>
+                      </div>
+                      <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-black tracking-widest text-slate-400">Meal Plan</label>
+                          <select 
+                             value={manageQuery.foodPreference || ''} 
+                             onChange={(e) => setManageQuery({...manageQuery, foodPreference: e.target.value})}
+                             className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 transition-all text-sm"
+                          >
+                             <option value="">None Selected</option>
+                             <option value="CP (Breakfast Only)">CP (Breakfast Only)</option>
+                             <option value="MAP (Breakfast & Dinner)">MAP (Breakfast & Dinner)</option>
+                             <option value="AP (All Meals)">AP (All Meals)</option>
+                             <option value="Pure Veg / Jain">Pure Veg / Jain</option>
+                          </select>
+                      </div>
+                      <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-black tracking-widest text-slate-400">Status</label>
+                          <select 
+                             value={manageQuery.status || 'New'} 
+                             onChange={(e) => setManageQuery({...manageQuery, status: e.target.value})}
+                             className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 transition-all text-sm"
+                          >
+                             <option value="New">New</option>
+                             <option value="Contacted">Contacted</option>
+                             <option value="Closed">Closed</option>
+                          </select>
+                      </div>
+                  </div>
+               </div>
+               
+               <div className="p-6 bg-white border-t border-slate-100 flex justify-end">
+                   <button 
+                       onClick={async () => {
+                           setIsSavingManage(true);
+                           await updateQueryOnServer(manageQuery);
+                           setIsSavingManage(false);
+                           setManageQuery(null);
+                       }}
+                       disabled={isSavingManage}
+                       className="px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest text-[12px] rounded-xl flex items-center gap-2 shadow-lg shadow-orange-600/20 transition-all"
+                   >
+                       {isSavingManage ? 'Saving...' : (
+                           <><span className="material-symbols-outlined text-[18px]">save</span> Save Changes</>
+                       )}
+                   </button>
                </div>
              </div>
           </div>

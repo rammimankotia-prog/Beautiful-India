@@ -41,6 +41,44 @@ const PilgrimageTourDetailView = () => {
     const [loading, setLoading] = useState(true);
     const [activeDay, setActiveDay] = useState(0);
 
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [bookingForm, setBookingForm] = useState({
+        name: '',
+        phone: '',
+        departureDate: '',
+        travelers: 'Individual'
+    });
+
+    const handleBookingSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            const response = await fetch(`${import.meta.env.BASE_URL}api-save-leads.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'Pilgrimage Inquiry',
+                    to: tour.title,
+                    ...bookingForm,
+                    status: 'New'
+                })
+            });
+            if (response.ok) {
+                setSubmitSuccess(true);
+                setTimeout(() => {
+                    setIsBookingModalOpen(false);
+                    setSubmitSuccess(false);
+                    setBookingForm({ name: '', phone: '', departureDate: '', travelers: 'Individual' });
+                }, 2500);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        setIsSubmitting(false);
+    };
+
     useEffect(() => {
         const fetchTour = async () => {
             try {
@@ -274,7 +312,10 @@ const PilgrimageTourDetailView = () => {
                                         <span className="text-2xl font-black text-slate-900 dark:text-white">₹{Number(tour.price).toLocaleString('en-IN')}</span>
                                     </div>
                                 )}
-                                <button className="w-full mt-4 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-black uppercase tracking-widest text-sm transition-colors shadow-lg shadow-orange-600/30 flex items-center justify-center gap-2">
+                                <button 
+                                    onClick={() => setIsBookingModalOpen(true)}
+                                    className="w-full mt-4 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-black uppercase tracking-widest text-sm transition-colors shadow-lg shadow-orange-600/30 flex items-center justify-center gap-2"
+                                >
                                     <span className="material-symbols-outlined">event_available</span>
                                     Reserve Now
                                 </button>
@@ -348,12 +389,86 @@ const PilgrimageTourDetailView = () => {
                                 : 'Get Quote'}
                         </p>
                     </div>
-                    <button className="px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-full font-black uppercase tracking-widest text-xs transition-colors shadow-lg shadow-orange-600/30 flex items-center gap-2">
+                    <button 
+                        onClick={() => setIsBookingModalOpen(true)}
+                        className="px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-full font-black uppercase tracking-widest text-xs transition-colors shadow-lg shadow-orange-600/30 flex items-center gap-2"
+                    >
                         <span>Book</span>
                         <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </button>
                 </div>
             </div>
+            {/* ── Booking Modal Overlay ── */}
+            {isBookingModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl w-full max-w-md overflow-hidden relative border border-slate-200 dark:border-slate-800">
+                        {/* Close btn */}
+                        <button 
+                            onClick={() => setIsBookingModalOpen(false)}
+                            className="absolute top-6 right-6 w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
+                        >
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                        
+                        <div className="p-8">
+                            <h3 className="text-2xl font-black text-slate-800 dark:text-white mb-2 font-serif relative z-10 w-[80%]">
+                                Secure Your Yatra
+                                <span className="absolute bottom-1 left-0 w-1/3 h-3 bg-orange-400/20 -z-10 rounded-full"></span>
+                            </h3>
+                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-8 italic">
+                                Fill in your details below to reserve <span className="text-orange-600 dark:text-orange-400">{tour.title}</span>.
+                            </p>
+                            
+                            {submitSuccess ? (
+                                <div className="bg-orange-50 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300 p-6 rounded-2xl flex flex-col items-center justify-center gap-3 border border-orange-100 dark:border-orange-800/50">
+                                    <span className="material-symbols-outlined text-4xl text-orange-500">task_alt</span>
+                                    <p className="font-black text-center">Inquiry Sent Successfully!</p>
+                                    <p className="text-xs text-center font-medium opacity-80">Our travel guide will contact you shortly.</p>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleBookingSubmit} className="space-y-5">
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] uppercase font-black tracking-widest text-slate-400 whitespace-nowrap">Full Name</label>
+                                        <input required type="text" value={bookingForm.name} onChange={e => setBookingForm({...bookingForm, name: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5 py-3.5 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 dark:text-slate-200 transition-all font-sans text-sm" placeholder="e.g. Rahul Sharma" />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] uppercase font-black tracking-widest text-slate-400 whitespace-nowrap">Mobile Number</label>
+                                        <input required type="tel" value={bookingForm.phone} onChange={e => setBookingForm({...bookingForm, phone: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5 py-3.5 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 dark:text-slate-200 transition-all font-sans text-sm" placeholder="+91" />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] uppercase font-black tracking-widest text-slate-400 whitespace-nowrap">Departure Date</label>
+                                            <input required type="date" value={bookingForm.departureDate} onChange={e => setBookingForm({...bookingForm, departureDate: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5 py-3.5 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 dark:text-slate-200 transition-all font-sans text-sm" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] uppercase font-black tracking-widest text-slate-400 whitespace-nowrap">Travel Type</label>
+                                            <select required value={bookingForm.travelers} onChange={e => setBookingForm({...bookingForm, travelers: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5 py-3.5 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-bold text-slate-700 dark:text-slate-200 transition-all font-sans text-sm">
+                                                <option value="Individual">Individual</option>
+                                                <option value="Group">Group</option>
+                                                <option value="Couple">Couple</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        type="submit" 
+                                        disabled={isSubmitting}
+                                        className="w-full mt-2 py-4 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white rounded-xl font-black uppercase tracking-widest text-sm transition-colors shadow-lg shadow-orange-600/30 flex items-center justify-center gap-2"
+                                    >
+                                        {isSubmitting ? (
+                                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        ) : (
+                                            <>
+                                                <span className="material-symbols-outlined">send</span>
+                                                Submit Inquiry
+                                            </>
+                                        )}
+                                    </button>
+                                </form>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

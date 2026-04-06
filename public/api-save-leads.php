@@ -32,15 +32,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $json = file_exists($target) ? file_get_contents($target) : '[]';
         $current_data = json_decode($json, true) ?: [];
         
-        // Add ID and Timestamp if not present
-        if (!isset($data['id'])) {
+        $is_update = false;
+        if (!isset($data['id']) || empty($data['id'])) {
             $data['id'] = 'LD-' . time() . '-' . rand(1000, 9999);
+        } else {
+            foreach ($current_data as $index => $existing_lead) {
+                if (isset($existing_lead['id']) && $existing_lead['id'] === $data['id']) {
+                    $data['createdAt'] = $existing_lead['createdAt'] ?? $existing_lead['timestamp'] ?? date('c');
+                    $current_data[$index] = array_merge($existing_lead, $data);
+                    $is_update = true;
+                    break;
+                }
+            }
         }
-        if (!isset($data['timestamp']) && !isset($data['createdAt'])) {
-            $data['createdAt'] = date('c');
-        }
-        if (!isset($data['status'])) {
-            $data['status'] = 'New';
+        
+        if (!$is_update) {
+            if (!isset($data['timestamp']) && !isset($data['createdAt'])) {
+                $data['createdAt'] = date('c');
+            }
+            if (!isset($data['status'])) {
+                $data['status'] = 'New';
+            }
+            $current_data[] = $data;
         }
         
         // 3. Persist to BOTH locations
