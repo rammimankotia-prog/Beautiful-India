@@ -116,13 +116,22 @@ const AdminPilgrimageTourForm = () => {
         }
     };
 
+    // Sync visual editor when switching TO visual mode
     useEffect(() => {
         if (editorMode === 'visual' && editorRef.current) {
-            if (editorRef.current.innerHTML !== formData.content) {
-                editorRef.current.innerHTML = formData.content;
-            }
+            editorRef.current.innerHTML = formData.content || '';
         }
     }, [editorMode]);
+
+    // Also sync visual editor when async data loads (editing existing tour)
+    useEffect(() => {
+        if (editorMode === 'visual' && editorRef.current) {
+            // Only update if editor is NOT focused (user isn't typing)
+            if (document.activeElement !== editorRef.current) {
+                editorRef.current.innerHTML = formData.content || '';
+            }
+        }
+    }, [formData.content]);
 
     // --- Gallery: URL add ---
     const addImage = () => {
