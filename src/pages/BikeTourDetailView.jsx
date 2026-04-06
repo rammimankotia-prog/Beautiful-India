@@ -240,9 +240,9 @@ const BikeTourDetailView = () => {
 
             {/* Main Content Layout */}
             <main className="max-w-[1400px] mx-auto px-6 md:px-10 mt-12 md:mt-24">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
-                    {/* Left Side: Editorial Storytelling */}
-                    <div className="lg:col-span-2 space-y-24">
+                <div className="space-y-24">
+                    {/* Main Content: Editorial Storytelling */}
+                    <div className="space-y-24">
                         {/* Highlights Grid */}
                         <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
                             <div className="space-y-6">
@@ -339,70 +339,6 @@ const BikeTourDetailView = () => {
                                 )}
                             </div>
                         </section>
-                    </div>
-
-                    {/* Right Side: Trust & Meta */}
-                    <div className="lg:col-span-1 border-l border-slate-100 dark:border-white/5 pl-12 hidden lg:block">
-                        <div className="space-y-12 sticky top-32">
-                            {/* Summary Stats Grid */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-8 bg-slate-50 dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 transition-all hover:border-primary/20">
-                                    <span className="material-symbols-outlined text-primary mb-4 text-3xl font-light">terrain</span>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Max Alt</p>
-                                    <p className="text-xl font-serif font-black text-slate-900 dark:text-white italic">18,379 ft</p>
-                                </div>
-                                <div className="p-8 bg-slate-50 dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 transition-all hover:border-primary/20">
-                                    <span className="material-symbols-outlined text-primary mb-4 text-3xl font-light">speed</span>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Intensity</p>
-                                    <p className="text-xl font-serif font-black text-slate-900 dark:text-white italic">Level 4</p>
-                                </div>
-                            </div>
-
-                            {/* Trust Signals Stacked */}
-                            <div className="space-y-6">
-                                {/* Personal Expert Card */}
-                                <div className="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-[3rem] border border-slate-100 dark:border-white/5 transition-all hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-2 group duration-500">
-                                    <div className="flex items-center gap-6 mb-6">
-                                        <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-sm leading-none">
-                                            <i className="fa-solid fa-user-tie text-2xl"></i>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-[9px] font-black text-primary uppercase tracking-[4px] mb-1 leading-none">Personal Expert</h4>
-                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif leading-tight">Tour Captain</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-4 italic">Our certified captains ensure your safety while sharing deep local insights on every curve.</p>
-                                    <div className="flex items-center gap-3 text-primary bg-primary/5 p-3 px-5 rounded-2xl border border-primary/10 w-fit">
-                                        <i className="fa-solid fa-certificate text-xs"></i>
-                                        <span className="text-[9px] font-black uppercase tracking-widest">24/7 Ground Support</span>
-                                    </div>
-                                </div>
-
-                                {/* Certified Fleet Card */}
-                                <div className="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-[3rem] border border-slate-100 dark:border-white/5 transition-all hover:shadow-2xl hover:shadow-emerald-500/5 hover:border-emerald-500/20 hover:-translate-y-2 group duration-500">
-                                    <div className="flex items-center gap-6 mb-6">
-                                        <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform shadow-sm leading-none">
-                                            <i className="fa-solid fa-motorcycle text-2xl"></i>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-[9px] font-black text-emerald-500 uppercase tracking-[4px] mb-1 leading-none">Certified Fleet</h4>
-                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif leading-tight">Premium Gear</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-4 italic">Late-model motorcycles with multi-point safety checks for every expedition.</p>
-                                    <div className="flex items-center gap-3 text-emerald-500 bg-emerald-500/5 p-3 px-5 rounded-2xl border border-emerald-500/10 w-fit">
-                                        <i className="fa-solid fa-screwdriver-wrench text-xs"></i>
-                                        <span className="text-[9px] font-black uppercase tracking-widest">Expert Mechanics</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Urgency Widget */}
-                            <div className="p-10 bg-orange-50 dark:bg-orange-950/20 border border-orange-100 dark:border-orange-900/30 rounded-[3rem] flex items-center gap-6">
-                                <div className="w-4 h-4 bg-orange-500 rounded-full animate-pulse shadow-lg shadow-orange-500/50"></div>
-                                <p className="text-[11px] font-black text-orange-700 dark:text-orange-400 uppercase tracking-[3px] italic">Limited Availability for Summer '25</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
