@@ -493,14 +493,19 @@ const TourDetailView = () => {
                               <div className="absolute left-[9px] top-5 bottom-0 w-0.5 bg-primary/25" />
                             )}
                             {/* Circle dot */}
-                            <div className="relative z-10 flex-shrink-0 mt-1">
-                              <div className="w-5 h-5 bg-background-light dark:bg-background-dark border-2 border-primary rounded-full" />
+                            <div className="relative z-10 flex-shrink-0 mt-1.5">
+                              <div className="w-5 h-5 bg-white dark:bg-slate-800 border-[3px] border-primary rounded-full ring-4 ring-primary/10 shadow-sm" />
                             </div>
                             {/* Text content */}
                             <div className="flex-1 pt-0">
-                              <h4 className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mb-1">
-                                Day {item.day}: {item.title}
-                              </h4>
+                              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 mb-3">
+                                <div className="inline-flex items-center justify-center px-3 py-1 rounded-md bg-primary/10 text-primary dark:bg-primary/20 font-black text-[13px] border border-primary/20 uppercase tracking-widest w-fit shadow-sm">
+                                  Day {item.day}
+                                </div>
+                                <h4 className="text-xl font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
+                                  {item.title}
+                                </h4>
+                              </div>
                               <div className={`text-text-secondary-light dark:text-text-secondary-dark leading-relaxed prose prose-sm dark:prose-invert ${item.tags || (item.services && item.services.length) ? 'mb-3' : ''}`} dangerouslySetInnerHTML={{ __html: formatContent(item.description) }} />
                               
                               {/* Highlight Tags */}
