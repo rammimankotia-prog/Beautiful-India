@@ -3,11 +3,70 @@ import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
 
-// Smarter slug matching
+// ─── Regional Normalization Helpers ─────────────────────────────────────────
+// Splits a potentially concatenated value like "KashmirJammu and Kashmir"
+// into individual canonical state names, then normalizes each one.
+const KNOWN_STATES = [
+    'Jammu and Kashmir', 'Himachal Pradesh', 'Uttarakhand', 'Rajasthan',
+    'Kerala', 'Goa', 'Ladakh', 'Andaman Islands', 'Delhi', 'Mumbai',
+    'Kolkata', 'Chennai', 'Uttar Pradesh', 'Karnataka', 'Tamil Nadu',
+    'Maharashtra', 'Gujarat', 'West Bengal', 'Madhya Pradesh', 'Sikkim',
+    'Assam', 'Meghalaya', 'Arunachal Pradesh', 'Maldives', 'Thailand',
+    'Bali', 'Dubai', 'Singapore', 'Sri Lanka', 'Nepal', 'Bhutan',
+];
+
+// Splits a raw value on camelCase or known-state boundaries to recover
+// individual state names from concatenated strings.
+const splitConcatenated = (raw) => {
+    const s = String(raw || '').trim();
+    if (!s) return [];
+
+    // Try exact match first
+    if (KNOWN_STATES.some(k => k.toLowerCase() === s.toLowerCase())) return [s];
+
+    // Check if a known state appears at the START of the string (concatenation)
+    for (const state of KNOWN_STATES) {
+        if (s.toLowerCase().startsWith(state.toLowerCase()) && s.length > state.length) {
+            const rest = s.slice(state.length).trim();
+            return [state, ...splitConcatenated(rest)];
+        }
+    }
+    // Check if a known state appears at the END of the string
+    for (const state of KNOWN_STATES) {
+        if (s.toLowerCase().endsWith(state.toLowerCase()) && s.length > state.length) {
+            const start = s.slice(0, s.length - state.length).trim();
+            return [...splitConcatenated(start), state];
+        }
+    }
+
+    return [s]; // Return as-is if no known split found
+};
+
 const normalizeBucket = (s) => {
     const val = String(s || "").toLowerCase().trim();
     if (val === 'kashmir' || val === 'jammu' || val === 'jammu and kashmir' || val === 'jammu & kashmir') return 'jammu and kashmir';
+    // Handle concatenated values like "kashmirjammu and kashmir"
+    if (val.includes('kashmir') && val.includes('jammu')) return 'jammu and kashmir';
     return val;
+};
+
+// Returns a clean, deduplicated array of canonical display names from a
+// potentially malformed raw stateRegion value (string or array).
+const normalizeRegionsToDisplay = (raw) => {
+    const items = Array.isArray(raw) ? raw : [raw];
+    const seen = new Set(); // keyed by normalized bucket to prevent duplicates
+    const result = [];
+    items.forEach(item => {
+        const parts = splitConcatenated(item);
+        parts.forEach(part => {
+            const bucket = normalizeBucket(part);
+            if (!bucket) return;
+            if (seen.has(bucket)) return;
+            seen.add(bucket);
+            result.push(bucket === 'jammu and kashmir' ? 'Jammu and Kashmir' : String(part).trim());
+        });
+    });
+    return result;
 };
 
 const displayState = (s) => {
@@ -102,16 +161,22 @@ const FilterPanel = ({
                     >
                         <option>All States</option>
                         {(() => {
-                            const states = tours
+                            // Collect all raw stateRegion values for tours matching the
+                            // selected destination, then use normalizeRegionsToDisplay to
+                            // split any concatenated values and deduplicate by canonical bucket.
+                            const rawRegions = tours
                                 .filter(t => {
                                     const tourDest = Array.isArray(t.destination) ? t.destination : [t.destination];
                                     return tourDest.some(d => d && d.toLowerCase() === destination.toLowerCase());
                                 })
                                 .flatMap(t => Array.isArray(t.stateRegion) ? t.stateRegion : [t.stateRegion])
-                                .filter(Boolean)
-                                .map(displayState);
-                            
-                            return [...new Set(states)].sort((a, b) => a.localeCompare(b)).map(state => (
+                                .filter(Boolean);
+
+                            // normalizeRegionsToDisplay handles splitting "KashmirJammu and Kashmir"
+                            // → ["Jammu and Kashmir"] and deduplicates by canonical bucket key.
+                            const uniqueStates = normalizeRegionsToDisplay(rawRegions);
+
+                            return uniqueStates.sort((a, b) => a.localeCompare(b)).map(state => (
                                 <option key={state} value={state}>{state}</option>
                             ));
                         })()}
@@ -370,11 +435,11 @@ const ToursDiscoveryFiltering1 = () => {
         }
 
         if (stateRegion !== 'All States') {
-            const tourState = tour.stateRegion;
             const filterState = normalizeBucket(stateRegion);
-            const stateMatch = Array.isArray(tourState)
-                ? tourState.some(s => s && normalizeBucket(s) === filterState)
-                : (tourState && normalizeBucket(tourState) === filterState);
+            // normalizeRegionsToDisplay splits malformed values like "KashmirJammu and Kashmir"
+            // into ["Jammu and Kashmir"] so they match the clean filter selection correctly.
+            const tourNormalizedStates = normalizeRegionsToDisplay(tour.stateRegion);
+            const stateMatch = tourNormalizedStates.some(s => normalizeBucket(s) === filterState);
             if (!stateMatch) return false;
         }
 
