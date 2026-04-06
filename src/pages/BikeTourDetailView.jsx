@@ -318,54 +318,67 @@ const BikeTourDetailView = () => {
 
                     {/* Right Side: Interaction & Pricing */}
                     <div className="lg:col-span-1">
-                        <div className="sticky top-32 space-y-10">
-                            {/* Booking Card */}
-                            <div className="bg-slate-900 dark:bg-slate-900 rounded-[48px] p-12 text-white shadow-2xl space-y-10 relative overflow-hidden group/book">
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover/book:scale-150 transition-transform duration-1000"></div>
-                                
-                                <div className="space-y-4 relative z-10">
-                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Pricing</h2>
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-6xl font-serif font-black">₹{tour.pricing?.perPerson?.toLocaleString() || 'Custom'}</span>
-                                        <span className="text-primary font-black uppercase tracking-widest text-[9px]">/ Person</span>
+                            <div className="flex flex-col gap-6 sticky top-32">
+                                {/* Main Booking Card */}
+                                <div className="bg-slate-900 rounded-[3rem] p-10 md:p-12 text-white shadow-2xl relative overflow-hidden group/book border border-white/5">
+                                    {/* Premium Glow Effect */}
+                                    <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-[100px] -translate-y-1/3 translate-x-1/3 transition-transform duration-1000 group-hover/book:scale-125"></div>
+                                    
+                                    <div className="space-y-6 relative z-10">
+                                        <div>
+                                          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">Exclusive Pricing</h2>
+                                          <div className="flex items-center gap-1.5 leading-none">
+                                              <span className="text-3xl font-light text-primary -mt-4">₹</span>
+                                              <span className="text-6xl md:text-7xl font-serif font-black tracking-tighter">
+                                                  {tour.pricing?.perPerson?.toLocaleString() || 'Custom'}
+                                              </span>
+                                              <div className="ml-2 flex flex-col">
+                                                <span className="text-primary font-black uppercase tracking-widest text-[9px]">/ Per</span>
+                                                <span className="text-white/40 font-black uppercase tracking-widest text-[9px]">Person</span>
+                                              </div>
+                                          </div>
+                                        </div>
+                                        <p className="text-white/50 text-[11px] font-bold leading-relaxed max-w-[220px] italic">
+                                          {tour.pricing?.inclusions || 'Inclusive of bike, fuel, stay, and expert mechanics.'}
+                                        </p>
                                     </div>
-                                    <p className="text-white/40 text-xs font-bold leading-relaxed">{tour.pricing?.inclusions || 'Inclusive of bike, fuel, stay, and expert mechanics.'}</p>
-                                </div>
 
-                                <div className="space-y-6 relative z-10">
-                                    <button 
-                                        onClick={() => setIsQueryModalOpen(true)}
-                                        className="w-full py-6 bg-primary text-white rounded-full font-black uppercase text-xs tracking-[4px] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 outline-none"
-                                    >
-                                        Reserve My Slot
-                                    </button>
-                                    <p className="text-center text-[9px] font-black uppercase tracking-[4px] text-white/40">Limited Availability</p>
-                                </div>
+                                    <div className="mt-10 space-y-6 relative z-10">
+                                        <button 
+                                            onClick={() => setIsQueryModalOpen(true)}
+                                            className="w-full py-6 bg-primary text-white rounded-2xl font-black uppercase text-xs tracking-[0.25em] hover:bg-white hover:text-slate-950 active:scale-95 transition-all shadow-2xl shadow-primary/20 outline-none flex items-center justify-center gap-3 group/btn"
+                                        >
+                                            Reserve My Slot
+                                            <span className="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">trending_flat</span>
+                                        </button>
+                                        <div className="flex items-center justify-center gap-2">
+                                           <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
+                                           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 italic">Limited Availability Remaining</p>
+                                        </div>
+                                    </div>
 
-                                <div className="pt-10 border-t border-white/5 space-y-6 relative z-10">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
-                                            <span className="material-symbols-outlined text-sm">support_agent</span>
+                                    <div className="mt-10 pt-10 border-t border-white/5 flex items-center gap-6 relative z-10">
+                                        <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-inner">
+                                            <span className="material-symbols-outlined text-2xl font-light">face_6</span>
                                         </div>
                                         <div className="space-y-0.5">
-                                            <p className="text-[9px] font-black uppercase tracking-widest text-primary">Personal Expert</p>
-                                            <p className="text-xs font-bold">24/7 Ground Support</p>
+                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary italic">Personal Expert</p>
+                                            <p className="text-xs font-black uppercase tracking-widest text-white">24/7 Ground Support</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Trust Badge / Quick Info */}
-                            <div className="bg-slate-50 dark:bg-slate-900/50 p-10 rounded-[40px] border border-slate-100 dark:border-slate-800 flex items-center gap-6">
-                                <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-primary shadow-sm">
-                                    <span className="material-symbols-outlined font-black">verified</span>
-                                </div>
-                                <div>
-                                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Certified Fleet</p>
-                                    <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Premium Equipment</p>
+                                {/* Trust Badge / Quick Info */}
+                                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6 shadow-sm hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                                    <div className="w-14 h-14 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-primary shadow-lg border border-slate-50 dark:border-white/5">
+                                        <span className="material-symbols-outlined text-3xl font-light">verified</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 mb-1">Certified Fleet</p>
+                                        <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-[0.15em]">Premium Equipment</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
 
