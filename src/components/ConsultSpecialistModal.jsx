@@ -163,132 +163,157 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-12">
-                     <div className="space-y-4">
-                        <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white tracking-tighter">Your Journey <span className="text-primary italic">Starts Here.</span></h3>
-                        <p className="text-slate-500 font-medium italic">Planning for: <span className="text-primary font-black uppercase tracking-widest">{tourTitle || topic}</span></p>
-                     </div>
+                   <form onSubmit={handleSubmit} className="space-y-10">
+                      <div className="space-y-3">
+                         <div className="flex items-center gap-3">
+                            <div className="h-0.5 w-10 bg-primary opacity-30"></div>
+                            <span className="text-[10px] font-black uppercase tracking-[6px] text-primary">Your Journey Starts Here</span>
+                         </div>
+                         <h3 className="text-4xl sm:text-5xl font-serif font-black text-slate-900 dark:text-white tracking-tighter leading-none italic">
+                            Begin Curating <br />Your <span className="text-primary not-italic">Expedition.</span>
+                         </h3>
+                         <p className="text-slate-500 font-medium italic text-sm">
+                            Customizing details for: <span className="text-slate-900 dark:text-white font-black uppercase tracking-[3px] ml-1">{tourTitle || topic}</span>
+                         </p>
+                      </div>
 
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Name */}
-                        <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[3px] text-slate-400 ml-2">Appellation</label>
-                            <div className="relative group">
-                                <User className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" size={20} />
-                                <input 
-                                    type="text"
-                                    name="name"
-                                    required
-                                    placeholder="Full Name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className="w-full pl-16 pr-8 py-5 bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary/20 outline-none rounded-3xl text-slate-900 dark:text-white font-black transition-all"
-                                />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                         {/* Name Input with Deep Inset Label */}
+                         <div className="group relative">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                                <User size={20} />
+                             </div>
+                             <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Appellation / Full Name</label>
+                                 <input 
+                                     type="text"
+                                     name="name"
+                                     required
+                                     placeholder="e.g. Alexander Walker"
+                                     value={formData.name}
+                                     onChange={handleChange}
+                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                 />
+                             </div>
+                         </div>
+
+                         {/* Email Input */}
+                         <div className="group relative">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                                <Mail size={20} />
+                             </div>
+                             <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Digital Address / Email</label>
+                                 <input 
+                                     type="email"
+                                     name="email"
+                                     required
+                                     placeholder="alex@expedition.com"
+                                     value={formData.email}
+                                     onChange={handleChange}
+                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                 />
+                             </div>
+                         </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                         {/* Phone Input */}
+                         <div className="group relative">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                                <Phone size={20} />
+                             </div>
+                             <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Mobile Hotline / WhatsApp</label>
+                                 <input 
+                                     type="tel"
+                                     name="phone"
+                                     required
+                                     placeholder="+91 — — — — —"
+                                     value={formData.phone}
+                                     onChange={handleChange}
+                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                 />
+                             </div>
+                         </div>
+
+                         {/* Date Input */}
+                         <div className="group relative">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                                <Calendar size={20} />
+                             </div>
+                             <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Planned Departure</label>
+                                 <input 
+                                     type="month"
+                                     name="travelDate"
+                                     required
+                                     value={formData.travelDate}
+                                     onChange={handleChange}
+                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base"
+                                 />
+                             </div>
+                         </div>
+                      </div>
+
+                      {/* Interests Chips */}
+                      <div className="space-y-5">
+                         <div className="flex items-center gap-3">
+                             <span className="text-[9px] font-black uppercase tracking-[4px] text-slate-400">Expedition Interests</span>
+                             <div className="h-px flex-1 bg-slate-100 dark:bg-white/5"></div>
+                         </div>
+                         <div className="flex flex-wrap gap-2 md:gap-3">
+                             {['Heritage', 'Off-roading', 'Luxury', 'Cuisine', 'Support'].map(interest => (
+                                 <button
+                                     key={interest}
+                                     type="button"
+                                     onClick={() => handleInterestToggle(interest)}
+                                     className={`px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all border-2 ${
+                                         formData.interests.includes(interest) 
+                                         ? 'bg-slate-900 text-white border-slate-900 dark:bg-primary dark:border-primary shadow-xl shadow-primary/20 scale-105' 
+                                         : 'bg-white dark:bg-slate-900 text-slate-400 border-slate-100 dark:border-white/5 hover:border-primary/30 active:scale-95'
+                                     }`}
+                                 >
+                                     {interest}
+                                 </button>
+                             ))}
+                         </div>
+                      </div>
+
+                      {/* WhatsApp Consent and Submit Bar */}
+                      <div className="flex flex-col sm:flex-row gap-6 items-center pt-4">
+                         <div 
+                            className={`flex flex-1 items-center gap-5 p-6 rounded-[2rem] border-2 transition-all cursor-pointer ${formData.whatsappConsent ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/30' : 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-white/5'}`}
+                            onClick={() => setFormData(p => ({...p, whatsappConsent: !p.whatsappConsent}))}
+                         >
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${formData.whatsappConsent ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-white dark:bg-slate-800 text-slate-300'}`}>
+                                <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.586-5.766-5.764-5.771zm3.391 8.244c-.144.405-.837.778-1.148.822-.311.043-.69.058-1.11-.082s-.939-.218-1.57-.501c-1.424-.638-2.33-2.094-2.401-2.188-.071-.094-.61-2.112-.61-5.112 0-3 .54-4.512.61-4.606.071-.094.131-.137.2-.137h.1l.01.002.046.002c.11.002.261.025.36.262l.4 1.117.066.16c.045.1.06.18.01.29-.05.11-.12.24-.2.37l-.14.21-.132.17c-.1.14-.11.23-.05.34.05.1.25.43.52.68.35.31.64.41.77.47s.24.08.33.1.2.04.28-.06c.07-.12.3-.39.42-.58s.22-.16.38-.1c.16.07.97.46 1.13.54.17.08.28.12.32.18.04.06.04.34-.1.74z"/></svg>
                             </div>
-                        </div>
-
-                        {/* Email */}
-                        <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[3px] text-slate-400 ml-2">Digital Address</label>
-                            <div className="relative group">
-                                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" size={20} />
-                                <input 
-                                    type="email"
-                                    name="email"
-                                    required
-                                    placeholder="Email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full pl-16 pr-8 py-5 bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary/20 outline-none rounded-3xl text-slate-900 dark:text-white font-black transition-all"
-                                />
+                            <div className="flex-1">
+                                <p className={`text-[10px] font-black uppercase tracking-[2px] ${formData.whatsappConsent ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-400'}`}>WhatsApp Quote</p>
+                                <p className="text-[8px] font-bold text-slate-400 uppercase">High Priority Response</p>
                             </div>
-                        </div>
-                     </div>
-
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Phone */}
-                        <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[3px] text-slate-400 ml-2">Mobile Hotline</label>
-                            <div className="relative group">
-                                <Phone className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" size={20} />
-                                <input 
-                                    type="tel"
-                                    name="phone"
-                                    required
-                                    placeholder="+91 Phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    className="w-full pl-16 pr-8 py-5 bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary/20 outline-none rounded-3xl text-slate-900 dark:text-white font-black transition-all"
-                                />
+                            <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${formData.whatsappConsent ? 'bg-emerald-500 border-emerald-500' : 'border-slate-200 dark:border-slate-700'}`}>
+                                {formData.whatsappConsent && <CheckCircle size={14} className="text-white" />}
                             </div>
-                        </div>
+                         </div>
 
-                        {/* Date */}
-                        <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[3px] text-slate-400 ml-2">Departure</label>
-                            <div className="relative group">
-                                <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" size={20} />
-                                <input 
-                                    type="month"
-                                    name="travelDate"
-                                    required
-                                    value={formData.travelDate}
-                                    onChange={handleChange}
-                                    className="w-full pl-16 pr-8 py-5 bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary/20 outline-none rounded-3xl text-slate-900 dark:text-white font-black transition-all"
-                                />
-                            </div>
-                        </div>
-                     </div>
-
-                     {/* Interests */}
-                     <div className="space-y-6">
-                        <label className="text-[10px] font-black uppercase tracking-[3px] text-slate-400 ml-2">Expedition Interests</label>
-                        <div className="flex flex-wrap gap-3">
-                            {['Heritage', 'Off-roading', 'Luxury', 'Cuisine', 'Support'].map(interest => (
-                                <button
-                                    key={interest}
-                                    type="button"
-                                    onClick={() => handleInterestToggle(interest)}
-                                    className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border-2 ${
-                                        formData.interests.includes(interest) 
-                                        ? 'bg-slate-900 text-white border-slate-900 dark:bg-primary dark:border-primary' 
-                                        : 'bg-white dark:bg-slate-800 text-slate-500 border-slate-100 dark:border-slate-700 hover:border-primary'
-                                    }`}
-                                >
-                                    {interest}
-                                </button>
-                            ))}
-                        </div>
-                     </div>
-
-                     <div className="p-6 bg-emerald-50 dark:bg-emerald-900/10 rounded-3xl border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between group cursor-pointer" onClick={() => setFormData(p => ({...p, whatsappConsent: !p.whatsappConsent}))}>
-                        <div className="flex gap-4 items-center">
-                            <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${formData.whatsappConsent ? 'bg-emerald-500 text-white' : 'bg-white dark:bg-slate-800 text-slate-300'}`}>
-                                <i className="fa-brands fa-whatsapp text-2xl"></i>
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black uppercase tracking-[2px] text-emerald-700 dark:text-emerald-400">Receive Quote via WhatsApp</p>
-                                <p className="text-[8px] font-bold text-emerald-600/60 uppercase">High Priority Response</p>
-                            </div>
-                        </div>
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${formData.whatsappConsent ? 'bg-emerald-500 border-emerald-500' : 'border-slate-200 dark:border-slate-700'}`}>
-                            {formData.whatsappConsent && <CheckCircle className="text-white" size={14} />}
-                        </div>
-                     </div>
-
-                     <button 
-                        type="submit"
-                        disabled={status === 'loading'}
-                        className="w-full h-20 bg-primary text-white rounded-[2.5rem] font-black text-sm uppercase tracking-[6px] shadow-2xl shadow-primary/30 hover:bg-slate-900 transition-all flex items-center justify-center gap-6 group"
-                     >
-                        {status === 'loading' ? 'Processing...' : (
-                            <>
-                                <span>Begin Curating</span>
-                                <ArrowRight className="group-hover:translate-x-4 transition-transform" />
-                            </>
-                        )}
-                     </button>
-                  </form>
+                         <button 
+                            type="submit"
+                            disabled={status === 'loading'}
+                            className="h-24 sm:h-auto sm:aspect-square sm:w-28 bg-primary text-white rounded-[2rem] sm:rounded-[2.5rem] font-black text-[10px] uppercase tracking-[4px] shadow-2xl shadow-primary/30 hover:bg-slate-900 transition-all flex flex-col items-center justify-center gap-3 group shrink-0"
+                         >
+                            {status === 'loading' ? (
+                                <div className="w-5 h-5 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            ) : (
+                                <>
+                                    <ArrowRight className="group-hover:translate-x-2 transition-transform h-8 w-8" strokeWidth={3} />
+                                    <span className="hidden sm:block">Begin</span>
+                                </>
+                            )}
+                         </button>
+                      </div>
+                   </form>
                 )}
             </div>
         </div>
