@@ -506,7 +506,7 @@ const TourDetailView = () => {
                               {/* Highlight Tags */}
                               {item.tags && (
                                 <div className="flex flex-wrap gap-2 mb-3">
-                                  {(typeof item.tags === 'string' ? item.tags.split(/[#,]+/) : item.tags).map((tag, tIdx) => {
+                                  {(Array.isArray(item.tags) ? item.tags.join(',') : item.tags).split(/[#,]+/).map((tag, tIdx) => {
                                     const cleanTag = tag.trim();
                                     if (!cleanTag) return null;
                                     return (
