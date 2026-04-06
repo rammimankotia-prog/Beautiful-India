@@ -59,6 +59,7 @@ const TourDetailView = () => {
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [allTours, setAllTours] = useState([]);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showStickyNav, setShowStickyNav] = useState(false);
   const { formatPrice } = useCurrency();
   const { tours, reviews, loading: dataLoading, error: dataError } = useData();
 
@@ -86,6 +87,9 @@ const TourDetailView = () => {
           }
         }
       }
+      
+      // Show/Hide sticky nav based on scroll depth
+      setShowStickyNav(window.scrollY > 600);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -270,7 +274,51 @@ const TourDetailView = () => {
   const availableMonths = getAvailableMonths();
 
   return (
-    <div data-page="tour_detail_view">
+    <div data-page="tour_detail_view" className="bg-white dark:bg-slate-950">
+      {/* ── Fixed Scroll-Only Sub-Navigation ── */}
+      <div className={`fixed top-[72px] md:top-[80px] left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-lg hidden md:flex items-center justify-between px-6 lg:px-20 py-3 transition-all duration-500 ease-in-out ${
+        showStickyNav ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
+      }`}>
+        <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+          {['overview', 'itinerary', 'inclusions', 'faq'].map((tab) => {
+            if (tab === 'inclusions' && (!tour.inclusions || tour.inclusions.length === 0)) return null;
+            if (tab === 'faq' && (!tour.faq || tour.faq.length === 0)) return null;
+            
+            const labels = {
+              overview: 'Overview',
+              itinerary: 'Itinerary',
+              inclusions: 'Inclusions / Exclusions',
+              faq: 'FAQ'
+            };
+            return (
+              <button
+                key={tab}
+                onClick={() => scrollToSection(`section-${tab}`)}
+                className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
+                  activeTab === tab
+                    ? 'bg-primary text-white shadow-md'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                {labels[tab]}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex items-center gap-6 bg-primary/5 pl-6 pr-2 py-2 rounded-full border border-primary/20 shrink-0">
+           <div className="flex flex-col items-end">
+             <span className="text-[10px] uppercase font-black text-primary/60 leading-none mb-1 tracking-widest">Best Price Today</span>
+             <div className="flex items-baseline gap-1">
+               <span className="text-xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.price, true)}</span>
+               <span className="text-[10px] uppercase font-bold text-slate-500">/{tour.priceBasis === 'per_package' ? 'pkg' : 'person'}</span>
+             </div>
+           </div>
+           <button onClick={() => setIsQuoteModalOpen(true)} className="bg-primary text-white text-xs font-black px-6 py-3 rounded-full hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/25 uppercase tracking-wider">
+             Get Personalized Quote
+           </button>
+        </div>
+      </div>
+
       <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
         {/* Top Navigation */}
 
@@ -461,45 +509,6 @@ const TourDetailView = () => {
                   </>
                 );
               })()}
-
-              {/* ── Sticky Sub-Navigation ── */}
-              <div className="sticky top-[72px] md:top-[80px] z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm mt-8 hidden md:flex items-center justify-between px-4 lg:px-8 py-3 mb-6 -mx-4 lg:-mx-10 transition-colors">
-                <div className="flex gap-2 overflow-x-auto hide-scrollbar">
-                  {['overview', 'itinerary', 'inclusions', 'faq'].map((tab) => {
-                    if (tab === 'inclusions' && (!tour.inclusions || tour.inclusions.length === 0)) return null;
-                    if (tab === 'faq' && (!tour.faq || tour.faq.length === 0)) return null;
-                    
-                    const labels = {
-                      overview: 'Overview',
-                      itinerary: 'Itinerary',
-                      inclusions: 'Inclusions / Exclusions',
-                      faq: 'FAQ'
-                    };
-                    return (
-                      <button
-                        key={tab}
-                        onClick={() => scrollToSection(`section-${tab}`)}
-                        className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
-                          activeTab === tab
-                            ? 'bg-primary text-white shadow-md'
-                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                        }`}
-                      >
-                        {labels[tab]}
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="flex items-center gap-4 bg-primary/5 pl-5 pr-1.5 py-1.5 rounded-full border border-primary/20 shrink-0">
-                   <div className="flex items-baseline gap-1">
-                     <span className="text-xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.price, true)}</span>
-                     <span className="text-[10px] uppercase font-bold text-slate-500">/{tour.priceBasis === 'per_package' ? 'pkg' : 'person'}</span>
-                   </div>
-                   <button onClick={handleBookNow} className="bg-primary text-white text-xs font-black px-5 py-2.5 rounded-full hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-sm">
-                     Book Now
-                   </button>
-                </div>
-              </div>
 
               {/* Content Section */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-4">
