@@ -58,8 +58,38 @@ const TourDetailView = () => {
   const [originCity, setOriginCity] = useState('');
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [allTours, setAllTours] = useState([]);
+  const [activeTab, setActiveTab] = useState('overview');
   const { formatPrice } = useCurrency();
   const { tours, reviews, loading: dataLoading, error: dataError } = useData();
+
+  const scrollToSection = (id) => {
+    setActiveTab(id.replace('section-', ''));
+    const element = document.getElementById(id);
+    if (element) {
+      const y = element.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  // Optional: Update active tab on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['overview', 'itinerary', 'inclusions', 'faq'];
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const id = `section-${sections[i]}`;
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 150) {
+            setActiveTab(sections[i]);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (dataLoading || !tours) return;
@@ -432,6 +462,45 @@ const TourDetailView = () => {
                 );
               })()}
 
+              {/* ── Sticky Sub-Navigation ── */}
+              <div className="sticky top-[72px] md:top-[80px] z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm mt-8 hidden md:flex items-center justify-between px-4 lg:px-8 py-3 mb-6 -mx-4 lg:-mx-10 transition-colors">
+                <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+                  {['overview', 'itinerary', 'inclusions', 'faq'].map((tab) => {
+                    if (tab === 'inclusions' && (!tour.inclusions || tour.inclusions.length === 0)) return null;
+                    if (tab === 'faq' && (!tour.faq || tour.faq.length === 0)) return null;
+                    
+                    const labels = {
+                      overview: 'Overview',
+                      itinerary: 'Itinerary',
+                      inclusions: 'Inclusions / Exclusions',
+                      faq: 'FAQ'
+                    };
+                    return (
+                      <button
+                        key={tab}
+                        onClick={() => scrollToSection(`section-${tab}`)}
+                        className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
+                          activeTab === tab
+                            ? 'bg-primary text-white shadow-md'
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        {labels[tab]}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex items-center gap-4 bg-primary/5 pl-5 pr-1.5 py-1.5 rounded-full border border-primary/20 shrink-0">
+                   <div className="flex items-baseline gap-1">
+                     <span className="text-xl font-black text-slate-900 dark:text-white leading-none">{formatPrice(tour.price, true)}</span>
+                     <span className="text-[10px] uppercase font-bold text-slate-500">/{tour.priceBasis === 'per_package' ? 'pkg' : 'person'}</span>
+                   </div>
+                   <button onClick={handleBookNow} className="bg-primary text-white text-xs font-black px-5 py-2.5 rounded-full hover:bg-primary/90 transition-colors uppercase tracking-wide shadow-sm">
+                     Book Now
+                   </button>
+                </div>
+              </div>
+
               {/* Content Section */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-4">
                 {/* Main Content (Left Column) */}
@@ -454,8 +523,8 @@ const TourDetailView = () => {
                     )}
                   </div>
                   {/* Description */}
-                  <div className="prose prose-lg dark:prose-invert  text-text-secondary-light dark:text-text-secondary-dark leading-relaxed">
-                    <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Overview</h3>
+                  <div id="section-overview" className="prose prose-lg dark:prose-invert  text-text-secondary-light dark:text-text-secondary-dark leading-relaxed">
+                    <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4 scroll-mt-24">Overview</h3>
                     <div 
                       className="mb-4"
                       dangerouslySetInnerHTML={{ __html: formatContent(tour.description) }} 
@@ -481,7 +550,7 @@ const TourDetailView = () => {
                   )}
 
                   {/* Itinerary */}
-                  <div className="flex flex-col gap-6 mt-4">
+                  <div id="section-itinerary" className="flex flex-col gap-6 mt-4 scroll-mt-24">
                     <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Proposed Itinerary</h3>
                     <div className="relative space-y-0">
                       {visibleDays.map((item, idx) => {
@@ -570,7 +639,7 @@ const TourDetailView = () => {
 
                   {/* Inclusions & Exclusions */}
                   {(tour.inclusions || tour.exclusions) && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <div id="section-inclusions" className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 scroll-mt-24">
                       {tour.inclusions && (
                         <div className="flex flex-col gap-4 bg-green-50/50 dark:bg-green-900/10 p-6 rounded-2xl border border-green-100 dark:border-green-800/30 h-full">
                           <h4 className="text-xl font-bold gap-2 flex items-center text-text-primary-light dark:text-text-primary-dark">
@@ -712,7 +781,7 @@ const TourDetailView = () => {
 
               {/* ── FAQ Section ── */}
               {tour.faq && tour.faq.length > 0 && tour.faq.some(f => f.question && f.answer) && (
-                <div className="mt-12 mb-8">
+                <div id="section-faq" className="mt-12 mb-8 scroll-mt-24">
                   {/* Header */}
                   <div className="flex flex-col items-center text-center mb-10">
                     <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4">
