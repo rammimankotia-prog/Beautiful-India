@@ -27,6 +27,25 @@ const formatContent = (content) => {
     .join('');
 };
 
+/* ─────────────────────────────────────────────
+   Inclusions & Exclusions Icon Helper
+───────────────────────────────────────────── */
+const getInclusionIcon = (text) => {
+  const t = text.toLowerCase();
+  if (t.includes('hotel') || t.includes('stay') || t.includes('accommodation') || t.includes('lodge')) return 'hotel';
+  if (t.includes('breakfast') || t.includes('meal') || t.includes('dinner') || t.includes('lunch') || t.includes('food')) return 'restaurant';
+  if (t.includes('flight') || t.includes('airport') || t.includes('airfare')) return 'flight';
+  if (t.includes('cab') || t.includes('taxi') || t.includes('transfer') || t.includes('car') || t.includes('vehicle')) return 'airport_shuttle';
+  if (t.includes('sightseeing') || t.includes('tour') || t.includes('guide') || t.includes('monument')) return 'photo_camera';
+  if (t.includes('train') || t.includes('rail')) return 'train';
+  if (t.includes('entry') || t.includes('ticket') || t.includes('fee') || t.includes('permit') || t.includes('tax')) return 'confirmation_number';
+  if (t.includes('welcome') || t.includes('drink') || t.includes('refreshment')) return 'local_bar';
+  if (t.includes('insurance')) return 'security';
+  if (t.includes('medical') || t.includes('health') || t.includes('first aid')) return 'medical_services';
+  if (t.includes('visa')) return 'assignment_ind';
+  return 'task_alt'; // high contrast default for inclusions
+};
+
 /**
  * Auto-generated from: tour_detail_view/code.html
  * Group: tours | Path: /tours/detail
@@ -648,38 +667,70 @@ const TourDetailView = () => {
 
                   {/* Inclusions & Exclusions */}
                   {(tour.inclusions || tour.exclusions) && (
-                    <div id="section-inclusions" className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 scroll-mt-24">
+                    <div id="section-inclusions" className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 scroll-mt-24">
+                      {/* Inclusions */}
                       {tour.inclusions && (
-                        <div className="flex flex-col gap-4 bg-green-50/50 dark:bg-green-900/10 p-6 rounded-2xl border border-green-100 dark:border-green-800/30 h-full">
-                          <h4 className="text-xl font-bold gap-2 flex items-center text-text-primary-light dark:text-text-primary-dark">
-                            <span className="material-symbols-outlined text-green-600 dark:text-green-500">check_circle</span>
-                            What's Included
-                          </h4>
-                          <ul className="flex flex-col gap-3">
-                            {(Array.isArray(tour.inclusions) ? tour.inclusions : tour.inclusions.split('\n')).filter(Boolean).map((item, idx) => (
-                              <li key={idx} className="flex gap-3 text-text-secondary-light dark:text-text-secondary-dark">
-                                <span className="material-symbols-outlined text-green-500 text-[18px] shrink-0 mt-0.5">done</span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
+                        <div className="flex flex-col gap-6 bg-emerald-50/40 dark:bg-emerald-950/20 p-8 rounded-[2rem] border border-emerald-100/50 dark:border-emerald-800/30 h-full shadow-sm hover:shadow-md transition-all duration-300">
+                          <div className="flex items-center justify-between border-b border-emerald-100 dark:border-emerald-800/30 pb-4">
+                            <h4 className="text-2xl font-black flex items-center gap-3 text-emerald-900 dark:text-emerald-100">
+                              <span className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400">
+                                <span className="material-symbols-outlined text-2xl">check_circle</span>
+                              </span>
+                              What's Included
+                            </h4>
+                            <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-emerald-500/10 text-emerald-600 rounded">Guaranteed</span>
+                          </div>
+                          <ul className="grid grid-cols-1 gap-5">
+                            {(Array.isArray(tour.inclusions) ? tour.inclusions : tour.inclusions.split('\n')).filter(Boolean).map((item, idx) => {
+                              const iconName = getInclusionIcon(item);
+                              return (
+                                <li key={idx} className="flex items-start gap-4 group">
+                                  <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-emerald-100/50 dark:border-emerald-800/50 shadow-sm text-emerald-600 dark:text-emerald-400 shrink-0 group-hover:scale-110 transition-transform">
+                                    <span className="material-symbols-outlined text-[20px]">{iconName}</span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-[15px] font-bold text-slate-800 dark:text-slate-100 leading-tight">{item}</span>
+                                    <span className="text-[11px] font-medium text-emerald-600/70 dark:text-emerald-400/50 uppercase tracking-tighter mt-1">Included in Package</span>
+                                  </div>
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       )}
 
+                      {/* Exclusions */}
                       {tour.exclusions && (
-                        <div className="flex flex-col gap-4 bg-red-50/50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-800/30 h-full">
-                          <h4 className="text-xl font-bold gap-2 flex items-center text-text-primary-light dark:text-text-primary-dark">
-                            <span className="material-symbols-outlined text-red-500 dark:text-red-400">cancel</span>
-                            Not Included
-                          </h4>
-                          <ul className="flex flex-col gap-3">
-                            {(Array.isArray(tour.exclusions) ? tour.exclusions : tour.exclusions.split('\n')).filter(Boolean).map((item, idx) => (
-                              <li key={idx} className="flex gap-3 text-text-secondary-light dark:text-text-secondary-dark">
-                                <span className="material-symbols-outlined text-red-400 text-[18px] shrink-0 mt-0.5">close</span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
+                        <div className="flex flex-col gap-6 bg-slate-50 dark:bg-slate-950/20 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800/50 h-full shadow-sm hover:shadow-md transition-all duration-300">
+                          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/30 pb-4">
+                            <h4 className="text-2xl font-black flex items-center gap-3 text-slate-900 dark:text-slate-100">
+                              <span className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                                <span className="material-symbols-outlined text-2xl">cancel</span>
+                              </span>
+                              Not Included
+                            </h4>
+                            <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-slate-200 dark:bg-slate-800 text-slate-500 rounded">Excluded</span>
+                          </div>
+                          <ul className="grid grid-cols-1 gap-5">
+                            {(Array.isArray(tour.exclusions) ? tour.exclusions : tour.exclusions.split('\n')).filter(Boolean).map((item, idx) => {
+                              const iconName = getInclusionIcon(item);
+                              return (
+                                <li key={idx} className="flex items-start gap-4 group opacity-80 hover:opacity-100 transition-opacity">
+                                  <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-slate-400 dark:text-slate-500 shrink-0 group-hover:bg-rose-50 dark:group-hover:bg-rose-900/20 group-hover:text-rose-500 transition-colors">
+                                    <span className="material-symbols-outlined text-[20px]">{iconName}</span>
+                                  </div>
+                                  <div className="flex flex-col border-l-2 border-slate-100 dark:border-slate-800 pl-4">
+                                    <span className="text-[15px] font-bold text-slate-500 dark:text-slate-400 leading-tight line-through decoration-slate-300 dark:decoration-slate-700">{item}</span>
+                                    <span className="text-[11px] font-medium text-rose-500/70 dark:text-rose-400/50 uppercase tracking-tighter mt-1">Extra Charges Apply</span>
+                                  </div>
+                                </li>
+                              );
+                            })}
                           </ul>
+                          
+                          <div className="mt-auto pt-6 border-t border-slate-200 dark:border-slate-800/30">
+                            <p className="text-[11px] italic text-slate-400 text-center font-medium">Please check with our experts for any specific requirements or customizations not listed above.</p>
+                          </div>
                         </div>
                       )}
                     </div>
