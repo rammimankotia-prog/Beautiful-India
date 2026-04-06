@@ -13,6 +13,7 @@ const BikeTourDetailView = () => {
     const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('overview');
     const [relatedTours, setRelatedTours] = useState([]);
+    const [showStickyNav, setShowStickyNav] = useState(false);
 
     const fetchTour = async () => {
         setLoading(true);
@@ -81,8 +82,13 @@ const BikeTourDetailView = () => {
     };
 
     useEffect(() => {
+        const handleScroll = () => {
+            setShowStickyNav(window.scrollY > 500);
+        };
+        window.addEventListener('scroll', handleScroll);
         fetchTour();
         window.scrollTo(0, 0);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, [slug]);
 
     if (loading) {
@@ -113,6 +119,33 @@ const BikeTourDetailView = () => {
 
     return (
         <div className="bg-white dark:bg-slate-950 min-h-screen pb-40">
+            {/* Sticky Pricing Navigation Bar (Desktop/Tablet Only) */}
+            <div className={`fixed top-0 inset-x-0 h-24 bg-white/90 dark:bg-slate-900/95 backdrop-blur-3xl border-b border-slate-100 dark:border-white/5 z-50 flex items-center transition-all duration-700 ease-in-out md:translate-y-0 ${showStickyNav ? 'translate-y-0 opacity-100 invisible md:visible' : '-translate-y-full opacity-0 invisible'}`}>
+                <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full flex items-center justify-between">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-primary uppercase tracking-[4px] mb-1">Bike Expedition</span>
+                        <h3 className="text-xl font-serif font-black text-slate-900 dark:text-white truncate max-w-[300px] lg:max-w-md">{tour.title}</h3>
+                    </div>
+                    <div className="flex items-center gap-10">
+                        <div className="hidden lg:flex flex-col items-end">
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Adventure starts at</span>
+                            <div className="flex items-baseline gap-1 text-slate-900 dark:text-white">
+                                <span className="text-lg font-light opacity-60">₹</span>
+                                <span className="text-3xl font-black">{tour.id === 15 || tour.slug?.includes('delhi') ? '24,000' : '39,000'}</span>
+                                <span className="text-[10px] items-center italic mb-0.5 ml-1">/ person</span>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={() => setIsQueryModalOpen(true)}
+                            className="px-8 py-3.5 bg-primary text-white rounded-full font-black uppercase text-[10px] tracking-[3px] shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                        >
+                            Reserve My Slot
+                            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <Helmet>
                 <title>{tour.title} | The Beautiful India</title>
                 <meta name="description" content={tour.subtitle || tour.title} />
@@ -201,6 +234,10 @@ const BikeTourDetailView = () => {
                             </span>
                             <span className="px-5 py-2 md:px-6 md:py-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[4px] md:tracking-[6px]">
                                 {tour.duration}
+                            </span>
+                            <span className="px-5 py-2 md:px-6 md:py-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full text-[10px] md:text-[11px] font-black flex items-center gap-2">
+                                <span className="text-white/40 text-[16px] font-light italic">₹</span>
+                                {tour.id === 15 || tour.slug?.includes('delhi') ? '24,000' : '39,000'}
                             </span>
                         </div>
                         <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif font-black text-white leading-tight md:leading-[1.1] tracking-tighter max-w-4xl">
@@ -316,69 +353,68 @@ const BikeTourDetailView = () => {
                         </section>
                     </div>
 
-                    {/* Right Side: Interaction & Pricing */}
-                    <div className="lg:col-span-1">
-                            <div className="flex flex-col gap-6 sticky top-32">
-                                {/* Main Booking Card */}
-                                <div className="bg-slate-900 rounded-[3rem] p-10 md:p-12 text-white shadow-2xl relative overflow-hidden group/book border border-white/5">
-                                    {/* Premium Glow Effect */}
-                                    <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-[100px] -translate-y-1/3 translate-x-1/3 transition-transform duration-1000 group-hover/book:scale-125"></div>
-                                    
-                                    <div className="space-y-6 relative z-10">
+                    {/* Right Side: Trust & Meta */}
+                    <div className="lg:col-span-1 border-l border-slate-100 dark:border-white/5 pl-12 hidden lg:block">
+                        <div className="space-y-12 sticky top-32">
+                            {/* Summary Stats Grid */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-8 bg-slate-50 dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 transition-all hover:border-primary/20">
+                                    <span className="material-symbols-outlined text-primary mb-4 text-3xl font-light">terrain</span>
+                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Max Alt</p>
+                                    <p className="text-xl font-serif font-black text-slate-900 dark:text-white italic">18,379 ft</p>
+                                </div>
+                                <div className="p-8 bg-slate-50 dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 transition-all hover:border-primary/20">
+                                    <span className="material-symbols-outlined text-primary mb-4 text-3xl font-light">speed</span>
+                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Intensity</p>
+                                    <p className="text-xl font-serif font-black text-slate-900 dark:text-white italic">Level 4</p>
+                                </div>
+                            </div>
+
+                            {/* Trust Signals Stacked */}
+                            <div className="space-y-6">
+                                {/* Personal Expert Card */}
+                                <div className="p-10 bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl hover:shadow-slate-200/20 group">
+                                    <div className="flex items-center gap-6 mb-6">
+                                        <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                            <span className="material-symbols-outlined text-slate-400 text-3xl font-light">face_6</span>
+                                        </div>
                                         <div>
-                                          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">Exclusive Pricing</h2>
-                                          <div className="flex items-center gap-1.5 leading-none">
-                                              <span className="text-3xl font-light text-primary -mt-4">₹</span>
-                                              <span className="text-6xl md:text-7xl font-serif font-black tracking-tighter">
-                                                  {tour.pricing?.perPerson?.toLocaleString() || 'Custom'}
-                                              </span>
-                                              <div className="ml-2 flex flex-col">
-                                                <span className="text-primary font-black uppercase tracking-widest text-[9px]">/ Per</span>
-                                                <span className="text-white/40 font-black uppercase tracking-widest text-[9px]">Person</span>
-                                              </div>
-                                          </div>
-                                        </div>
-                                        <p className="text-white/50 text-[11px] font-bold leading-relaxed max-w-[220px] italic">
-                                          {tour.pricing?.inclusions || 'Inclusive of bike, fuel, stay, and expert mechanics.'}
-                                        </p>
-                                    </div>
-
-                                    <div className="mt-10 space-y-6 relative z-10">
-                                        <button 
-                                            onClick={() => setIsQueryModalOpen(true)}
-                                            className="w-full py-6 bg-primary text-white rounded-2xl font-black uppercase text-xs tracking-[0.25em] hover:bg-white hover:text-slate-950 active:scale-95 transition-all shadow-2xl shadow-primary/20 outline-none flex items-center justify-center gap-3 group/btn"
-                                        >
-                                            Reserve My Slot
-                                            <span className="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">trending_flat</span>
-                                        </button>
-                                        <div className="flex items-center justify-center gap-2">
-                                           <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
-                                           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 italic">Limited Availability Remaining</p>
+                                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[4px] mb-1">Personal Expert</h4>
+                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif">Tour Captain</p>
                                         </div>
                                     </div>
-
-                                    <div className="mt-10 pt-10 border-t border-white/5 flex items-center gap-6 relative z-10">
-                                        <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-inner">
-                                            <span className="material-symbols-outlined text-2xl font-light">face_6</span>
-                                        </div>
-                                        <div className="space-y-0.5">
-                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary italic">Personal Expert</p>
-                                            <p className="text-xs font-black uppercase tracking-widest text-white">24/7 Ground Support</p>
-                                        </div>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-2">Our certified captains ensure your safety while sharing deep local insights on every curve.</p>
+                                    <div className="flex items-center gap-2 text-primary">
+                                        <span className="material-symbols-outlined text-sm font-bold">verified</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">24/7 Ground Support</span>
                                     </div>
                                 </div>
 
-                                {/* Trust Badge / Quick Info */}
-                                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6 shadow-sm hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                                    <div className="w-14 h-14 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-primary shadow-lg border border-slate-50 dark:border-white/5">
-                                        <span className="material-symbols-outlined text-3xl font-light">verified</span>
+                                {/* Certified Fleet Card */}
+                                <div className="p-10 bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl hover:shadow-slate-200/20 group">
+                                    <div className="flex items-center gap-6 mb-6">
+                                        <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                            <span className="material-symbols-outlined text-emerald-500 text-3xl font-light">verified_user</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-[4px] mb-1">Certified Fleet</h4>
+                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif">Premium Gear</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 mb-1">Certified Fleet</p>
-                                        <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-[0.15em]">Premium Equipment</p>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-2">Late-model motorcycles with multi-point safety checks for every expedition.</p>
+                                    <div className="flex items-center gap-2 text-emerald-500">
+                                        <span className="material-symbols-outlined text-sm font-bold">handyman</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Expert Mechanics</span>
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Urgency Widget */}
+                            <div className="p-10 bg-orange-50 dark:bg-orange-950/20 border border-orange-100 dark:border-orange-900/30 rounded-[3rem] flex items-center gap-6">
+                                <div className="w-4 h-4 bg-orange-500 rounded-full animate-pulse shadow-lg shadow-orange-500/50"></div>
+                                <p className="text-[11px] font-black text-orange-700 dark:text-orange-400 uppercase tracking-[3px] italic">Limited Availability for Summer '25</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
