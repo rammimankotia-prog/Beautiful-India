@@ -67,7 +67,7 @@ const TourDetailView = () => {
     setActiveTab(id.replace('section-', ''));
     const element = document.getElementById(id);
     if (element) {
-      const y = element.getBoundingClientRect().top + window.scrollY - 100;
+      const y = element.getBoundingClientRect().top + window.scrollY - 70;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
@@ -276,7 +276,7 @@ const TourDetailView = () => {
   return (
     <div data-page="tour_detail_view" className="bg-white dark:bg-slate-950">
       {/* ── Fixed Scroll-Only Sub-Navigation ── */}
-      <div className={`fixed top-[72px] md:top-[80px] left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-lg hidden md:flex items-center justify-between px-6 lg:px-20 py-3 transition-all duration-500 ease-in-out ${
+      <div className={`fixed top-0 left-0 right-0 z-[100] bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-lg hidden md:flex items-center justify-between px-6 lg:px-20 py-3 transition-all duration-500 ease-in-out ${
         showStickyNav ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
       }`}>
         <div className="flex gap-2 overflow-x-auto hide-scrollbar">
