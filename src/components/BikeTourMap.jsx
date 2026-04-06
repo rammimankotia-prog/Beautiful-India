@@ -45,9 +45,22 @@ const BikeTourMap = ({ slug, title }) => {
             maxZoom: 14
         }).addTo(map);
 
-        // Leh Tour Specific Data
-        if (slug === 'leh-and-leh-grand-circuit') {
-            const locations = {
+        // Extract map data from tour prop if available
+        let locations = null;
+        let routeCoordinates = null;
+        let mapCenter = [20.5937, 78.9629]; // Default India center
+        let mapZoom = 5;
+
+        // 1. Check for specific map data in tour object
+        if (tour?.mapData) {
+            locations = tour.mapData.locations;
+            routeCoordinates = tour.mapData.route;
+            mapCenter = tour.mapData.center || mapCenter;
+            mapZoom = tour.mapData.zoom || mapZoom;
+        } 
+        // 2. Legacy fallback for the Leh tour
+        else if (slug === 'leh-and-leh-grand-circuit') {
+            locations = {
                 leh: { coords: [34.1526, 77.5771], label: 'F', classes: 'marker-green', name: 'Leh', desc: 'Start / Finish' },
                 khardungLa: { coords: [34.2787, 77.6047], label: 'K', classes: 'marker-orange', name: 'Khardung La', desc: 'High Pass (5,359m)' },
                 nubra: { coords: [34.5459, 77.5606], label: 'N', classes: 'marker-red', name: 'Nubra Valley', desc: 'Overnight Stop' },
@@ -56,8 +69,7 @@ const BikeTourMap = ({ slug, title }) => {
                 pangong: { coords: [33.722, 78.435], label: 'P', classes: 'marker-blue', name: 'Pangong Tso', desc: 'Scenic Highlight' },
                 tsoMoriri: { coords: [32.946, 78.261], label: 'M', classes: 'marker-blue', name: 'Tso Moriri', desc: 'Scenic Highlight' }
             };
-
-            const routeCoordinates = [
+            routeCoordinates = [
                 locations.leh.coords,
                 locations.khardungLa.coords,
                 locations.nubra.coords,
@@ -68,21 +80,44 @@ const BikeTourMap = ({ slug, title }) => {
                 locations.tsoMoriri.coords,
                 locations.leh.coords
             ];
+            mapCenter = [34.1, 77.8];
+            mapZoom = 8;
+        }
+        // 3. Simple coordinate fallback (if tour has lat/lon)
+        else if (tour?.coordinates) {
+            locations = {
+                destination: { 
+                    coords: tour.coordinates, 
+                    label: 'D', 
+                    classes: 'marker-primary', 
+                    name: tour.title, 
+                    desc: tour.destination 
+                }
+            };
+            mapCenter = tour.coordinates;
+            mapZoom = 10;
+        }
 
-            // Add polyline
-            L.polyline(routeCoordinates, {
-                color: '#b75b5b',
-                weight: 3,
-                dashArray: '10, 10',
-                opacity: 0.8,
-                lineJoin: 'round'
-            }).addTo(map);
+        // Set initial view
+        map.setView(mapCenter, mapZoom);
+
+        if (locations) {
+            // Add polyline if route exists
+            if (routeCoordinates && routeCoordinates.length > 0) {
+                L.polyline(routeCoordinates, {
+                    color: '#b75b5b',
+                    weight: 3,
+                    dashArray: '10, 10',
+                    opacity: 0.8,
+                    lineJoin: 'round'
+                }).addTo(map);
+            }
 
             // Add Markers
             Object.values(locations).forEach(loc => {
                 const icon = L.divIcon({
                     className: 'custom-icon',
-                    html: `<div class="custom-marker ${loc.classes}">${loc.label}</div>`,
+                    html: `<div class="custom-marker ${loc.classes || 'marker-primary'}">${loc.label || '•'}</div>`,
                     iconSize: [32, 40],
                     iconAnchor: [16, 40],
                     popupAnchor: [0, -40]
@@ -92,12 +127,17 @@ const BikeTourMap = ({ slug, title }) => {
                     .addTo(map)
                     .bindPopup(`
                         <h3 class="popup-title">${loc.name}</h3>
-                        <p class="popup-desc">${loc.desc}</p>
+                        <p class="popup-desc">${loc.desc || ''}</p>
                     `);
             });
 
-            // Fit bounds
-            map.fitBounds(L.polyline(routeCoordinates).getBounds(), { padding: [50, 50] });
+            // Fit bounds if multiple points exist
+            if (routeCoordinates && routeCoordinates.length > 1) {
+                map.fitBounds(L.polyline(routeCoordinates).getBounds(), { padding: [50, 50] });
+            } else if (Object.keys(locations).length > 1) {
+                const bounds = L.latLngBounds(Object.values(locations).map(l => l.coords));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
         }
 
         return () => {

@@ -160,6 +160,7 @@
     ],
     "noBookingEnd": true,
     "noAvailableTo": true,
+    "coordinates": [34.0837, 74.7973],
     "id": "kashmir-train-tour-package"
   },
   {
@@ -231,6 +232,7 @@
       }
     ],
     "transport": "train",
+    "coordinates": [10.0889, 77.0595],
     "slug": "kerala-tour-package"
   },
   {

@@ -115,10 +115,12 @@ const BikeTourDetailView = () => {
                     <div className="flex items-center gap-10">
                         <div className="hidden lg:flex flex-col items-end">
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Adventure starts at</span>
-                            <div className="flex items-baseline gap-1 text-slate-900 dark:text-white">
-                                <span className="text-lg font-light opacity-60">₹</span>
-                                <span className="text-3xl font-black">{tour.id === 15 || tour.slug?.includes('delhi') ? '24,000' : '39,000'}</span>
-                                <span className="text-[10px] items-center italic mb-0.5 ml-1">/ person</span>
+                            <div className="flex items-baseline gap-1.5 text-slate-900 dark:text-white">
+                                <span className="text-sm font-light text-primary -mb-1 translate-y-[2px]">₹</span>
+                                <span className="text-3xl font-black tabular-nums tracking-tighter leading-none">
+                                    {tour.pricing?.perPerson?.toLocaleString() || '39,000'}
+                                </span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1.5 opacity-60">/ person</span>
                             </div>
                         </div>
                         <button 
@@ -332,7 +334,7 @@ const BikeTourDetailView = () => {
                                 )}
                                 {activeTab === 'map' && (
                                     <div className="rounded-[60px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-2xl h-[600px] bg-slate-50">
-                                        <BikeTourMap tourSlug={tour.slug} />
+                                        <BikeTourMap slug={tour.slug} title={tour.title} tour={tour} />
                                     </div>
                                 )}
                             </div>
@@ -359,38 +361,38 @@ const BikeTourDetailView = () => {
                             {/* Trust Signals Stacked */}
                             <div className="space-y-6">
                                 {/* Personal Expert Card */}
-                                <div className="p-10 bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl hover:shadow-slate-200/20 group">
+                                <div className="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-[3rem] border border-slate-100 dark:border-white/5 transition-all hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-2 group duration-500">
                                     <div className="flex items-center gap-6 mb-6">
-                                        <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                            <span className="material-symbols-outlined text-slate-400 text-3xl font-light">face_6</span>
+                                        <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-sm leading-none">
+                                            <i className="fa-solid fa-user-tie text-2xl"></i>
                                         </div>
                                         <div>
-                                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[4px] mb-1">Personal Expert</h4>
-                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif">Tour Captain</p>
+                                            <h4 className="text-[9px] font-black text-primary uppercase tracking-[4px] mb-1 leading-none">Personal Expert</h4>
+                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif leading-tight">Tour Captain</p>
                                         </div>
                                     </div>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-2">Our certified captains ensure your safety while sharing deep local insights on every curve.</p>
-                                    <div className="flex items-center gap-2 text-primary">
-                                        <span className="material-symbols-outlined text-sm font-bold">verified</span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest">24/7 Ground Support</span>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-4 italic">Our certified captains ensure your safety while sharing deep local insights on every curve.</p>
+                                    <div className="flex items-center gap-3 text-primary bg-primary/5 p-3 px-5 rounded-2xl border border-primary/10 w-fit">
+                                        <i className="fa-solid fa-certificate text-xs"></i>
+                                        <span className="text-[9px] font-black uppercase tracking-widest">24/7 Ground Support</span>
                                     </div>
                                 </div>
 
                                 {/* Certified Fleet Card */}
-                                <div className="p-10 bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl hover:shadow-slate-200/20 group">
+                                <div className="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-[3rem] border border-slate-100 dark:border-white/5 transition-all hover:shadow-2xl hover:shadow-emerald-500/5 hover:border-emerald-500/20 hover:-translate-y-2 group duration-500">
                                     <div className="flex items-center gap-6 mb-6">
-                                        <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                            <span className="material-symbols-outlined text-emerald-500 text-3xl font-light">verified_user</span>
+                                        <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform shadow-sm leading-none">
+                                            <i className="fa-solid fa-motorcycle text-2xl"></i>
                                         </div>
                                         <div>
-                                            <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-[4px] mb-1">Certified Fleet</h4>
-                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif">Premium Gear</p>
+                                            <h4 className="text-[9px] font-black text-emerald-500 uppercase tracking-[4px] mb-1 leading-none">Certified Fleet</h4>
+                                            <p className="text-base font-black text-slate-900 dark:text-white italic font-serif leading-tight">Premium Gear</p>
                                         </div>
                                     </div>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-2">Late-model motorcycles with multi-point safety checks for every expedition.</p>
-                                    <div className="flex items-center gap-2 text-emerald-500">
-                                        <span className="material-symbols-outlined text-sm font-bold">handyman</span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Expert Mechanics</span>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-semibold mb-4 italic">Late-model motorcycles with multi-point safety checks for every expedition.</p>
+                                    <div className="flex items-center gap-3 text-emerald-500 bg-emerald-500/5 p-3 px-5 rounded-2xl border border-emerald-500/10 w-fit">
+                                        <i className="fa-solid fa-screwdriver-wrench text-xs"></i>
+                                        <span className="text-[9px] font-black uppercase tracking-widest">Expert Mechanics</span>
                                     </div>
                                 </div>
                             </div>
