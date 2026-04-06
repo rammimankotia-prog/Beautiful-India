@@ -30,6 +30,10 @@ const normalizeTour = (t) => {
         tour_dates_ongoing: t.meta?.is_ongoing === true ? 'true'
                           : (t.tour_dates_ongoing || 'false'),
         tour_dates_start: dateStart || t.tour_dates_start || '',
+        // Inclusions
+        tour_transport: toArray(t.meta?.transport_options),
+        tour_hotels: toArray(t.meta?.hotel_options),
+        tour_meals: toArray(t.meta?.meal_options),
         // Price fallback
         price: t.meta?.price_single || t.price || '',
     };
@@ -181,6 +185,57 @@ const PilgrimageTourDetailView = () => {
 
                 {/* ── Left: Content ──────────────────────────────────── */}
                 <div className="lg:col-span-2 space-y-16">
+
+                    {/* ── Package Inclusions ── */}
+                    {(tour.tour_transport?.length > 0 || tour.tour_hotels?.length > 0 || tour.tour_meals?.length > 0) && (
+                        <section className="bg-orange-50/50 dark:bg-orange-950/20 p-8 rounded-[32px] border border-orange-100 dark:border-orange-900/30">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-6 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-orange-500 text-[18px]">verified</span>
+                                Signature Inclusions
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {tour.tour_transport?.length > 0 && (
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-2 text-slate-800 dark:text-white font-bold">
+                                            <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-600">
+                                                <span className="material-symbols-outlined text-[16px]">airport_shuttle</span>
+                                            </div>
+                                            Transport
+                                        </div>
+                                        <div className="flex flex-col gap-1 pl-10 text-sm font-medium text-slate-600 dark:text-slate-300">
+                                            {tour.tour_transport.map(opt => <span key={opt}>• {opt}</span>)}
+                                        </div>
+                                    </div>
+                                )}
+                                {tour.tour_hotels?.length > 0 && (
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-2 text-slate-800 dark:text-white font-bold">
+                                            <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-600">
+                                                <span className="material-symbols-outlined text-[16px]">hotel</span>
+                                            </div>
+                                            Hotels
+                                        </div>
+                                        <div className="flex flex-col gap-1 pl-10 text-sm font-medium text-slate-600 dark:text-slate-300">
+                                            {tour.tour_hotels.map(opt => <span key={opt}>• {opt}</span>)}
+                                        </div>
+                                    </div>
+                                )}
+                                {tour.tour_meals?.length > 0 && (
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-2 text-slate-800 dark:text-white font-bold">
+                                            <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-600">
+                                                <span className="material-symbols-outlined text-[16px]">restaurant</span>
+                                            </div>
+                                            Meals
+                                        </div>
+                                        <div className="flex flex-col gap-1 pl-10 text-sm font-medium text-slate-600 dark:text-slate-300">
+                                            {tour.tour_meals.map(opt => <span key={opt}>• {opt}</span>)}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    )}
 
                     {/* About the Yatra */}
                     {tour.content && (
