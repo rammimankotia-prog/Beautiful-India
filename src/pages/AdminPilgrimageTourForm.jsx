@@ -209,340 +209,423 @@ const AdminPilgrimageTourForm = () => {
     if (loading) return <div className="p-10 text-center animate-pulse">Loading Devotional Journey...</div>;
 
     return (
-        <div className="max-w-6xl mx-auto space-y-6 pb-20 p-6 lg:p-10 animate-in fade-in duration-500">
-                {/* Header Area */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 shadow-sm border-t-4 border-[#0a6c75]">
-                    <div>
-                        <h1 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">
-                            {slug ? `Edit Yatra: ${formData.title}` : 'Create New Sacred Yatra'}
-                        </h1>
-                        <p className="text-slate-500 font-medium text-sm mt-1">Standalone Pilgrimage Module Editor</p>
-                    </div>
-                    <div className="flex items-center gap-3">
+        <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-700">
+            <style>{`
+                @keyframes shimmer {
+                    100% { transform: translateX(200%); }
+                }
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+                .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+            `}</style>
+            {/* Header section */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+                <div>
+                    <h1 className="text-4xl font-black text-slate-800 dark:text-white uppercase tracking-tight mb-2">
+                        {slug ? `Edit Journey` : 'Inscribe New Yatra'}
+                    </h1>
+                    <p className="text-slate-500 dark:text-slate-400 font-bold italic">
+                        {slug ? `Modifying the sacred itinerary for ${formData.title}` : 'Creating a new path for the divine seekers.'}
+                    </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className="relative group">
                         <select 
                             value={formData.status}
                             onChange={(e) => handleChange('status', e.target.value)}
-                            className={`px-4 py-2.5 rounded-xl font-bold uppercase tracking-widest text-xs outline-none transition-colors ${formData.status === 'publish' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}
+                            className={`pl-10 pr-8 py-4 rounded-2xl font-black uppercase tracking-[2px] text-[10px] outline-none transition-all appearance-none cursor-pointer border shadow-sm ${
+                                formData.status === 'publish' 
+                                ? 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20' 
+                                : 'bg-amber-50 text-amber-600 border-amber-100 hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20'
+                            }`}
                         >
-                            <option value="draft">Draft</option>
-                            <option value="publish">Publish</option>
+                            <option value="draft">Draft Protocol</option>
+                            <option value="publish">Live Broadcast</option>
                         </select>
-                        <button 
-                            onClick={handleSave}
-                            disabled={saving}
-                            className="flex items-center gap-2 px-8 py-3 bg-[#0a6c75] hover:bg-[#005a63] text-white rounded-xl font-bold transition-all disabled:opacity-50"
-                        >
-                            <span className="material-symbols-outlined">{saving ? 'hourglass_empty' : 'save'}</span>
-                            {saving ? 'Saving...' : 'Save Yatra'}
-                        </button>
+                        <span className={`material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[18px] ${formData.status === 'publish' ? 'text-emerald-500 animate-pulse' : 'text-amber-500'}`}>
+                            {formData.status === 'publish' ? 'online_prediction' : 'edit_notifications'}
+                        </span>
                     </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Primary Column */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <button 
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="group relative flex items-center gap-3 px-10 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black uppercase text-xs tracking-[2px] transition-all hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 overflow-hidden"
+                    >
+                        {/* Shimmer Effect */}
+                        <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 dark:via-slate-900/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                         
-                        {/* Core Info */}
-                        <div className="glass-panel p-6 space-y-6">
-                            <h2 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-2 border-b border-slate-100 dark:border-slate-800 pb-2">Core Identity</h2>
-                            <div className="space-y-4">
+                        <span className={`material-symbols-outlined transition-transform ${saving ? 'animate-spin' : 'group-hover:scale-110'}`}>
+                            {saving ? 'progress_activity' : 'verified_user'}
+                        </span>
+                        {saving ? 'Syncing...' : 'Seal Record'}
+                    </button>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Primary Column */}
+                <div className="lg:col-span-2 space-y-8">
+                    
+                    {/* Divine Identity */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+                        <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <span className="material-symbols-outlined text-primary">auto_awesome</span>
+                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Divine Identity</h2>
+                        </div>
+                        
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Journey Title</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.title} 
+                                    onChange={handleTitleChange}
+                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[24px] px-6 py-4 font-serif font-black text-2xl outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all text-slate-800 dark:text-white"
+                                    placeholder="E.g., Complete Chardham Yatra 2026"
+                                />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Yatra Title *</label>
-                                    <input 
-                                        type="text" 
-                                        value={formData.title} 
-                                        onChange={handleTitleChange}
-                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-serif font-black text-xl outline-none focus:border-[#0a6c75] text-slate-800 dark:text-white"
-                                        placeholder="E.g., Complete Chardham Yatra 2026"
-                                    />
+                                    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Universal Slug</label>
+                                    <div className="relative">
+                                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[18px] text-slate-300">link</span>
+                                        <input 
+                                            type="text" 
+                                            value={formData.slug} 
+                                            onChange={(e) => handleChange('slug', e.target.value)}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[20px] pl-12 pr-4 py-3 font-mono text-xs outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300"
+                                        />
+                                    </div>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">URL Slug *</label>
-                                    <input 
-                                        type="text" 
-                                        value={formData.slug} 
-                                        onChange={(e) => handleChange('slug', e.target.value)}
-                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 font-mono text-sm outline-none focus:border-[#0a6c75] text-slate-600 dark:text-slate-300"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Base Price / Starting Price (₹) *</label>
-                                    <input 
-                                        type="number" 
-                                        value={formData.price || ''} 
-                                        onChange={(e) => handleChange('price', e.target.value)}
-                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 font-mono text-sm outline-none focus:border-[#0a6c75] text-slate-600 dark:text-slate-300"
-                                        placeholder="e.g. 25000"
-                                    />
+                                    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Base Price (₹)</label>
+                                    <div className="relative">
+                                        <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-black">₹</span>
+                                        <input 
+                                            type="number" 
+                                            value={formData.price || ''} 
+                                            onChange={(e) => handleChange('price', e.target.value)}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[20px] pl-10 pr-4 py-3 font-black text-lg outline-none focus:border-primary transition-all text-slate-800 dark:text-white"
+                                            placeholder="0.00"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Dual-Mode Editor */}
-                        <div className="glass-panel p-6 space-y-4">
-                            <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
-                                <h2 className="text-sm font-black uppercase tracking-widest text-slate-400">Content Engine</h2>
-                                <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
-                                    <button 
-                                        onClick={() => setEditorMode('visual')}
-                                        className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-colors ${editorMode === 'visual' ? 'bg-white shadow dark:bg-slate-700 text-[#0a6c75]' : 'text-slate-500'}`}
-                                    >
-                                        Visual
-                                    </button>
-                                    <button 
-                                        onClick={() => setEditorMode('html')}
-                                        className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-colors ${editorMode === 'html' ? 'bg-white shadow dark:bg-slate-700 text-[#0a6c75]' : 'text-slate-500'}`}
-                                    >
-                                        Raw HTML
-                                    </button>
-                                </div>
+                    {/* Content Engine */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary">description</span>
+                                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Content Engine</h2>
                             </div>
+                            <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
+                                <button 
+                                    onClick={() => setEditorMode('visual')}
+                                    className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[2px] transition-all ${editorMode === 'visual' ? 'bg-white shadow-xl dark:bg-slate-700 text-primary' : 'text-slate-400 opacity-60 hover:opacity-100'}`}
+                                >
+                                    Aesthetics
+                                </button>
+                                <button 
+                                    onClick={() => setEditorMode('html')}
+                                    className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[2px] transition-all ${editorMode === 'html' ? 'bg-white shadow-xl dark:bg-slate-700 text-primary' : 'text-slate-400 opacity-60 hover:opacity-100'}`}
+                                >
+                                    Raw Code
+                                </button>
+                            </div>
+                        </div>
 
-                            {editorMode === 'visual' && (
-                                <div className="flex flex-wrap gap-2 mb-2 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                                    <button onClick={() => execCommand('bold')} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-200 rounded shadow-sm"><span className="font-bold">B</span></button>
-                                    <button onClick={() => execCommand('italic')} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-200 rounded shadow-sm"><span className="italic">I</span></button>
-                                    <button onClick={() => execCommand('underline')} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-200 rounded shadow-sm"><span className="underline">U</span></button>
-                                    <div className="w-px h-8 bg-slate-300 dark:bg-slate-600 mx-1"></div>
-                                    <button onClick={() => execCommand('formatBlock', 'H2')} className="px-2 h-8 flex items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-200 rounded shadow-sm text-xs font-bold">H2</button>
-                                    <button onClick={() => execCommand('formatBlock', 'H3')} className="px-2 h-8 flex items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-200 rounded shadow-sm text-xs font-bold">H3</button>
-                                    <div className="w-px h-8 bg-slate-300 dark:bg-slate-600 mx-1"></div>
-                                    <button onClick={() => execCommand('insertUnorderedList')} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-200 rounded shadow-sm"><span className="material-symbols-outlined text-[18px]">format_list_bulleted</span></button>
-                                    <button onClick={() => execCommand('createLink', prompt('URL:'))} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-200 rounded shadow-sm"><span className="material-symbols-outlined text-[18px]">link</span></button>
-                                </div>
-                            )}
+                        {editorMode === 'visual' && (
+                            <div className="flex flex-wrap gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner">
+                                {[
+                                    { cmd: 'bold', icon: 'format_bold' },
+                                    { cmd: 'italic', icon: 'format_italic' },
+                                    { cmd: 'underline', icon: 'format_underlined' },
+                                    { divider: true },
+                                    { cmd: 'formatBlock', val: 'H2', label: 'H2' },
+                                    { cmd: 'formatBlock', val: 'H3', label: 'H3' },
+                                    { divider: true },
+                                    { cmd: 'insertUnorderedList', icon: 'format_list_bulleted' },
+                                    { cmd: 'createLink', prompt: 'URL:', icon: 'link' }
+                                ].map((btn, i) => (
+                                    btn.divider ? (
+                                        <div key={i} className="w-px h-8 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                                    ) : (
+                                        <button 
+                                            key={i}
+                                            onClick={() => btn.prompt ? execCommand(btn.cmd, prompt(btn.prompt)) : execCommand(btn.cmd, btn.val)} 
+                                            className="w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 hover:border-primary hover:text-primary rounded-xl shadow-sm transition-all"
+                                        >
+                                            {btn.icon ? <span className="material-symbols-outlined text-[20px]">{btn.icon}</span> : <span className="font-black text-xs">{btn.label}</span>}
+                                        </button>
+                                    )
+                                ))}
+                            </div>
+                        )}
 
+                        <div className="relative group">
                             {editorMode === 'html' ? (
                                 <textarea 
-                                    className="w-full h-80 bg-slate-800 text-green-400 font-mono text-sm p-4 rounded-xl outline-none focus:ring-2 ring-[#0a6c75]"
+                                    className="w-full h-[500px] bg-slate-900 text-emerald-400 font-mono text-sm p-8 rounded-[32px] outline-none border-4 border-transparent focus:border-primary/10 transition-all shadow-2xl"
                                     value={formData.content}
                                     onChange={(e) => handleChange('content', e.target.value)}
-                                    placeholder="<p>Enter your HTML here...</p>"
+                                    placeholder="<!-- Begin writing your sacred story here... -->"
                                 />
                             ) : (
                                 <div 
                                     ref={editorRef}
                                     contentEditable
                                     onInput={handleVisualInput}
-                                    className="w-full min-h-[320px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-4 outline-none focus:border-[#0a6c75] prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300"
+                                    className="w-full min-h-[500px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 outline-none focus:ring-4 focus:ring-primary/5 transition-all prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 shadow-inner"
                                     suppressContentEditableWarning
                                 />
                             )}
                         </div>
-
-                        {/* Itinerary Matrix */}
-                        <div className="glass-panel p-6 space-y-4">
-                            <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
-                                <h2 className="text-sm font-black uppercase tracking-widest text-slate-400">Daily Itinerary</h2>
-                                <button onClick={addItineraryDay} className="flex items-center gap-1 text-[#0a6c75] hover:text-teal-700 font-bold text-xs uppercase cursor-pointer bg-teal-50 dark:bg-teal-900/30 px-3 py-1 rounded-full">
-                                    <span className="material-symbols-outlined text-[16px]">add</span> Add Day
-                                </button>
-                            </div>
-                            
-                            <div className="space-y-4">
-                                {formData.tour_itinerary.map((day, idx) => (
-                                    <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700 space-y-3 relative group">
-                                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => removeItineraryDay(idx)} className="text-red-500 hover:text-red-600 bg-red-50 dark:bg-red-900/30 p-1 rounded-md"><span className="material-symbols-outlined text-[18px]">close</span></button>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-[#0a6c75] text-white rounded-lg flex items-center justify-center font-black text-xl shadow-md">
-                                                {day.day}
-                                            </div>
-                                            <div className="flex-1">
-                                                <input 
-                                                    type="text" 
-                                                    value={day.title}
-                                                    onChange={(e) => updateItineraryDay(idx, 'title', e.target.value)}
-                                                    placeholder="Day Title (e.g. Arrival in Haridwar)"
-                                                    className="w-full bg-transparent border-b border-slate-300 dark:border-slate-600 px-2 py-1 font-bold text-slate-800 dark:text-white outline-none focus:border-[#0a6c75]"
-                                                />
-                                            </div>
-                                        </div>
-                                        <textarea 
-                                            value={day.description}
-                                            onChange={(e) => updateItineraryDay(idx, 'description', e.target.value)}
-                                            placeholder="HTML Description of activities..."
-                                            className="w-full h-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-sm outline-none focus:border-[#0a6c75] mt-2 font-mono text-slate-600 dark:text-slate-400"
-                                        />
-                                    </div>
-                                ))}
-                                {formData.tour_itinerary.length === 0 && (
-                                    <div className="text-center py-6 text-slate-400 text-sm border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl">
-                                        No itinerary defined. Click "Add Day" to begin.
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
                     </div>
 
-                    {/* Secondary Column */}
-                    <div className="lg:col-span-1 space-y-6">
+                    {/* Sacred Sequence (Itinerary) */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+                        <div className="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary">route</span>
+                                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Sacred Sequence</h2>
+                            </div>
+                            <button 
+                                onClick={addItineraryDay} 
+                                className="flex items-center gap-2 px-5 py-2 bg-primary/10 text-primary hover:bg-primary text-[10px] font-black uppercase tracking-wider rounded-xl transition-all hover:text-white"
+                            >
+                                <span className="material-symbols-outlined text-[18px]">add_circle</span> Add Milestone
+                            </button>
+                        </div>
                         
-                        {/* Categorization & Location */}
-                        <div className="glass-panel p-6 space-y-4">
-                            <h2 className="text-sm font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2">Taxonomies & Routing</h2>
-                            
+                        <div className="space-y-6">
+                            {formData.tour_itinerary.map((day, idx) => (
+                                <div key={idx} className="group relative bg-slate-50 dark:bg-slate-800/50 rounded-[32px] p-8 border border-slate-100 dark:border-slate-800/80 transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none">
+                                    <div className="absolute top-6 right-6 translate-x-4 -translate-y-4 opacity-0 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+                                        <button 
+                                            onClick={() => removeItineraryDay(idx)} 
+                                            className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-xl shadow-lg shadow-red-500/20 active:scale-95 transition-transform"
+                                        >
+                                            <span className="material-symbols-outlined text-[20px]">delete_forever</span>
+                                        </button>
+                                    </div>
+                                    <div className="flex items-start gap-6">
+                                        <div className="w-14 h-14 bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow-xl shadow-slate-200/50 dark:shadow-none shrink-0 border border-slate-100 dark:border-slate-600 transition-transform group-hover:scale-105">
+                                            {day.day}
+                                        </div>
+                                        <div className="flex-1 space-y-4">
+                                            <input 
+                                                type="text" 
+                                                value={day.title}
+                                                onChange={(e) => updateItineraryDay(idx, 'title', e.target.value)}
+                                                placeholder="Inscribe milestone title..."
+                                                className="w-full bg-transparent border-b-2 border-slate-200 dark:border-slate-700 px-0 py-2 font-black text-xl text-slate-800 dark:text-white outline-none focus:border-primary transition-all"
+                                            />
+                                            <textarea 
+                                                value={day.description}
+                                                onChange={(e) => updateItineraryDay(idx, 'description', e.target.value)}
+                                                placeholder="Detailed description of the day's divine events..."
+                                                className="w-full h-32 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 text-sm outline-none focus:ring-4 focus:ring-primary/5 transition-all font-mono text-slate-600 dark:text-slate-400 shadow-inner"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {formData.tour_itinerary.length === 0 && (
+                                <div className="flex flex-col items-center justify-center py-20 text-slate-300 dark:text-slate-700 border-4 border-dashed border-slate-50 dark:border-slate-800/50 rounded-[40px]">
+                                    <span className="material-symbols-outlined text-[64px] mb-4 opacity-20">history_edu</span>
+                                    <p className="font-black uppercase tracking-widest text-[11px]">The scroll is empty. Add a new milestone.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Secondary Column */}
+                <div className="lg:col-span-1 space-y-8">
+                    
+                    {/* Taxonomies & Routing */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
+                        <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <span className="material-symbols-outlined text-primary">sell</span>
+                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Taxonomies & Routing</h2>
+                        </div>
+                        
+                        <div className="space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Destinations (Comma separated)</label>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Destinations</label>
                                 <input 
                                     type="text" 
                                     value={formData.tour_destination.join(', ')} 
                                     onChange={(e) => handleArrayInput('tour_destination', e.target.value)}
                                     placeholder="Uttarakhand, Haridwar"
-                                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm outline-none focus:border-[#0a6c75] text-slate-600 dark:text-slate-300"
+                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300"
                                 />
                             </div>
                             
                             <div>
-                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Tour Types (Comma separated)</label>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tour Types</label>
                                 <input 
                                     type="text" 
                                     value={formData.tour_type.join(', ')} 
                                     onChange={(e) => handleArrayInput('tour_type', e.target.value)}
                                     placeholder="Chardham, Heritage"
-                                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm outline-none focus:border-[#0a6c75] text-slate-600 dark:text-slate-300"
+                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">City Route Path (Iterative)</label>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sacred Path (Cities)</label>
                                 <textarea 
                                     value={formData.tour_city_path} 
                                     onChange={(e) => handleChange('tour_city_path', e.target.value)}
-                                    placeholder="Haridwar, Barkot, Uttarkashi, Guptkashi, Badrinath"
-                                    className="w-full h-16 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm outline-none focus:border-[#0a6c75] text-slate-600 dark:text-slate-300"
+                                    placeholder="Haridwar, Barkot, Uttarkashi..."
+                                    className="w-full h-24 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300 resize-none font-mono"
                                 />
-                                <p className="text-[10px] text-slate-400 mt-1">Comma mapped for map visualization.</p>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Logistics */}
-                        <div className="glass-panel p-6 space-y-4">
-                            <h2 className="text-sm font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2">Logistics & Economics</h2>
-                            
-                            <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block text-[10px] font-bold text-slate-500 mb-1">Single Price</label>
-                                    <input 
-                                        type="number" 
-                                        value={formData.tour_price_single} 
-                                        onChange={(e) => handleChange('tour_price_single', e.target.value)}
-                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a6c75]"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] font-bold text-slate-500 mb-1">Couple Price</label>
-                                    <input 
-                                        type="number" 
-                                        value={formData.tour_price_couple} 
-                                        onChange={(e) => handleChange('tour_price_couple', e.target.value)}
-                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a6c75]"
-                                    />
-                                </div>
-                                <div className="col-span-2">
-                                    <label className="block text-[10px] font-bold text-slate-500 mb-1">Group Rate Price</label>
-                                    <input 
-                                        type="number" 
-                                        value={formData.tour_price_group} 
-                                        onChange={(e) => handleChange('tour_price_group', e.target.value)}
-                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a6c75]"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                <div>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input 
-                                            type="checkbox"
-                                            checked={formData.tour_dates_ongoing === 'true'}
-                                            onChange={(e) => handleChange('tour_dates_ongoing', e.target.checked ? 'true' : 'false')}
-                                            className="w-4 h-4 text-[#0a6c75] rounded border-slate-300"
-                                        />
-                                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">Daily / Flexible Departures</span>
-                                    </label>
-                                </div>
-
-                                {formData.tour_dates_ongoing !== 'true' && (
-                                    <div className="flex gap-3">
-                                        <div className="flex-1">
-                                            <label className="block text-[10px] font-bold text-slate-500 mb-1">Start Date</label>
-                                            <input 
-                                                type="date" 
-                                                value={formData.tour_dates_start} 
-                                                onChange={(e) => handleChange('tour_dates_start', e.target.value)}
-                                                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[11px] outline-none"
-                                            />
-                                        </div>
-                                        <div className="flex-1">
-                                            <label className="block text-[10px] font-bold text-slate-500 mb-1">End Date</label>
-                                            <input 
-                                                type="date" 
-                                                value={formData.tour_dates_end} 
-                                                onChange={(e) => handleChange('tour_dates_end', e.target.value)}
-                                                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[11px] outline-none"
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                    {/* Logistics & Economics */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
+                        <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <span className="material-symbols-outlined text-primary">payments</span>
+                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Economics</h2>
                         </div>
-
-                        {/* Gallery Array Manager */}
-                        <div className="glass-panel p-6 space-y-4">
-                            <h2 className="text-sm font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2">Media Gallery Engine</h2>
-                            
-                            <div className="flex gap-2">
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="col-span-2">
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Single Occupancy</label>
                                 <input 
-                                    type="text"
-                                    value={newImage}
-                                    onChange={(e) => setNewImage(e.target.value)}
-                                    placeholder="Image URL"
-                                    className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a6c75]"
+                                    type="number" 
+                                    value={formData.tour_price_single} 
+                                    onChange={(e) => handleChange('tour_price_single', e.target.value)}
+                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all"
                                 />
-                                <button onClick={addImage} className="bg-[#0a6c75] text-white px-3 py-2 rounded-lg font-bold hover:bg-[#005a63] transition-colors"><span className="material-symbols-outlined text-[20px]">add</span></button>
                             </div>
-
-                            <p className="text-[10px] text-slate-400">Drag to reorder. Index 0 is the featured cover image.</p>
-
-                            <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                                {formData.tour_gallery.map((img, idx) => (
-                                    <div 
-                                        key={`${img}-${idx}`} 
-                                        draggable
-                                        onDragStart={(e) => handleDragStart(e, idx)}
-                                        onDragEnd={handleDragEnd}
-                                        onDrop={(e) => handleDrop(e, idx)}
-                                        onDragOver={handleDragOver}
-                                        className="flex items-center gap-3 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2 cursor-move hover:border-[#0a6c75] transition-colors"
-                                    >
-                                        <div className="w-12 h-12 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden flex-shrink-0">
-                                            <img src={img} alt="thumb" className="w-full h-full object-cover" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <input 
-                                                type="text" 
-                                                value={img} 
-                                                onChange={(e) => updateImage(idx, e.target.value)}
-                                                className="w-full bg-transparent text-xs font-mono text-slate-700 dark:text-slate-300 outline-none border-b border-transparent focus:border-[#0a6c75] transition-colors py-1"
-                                            />
-                                        </div>
-                                        <button onClick={() => removeImage(idx)} className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg shrink-0">
-                                            <span className="material-symbols-outlined text-[18px]">delete</span>
-                                        </button>
-                                        <div className="w-6 flex items-center justify-center text-slate-300">
-                                            <span className="material-symbols-outlined">drag_indicator</span>
-                                        </div>
-                                    </div>
-                                ))}
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Couple</label>
+                                <input 
+                                    type="number" 
+                                    value={formData.tour_price_couple} 
+                                    onChange={(e) => handleChange('tour_price_couple', e.target.value)}
+                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Group Rate</label>
+                                <input 
+                                    type="number" 
+                                    value={formData.tour_price_group} 
+                                    onChange={(e) => handleChange('tour_price_group', e.target.value)}
+                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all"
+                                />
                             </div>
                         </div>
 
+                        <div className="pt-6 border-t border-slate-50 dark:border-slate-800 space-y-5">
+                            <label className="flex items-center gap-4 cursor-pointer group">
+                                <div className="relative flex items-center">
+                                    <input 
+                                        type="checkbox"
+                                        checked={formData.tour_dates_ongoing === 'true'}
+                                        onChange={(e) => handleChange('tour_dates_ongoing', e.target.checked ? 'true' : 'false')}
+                                        className="peer w-6 h-6 rounded-lg border-2 border-slate-200 dark:border-slate-700 checked:bg-primary checked:border-primary appearance-none transition-all cursor-pointer"
+                                    />
+                                    <span className="material-symbols-outlined absolute text-white text-[18px] left-0 translate-x-[3px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none">done_all</span>
+                                </div>
+                                <span className="text-[11px] font-black uppercase tracking-[2px] text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">Flexible Departures</span>
+                            </label>
+
+                            {formData.tour_dates_ongoing !== 'true' && (
+                                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-500">
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Departure</label>
+                                        <input 
+                                            type="date" 
+                                            value={formData.tour_dates_start} 
+                                            onChange={(e) => handleChange('tour_dates_start', e.target.value)}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-3 text-[10px] uppercase font-black outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Return</label>
+                                        <input 
+                                            type="date" 
+                                            value={formData.tour_dates_end} 
+                                            onChange={(e) => handleChange('tour_dates_end', e.target.value)}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-3 text-[10px] uppercase font-black outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Media vault */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
+                        <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <span className="material-symbols-outlined text-primary">gallery_thumbnail</span>
+                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Media Vault</h2>
+                        </div>
+                        
+                        <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800/50 rounded-[24px] border border-slate-200/50 dark:border-slate-800 shadow-inner">
+                            <input 
+                                type="text"
+                                value={newImage}
+                                onChange={(e) => setNewImage(e.target.value)}
+                                placeholder="Enter sacred image URL..."
+                                className="flex-1 bg-transparent px-5 py-3 text-xs outline-none text-slate-600 dark:text-slate-300 font-bold"
+                            />
+                            <button onClick={addImage} className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-[18px] shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"><span className="material-symbols-outlined">add_photo_alternate</span></button>
+                        </div>
+
+                        <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+                            {formData.tour_gallery.map((img, idx) => (
+                                <div 
+                                    key={`${img}-${idx}`} 
+                                    draggable
+                                    onDragStart={(e) => handleDragStart(e, idx)}
+                                    onDragEnd={handleDragEnd}
+                                    onDrop={(e) => handleDrop(e, idx)}
+                                    onDragOver={handleDragOver}
+                                    className="group flex items-center gap-4 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800/50 rounded-[32px] p-3 cursor-move transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-primary/20"
+                                >
+                                    <div className="w-16 h-16 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-slate-100 dark:border-slate-800 relative group-hover:border-primary/30 transition-colors">
+                                        <img src={img} alt="thumb" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        <div className="absolute top-1 right-1 w-6 h-6 bg-black/50 backdrop-blur-md rounded-lg flex items-center justify-center text-[10px] text-white font-black border border-white/10 shadow-lg">
+                                            {idx + 1}
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <input 
+                                            type="text" 
+                                            value={img} 
+                                            onChange={(e) => updateImage(idx, e.target.value)}
+                                            className="w-full bg-transparent text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 outline-none hover:text-primary transition-colors truncate"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                                        <button 
+                                            onClick={() => removeImage(idx)} 
+                                            className="w-10 h-10 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-500 rounded-xl transition-all active:scale-95 shadow-lg shadow-red-500/10"
+                                        >
+                                            <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
+                                        </button>
+                                        <div className="w-8 flex items-center justify-center text-slate-300 dark:text-slate-700">
+                                            <span className="material-symbols-outlined text-[20px]">drag_indicator</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
     );
 };
 
