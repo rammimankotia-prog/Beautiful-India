@@ -36,6 +36,11 @@ const AdminPilgrimageTourForm = () => {
 
     // Gallery State
     const [newImage, setNewImage] = useState('');
+    const [uploadQueue, setUploadQueue] = useState([]); // { id, file, name, progress, status, error }
+    const [isDragOver, setIsDragOver] = useState(false);
+    const fileInputRef = useRef(null);
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [editingValue, setEditingValue] = useState('');
 
     useEffect(() => {
         if (!user || (user.role !== 'admin' && user.role !== 'master_admin')) {
@@ -119,7 +124,7 @@ const AdminPilgrimageTourForm = () => {
         }
     }, [editorMode]);
 
-    // --- Gallery Drag & Drop ---
+    // --- Gallery: URL add ---
     const addImage = () => {
         if (newImage && newImage.trim() !== '') {
             setFormData(prev => ({ ...prev, tour_gallery: [...prev.tour_gallery, newImage.trim()] }));
@@ -139,21 +144,21 @@ const AdminPilgrimageTourForm = () => {
         handleChange('tour_gallery', arr);
     };
 
+    // --- Gallery: Reorder Drag & Drop (existing images) ---
     const handleDragStart = (e, index) => {
-        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('imageIndex', index.toString());
         e.target.style.opacity = '0.4';
     };
 
     const handleDragEnd = (e) => {
-         e.target.style.opacity = '1';
+        e.target.style.opacity = '1';
     };
 
     const handleDrop = (e, targetIndex) => {
         e.preventDefault();
         const sourceIndex = parseInt(e.dataTransfer.getData('imageIndex'), 10);
-        if (sourceIndex === targetIndex || isNaN(sourceIndex)) return;
-
+        if (isNaN(sourceIndex) || sourceIndex === targetIndex) return;
         const newGallery = [...formData.tour_gallery];
         const [movedItem] = newGallery.splice(sourceIndex, 1);
         newGallery.splice(targetIndex, 0, movedItem);
@@ -161,8 +166,107 @@ const AdminPilgrimageTourForm = () => {
     };
 
     const handleDragOver = (e) => {
-        e.preventDefault(); // Necessary to allow dropping
-        e.dataTransfer.dropEffect = "move";
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    // --- Gallery: File Upload ---
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+    const uploadFile = async (fileObj) => {
+        const { id, file } = fileObj;
+
+        // Validate size
+        if (file.size > MAX_FILE_SIZE) {
+            setUploadQueue(q => q.map(i => i.id === id ? { ...i, status: 'error', error: 'Exceeds 5 MB limit' } : i));
+            return;
+        }
+        // Validate type
+        if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) {
+            setUploadQueue(q => q.map(i => i.id === id ? { ...i, status: 'error', error: 'Invalid file type' } : i));
+            return;
+        }
+
+        const formDataUpload = new FormData();
+        formDataUpload.append('image', file);
+
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `${import.meta.env.BASE_URL}api-upload-image.php`);
+
+            xhr.upload.onprogress = (evt) => {
+                if (evt.lengthComputable) {
+                    const pct = Math.round((evt.loaded / evt.total) * 100);
+                    setUploadQueue(q => q.map(i => i.id === id ? { ...i, progress: pct } : i));
+                }
+            };
+
+            xhr.onload = () => {
+                try {
+                    const res = JSON.parse(xhr.responseText);
+                    if (res.success) {
+                        setUploadQueue(q => q.map(i => i.id === id ? { ...i, status: 'done', progress: 100, url: res.url } : i));
+                        setFormData(prev => ({ ...prev, tour_gallery: [...prev.tour_gallery, res.url] }));
+                    } else {
+                        setUploadQueue(q => q.map(i => i.id === id ? { ...i, status: 'error', error: res.error || 'Upload failed' } : i));
+                    }
+                } catch {
+                    setUploadQueue(q => q.map(i => i.id === id ? { ...i, status: 'error', error: 'Server error' } : i));
+                }
+                resolve();
+            };
+
+            xhr.onerror = () => {
+                setUploadQueue(q => q.map(i => i.id === id ? { ...i, status: 'error', error: 'Network error' } : i));
+                resolve();
+            };
+
+            xhr.send(formDataUpload);
+        });
+    };
+
+    const enqueueFiles = (files) => {
+        const newItems = Array.from(files).map(file => ({
+            id: `${file.name}_${Date.now()}_${Math.random()}`,
+            file,
+            name: file.name,
+            progress: 0,
+            status: 'uploading', // uploading | done | error
+            error: null,
+            url: null,
+        }));
+        setUploadQueue(prev => [...prev, ...newItems]);
+        newItems.forEach(item => uploadFile(item));
+    };
+
+    const handleFilePick = (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            enqueueFiles(e.target.files);
+            e.target.value = '';
+        }
+    };
+
+    const handleDropZone = (e) => {
+        e.preventDefault();
+        setIsDragOver(false);
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            enqueueFiles(e.dataTransfer.files);
+        }
+    };
+
+    const dismissQueueItem = (id) => {
+        setUploadQueue(q => q.filter(i => i.id !== id));
+    };
+
+    // --- Inline Edit ---
+    const startEditing = (idx) => {
+        setEditingIndex(idx);
+        setEditingValue(formData.tour_gallery[idx]);
+    };
+
+    const commitEdit = (idx) => {
+        updateImage(idx, editingValue);
+        setEditingIndex(null);
     };
 
     // --- Itinerary ---
@@ -634,58 +738,200 @@ const AdminPilgrimageTourForm = () => {
                         </div>
                     </div>
 
-                    {/* Media vault */}
+                    {/* ═══════════════ MEDIA VAULT ═══════════════ */}
                     <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
-                        <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
-                            <span className="material-symbols-outlined text-primary">gallery_thumbnail</span>
-                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Media Vault</h2>
+                        {/* Header */}
+                        <div className="flex items-center justify-between border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary">perm_media</span>
+                                <div>
+                                    <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Media Vault</h2>
+                                    <p className="text-[9px] text-slate-300 dark:text-slate-600 mt-0.5">Max 5 MB · JPG, PNG, WebP, GIF</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-black text-slate-300 dark:text-slate-600">{formData.tour_gallery.length} image{formData.tour_gallery.length !== 1 ? 's' : ''}</span>
+                            </div>
                         </div>
-                        
+
+                        {/* ── Drop Zone ── */}
+                        <div
+                            onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+                            onDragLeave={() => setIsDragOver(false)}
+                            onDrop={handleDropZone}
+                            onClick={() => fileInputRef.current?.click()}
+                            className={`relative flex flex-col items-center justify-center gap-3 py-10 rounded-[28px] border-2 border-dashed cursor-pointer transition-all select-none ${
+                                isDragOver
+                                    ? 'border-primary bg-primary/5 scale-[1.01]'
+                                    : 'border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                            }`}
+                        >
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
+                                isDragOver ? 'bg-primary text-white scale-110' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                            }`}>
+                                <span className="material-symbols-outlined text-[32px]">
+                                    {isDragOver ? 'file_download' : 'cloud_upload'}
+                                </span>
+                            </div>
+                            <div className="text-center">
+                                <p className="font-black text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                    {isDragOver ? 'Release to Upload' : 'Drop images here or click to browse'}
+                                </p>
+                                <p className="text-[10px] text-slate-300 dark:text-slate-600 mt-1">Multiple files supported · Max 5 MB each</p>
+                            </div>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                multiple
+                                className="hidden"
+                                onChange={handleFilePick}
+                            />
+                        </div>
+
+                        {/* ── Upload Queue (progress) ── */}
+                        {uploadQueue.length > 0 && (
+                            <div className="space-y-2">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-300 dark:text-slate-600 mb-3">Upload Queue</p>
+                                {uploadQueue.map(item => (
+                                    <div key={item.id} className={`flex items-center gap-3 rounded-2xl p-3 border transition-all ${
+                                        item.status === 'error'
+                                            ? 'bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-900/30'
+                                            : item.status === 'done'
+                                            ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-900/30'
+                                            : 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800'
+                                    }`}>
+                                        {/* Icon */}
+                                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                                            item.status === 'error' ? 'bg-red-100 dark:bg-red-900/20 text-red-500'
+                                            : item.status === 'done' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-500'
+                                            : 'bg-primary/10 text-primary'
+                                        }`}>
+                                            <span className="material-symbols-outlined text-[18px]">
+                                                {item.status === 'error' ? 'error' : item.status === 'done' ? 'check_circle' : 'upload'}
+                                            </span>
+                                        </div>
+                                        {/* Info */}
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-[10px] font-bold text-slate-600 dark:text-slate-300 truncate">{item.name}</p>
+                                            {item.status === 'uploading' && (
+                                                <div className="mt-1.5 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-primary rounded-full transition-all duration-300"
+                                                        style={{ width: `${item.progress}%` }}
+                                                    />
+                                                </div>
+                                            )}
+                                            {item.status === 'error' && (
+                                                <p className="text-[9px] text-red-400 mt-0.5">{item.error}</p>
+                                            )}
+                                            {item.status === 'done' && (
+                                                <p className="text-[9px] text-emerald-500 mt-0.5 truncate font-mono">{item.url}</p>
+                                            )}
+                                        </div>
+                                        {/* Dismiss */}
+                                        {item.status !== 'uploading' && (
+                                            <button
+                                                onClick={() => dismissQueueItem(item.id)}
+                                                className="w-7 h-7 flex items-center justify-center text-slate-300 hover:text-slate-500 rounded-lg transition-all hover:bg-slate-100 dark:hover:bg-slate-700 shrink-0"
+                                            >
+                                                <span className="material-symbols-outlined text-[16px]">close</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* ── URL add (manual) ── */}
                         <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800/50 rounded-[24px] border border-slate-200/50 dark:border-slate-800 shadow-inner">
-                            <input 
+                            <input
                                 type="text"
                                 value={newImage}
                                 onChange={(e) => setNewImage(e.target.value)}
-                                placeholder="Enter sacred image URL..."
+                                onKeyDown={(e) => e.key === 'Enter' && addImage()}
+                                placeholder="Or paste an image URL..."
                                 className="flex-1 bg-transparent px-5 py-3 text-xs outline-none text-slate-600 dark:text-slate-300 font-bold"
                             />
-                            <button onClick={addImage} className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-[18px] shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"><span className="material-symbols-outlined">add_photo_alternate</span></button>
+                            <button onClick={addImage} className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-[18px] shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                                <span className="material-symbols-outlined">add_link</span>
+                            </button>
                         </div>
 
-                        <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+                        {/* ── Image List ── */}
+                        <div className="space-y-3 max-h-[460px] overflow-y-auto custom-scrollbar pr-1">
+                            {formData.tour_gallery.length === 0 && uploadQueue.filter(q => q.status === 'uploading').length === 0 && (
+                                <div className="flex flex-col items-center justify-center py-10 text-slate-200 dark:text-slate-700">
+                                    <span className="material-symbols-outlined text-[48px] mb-2 opacity-30">photo_library</span>
+                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-40">No images yet</p>
+                                </div>
+                            )}
+
                             {formData.tour_gallery.map((img, idx) => (
-                                <div 
-                                    key={`${img}-${idx}`} 
+                                <div
+                                    key={`${img}-${idx}`}
                                     draggable
                                     onDragStart={(e) => handleDragStart(e, idx)}
                                     onDragEnd={handleDragEnd}
                                     onDrop={(e) => handleDrop(e, idx)}
                                     onDragOver={handleDragOver}
-                                    className="group flex items-center gap-4 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800/50 rounded-[32px] p-3 cursor-move transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-primary/20"
+                                    className="group flex items-center gap-3 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800/50 rounded-[24px] p-2.5 cursor-move transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-primary/20"
                                 >
-                                    <div className="w-16 h-16 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-slate-100 dark:border-slate-800 relative group-hover:border-primary/30 transition-colors">
-                                        <img src={img} alt="thumb" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                        <div className="absolute top-1 right-1 w-6 h-6 bg-black/50 backdrop-blur-md rounded-lg flex items-center justify-center text-[10px] text-white font-black border border-white/10 shadow-lg">
-                                            {idx + 1}
-                                        </div>
+                                    {/* Thumbnail */}
+                                    <div className="w-14 h-14 bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm shrink-0 border border-slate-100 dark:border-slate-800 relative group-hover:border-primary/30 transition-colors">
+                                        <img src={img} alt={`gallery-${idx}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        {idx === 0 && (
+                                            <div className="absolute bottom-0 left-0 right-0 bg-primary text-white text-[7px] font-black uppercase text-center leading-4">Cover</div>
+                                        )}
+                                        {idx > 0 && (
+                                            <div className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/50 backdrop-blur text-white text-[9px] font-black rounded-md flex items-center justify-center">{idx + 1}</div>
+                                        )}
                                     </div>
+
+                                    {/* URL (inline edit) */}
                                     <div className="flex-1 min-w-0">
-                                        <input 
-                                            type="text" 
-                                            value={img} 
-                                            onChange={(e) => updateImage(idx, e.target.value)}
-                                            className="w-full bg-transparent text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 outline-none hover:text-primary transition-colors truncate"
-                                        />
+                                        {editingIndex === idx ? (
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                value={editingValue}
+                                                onChange={(e) => setEditingValue(e.target.value)}
+                                                onBlur={() => commitEdit(idx)}
+                                                onKeyDown={(e) => { if (e.key === 'Enter') commitEdit(idx); if (e.key === 'Escape') setEditingIndex(null); }}
+                                                className="w-full bg-white dark:bg-slate-900 border border-primary rounded-lg px-3 py-1.5 text-[10px] font-mono outline-none text-slate-700 dark:text-slate-200"
+                                            />
+                                        ) : (
+                                            <p
+                                                className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 truncate cursor-text hover:text-primary transition-colors"
+                                                title={img}
+                                                onClick={() => startEditing(idx)}
+                                            >
+                                                {img}
+                                            </p>
+                                        )}
                                     </div>
-                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                                        <button 
-                                            onClick={() => removeImage(idx)} 
-                                            className="w-10 h-10 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-500 rounded-xl transition-all active:scale-95 shadow-lg shadow-red-500/10"
+
+                                    {/* Actions */}
+                                    <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-all">
+                                        {/* Edit */}
+                                        <button
+                                            onClick={() => startEditing(idx)}
+                                            className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all active:scale-95"
+                                            title="Edit URL"
                                         >
-                                            <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
+                                            <span className="material-symbols-outlined text-[16px]">edit</span>
                                         </button>
-                                        <div className="w-8 flex items-center justify-center text-slate-300 dark:text-slate-700">
-                                            <span className="material-symbols-outlined text-[20px]">drag_indicator</span>
+                                        {/* Delete */}
+                                        <button
+                                            onClick={() => removeImage(idx)}
+                                            className="w-8 h-8 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-500 rounded-lg transition-all active:scale-95"
+                                            title="Remove"
+                                        >
+                                            <span className="material-symbols-outlined text-[16px]">delete</span>
+                                        </button>
+                                        {/* Drag handle */}
+                                        <div className="w-6 flex items-center justify-center text-slate-300 dark:text-slate-700">
+                                            <span className="material-symbols-outlined text-[18px]">drag_indicator</span>
                                         </div>
                                     </div>
                                 </div>

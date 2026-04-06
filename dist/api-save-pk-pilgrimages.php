@@ -21,8 +21,8 @@ try {
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
     
-    if (!$data) {
-        throw new Exception('Invalid JSON data received.');
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception('Invalid JSON data received: ' . json_last_error_msg());
     }
 
     // Isolate sandboxed file path

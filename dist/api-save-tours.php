@@ -20,8 +20,8 @@ try {
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
     
-    if (!$data) {
-        throw new Exception('Invalid JSON data');
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception('Invalid JSON data received: ' . json_last_error_msg());
     }
 
     // Adjust paths for production (dist)
