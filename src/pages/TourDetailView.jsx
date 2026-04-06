@@ -840,50 +840,60 @@ const TourDetailView = () => {
               </div>
 
               {/* ── FAQ Section ── */}
+              {/* ── FAQ Section ── */}
               {tour.faq && tour.faq.length > 0 && tour.faq.some(f => f.question && f.answer) && (
-                <div id="section-faq" className="mt-12 mb-8 scroll-mt-24">
+                <div id="section-faq" className="mt-20 mb-12 scroll-mt-24">
                   {/* Header */}
-                  <div className="flex flex-col items-center text-center mb-10">
-                    <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4">
-                      <span className="material-symbols-outlined text-[14px]">help</span>
-                      Have Questions?
+                  <div className="flex flex-col items-center text-center mb-12">
+                    <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-[0.2em] mb-4">
+                      <span className="material-symbols-outlined text-[16px]">help</span>
+                      Tour Queries
                     </span>
-                    <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white">Frequently Asked Questions</h2>
-                    <p className="text-slate-500 mt-2 text-base">Everything you need to know before booking your trip.</p>
+                    <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Got Questions? We Have Answers.</h2>
+                    <p className="text-slate-500 mt-3 text-lg max-w-2xl mx-auto italic font-medium">Everything you need to know before embarking on your Beautiful India journey.</p>
                   </div>
 
                   {/* Accordion */}
-                  <div className="max-w-3xl mx-auto flex flex-col gap-3">
+                  <div className="max-w-3xl mx-auto flex flex-col gap-4">
                     {tour.faq.filter(f => f.question && f.answer).map((item, idx) => (
                       <div
                         key={idx}
-                        className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                        className={`rounded-[1.5rem] border transition-all duration-500 overflow-hidden ${
                           openFaq === idx
-                            ? 'border-primary/30 bg-primary/5 shadow-md'
-                            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-primary/20'
+                            ? 'border-primary/40 bg-white dark:bg-slate-900 shadow-2xl shadow-primary/5'
+                            : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/20 hover:shadow-lg'
                         }`}
                       >
                         <button
                           onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                          className="flex justify-between items-center w-full px-6 py-5 text-left focus:outline-none"
+                          className="flex justify-between items-center w-full px-8 py-6 text-left focus:outline-none group"
                         >
-                          <div className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                              openFaq === idx ? 'bg-primary text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                          <div className="flex items-center gap-5">
+                            <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 font-black text-xs ${
+                              openFaq === idx ? 'bg-primary text-white scale-110 shadow-lg shadow-primary/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:bg-primary/10 group-hover:text-primary'
                             }`}>
-                              <span className="text-sm font-black">{idx + 1}</span>
+                              Q
                             </div>
-                            <span className="text-slate-800 dark:text-slate-100 font-bold text-base leading-snug">{item.question}</span>
+                            <span className={`dark:text-slate-100 font-extrabold text-lg transition-colors duration-300 ${openFaq === idx ? 'text-primary' : 'text-slate-800'}`}>{item.question}</span>
                           </div>
-                          <span className={`material-symbols-outlined text-xl shrink-0 ml-4 transition-transform duration-300 ${
-                            openFaq === idx ? 'text-primary rotate-180' : 'text-slate-400'
-                          }`}>expand_more</span>
+                          <div className={`w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center transition-all duration-500 ${
+                            openFaq === idx ? 'bg-primary border-primary text-white rotate-180' : 'text-slate-400'
+                          }`}>
+                            <span className="material-symbols-outlined text-[20px]">expand_more</span>
+                          </div>
                         </button>
-                        {openFaq === idx && (
-                          <div className="px-6 pb-5 pl-[72px] text-slate-600 dark:text-slate-400 text-sm leading-relaxed border-t border-primary/10 pt-4">
-                            {item.answer}
+                        <div className={`transition-all duration-500 ease-in-out px-8 ${
+                          openFaq === idx ? 'pb-8 opacity-100 max-h-[500px]' : 'max-h-0 opacity-0 pointer-events-none'
+                        }`}>
+                          <div className="flex gap-5 border-t border-slate-50 dark:border-slate-800 pt-6">
+                            <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-black text-xs">
+                              A
+                            </div>
+                            <p className="text-slate-600 dark:text-slate-400 text-[15px] leading-relaxed font-medium">
+                              {item.answer}
+                            </p>
                           </div>
-                        )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -942,46 +952,53 @@ const TourDetailView = () => {
               )}
 
               {/* ── Traveler Reviews ── */}
-              <div className="mt-12 mb-16">
+              <div className="mt-20 mb-12">
                 {/* Header Row */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
-                  <div>
-                    <p className="text-xs font-black text-primary uppercase tracking-widest mb-1">What Travelers Say</p>
-                    <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight">Stories & Reviews</h2>
+                <div className="flex flex-col md:flex-row justify-between items-end gap-10 mb-12 pb-8 border-b border-slate-100 dark:border-slate-800">
+                  <div className="max-w-xl">
+                    <span className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest mb-4">
+                      Authentic Stories
+                    </span>
+                    <h2 className="text-3xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tight leading-none">Traveler Reviews</h2>
+                    <p className="text-slate-500 mt-4 text-lg font-medium italic leading-relaxed">Discover why over 40,000 travelers trust us with their dream holidays to Beautiful India.</p>
                   </div>
                   {/* Rating Badge */}
-                  <div className="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 shadow-sm">
-                    <div className="text-center">
-                      <p className="text-3xl font-black text-slate-800 dark:text-white leading-none">4.9</p>
-                      <div className="flex text-amber-400 mt-0.5 justify-center">{'★★★★★'.split('').map((s, i) => <span key={i} className="text-base">{s}</span>)}</div>
+                  <div className="flex items-center gap-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl px-8 py-5 shadow-2xl shadow-primary/5">
+                    <div className="text-center group">
+                      <p className="text-5xl font-black text-slate-900 dark:text-white leading-none mb-1 group-hover:scale-110 transition-transform">4.9</p>
+                      <div className="flex text-amber-400 mt-1 justify-center gap-0.5">{'★★★★★'.split('').map((s, i) => <span key={i} className="text-xl drop-shadow-sm">{s}</span>)}</div>
                     </div>
-                    <div className="w-px h-10 bg-slate-200" />
-                    <div>
-                      <p className="text-sm font-black text-slate-700 dark:text-slate-200">Excellent</p>
-                      <p className="text-xs text-slate-400 font-semibold mt-0.5">Based on {reviews.filter(r => r.tourId === tour.id).length || 2} reviews</p>
+                    <div className="w-px h-16 bg-slate-200 dark:bg-slate-700" />
+                    <div className="flex flex-col gap-1">
+                      <p className="text-lg font-black text-primary uppercase tracking-wider">Exceptional</p>
+                      <p className="text-xs text-slate-400 font-bold">Based on {reviews.filter(r => r.tourId === tour.id).length || 24} Verified Reviews</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Review Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {reviews.filter(r => r.tourId === tour.id).length > 0 ? (
                     reviews.filter(r => r.tourId === tour.id).map((review) => (
-                      <div key={review.id} className="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex flex-col gap-4">
-                        {/* Quote mark */}
-                        <span className="text-5xl text-primary/10 font-black leading-none -mb-2 select-none">"</span>
-                        <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm flex-1">{review.comment}</p>
-                        <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
-                          <div className="flex items-center gap-3">
-                            <img src={review.userImage} alt={review.userName} className="w-10 h-10 rounded-xl object-cover shadow" />
+                      <div key={review.id} className="group bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative flex flex-col gap-6">
+                        {/* Quote mark icon */}
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center -mt-12 mb-2 shadow-lg shadow-white dark:shadow-slate-900 ring-8 ring-white dark:ring-slate-950">
+                           <span className="material-symbols-outlined text-primary text-2xl">format_quote</span>
+                        </div>
+                        <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-base font-medium flex-1">
+                          "{review.comment}"
+                        </p>
+                        <div className="flex items-center justify-between pt-6 border-t border-slate-50 dark:border-slate-800">
+                          <div className="flex items-center gap-4">
+                            <img src={review.userImage || 'https://i.pravatar.cc/150?u=raman'} alt={review.userName} className="w-12 h-12 rounded-2xl object-cover shadow-md border border-white dark:border-slate-800 ring-2 ring-primary/5" />
                             <div>
-                              <p className="font-black text-slate-800 dark:text-slate-100 text-sm">{review.userName}</p>
-                              <div className="flex text-amber-400 text-[11px]">
-                                {Array.from({ length: review.rating }).map((_, i) => <span key={i}>★</span>)}
+                              <p className="font-black text-slate-900 dark:text-white text-[15px]">{review.userName}</p>
+                              <div className="flex text-amber-400 text-[10px] mt-0.5">
+                                {Array.from({ length: review.rating || 5 }).map((_, i) => <span key={i} className="drop-shadow-sm">★</span>)}
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1 text-emerald-500 text-[10px] font-black uppercase">
+                          <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-[11px] font-black uppercase tracking-widest px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/20 rounded-md">
                             <span className="material-symbols-outlined text-[14px]">verified</span>
                             Verified
                           </div>
@@ -989,16 +1006,17 @@ const TourDetailView = () => {
                       </div>
                     ))
                   ) : (
-                    [1, 2].map(i => (
-                      <div key={i} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 animate-pulse">
-                        <div className="h-4 bg-slate-100 rounded w-3/4 mb-3" />
-                        <div className="h-4 bg-slate-50 rounded w-full mb-2" />
-                        <div className="h-4 bg-slate-50 rounded w-5/6 mb-6" />
-                        <div className="flex items-center gap-3 pt-4 border-t border-slate-50">
-                          <div className="w-10 h-10 bg-slate-100 rounded-xl" />
-                          <div className="space-y-1.5">
-                            <div className="h-3 w-20 bg-slate-100 rounded" />
-                            <div className="h-2.5 w-16 bg-slate-50 rounded" />
+                    [1, 2, 3].map(i => (
+                      <div key={i} className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 animate-pulse">
+                         <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full mb-6" />
+                        <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4 mb-3" />
+                        <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-full mb-2" />
+                        <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-5/6 mb-8" />
+                        <div className="flex items-center gap-4 pt-6 border-t border-slate-50 dark:border-slate-800">
+                          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-2xl" />
+                          <div className="space-y-2">
+                            <div className="h-3 w-24 bg-slate-100 dark:bg-slate-800 rounded" />
+                            <div className="h-2 w-16 bg-slate-50 dark:bg-slate-800/50 rounded" />
                           </div>
                         </div>
                       </div>
@@ -1007,14 +1025,34 @@ const TourDetailView = () => {
                 </div>
 
                 {/* CTA */}
-                <div className="mt-10 text-center">
+                <div className="mt-16 text-center">
                   <Link
                     to={`/account/review?tourId=${tour.id}&tourName=${encodeURIComponent(tour.title)}`}
-                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-white border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-900 rounded-xl font-black text-slate-700 dark:text-slate-300 hover:border-primary hover:text-primary dark:hover:text-primary transition-all shadow-sm text-xs uppercase tracking-widest"
+                    className="inline-flex items-center gap-3 px-10 py-5 bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] font-black text-slate-800 dark:text-white hover:border-primary hover:text-primary dark:hover:text-primary transition-all shadow-xl hover:shadow-primary/10 text-sm uppercase tracking-[0.15em]"
                   >
-                    <span className="material-symbols-outlined text-[16px]">rate_review</span>
-                    Write a Review
+                    <span className="material-symbols-outlined">rate_review</span>
+                    Share Your Experience
                   </Link>
+                </div>
+              </div>
+
+              {/* ── Confidence Bar (Trust Signals) ── */}
+              <div className="mt-8 mb-20">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-8 bg-[#006D77]/5 dark:bg-slate-900 border border-[#006D77]/10 dark:border-slate-800 rounded-[2.5rem]">
+                  {[
+                    { icon: 'verified_user', title: 'Verified Experts', desc: '100% Genuine Local Agents' },
+                    { icon: 'shield_lock', title: 'Safe & Secure', desc: 'ISO Certified Payments' },
+                    { icon: 'stars', title: 'Best Price Today', desc: 'Cheaper than Direct Booking' },
+                    { icon: 'support_agent', title: '24/7 Support', desc: 'Round-the-clock Assistant' },
+                  ].map((signal, idx) => (
+                    <div key={idx} className="flex flex-col items-center text-center group cursor-default">
+                       <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center text-[#006D77] dark:text-primary mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                         <span className="material-symbols-outlined text-3xl font-light">{signal.icon}</span>
+                       </div>
+                       <h5 className="font-black text-slate-800 dark:text-white text-sm mb-1">{signal.title}</h5>
+                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-bold italic tracking-tight">{signal.desc}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
