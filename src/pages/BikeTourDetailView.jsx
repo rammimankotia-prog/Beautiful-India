@@ -13,6 +13,7 @@ const BikeTourDetailView = () => {
     const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('overview');
     const [showStickyNav, setShowStickyNav] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     const fetchTour = async () => {
         setLoading(true);
@@ -69,6 +70,9 @@ const BikeTourDetailView = () => {
 
     useEffect(() => {
         const handleScroll = () => {
+            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const currentScroll = window.scrollY;
+            setScrollProgress((currentScroll / totalScroll) * 100);
             setShowStickyNav(window.scrollY > 500);
         };
         window.addEventListener('scroll', handleScroll);
@@ -105,30 +109,42 @@ const BikeTourDetailView = () => {
 
     return (
         <div className="bg-white dark:bg-slate-950 min-h-screen pb-40">
-            {/* Sticky Pricing Navigation Bar (Desktop/Tablet Only) */}
-            <div className={`fixed top-0 inset-x-0 h-24 bg-white/90 dark:bg-slate-900/95 backdrop-blur-3xl border-b border-slate-100 dark:border-white/5 z-50 flex items-center transition-all duration-700 ease-in-out md:translate-y-0 ${showStickyNav ? 'translate-y-0 opacity-100 invisible md:visible' : '-translate-y-full opacity-0 invisible'}`}>
-                <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full flex items-center justify-between">
+            <div className={`fixed top-0 inset-x-0 h-20 z-50 transition-all duration-700 ease-in-out hidden md:block ${showStickyNav ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+                {/* Visual Glassmorphism Backdrop */}
+                <div className="absolute inset-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-2xl border-b border-slate-200/50 dark:border-white/10 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)]"></div>
+                
+                {/* Dynamic Scroll Progress Accent */}
+                <div 
+                    className="absolute top-0 left-0 h-[3px] bg-gradient-to-r from-primary to-emerald-400 transition-all duration-200 ease-out z-10" 
+                    style={{ width: `${scrollProgress}%` }}
+                ></div>
+
+                <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 h-full w-full flex items-center justify-between">
                     <div className="flex flex-col">
-                        <span className="text-[10px] font-black text-primary uppercase tracking-[4px] mb-1">Bike Expedition</span>
-                        <h3 className="text-xl font-serif font-black text-slate-900 dark:text-white truncate max-w-[300px] lg:max-w-md">{tour.title}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                            <span className="text-[10px] font-black text-primary uppercase tracking-[4px]">Bike Expedition</span>
+                        </div>
+                        <h3 className="text-xl font-serif font-black text-slate-900 dark:text-white truncate max-w-[300px] lg:max-w-md italic tracking-tight">{tour.title}</h3>
                     </div>
-                    <div className="flex items-center gap-10">
+                    <div className="flex items-center gap-12">
                         <div className="hidden lg:flex flex-col items-end">
-                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Adventure starts at</span>
+                            <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none mb-1.5">Adventure starts at</span>
                             <div className="flex items-baseline gap-1.5 text-slate-900 dark:text-white">
                                 <span className="text-sm font-light text-primary -mb-1 translate-y-[2px]">₹</span>
                                 <span className="text-3xl font-black tabular-nums tracking-tighter leading-none">
                                     {tour.pricing?.perPerson?.toLocaleString() || '39,000'}
                                 </span>
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1.5 opacity-60">/ person</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1.5 opacity-80">/ person</span>
                             </div>
                         </div>
                         <button 
                             onClick={() => setIsQueryModalOpen(true)}
-                            className="px-8 py-3.5 bg-primary text-white rounded-full font-black uppercase text-[10px] tracking-[3px] shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                            className="group relative px-10 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-2xl font-black uppercase text-[10px] tracking-[3px] shadow-2xl shadow-black/10 hover:shadow-primary/40 transition-all overflow-hidden flex items-center gap-3"
                         >
-                            Reserve My Slot
-                            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary via-emerald-400 to-primary bg-[length:200%_100%] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <span className="relative z-10 group-hover:text-white transition-colors">Reserve Your Slot</span>
+                            <span className="relative z-10 material-symbols-outlined text-sm group-hover:translate-x-1 group-hover:text-white transition-all">arrow_forward</span>
                         </button>
                     </div>
                 </div>
