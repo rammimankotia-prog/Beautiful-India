@@ -400,6 +400,52 @@ const AdminPilgrimageTourForm = () => {
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
                 .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+
+                /* ── Visual (Aesthetics) Editor Typography ── */
+                .pk-visual-editor { font-family: 'Georgia', serif; color: #374151; line-height: 1.85; }
+                .pk-visual-editor:focus { outline: none; }
+
+                /* Headings */
+                .pk-visual-editor h1 { font-size: 2rem;    font-weight: 900; line-height: 1.2; margin: 1.6rem 0 0.8rem; color: #0f172a; letter-spacing: -0.02em; border-bottom: 3px solid #e5e7eb; padding-bottom: 0.4rem; }
+                .pk-visual-editor h2 { font-size: 1.5rem;   font-weight: 800; line-height: 1.3; margin: 1.4rem 0 0.6rem; color: #1e293b; }
+                .pk-visual-editor h3 { font-size: 1.2rem;   font-weight: 700; line-height: 1.4; margin: 1.2rem 0 0.5rem; color: #334155; }
+                .pk-visual-editor h4 { font-size: 1rem;     font-weight: 700; line-height: 1.4; margin: 1rem   0 0.4rem; color: #475569; }
+
+                /* Body */
+                .pk-visual-editor p  { margin: 0 0 1rem; }
+                .pk-visual-editor p:last-child { margin-bottom: 0; }
+
+                /* Lists */
+                .pk-visual-editor ul  { list-style: disc   outside; padding-left: 1.6rem; margin: 0.75rem 0 1rem; }
+                .pk-visual-editor ol  { list-style: decimal outside; padding-left: 1.6rem; margin: 0.75rem 0 1rem; }
+                .pk-visual-editor li  { margin-bottom: 0.35rem; line-height: 1.75; }
+
+                /* Blockquote */
+                .pk-visual-editor blockquote { border-left: 4px solid #f97316; padding: 0.6rem 1.2rem; margin: 1.25rem 0; background: #fff7ed; border-radius: 0 12px 12px 0; color: #9a3412; font-style: italic; }
+
+                /* Inline */
+                .pk-visual-editor strong { font-weight: 800; color: #0f172a; }
+                .pk-visual-editor em     { font-style: italic; color: #4b5563; }
+                .pk-visual-editor u     { text-decoration: underline; text-underline-offset: 3px; }
+                .pk-visual-editor a     { color: #f97316; text-decoration: underline; font-weight: 600; }
+                .pk-visual-editor a:hover { color: #ea580c; }
+
+                /* Code */
+                .pk-visual-editor code { font-family: 'JetBrains Mono', monospace; background: #f1f5f9; color: #0f172a; padding: 2px 6px; border-radius: 6px; font-size: 0.85em; }
+
+                /* HR */
+                .pk-visual-editor hr { border: none; border-top: 2px solid #e5e7eb; margin: 1.5rem 0; }
+
+                /* Dark mode overrides */
+                .dark .pk-visual-editor { color: #cbd5e1; }
+                .dark .pk-visual-editor h1 { color: #f8fafc; border-color: #334155; }
+                .dark .pk-visual-editor h2 { color: #f1f5f9; }
+                .dark .pk-visual-editor h3 { color: #e2e8f0; }
+                .dark .pk-visual-editor h4 { color: #cbd5e1; }
+                .dark .pk-visual-editor strong { color: #f8fafc; }
+                .dark .pk-visual-editor blockquote { background: #431407; border-color: #ea580c; color: #fed7aa; }
+                .dark .pk-visual-editor code { background: #1e293b; color: #e2e8f0; }
+                .dark .pk-visual-editor hr { border-color: #334155; }
             `}</style>
             {/* Header section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
@@ -557,12 +603,13 @@ const AdminPilgrimageTourForm = () => {
                                     placeholder="<!-- Begin writing your sacred story here... -->"
                                 />
                             ) : (
-                                <div 
+                                <div
                                     ref={editorRef}
                                     contentEditable
                                     onInput={handleVisualInput}
-                                    className="w-full min-h-[500px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 outline-none focus:ring-4 focus:ring-primary/5 transition-all prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 shadow-inner"
+                                    className="pk-visual-editor w-full min-h-[500px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 transition-all shadow-inner overflow-auto"
                                     suppressContentEditableWarning
+                                    data-placeholder="Start composing the yatra story here…"
                                 />
                             )}
                         </div>
