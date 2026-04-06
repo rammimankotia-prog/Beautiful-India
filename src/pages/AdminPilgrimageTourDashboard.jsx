@@ -42,15 +42,13 @@ const AdminPilgrimageTourDashboard = () => {
         if (!window.confirm('Are you absolutely sure you want to permanently delete this Pilgrimage Yatra?')) return;
         
         try {
-            const existingTour = tours.find(t => t.slug === slug);
-            if (!existingTour) return;
+            // Filter out the tour to delete
+            const updatedTours = tours.filter(t => t.slug !== slug);
 
-            // Mark as trashed instead of hard delete, or pass DELETE method. 
-            // The API supports DELETE.
             const response = await fetch(`${import.meta.env.BASE_URL}api-save-pk-pilgrimages.php`, {
-                method: 'DELETE',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ slug })
+                body: JSON.stringify(updatedTours)
             });
 
             if (!response.ok) throw new Error('Delete failed');
@@ -65,11 +63,17 @@ const AdminPilgrimageTourDashboard = () => {
         const newStatus = tour.status === 'publish' ? 'draft' : 'publish';
         
         try {
-            const updatedTour = { ...tour, status: newStatus, lastModified: new Date().toISOString() };
+            // Update the specific tour in the array
+            const updatedTours = tours.map(t => 
+                t.slug === tour.slug 
+                ? { ...t, status: newStatus, lastModified: new Date().toISOString() } 
+                : t
+            );
+
             const response = await fetch(`${import.meta.env.BASE_URL}api-save-pk-pilgrimages.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedTour)
+                body: JSON.stringify(updatedTours)
             });
 
             if (!response.ok) throw new Error('Status update failed');
@@ -163,8 +167,8 @@ const AdminPilgrimageTourDashboard = () => {
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-6">
                                                     <div className="w-24 h-16 bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow border-2 border-white dark:border-slate-700">
-                                                        {tour.tour_gallery && tour.tour_gallery[0] ? (
-                                                            <img src={tour.tour_gallery[0]} alt={tour.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                                        {tour.gallery && tour.gallery[0] ? (
+                                                            <img src={tour.gallery[0]} alt={tour.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                                         ) : (
                                                             <div className="w-full h-full flex items-center justify-center">
                                                                 <span className="material-symbols-outlined text-slate-300">temple_hindu</span>

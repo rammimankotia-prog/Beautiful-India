@@ -43,6 +43,25 @@ const AdminPilgrimageTourForm = () => {
         }
     }, [user, navigate]);
 
+    const mapNestedToFlatten = (nested) => ({
+        ...initialFormState,
+        id: nested.id,
+        title: nested.title,
+        slug: nested.slug,
+        content: nested.content?.visual_html || '',
+        status: nested.status,
+        tour_destination: nested.taxonomies?.destination ? [nested.taxonomies.destination] : [],
+        tour_type: nested.taxonomies?.type ? [nested.taxonomies.type] : [],
+        tour_price_single: nested.meta?.price_single || '',
+        tour_price_couple: nested.meta?.price_couple || '',
+        tour_price_group: nested.meta?.price_group || '',
+        tour_dates_ongoing: nested.meta?.is_ongoing ? 'true' : 'false',
+        tour_city_path: nested.meta?.city_path || '',
+        tour_gallery: nested.gallery || [],
+        tour_itinerary: nested.itinerary || [],
+        created: nested.createdAt
+    });
+
     useEffect(() => {
         if (slug) {
             setLoading(true);
@@ -50,7 +69,7 @@ const AdminPilgrimageTourForm = () => {
                 .then(res => res.json())
                 .then(data => {
                     const found = data.find(t => t.slug === slug);
-                    if (found) setFormData({ ...initialFormState, ...found });
+                    if (found) setFormData(mapNestedToFlatten(found));
                 })
                 .catch(err => console.error(err))
                 .finally(() => setLoading(false));
@@ -175,6 +194,39 @@ const AdminPilgrimageTourForm = () => {
     };
 
     // --- Save ---
+    const mapFlattenToNested = (flat) => ({
+        id: flat.id || `pk_${Date.now()}`,
+        slug: flat.slug,
+        title: flat.title,
+        status: flat.status,
+        createdAt: flat.created || new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+        taxonomies: {
+            destination: Array.isArray(flat.tour_destination) ? flat.tour_destination[0] || '' : (flat.tour_destination || ''),
+            type: Array.isArray(flat.tour_type) ? flat.tour_type[0] || '' : (flat.tour_type || '')
+        },
+        meta: {
+            price_single: flat.tour_price_single,
+            price_couple: flat.tour_price_couple,
+            price_group: flat.tour_price_group,
+            dates: (flat.tour_dates_start && flat.tour_dates_end) ? `${flat.tour_dates_start} - ${flat.tour_dates_end}` : '',
+            is_ongoing: flat.tour_dates_ongoing === 'true',
+            city_path: flat.tour_city_path,
+            batch_status: flat.status === 'publish' ? 'Open' : 'Draft'
+        },
+        seo: {
+            meta_title: flat.title,
+            meta_description: (flat.content || '').replace(/<[^>]*>?/gm, '').substring(0, 160)
+        },
+        content: {
+            visual_html: flat.content,
+            raw_html: flat.content
+        },
+        gallery: flat.tour_gallery,
+        featuredImage: flat.tour_gallery[0] || '',
+        itinerary: flat.tour_itinerary
+    });
+
     const handleSave = async () => {
         if (!formData.title || !formData.slug) {
             alert('Title and slug are required.');
@@ -183,19 +235,36 @@ const AdminPilgrimageTourForm = () => {
 
         setSaving(true);
         try {
-            const dataToSave = {
-                ...formData,
-                lastModified: new Date().toISOString(),
-                created: formData.created || new Date().toISOString()
-            };
+            // 1. Fetch current database
+            const resFetch = await fetch(`${import.meta.env.BASE_URL}data/pk_pilgrimage_tours.json?t=${Date.now()}`);
+            let currentTours = [];
+            if (resFetch.ok) {
+                currentTours = await resFetch.json();
+            }
 
-            const res = await fetch(`${import.meta.env.BASE_URL}api-save-pk-pilgrimages.php`, {
+            // 2. Prepare nested tour data
+            const nestedTour = mapFlattenToNested(formData);
+
+            // 3. Merge into array
+            let updatedTours;
+            const existingIndex = currentTours.findIndex(t => t.slug === (slug || formData.slug));
+            
+            if (existingIndex > -1) {
+                updatedTours = [...currentTours];
+                updatedTours[existingIndex] = nestedTour;
+            } else {
+                updatedTours = [...currentTours, nestedTour];
+            }
+
+            // 4. Save entire array
+            const resSave = await fetch(`${import.meta.env.BASE_URL}api-save-pk-pilgrimages.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataToSave)
+                body: JSON.stringify(updatedTours)
             });
 
-            if (!res.ok) throw new Error('Failed to save data');
+            if (!resSave.ok) throw new Error('Failed to save data');
+            
             alert('Yatra saved successfully!');
             navigate('/admin/pilgrimages');
         } catch (error) {
