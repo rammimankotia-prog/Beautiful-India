@@ -677,15 +677,15 @@ const TourDetailView = () => {
                         Customize & Get Quotes
                       </button>
                       <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-4">
-                         <h4 className="text-[13px] font-extrabold text-[#0a6c75] mb-4 uppercase tracking-tighter">Next Scheduled Departure</h4>
+                         <h4 className="text-[13px] font-extrabold text-[#0a6c75] mb-4 uppercase tracking-tighter">Essential Information</h4>
                          <div className="space-y-4">
                             <div className="flex items-center gap-3">
                                <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
-                                  <span className="material-symbols-outlined text-primary">calendar_month</span>
+                                  <span className="material-symbols-outlined text-primary">sunny</span>
                                </div>
                                <div>
-                                  <p className="text-[11px] text-slate-500 font-bold uppercase">Dates</p>
-                                  <p className="text-sm font-black text-slate-800 dark:text-slate-100 italic">Oct 15 - Oct 21, 2026</p>
+                                  <p className="text-[11px] text-slate-500 font-bold uppercase">Best Time To Visit</p>
+                                  <p className="text-sm font-black text-slate-800 dark:text-slate-100 italic">{tour.bestTimeToVisit || 'Year-round'}</p>
                                </div>
                             </div>
                             <div className="flex items-center gap-3">
