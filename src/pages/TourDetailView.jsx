@@ -4,6 +4,29 @@ import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
+/* ─────────────────────────────────────────────
+   Format Content Helper (Consistent with Guides)
+───────────────────────────────────────────── */
+const formatContent = (content) => {
+  if (!content) return '';
+  if (/<(p|div|h[1-6]|ul|ol|li|blockquote|section|article|span)/i.test(content)) {
+    return content;
+  }
+  return content
+    .split(/\n\s*\n/)
+    .map((para) => {
+      let text = para.trim();
+      if (!text) return '';
+      text = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br />');
+      if (text.startsWith('>')) return `<blockquote>${text.substring(1).trim()}</blockquote>`;
+      return `<p>${text}</p>`;
+    })
+    .join('');
+};
+
 /**
  * Auto-generated from: tour_detail_view/code.html
  * Group: tours | Path: /tours/detail
@@ -433,9 +456,10 @@ const TourDetailView = () => {
                   {/* Description */}
                   <div className="prose prose-lg dark:prose-invert  text-text-secondary-light dark:text-text-secondary-dark leading-relaxed">
                     <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Overview</h3>
-                    <p className="mb-4">
-                      {tour.description}
-                    </p>
+                    <div 
+                      className="mb-4"
+                      dangerouslySetInnerHTML={{ __html: formatContent(tour.description) }} 
+                    />
                     <p>
                       Embark on an unforgettable journey specifically designed for the discerning traveler. Our {tour.duration} {tour.title} package combines thrilling activities with hand-picked premium accommodations. From the moment you arrive, every detail is taken care of by our professional guides.
                     </p>
@@ -477,7 +501,7 @@ const TourDetailView = () => {
                               <h4 className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mb-1">
                                 Day {item.day}: {item.title}
                               </h4>
-                              <p className="text-text-secondary-light dark:text-text-secondary-dark leading-relaxed">{item.description}</p>
+                              <div className="text-text-secondary-light dark:text-text-secondary-dark leading-relaxed prose prose-sm dark:prose-invert" dangerouslySetInnerHTML={{ __html: formatContent(item.description) }} />
                             </div>
                           </div>
                         );
