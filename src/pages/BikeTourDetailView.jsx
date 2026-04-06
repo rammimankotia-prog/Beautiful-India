@@ -12,7 +12,6 @@ const BikeTourDetailView = () => {
     const [loading, setLoading] = useState(true);
     const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('overview');
-    const [relatedTours, setRelatedTours] = useState([]);
     const [showStickyNav, setShowStickyNav] = useState(false);
 
     const fetchTour = async () => {
@@ -41,19 +40,6 @@ const BikeTourDetailView = () => {
                 
                 // Schema injection is now handled by Helmet in render
 
-                // Fetch related tours (same type or destination)
-                const relatedUrl = isDev 
-                    ? `/api/v1/bike-tours?tourType=${data.tourType}` 
-                    : `/data/bike-tours.json?t=${Date.now()}`;
-
-                const relatedRes = await fetch(relatedUrl);
-                if (relatedRes.ok) {
-                    let relatedData = await relatedRes.json();
-                    if (!isDev) {
-                        relatedData = relatedData.filter(t => t.tourType === data.tourType && t.slug !== slug && t.status === 'active');
-                    }
-                    setRelatedTours(relatedData.slice(0, 3));
-                }
             }
         } catch (err) {
             console.error('Fetch error:', err);
@@ -418,37 +404,6 @@ const BikeTourDetailView = () => {
                     </div>
                 </div>
 
-                {/* Related Voyages */}
-                {relatedTours.length > 0 && (
-                    <section className="mt-40 pt-40 border-t border-slate-100 dark:border-slate-800 space-y-16">
-                        <div className="flex justify-between items-end">
-                            <div className="space-y-4">
-                                <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">Discover More</h2>
-                                <h3 className="text-5xl font-serif font-black leading-tight">Similar <span className="text-primary italic">Expeditions</span></h3>
-                            </div>
-                            <Link to="/tours/bike-tours" className="px-10 py-4 border border-slate-200 dark:border-slate-800 rounded-full text-[10px] font-black uppercase tracking-[4px] hover:bg-slate-900 hover:text-white transition-all">View All Voyages</Link>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                            {relatedTours.map((t, index) => (
-                                <Link 
-                                    key={t._id} 
-                                    to={`/tours/bike-tours/${t.slug}`} 
-                                    className="group space-y-6"
-                                >
-                                    <div className="aspect-[16/10] rounded-[40px] overflow-hidden shadow-xl group-hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] transition-all duration-700">
-                                        <img src={t.mainImage} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" />
-                                    </div>
-                                    <div className="space-y-2 px-4">
-                                        <p className="text-primary text-[10px] font-black uppercase tracking-[4px]">{t.destination}</p>
-                                        <h4 className="text-2xl font-serif font-black text-slate-800 dark:text-white group-hover:text-primary transition-colors">{t.title}</h4>
-                                        <p className="text-slate-400 font-black text-xs">₹{t.pricing?.perPerson?.toLocaleString() || 'Custom'}</p>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </section>
-                )}
             </main>
 
             {/* Mobile Sticky Bottom Booking Bar */}
