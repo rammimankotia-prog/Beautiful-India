@@ -258,20 +258,7 @@ const AdminOverviewDashboard = () => {
 
                 {/* Quick Shortcuts */}
                 <div className="space-y-8">
-                    <div className="bg-slate-900 p-8 rounded-[40px] text-white shadow-2xl relative overflow-hidden group">
-                        <div className="relative z-10">
-                            <h3 className="text-xl font-black mb-2 uppercase tracking-tight">System Growth</h3>
-                            <p className="text-slate-400 text-xs font-bold mb-8 italic">You've hit 92% of your monthly engagement target!</p>
-                            <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden mb-4">
-                                <div className="bg-[#0a6c75] h-full w-[92%] rounded-full shadow-[0_0_15px_rgba(10,108,117,0.5)] transition-all"></div>
-                            </div>
-                            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
-                                <span>Performance</span>
-                                <span className="text-white">92%</span>
-                            </div>
-                        </div>
-                        <span className="material-symbols-outlined absolute -bottom-10 -right-10 text-white/5 text-[220px] select-none group-hover:scale-110 transition-transform duration-700">insights</span>
-                    </div>
+
 
                     <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
                         <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest mb-6">Quick Actions</h3>
