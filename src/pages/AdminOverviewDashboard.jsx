@@ -74,45 +74,93 @@ const AdminOverviewDashboard = () => {
                 });
 
                 const allActivity = [
-                    ...bookings.map(b => ({
-                        id: `b-${b.id}`,
-                        type: 'booking',
-                        title: `New Booking: ${b.tourTitle || 'Package'}`,
-                        user: b.customerName || 'Explorer',
-                        time: b.date || b.timestamp,
-                        icon: 'shopping_cart',
-                        color: 'bg-emerald-500'
-                    })),
-                    ...leads.map(l => ({
-                        id: `l-${l.id}`,
-                        type: 'lead',
-                        title: `Lead Inquiry: ${l.to || 'General'}`,
-                        user: l.name,
-                        time: l.createdAt || l.timestamp,
-                        icon: 'contact_support',
-                        color: 'bg-blue-500'
-                    })),
+                    ...bookings.map(b => {
+                        let type = 'booking';
+                        let icon = 'shopping_cart';
+                        let color = 'bg-emerald-500';
+                        let titlePrefix = 'New Booking';
+
+                        if (b.tourTitle?.toLowerCase().includes('bike')) {
+                            type = 'bike';
+                            icon = 'motorcycle';
+                            color = 'bg-orange-500';
+                            titlePrefix = 'Bike Tour Booking';
+                        } else if (b.tourTitle?.toLowerCase().includes('pilgrimage')) {
+                            type = 'pilgrimage';
+                            icon = 'temple_hindu';
+                            color = 'bg-amber-600';
+                            titlePrefix = 'Pilgrimage Booking';
+                        } else if (b.id?.toString().startsWith('TRN') || b.tourTitle?.toLowerCase().includes('train')) {
+                            type = 'train_booking';
+                            icon = 'train';
+                            color = 'bg-blue-600';
+                            titlePrefix = 'Train Booking';
+                        }
+
+                        return {
+                            id: `b-${b.id}`,
+                            type,
+                            title: `${titlePrefix}: ${b.tourTitle || 'Package'}`,
+                            user: b.customerName || 'Explorer',
+                            time: b.date || b.timestamp,
+                            icon,
+                            color
+                        };
+                    }),
+                    ...leads.map(l => {
+                        let type = 'lead';
+                        let icon = 'contact_support';
+                        let color = 'bg-blue-500';
+                        let title = `Lead Inquiry: ${l.to || 'General'}`;
+
+                        if (l.source === 'Wanderbot' || l.source === 'Chatbot') {
+                            type = 'chatbot';
+                            icon = 'smart_toy';
+                            color = 'bg-purple-500';
+                            title = 'Chatbot Query';
+                        } else if (l.to?.toLowerCase().includes('bike')) {
+                            type = 'bike_inquiry';
+                            icon = 'motorcycle';
+                            color = 'bg-orange-400';
+                            title = `Bike Trip Inquiry`;
+                        } else if (l.to?.toLowerCase().includes('pilgrimage')) {
+                            type = 'pilgrimage_inquiry';
+                            icon = 'temple_hindu';
+                            color = 'bg-amber-500';
+                            title = `Pilgrimage Inquiry`;
+                        }
+
+                        return {
+                            id: `l-${l.id}`,
+                            type,
+                            title,
+                            user: l.name || 'Anonymous',
+                            time: l.createdAt || l.timestamp,
+                            icon,
+                            color
+                        };
+                    }),
                     ...reviews.map(r => ({
                         id: `r-${r.id}`,
                         type: 'review',
                         title: `New ${r.rating}★ Review`,
-                        user: r.userName,
-                        time: r.createdAt,
+                        user: r.userName || 'Verified Traveler',
+                        time: r.createdAt || r.timestamp,
                         icon: 'grade',
-                        color: 'bg-amber-500'
+                        color: 'bg-amber-400'
                     })),
                     ...trainQueries.map(t => ({
                         id: `t-${t.id}`,
                         type: 'train',
-                        title: `Train Inquiry: ${t.journeyDetails?.fromStation} to ${t.journeyDetails?.toStation}`,
-                        user: t.passengers?.[0]?.firstName || 'Guest',
-                        time: t.timestamp,
+                        title: `Train Query: ${t.from} ➔ ${t.to}`,
+                        user: t.name || 'Passenger',
+                        time: t.createdAt || t.timestamp,
                         icon: 'train',
-                        color: 'bg-orange-500'
+                        color: 'bg-indigo-500'
                     }))
-                ];
+                ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 10);
 
-                setActivities(allActivity.sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 10));
+                setActivities(allActivity);
                 setLoading(false);
             } catch (error) {
                 console.error("Dashboard fetch error:", error);

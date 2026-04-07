@@ -1,0 +1,47 @@
+[
+  {
+    "id": "4",
+    "createdAt": "2026-03-10T10:46:03.378Z",
+    "status": "New",
+    "name": "Chitra Dorbi",
+    "email": "chitradorbi@gmail.com",
+    "phone": "8810522089",
+    "from": "New Delhi",
+    "to": "Kashmir",
+    "departureType": "fixed",
+    "departureDate": "2026-02-10",
+    "duration": "6 Days",
+    "travelers": "2 Adults, 0 Kids",
+    "hotelRating": "3 Star",
+    "foodPreference": "Non-Veg",
+    "cabPreference": "Private",
+    "timestamp": "2026-03-10T10:46:03.364Z"
+  },
+  {
+    "id": "4",
+    "createdAt": "2026-03-11T10:08:19.324Z",
+    "status": "New",
+    "emailSent": true,
+    "source": "Wanderbot",
+    "timestamp": "2026-03-11T10:08:19.281Z"
+  },
+  {
+    "id": "3",
+    "createdAt": "2026-03-11T06:37:29.713Z",
+    "status": "New",
+    "emailSent": true,
+    "name": "Lisa",
+    "email": "Lisaenn63@gmail.com",
+    "phone": "8860081990",
+    "from": "Delhi",
+    "to": "Kashmir",
+    "departureType": "fixed",
+    "departureDate": "2026-03-26",
+    "duration": "10 Days",
+    "travelers": "2 Adults, 0 Kids",
+    "hotelRating": "4 Star",
+    "foodPreference": "Non-Veg",
+    "cabPreference": "Private",
+    "timestamp": "2026-03-11T06:37:29.692Z"
+  }
+]
