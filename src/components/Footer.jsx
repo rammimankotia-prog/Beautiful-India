@@ -69,8 +69,7 @@ const Footer = () => {
         { label: "Chennai", dest: "Chennai" }
     ];
     const domPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
-    const intPackages = ["1 to 3 Days Honeymoon Packages", "4 to 6 Days Honeymoon Packages", "7 to 9 Days Honeymoon Packages", "10 to 12 Days Honeymoon Packages"];
-    const blogs = Array.from({length: 20}, (_, i) => (i + 1).toString());
+
 
     return (
         <footer className="bg-[#2c3238] font-sans text-white border-t-4 border-red-600 mt-auto">
@@ -166,18 +165,7 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* International Packages */}
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
-                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">International Packages</span>
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
-                            {international.map((dest, i) => (
-                                <React.Fragment key={i}>
-                                    <Link to={`/${dest.slug}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{dest.label}</Link>
-                                    {i < international.length - 1 && <span className="text-gray-700">|</span>}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    </div>
+
 
                     {/* Bicycle Tours */}
                     <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
@@ -219,18 +207,7 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Blogs */}
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 text-[11px] bg-[#343a40]/50 p-4 rounded-xl border border-white/5 shadow-sm">
-                        <span className="font-bold text-white min-w-[160px] uppercase tracking-wider text-[10px] text-red-500">Explore Travel Blogs</span>
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1">
-                            {blogs.map((num, i) => (
-                                <React.Fragment key={i}>
-                                    <Link to={`/blog/post-${num}`} className="text-gray-400 hover:text-white whitespace-nowrap transition-colors">{num}</Link>
-                                    {i < blogs.length - 1 && <span className="text-gray-700">|</span>}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    </div>
+
                 </div>
                 
                 {/* Logo, Copyright & Sitemap */}
