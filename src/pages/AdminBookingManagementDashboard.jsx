@@ -17,6 +17,7 @@ const AdminBookingManagementDashboard = () => {
   };
   const [sortConfig, setSortConfig] = React.useState({ key: 'id', direction: 'desc' });
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [selectedBooking, setSelectedBooking] = React.useState(null);
   const itemsPerPage = 10;
   const { formatPrice } = useCurrency();
 
@@ -258,8 +259,11 @@ const AdminBookingManagementDashboard = () => {
                   <td className="px-8 py-6 text-[11px] font-black text-slate-400">{b.date}</td>
                   <td className="px-8 py-6 font-black text-slate-800 dark:text-slate-100">{formatPrice(b.amount, true)}</td>
                   <td className="px-8 py-6 text-right">
-                    <div className="flex justify-end gap-2 text-slate-200 group-hover:text-slate-400 hover:text-slate-600 transition-colors">
-                      <button onClick={() => handleDelete(b.id)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100">
+                    <div className="flex justify-end gap-2 text-slate-300 group-hover:text-slate-400 hover:text-slate-600 transition-colors">
+                      <button onClick={() => setSelectedBooking(b)} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-teal-50 hover:text-teal-600 transition-all border border-transparent hover:border-teal-100" title="View Booking">
+                        <span className="material-symbols-outlined text-[20px]">visibility</span>
+                      </button>
+                      <button onClick={() => { handleDelete(b.id); setSelectedBooking(null); }} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-100" title="Delete Booking">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </div>
@@ -293,6 +297,83 @@ const AdminBookingManagementDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* View Booking Modal */}
+      {selectedBooking && (
+        <div className="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-lg flex flex-col overflow-hidden max-h-[90vh] border border-slate-200">
+            <div className="px-8 py-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#0a6c75]/10 text-[#0a6c75] rounded-full flex items-center justify-center">
+                  <span className="material-symbols-outlined">receipt_long</span>
+                </div>
+                <div>
+                  <h3 className="font-black text-xl text-slate-800">Booking Details</h3>
+                  <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">#{selectedBooking.id}</p>
+                </div>
+              </div>
+              <button onClick={() => setSelectedBooking(null)} className="text-slate-400 hover:text-slate-600 transition-colors w-10 h-10 bg-white rounded-full flex justify-center items-center shadow-sm border border-slate-200">
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-6">
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4 shadow-sm">
+                 <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                    <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">Customer Name</span>
+                    <span className="text-sm font-black text-slate-800">{selectedBooking.customerName}</span>
+                 </div>
+                 <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                    <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">Email</span>
+                    <span className="text-sm font-bold text-slate-600">{selectedBooking.customerEmail}</span>
+                 </div>
+                 <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                    <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">Tour Package</span>
+                    <span className="text-sm font-black text-[#0a6c75] text-right ml-4">{selectedBooking.tourTitle}</span>
+                 </div>
+                 <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                    <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">Booking Date</span>
+                    <span className="text-sm font-bold text-slate-600">{selectedBooking.date}</span>
+                 </div>
+                 <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                    <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">Amount</span>
+                    <span className="text-sm font-black text-slate-800">{formatPrice(selectedBooking.amount, true)}</span>
+                 </div>
+                 <div className="flex justify-between items-center pt-1">
+                    <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">Status</span>
+                    <select 
+                      value={selectedBooking.status}
+                      onChange={(e) => {
+                        handleStatusUpdate(selectedBooking.id, e.target.value);
+                        setSelectedBooking({ ...selectedBooking, status: e.target.value });
+                      }}
+                      className="bg-white border border-slate-200 px-3 py-1.5 rounded-lg outline-none focus:border-[#0a6c75] font-black text-slate-700 text-xs shadow-sm cursor-pointer"
+                    >
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                 </div>
+              </div>
+            </div>
+            
+            <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+              <button 
+                onClick={() => { handleDelete(selectedBooking.id); setSelectedBooking(null); }} 
+                className="px-6 py-2.5 bg-red-50 text-red-500 font-black uppercase tracking-widest text-[11px] rounded-xl flex items-center gap-2 hover:bg-red-100 transition-all border border-red-100"
+              >
+                <span className="material-symbols-outlined text-[16px]">delete</span> Delete Booking
+              </button>
+              <button 
+                onClick={() => setSelectedBooking(null)} 
+                className="px-6 py-2.5 bg-slate-900 text-white font-black uppercase tracking-widest text-[11px] rounded-xl flex items-center gap-2 hover:bg-black transition-all shadow-lg"
+              >
+                Close Window
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
