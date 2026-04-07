@@ -16,7 +16,8 @@ import {
   Code,
   Eye,
   EyeOff,
-  ExternalLink
+  ExternalLink,
+  Sparkles
 } from 'lucide-react';
 
 const slugify = (text) => {
