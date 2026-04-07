@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "slug": "exploring-varanasi-spiritual-heart-india",
+    "title": "Exploring Varanasi: The Spiritual Heart of India",
+    "excerpt": "Discover the ancient city of Varanasi, where spirituality meets timeless traditions along the sacred Ganges.",
+    "content": "Varanasi, also known as Kashi, is one of the oldest continuously inhabited cities in the world and a major spiritual hub for Hindus. Located on the banks of the River Ganges in Uttar Pradesh, this sacred city draws millions of pilgrims and seekers each year.",
+    "image": "varanasi-blog.jpg",
+    "date": "2026-02-15",
+    "author": "Priya Sharma"
+  },
+  {
+    "id": 2,
+    "slug": "royal-heritage-rajasthan",
+    "title": "Royal Heritage of Rajasthan: A Journey Through Time",
+    "excerpt": "From majestic forts to vibrant bazaars, explore the royal legacy of India's most colorful state.",
+    "content": "Rajasthan, the Land of Kings, is a treasure trove of India's rich heritage. With its imposing forts, ornate palaces, and vibrant culture, this northwestern state offers a glimpse into the opulent lifestyle of India's royal past.",
+    "image": "rajasthan-blog.jpg",
+    "date": "2026-02-10",
+    "author": "Raj Malhotra"
+  },
+  {
+    "id": 3,
+    "slug": "kerala-backwaters-tranquil-escape",
+    "title": "Kerala Backwaters: A Tranquil Escape",
+    "excerpt": "Cruise through the serene backwaters of Kerala and experience God's Own Country like never before.",
+    "content": "The backwaters of Kerala are a network of lagoons and lakes lying parallel to the Arabian Sea. A houseboat cruise through these tranquil waters offers a unique perspective on the lush green landscapes and traditional village life of Kerala.",
+    "image": "kerala-blog.jpg",
+    "date": "2026-02-05",
+    "author": "Anita Menon"
+  },
+  {
+    "id": 4,
+    "slug": "trekking-ladakh-himalayas",
+    "title": "Trekking in Ladakh: Conquering the Himalayas",
+    "excerpt": "An adventure seeker's guide to exploring the breathtaking landscapes of Ladakh.",
+    "content": "Ladakh, the land of high passes, is a paradise for adventure enthusiasts and nature lovers alike. From challenging mountain passes to pristine lakes, this region in Jammu and Kashmir offers some of the most spectacular trekking routes in the world.",
+    "image": "ladakh-blog.jpg",
+    "date": "2026-01-28",
+    "author": "Vikram Singh"
+  },
+  {
+    "id": 5,
+    "slug": "golden-triangle-india-beginners",
+    "title": "Golden Triangle India: A Beginner's Guide",
+    "excerpt": "Everything you need to know about India's most popular tourist circuit.",
+    "content": "The Golden Triangle—comprising Delhi, Agra, and Jaipur—is the perfect introduction to India for first-time visitors. This iconic circuit covers some of the country's most famous landmarks, including the Taj Mahal, Amber Fort, and Qutub Minar.",
+    "image": "golden-triangle-blog.jpg",
+    "date": "2026-01-20",
+    "author": "Priya Sharma"
+  }
+]

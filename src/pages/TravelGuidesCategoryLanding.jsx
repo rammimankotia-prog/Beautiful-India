@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 /**
  * Auto-generated from: travel_guides_category_landing/code.html
@@ -133,6 +133,11 @@ const TravelGuidesCategoryLanding = () => {
 
   return (
     <div data-page="travel_guides_category_landing" style={{ fontFamily: "'Inter', 'Segoe UI', sans-serif" }}>
+      <SEO 
+        title="Travel Guides - Expert Tips and Destination Insights"
+        description="Explore our curated travel guides for expert tips, destination insights, and travel inspiration across India and beyond."
+        keywords="Travel Guides, India Travel Tips, Destination Insights, Bharat Darshan Guides"
+      />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 

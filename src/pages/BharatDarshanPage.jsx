@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 import { Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import SEO from '../components/SEO';
 import categoriesData from '../data/categories.json';
 
 const destinations = [
@@ -287,16 +287,12 @@ const BharatDarshanPage = () => {
 
   return (
     <main className="font-sans bg-[#f8fafc]">
-      <Helmet>
-        <title>Bharat Darshan - Explore the Incredible Soul of India | Tours & Packages</title>
-        <meta name="description" content="Discover India's beauty with Bharat Darshan. Curated tour packages for Himachal, Kashmir, Rajasthan, Kerala, and more. 100% customizable trips to India's top destinations." />
-        <meta name="keywords" content="Bharat Darshan, India Tours, Tour Packages India, Travel India, Himachal Tours, Rajasthan Packages, Kerala Backwaters, Incredible India" />
-        <meta property="og:title" content="Bharat Darshan - Discover the Soul of India" />
-        <meta property="og:description" content="Explore expertly curated tour packages for every Indian state. From the Himalayas to coastal beaches, plan your perfect trip with Bharat Darshan." />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80" />
-        <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://rammimankotia-prog.github.io/Beautiful-India" />
-      </Helmet>
+      <SEO 
+        title="Explore India's Beauty - Curated Tour Packages"
+        description="Discover the incredible beauty of Bharat with our handpicked tour packages. From Himalayan peaks to Kerala's backwaters, experience India like never before."
+        keywords="Bharat Darshan, India Tour Packages, Travel India, Incredible India, Domestic Tours, Himalayan Expeditions, Kerala Tourism"
+        image="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80"
+      />
 
       {/* ── Hero (TravelTriangle-style with Animations) ── */}
       <style>{`

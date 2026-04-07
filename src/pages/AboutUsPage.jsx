@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 /* ── animated counter hook ── */
 const useCounter = (target, duration = 2000, start = false) => {

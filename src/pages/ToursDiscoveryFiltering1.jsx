@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
 
@@ -522,6 +523,11 @@ const ToursDiscoveryFiltering1 = () => {
 
     return (
         <div data-page="tours_discovery_filtering_1" className="min-h-screen bg-[#f6f8f8]">
+            <SEO 
+                title={pageTitle}
+                description={`Discover the best tour packages for ${pageTitle.replace(' Tour Packages', '')}. Handpicked experiences, best prices guaranteed, and expert support.`}
+                keywords={`${pageTitle}, India Tours, Travel Packages, Bharat Darshan`}
+            />
 
             {/* ── Hero ──────────────────────────────────────────────────────── */}
             <section className="relative h-[220px] md:h-[320px] flex items-end overflow-hidden bg-slate-700">

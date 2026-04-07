@@ -5,6 +5,7 @@ import { useData } from '../context/DataContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ConsultSpecialistModal from '../components/ConsultSpecialistModal';
 import BikeTourMap from '../components/BikeTourMap';
+import SEO from '../components/SEO';
 
 /* ─────────────────────────────────────────────
    Format Content Helper (Consistent with Guides)
@@ -232,6 +233,16 @@ const TourDetailView = () => {
 
   return (
     <div data-page="tour_detail_view" className="bg-white dark:bg-slate-950">
+      {tour && (
+        <SEO 
+          title={`${tour.title} - ${tour.duration} Tour Package`}
+          description={tour.description ? tour.description.substring(0, 160).replace(/<[^>]*>/g, '') + '...' : `Explore ${tour.title} with our custom tour package.`}
+          keywords={`${tour.title}, ${tour.destination}, ${tour.stateRegion}, India Tour, Travel Package`}
+          image={tour.image || (tour.images && tour.images[0])}
+          type="article"
+          schema={tour.schemaSnippet}
+        />
+      )}
       {/* ── Fixed Scroll-Only Sub-Navigation ── */}
       <div className={`fixed top-0 left-0 right-0 z-[100] bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-lg hidden md:flex items-center justify-between px-6 lg:px-20 py-3 transition-all duration-500 ease-in-out ${
         showStickyNav ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'

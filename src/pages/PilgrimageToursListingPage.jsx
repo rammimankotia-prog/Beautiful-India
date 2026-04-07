@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const PilgrimageCard = ({ tour, index }) => {
     // Generate urgency badge based on ongoing or dates
@@ -175,6 +176,11 @@ const PilgrimageToursListingPage = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
+            <SEO 
+                title={filters.destination ? `${filters.destination} Yatras - Sacred Pilgrimage Tours` : "Sacred Yatras - Spiritual Pilgrimage Tours in India"}
+                description="Embark on a divine journey across India's most holy destinations. Hand-picked spiritual experiences with expert guidance and premium care."
+                keywords="Pilgrimage Tours, Sacred Yatras, Spiritual Travel India, Chardham Yatra, Kashi Yatra"
+            />
             {/* Spiritual Hero Section */}
             <header className="relative h-[60vh] flex items-center justify-center overflow-hidden bg-orange-950">
                 <div className="absolute inset-0 z-0">

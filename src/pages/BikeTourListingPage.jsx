@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const BikeTourCard = ({ tour, index }) => {
     return (
@@ -121,6 +122,11 @@ const BikeTourListingPage = () => {
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-slate-950 pb-40">
+            <SEO 
+                title={filters.destination ? `Motorbike Tours in ${filters.destination}` : "Motorbike Tours - Premium Riding Expeditions"}
+                description={`Premium motorbike expeditions through India's most breathtaking landscapes. From Himalayan peaks to tropical shores, discover the art of adventure.`}
+                keywords="Motorbike Tours, Riding Expeditions, Adventure Tours India, Bike Trips Bharat Darshan"
+            />
             {/* Cinematic Hero */}
             <header className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-slate-900">
                 <div className="absolute inset-0 z-0">

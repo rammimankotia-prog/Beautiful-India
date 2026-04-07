@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
 
@@ -207,6 +208,11 @@ const ToursByTrain = () => {
 
     return (
         <div className="min-h-screen bg-[#f8fafc]">
+            <SEO 
+                title="Train Tours - Iconic Rail Journeys Across India"
+                description="Discover the soul of Bharat through iconic rail journeys. From luxury trains to scenic coastal routes, experience India like never before."
+                keywords="Train Tours India, Rail Journeys, Luxury Trains India, Bharat Darshan by Train"
+            />
             {/* ── Hero ──────────────────────────────────────────────────────── */}
             <section className="relative h-[250px] md:h-[400px] flex items-end overflow-hidden bg-slate-900">
                 <img

@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import SEO from '../components/SEO';
 import {
   Calendar,
   Clock,
@@ -374,21 +373,13 @@ const GuideDetailView = () => {
   ═══════════════════════════════════════════════ */
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen transition-colors duration-500 overflow-x-hidden">
-      <Helmet>
-        <title>{guide.seoTitle || `${guide.title} | The Beautiful India`}</title>
-        <meta name="description" content={guide.metaDescription || guide.description || guide.title} />
-        <meta property="og:title" content={guide.seoTitle || guide.title} />
-        <meta property="og:image" content={guide.image} />
-        <meta property="og:url" content={pageUrl} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={guide.seoTitle || guide.title} />
-        <meta name="twitter:image" content={guide.image} />
-        {guide.schemaSnippet && (
-          <script type="application/ld+json">
-            {guide.schemaSnippet}
-          </script>
-        )}
-      </Helmet>
+      <SEO 
+        title={guide.seoTitle || guide.title}
+        description={guide.metaDescription || guide.description || guide.title}
+        image={guide.image}
+        url={pageUrl}
+        schema={guide.schemaSnippet}
+      />
 
       {/* Scroll Progress Bar */}
       <div className="scroll-progress"></div>
