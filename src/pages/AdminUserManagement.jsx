@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 const AdminUserManagement = () => {
-  const { allUsers, updateUserStatus, deleteUser, user: currentUser } = useAuth();
+  const { allUsers, updateUserStatus, deleteUser, createUser, user: currentUser } = useAuth();
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newUserData, setNewUserData] = useState({ name: '', email: '', password: '' });
+  const [addError, setAddError] = useState('');
 
   // Guard: Only master admin can see this page
   if (currentUser?.role !== 'master_admin') {
@@ -104,12 +107,103 @@ const AdminUserManagement = () => {
     </div>
   );
 
+  const handleAddUser = (e) => {
+    e.preventDefault();
+    setAddError('');
+    const res = createUser(newUserData.name, newUserData.email, newUserData.password);
+    if (res.success) {
+      setShowAddModal(false);
+      setNewUserData({ name: '', email: '', password: '' });
+    } else {
+      setAddError(res.message);
+    }
+  };
+
   return (
     <div className="p-6 lg:p-10 max-w-[1200px] mx-auto space-y-10 animate-in fade-in duration-500">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Admin User Management</h1>
-        <p className="text-slate-500 dark:text-slate-400 font-bold italic">Review and manage access for administrative staff.</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Admin User Management</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-bold italic">Review and manage access for administrative staff.</p>
+        </div>
+        <button 
+          onClick={() => setShowAddModal(true)}
+          className="flex items-center gap-2 px-6 py-3 bg-[#0a6c75] text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-teal-900/10 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+        >
+          <span className="material-symbols-outlined text-[20px]">person_add</span>
+          Add New Staff
+        </button>
       </div>
+
+      {/* Add User Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-[32px] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300">
+            <button 
+              onClick={() => setShowAddModal(false)}
+              className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+
+            <div className="mb-8">
+              <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Create Staff Account</h2>
+              <p className="text-slate-500 text-sm font-bold italic">This user will have immediate approved access.</p>
+            </div>
+
+            <form onSubmit={handleAddUser} className="space-y-5">
+              {addError && (
+                <div className="p-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-xs font-black text-center animate-pulse">
+                  {addError}
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                <input 
+                  type="text" 
+                  required
+                  value={newUserData.name}
+                  onChange={e => setNewUserData({...newUserData, name: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#0a6c75]/20"
+                  placeholder="e.g. Rahul Singh"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                <input 
+                  type="email" 
+                  required
+                  value={newUserData.email}
+                  onChange={e => setNewUserData({...newUserData, email: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#0a6c75]/20"
+                  placeholder="name@example.com"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Temporary Password</label>
+                <input 
+                  type="password" 
+                  required
+                  value={newUserData.password}
+                  onChange={e => setNewUserData({...newUserData, password: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#0a6c75]/20"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full py-4 bg-[#0a6c75] text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg shadow-teal-900/10 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+              >
+                Create Account
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       <UserTable users={pendingUsers} title="Pending Approvals" type="pending" />
       <UserTable users={approvedUsers} title="Approved Staff" type="approved" />

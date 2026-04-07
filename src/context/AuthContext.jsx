@@ -66,12 +66,9 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'Invalid password.' };
       }
       
-      // Allow pending users to login (for immediate access as requested)
-      /*
       if (existingUser.status === 'pending') {
         return { success: false, message: 'Your account is pending approval from the Master Admin.' };
       }
-      */
       
       if (existingUser.status === 'rejected') {
         return { success: false, message: 'Your access has been rejected by the Master Admin.' };
@@ -81,20 +78,47 @@ export const AuthProvider = ({ children }) => {
       return { success: true, message: 'Welcome back!' };
     }
 
-    // 3. New user registration (simplified as part of login for this mock)
-    // In a real app, this would be a separate SignUp function
+    return { success: false, message: 'Invalid credentials. Please request an account if you are new.' };
+  };
+
+  const signup = (name, email, password) => {
+    const existingUser = allUsers.find(u => u.email === email);
+    if (existingUser || email === MASTER_ADMIN_EMAIL) {
+      return { success: false, message: 'An account with this email already exists.' };
+    }
+
     const newUser = {
-      name: email.split('@')[0],
+      name: name,
       email: email,
       password: password,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}&backgroundColor=c0aede`,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}&backgroundColor=c0aede`,
       role: 'admin',
-      status: 'approved', // Default to approved for immediate access
+      status: 'pending',
       requestedAt: new Date().toISOString()
     };
     
     setAllUsers(prev => [...prev, newUser]);
-    return { success: false, message: 'Account created! Please wait for Master Admin approval.' };
+    return { success: true, message: 'Request sent successfully!' };
+  };
+
+  const createUser = (name, email, password) => {
+    const existingUser = allUsers.find(u => u.email === email);
+    if (existingUser || email === MASTER_ADMIN_EMAIL) {
+      return { success: false, message: 'Account already exists.' };
+    }
+
+    const newUser = {
+      name: name,
+      email: email,
+      password: password,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}&backgroundColor=d1d4f9`,
+      role: 'admin',
+      status: 'approved',
+      requestedAt: new Date().toISOString()
+    };
+    
+    setAllUsers(prev => [...prev, newUser]);
+    return { success: true, message: 'User created successfully!' };
   };
 
   const logout = () => {
@@ -110,7 +134,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, allUsers, login, logout, updateUserStatus, deleteUser }}>
+    <AuthContext.Provider value={{ user, allUsers, login, logout, signup, createUser, updateUserStatus, deleteUser }}>
       {children}
     </AuthContext.Provider>
   );
