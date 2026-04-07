@@ -39,7 +39,13 @@ const AdminArticleManagementDashboard = () => {
           const valB = b.lastModified || b.date || '';
           const dateA = new Date(valA).getTime() || 0;
           const dateB = new Date(valB).getTime() || 0;
-          return dateB - dateA;
+          
+          if (dateA !== dateB) return dateB - dateA;
+          
+          // Fallback to ID sorting (descending) if dates are equal or missing
+          const idA = String(a.id || '');
+          const idB = String(b.id || '');
+          return idB.localeCompare(idA, undefined, { numeric: true, sensitivity: 'base' });
         });
         setGuides(sorted);
         setDataSource('server');
@@ -199,6 +205,7 @@ const AdminArticleManagementDashboard = () => {
                 <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Article</th>
                 <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Category</th>
                 <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Stats</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Date</th>
                 <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
                 <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Actions</th>
               </tr>
@@ -235,6 +242,16 @@ const AdminArticleManagementDashboard = () => {
                     <div className="flex flex-col gap-1">
                       <span className="text-[11px] font-bold text-slate-500">{guide.readTime || '5 min'} read</span>
                       <span className="text-[9px] font-black text-slate-300 uppercase">{guide.type || 'Inspiration'}</span>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6">
+                    <div className="flex flex-col">
+                      <span className="text-[11px] font-black text-slate-700 dark:text-slate-200">
+                        {guide.lastModified ? new Date(guide.lastModified).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : (guide.date || 'No Date')}
+                      </span>
+                      {guide.lastModified && (
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Updated</span>
+                      )}
                     </div>
                   </td>
                   <td className="px-8 py-6 text-right">

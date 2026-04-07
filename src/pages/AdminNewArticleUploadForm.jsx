@@ -213,7 +213,7 @@ const AdminNewArticleUploadForm = () => {
 
   useEffect(() => {
     if (id) {
-      // 1. Fetch source of truth from server only (Absolute Path)
+      // 1. Fetch source of truth from server (Absolute Path)
       fetch(`/data/guides.json?t=${Date.now()}`, {
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -366,9 +366,9 @@ const AdminNewArticleUploadForm = () => {
       // 1. Fetch current live guides to ensure we don't drop other articles
       let currentGuides = [];
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+        const res = await fetch(`/data/guides.json?t=${Date.now()}`, {
           headers: {
-            'Cache-Control': 'no-cache',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',
             'Expires': '0'
           }

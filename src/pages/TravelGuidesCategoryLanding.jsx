@@ -19,8 +19,8 @@ const TravelGuidesCategoryLanding = () => {
   const TIPS_PER_PAGE = 5;
 
   useEffect(() => {
-    // 1. Fetch Master List from Server with cache-busting
-    fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+    // 1. Fetch Master List from Server with cache-busting (Absolute Path)
+    fetch(`/data/guides.json?t=${Date.now()}`, {
       headers: {
         'Cache-Control': 'no-cache',
         'Pragma': 'no-cache',
@@ -35,7 +35,13 @@ const TravelGuidesCategoryLanding = () => {
           const valB = b.lastModified || b.date || '';
           const dateA = new Date(valA).getTime() || 0;
           const dateB = new Date(valB).getTime() || 0;
-          return dateB - dateA;
+          
+          if (dateA !== dateB) return dateB - dateA;
+          
+          // Fallback to ID sorting (descending) if dates are equal or missing
+          const idA = String(a.id || '');
+          const idB = String(b.id || '');
+          return idB.localeCompare(idA, undefined, { numeric: true, sensitivity: 'base' });
         });
         setGuides(sorted);
         setIsLoaded(true);
@@ -45,8 +51,8 @@ const TravelGuidesCategoryLanding = () => {
         setIsLoaded(true);
       });
 
-    // 2. Fetch Tours List for Sidebar
-    fetch(`${import.meta.env.BASE_URL}data/tours.json?t=${Date.now()}`)
+    // 2. Fetch Tours List for Sidebar (Absolute Path)
+    fetch(`/data/tours.json?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         const activeTours = data.filter(t => t.status === 'active');
