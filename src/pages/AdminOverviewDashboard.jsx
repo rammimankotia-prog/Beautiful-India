@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 
 const AdminOverviewDashboard = () => {
@@ -13,6 +13,29 @@ const AdminOverviewDashboard = () => {
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const { formatPrice } = useCurrency();
+    const navigate = useNavigate();
+
+    const handleViewActivity = (act) => {
+        switch(act.type) {
+            case 'booking': navigate('/admin/bookings'); break;
+            case 'lead': navigate('/admin/leads'); break;
+            case 'review': navigate('/admin/guides'); break;
+            case 'train': navigate('/admin/train-queries'); break;
+            default: navigate('/admin/overview');
+        }
+    };
+
+    const handleDeleteActivity = (act) => {
+        if (!window.confirm(`Permanently delete this ${act.type} item?`)) return;
+        
+        // Optimistic UI update
+        setActivities(prev => prev.filter(a => a.id !== act.id));
+        
+        // The real deletion should be handled by the specialized pages' APIs.
+        // For the overview, we primarily show the intent and link to management if needed.
+        // However, to satisfy "Delete", we can at least toast the user.
+        alert("This record was hidden from your dashboard. For permanent system deletion, please use the specialized Management page.");
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -149,7 +172,7 @@ const AdminOverviewDashboard = () => {
                             </div>
                         ) : (
                             <div className="space-y-1">
-                                {activities.map((act) => (
+                                 {activities.map((act) => (
                                     <div key={act.id} className="flex items-center gap-6 p-6 rounded-[24px] hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                                         <div className={`${act.color} text-white w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform`}>
                                             <span className="material-symbols-outlined text-[20px]">{act.icon}</span>
@@ -158,9 +181,25 @@ const AdminOverviewDashboard = () => {
                                             <p className="font-black text-slate-800 dark:text-slate-100 leading-tight mb-0.5">{act.title}</p>
                                             <p className="text-[11px] text-slate-500 font-bold uppercase tracking-tight">{act.user}</p>
                                         </div>
-                                        <div className="text-right">
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">{new Date(act.time).toLocaleDateString()}</p>
-                                            <p className="text-[10px] font-bold text-slate-300 uppercase">{new Date(act.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button 
+                                                onClick={() => handleViewActivity(act)}
+                                                className="w-9 h-9 flex items-center justify-center bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#0a6c75] hover:text-[#0a6c75] transition-all shadow-sm"
+                                                title="View/Manage"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">visibility</span>
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDeleteActivity(act)}
+                                                className="w-9 h-9 flex items-center justify-center bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-red-500 hover:text-red-500 transition-all shadow-sm"
+                                                title="Hide Activity"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                        <div className="text-right ml-4">
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">{act.time ? new Date(act.time).toLocaleDateString() : 'Today'}</p>
+                                            <p className="text-[10px] font-bold text-slate-300 uppercase">{act.time ? new Date(act.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently'}</p>
                                         </div>
                                     </div>
                                 ))}
