@@ -44,7 +44,7 @@ const GiftCardPurchaseConfirmed = lazy(() => import('./pages/GiftCardPurchaseCon
 const MemberOnlyExclusiveTourEmail = lazy(() => import('./pages/MemberOnlyExclusiveTourEmail'));
 const ReferralCreditAppliedNotification = lazy(() => import('./pages/ReferralCreditAppliedNotification'));
 const ReferralInviteEmailTemplate = lazy(() => import('./pages/ReferralInviteEmailTemplate'));
-const ReferralRewardsDashboard = lazy(() => import('./pages/ReferralRewardsDashboard'));
+
 const ReferralRewardMilestonePopUp = lazy(() => import('./pages/ReferralRewardMilestonePopUp'));
 const ReferAFriendRewards = lazy(() => import('./pages/ReferAFriendRewards'));
 const SavedTripsWishlist = lazy(() => import('./pages/SavedTripsWishlist'));
@@ -165,7 +165,7 @@ export const routes = [
   { path: '/emails/member-offer', element: Loadable(MemberOnlyExclusiveTourEmail)() },
   { path: '/referral/credit-applied', element: Loadable(ReferralCreditAppliedNotification)() },
   { path: '/emails/referral-invite', element: Loadable(ReferralInviteEmailTemplate)() },
-  { path: '/referral/dashboard', element: Loadable(ReferralRewardsDashboard)() },
+
   { path: '/referral/milestone', element: Loadable(ReferralRewardMilestonePopUp)() },
   { path: '/referral', element: Loadable(ReferAFriendRewards)() },
   { path: '/account/wishlist', element: Loadable(SavedTripsWishlist)() },
