@@ -89,13 +89,13 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center px-4 py-10 sm:p-0">
+    <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={onClose}></div>
 
-      <div className="relative w-full max-w-5xl bg-white dark:bg-slate-900 rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden animate-in zoom-in slide-in-from-bottom duration-700 max-h-[90vh] flex flex-col lg:flex-row">
+      <div className="relative w-full max-w-5xl bg-white dark:bg-slate-900 rounded-t-[2.5rem] sm:rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden animate-in zoom-in slide-in-from-bottom duration-700 h-[92vh] sm:h-auto sm:max-h-[90vh] flex flex-col lg:flex-row">
         
         {/* Left Side: Persona & Trust */}
-        <div className="lg:w-2/5 bg-slate-900 relative overflow-hidden flex flex-col min-h-[300px]">
+        <div className="lg:w-2/5 bg-slate-900 relative overflow-hidden flex flex-col min-h-[220px] lg:min-h-[300px]">
             <div className="absolute inset-0 opacity-40">
                 <img 
                     src="https://images.unsplash.com/photo-1551028150-64b9f398f678?auto=format&fit=crop&q=80" 
@@ -139,8 +139,8 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
         </div>
 
         {/* Right Side: High-End Intake Form */}
-        <div className="lg:w-3/5 flex flex-col bg-white dark:bg-slate-950 relative">
-            <div className="p-8 sm:p-14 flex-1 overflow-y-auto no-scrollbar">
+        <div className="lg:w-3/5 flex flex-col bg-white dark:bg-slate-950 relative overflow-hidden">
+            <div className="p-6 sm:p-14 flex-1 overflow-y-auto custom-scrollbar">
                 <button 
                   onClick={onClose}
                   className="absolute top-8 right-8 w-12 h-12 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-500 hover:scale-110 transition-all z-20"
@@ -164,18 +164,18 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
                   </div>
                 ) : (
                    <form onSubmit={handleSubmit} className="space-y-10">
-                      <div className="space-y-3">
-                         <div className="flex items-center gap-3">
-                            <div className="h-0.5 w-10 bg-primary opacity-30"></div>
-                            <span className="text-[10px] font-black uppercase tracking-[6px] text-primary">Your Journey Starts Here</span>
-                         </div>
-                         <h3 className="text-4xl sm:text-5xl font-serif font-black text-slate-900 dark:text-white tracking-tighter leading-none italic">
-                            Begin Curating <br />Your <span className="text-primary not-italic">Expedition.</span>
-                         </h3>
-                         <p className="text-slate-500 font-medium italic text-sm">
-                            Customizing details for: <span className="text-slate-900 dark:text-white font-black uppercase tracking-[3px] ml-1">{tourTitle || topic}</span>
-                         </p>
-                      </div>
+                       <div className="space-y-3">
+                          <div className="flex items-center gap-3">
+                             <div className="h-0.5 w-10 bg-primary opacity-30"></div>
+                             <span className="text-[10px] font-black uppercase tracking-[6px] text-primary">Your Journey Starts Here</span>
+                          </div>
+                          <h3 className="text-3xl sm:text-5xl font-serif font-black text-slate-900 dark:text-white tracking-tighter leading-none italic">
+                             Begin Curating <br />Your <span className="text-primary not-italic">Expedition.</span>
+                          </h3>
+                          <p className="text-slate-500 font-medium italic text-sm">
+                             Customizing details for: <span className="text-slate-900 dark:text-white font-black uppercase tracking-[3px] ml-1">{tourTitle || topic}</span>
+                          </p>
+                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                          {/* Name Input with Deep Inset Label */}

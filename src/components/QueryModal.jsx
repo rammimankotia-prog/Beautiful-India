@@ -82,7 +82,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
@@ -90,7 +90,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
       ></div>
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] sm:max-h-[95vh] flex flex-col">
+      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-t-[2rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 h-[90vh] sm:h-auto sm:max-h-[95vh] flex flex-col">
         
         {/* Header Decor */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-teal-500 via-indigo-500 to-teal-500"></div>
