@@ -16,7 +16,7 @@ const TravelGuidesCategoryLanding = () => {
   const [destPage, setDestPage] = useState(1);
   const [tipsPage, setTipsPage] = useState(1);
   const DEST_PER_PAGE = 12;
-  const TIPS_PER_PAGE = 5;
+  const TIPS_PER_PAGE = 6;
 
   useEffect(() => {
     // 1. Fetch Master List from Server with cache-busting (Absolute Path)
