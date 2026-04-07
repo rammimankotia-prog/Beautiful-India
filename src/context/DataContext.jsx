@@ -23,8 +23,7 @@ export const DataProvider = ({ children }) => {
             };
             
             // Fetch Tours
-            const baseUrl = import.meta.env.BASE_URL || '/';
-            const toursUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/tours.json${cacheBust}`;
+            const toursUrl = `/data/tours.json${cacheBust}`;
             const toursRes = await fetch(toursUrl, fetchOptions);
             if (toursRes.ok) {
                 const toursData = await toursRes.json();
@@ -38,7 +37,7 @@ export const DataProvider = ({ children }) => {
             }
 
             // Fetch Reviews
-            const reviewsUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/reviews.json${cacheBust}`;
+            const reviewsUrl = `/data/reviews.json${cacheBust}`;
             const reviewsRes = await fetch(reviewsUrl, fetchOptions);
             if (reviewsRes.ok) {
                 const reviewsData = await reviewsRes.json();

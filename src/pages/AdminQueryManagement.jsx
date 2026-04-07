@@ -11,20 +11,44 @@ const AdminQueryManagement = () => {
   const [manageQuery, setManageQuery] = useState(null);
   const [isSavingManage, setIsSavingManage] = useState(false);
 
-  const fetchQueries = () => {
+  const [dataSource, setDataSource] = useState('loading');
+
+  const fetchQueries = async () => {
     setLoading(true);
-    fetch(`${import.meta.env.BASE_URL}api-save-leads.php`)
-      .then(res => res.json())
-      .then(data => {
+    try {
+      // Updated to absolute path with cache-busting
+      const res = await fetch(`/api-save-leads.php?t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
         // Sort by timestamp descending (newest first)
         const sortedData = Array.isArray(data) ? data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) : [];
         setQueries(sortedData);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Fetch queries error:", err);
-        setLoading(false);
-      });
+        setDataSource('server');
+        localStorage.setItem('beautifulindia_admin_leads_cache', JSON.stringify(data));
+      } else {
+        throw new Error(`Server returned ${res.status}`);
+      }
+    } catch (err) {
+      console.error("Fetch queries error:", err);
+      const saved = localStorage.getItem('beautifulindia_admin_leads_cache');
+      if (saved) {
+        const data = JSON.parse(saved);
+        const sortedData = Array.isArray(data) ? data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) : [];
+        setQueries(sortedData);
+        setDataSource('cache');
+      } else {
+        setDataSource('error');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -33,7 +57,7 @@ const AdminQueryManagement = () => {
 
   const updateQueryOnServer = async (updatedQuery) => {
     try {
-      const resp = await fetch(`${import.meta.env.BASE_URL}api-save-leads.php`, {
+      const resp = await fetch(`/api-save-leads.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedQuery)
@@ -113,9 +137,19 @@ const AdminQueryManagement = () => {
 
       <main className="max-w-[1400px] mx-auto px-8 py-10">
         <div className="flex justify-between items-end mb-10">
-          <div>
-            <h1 className="text-4xl font-black text-slate-800 tracking-tight mb-2">Customer Queries</h1>
-            <p className="text-slate-500 font-bold italic">Manage and track all quote requests from travelers.</p>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-4xl font-black text-slate-800 tracking-tight mb-0">Customer Queries</h1>
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border w-fit transition-all ${
+                dataSource === 'server' 
+                    ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                    : dataSource === 'cache'
+                    ? 'bg-amber-50 text-amber-600 border-amber-100'
+                    : 'bg-red-50 text-red-600 border-red-100'
+            }`}>
+                <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+                {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Syncing...'}
+            </div>
+            <p className="text-slate-500 font-bold italic mt-2">Manage and track all quote requests from travelers.</p>
           </div>
           <div className="flex items-center gap-4">
             <button 

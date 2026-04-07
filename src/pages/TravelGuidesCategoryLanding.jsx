@@ -29,10 +29,12 @@ const TravelGuidesCategoryLanding = () => {
     })
       .then(res => res.json())
       .then(data => {
-        // Sort newest first by date string
+        // Sort newest first: lastModified iso string first, fallback to date string
         const sorted = [...data].sort((a, b) => {
-          const dateA = a.date ? new Date(a.date) : new Date(0);
-          const dateB = b.date ? new Date(b.date) : new Date(0);
+          const valA = a.lastModified || a.date || '';
+          const valB = b.lastModified || b.date || '';
+          const dateA = new Date(valA).getTime() || 0;
+          const dateB = new Date(valB).getTime() || 0;
           return dateB - dateA;
         });
         setGuides(sorted);

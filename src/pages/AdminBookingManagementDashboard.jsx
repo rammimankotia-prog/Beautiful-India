@@ -21,29 +21,43 @@ const AdminBookingManagementDashboard = () => {
   const itemsPerPage = 10;
   const { formatPrice } = useCurrency();
 
-  const fetchBookings = () => {
-    setLoading(true);
-    const saved = localStorage.getItem('beautifulindia_admin_bookings');
-    if (saved) {
-      try {
-        setBookings(JSON.parse(saved));
-        setLoading(false);
-        return;
-      } catch (e) {
-        console.error("Parse error:", e);
-      }
-    }
+  const [dataSource, setDataSource] = React.useState('loading');
 
-    fetch(`${import.meta.env.BASE_URL}data/bookings.json`)
-      .then(res => res.json())
-      .then(data => {
-        setBookings(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Fetch bookings error:", err);
-        setLoading(false);
+  const fetchBookings = async () => {
+    setLoading(true);
+    try {
+      // Use absolute path with cache-busting
+      const res = await fetch(`/data/bookings.json?t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setBookings(data);
+        setDataSource('server');
+        // Keep a backup in localStorage for session stability
+        localStorage.setItem('beautifulindia_admin_bookings', JSON.stringify(data));
+      } else {
+        throw new Error(`Server returned ${res.status}`);
+      }
+    } catch (err) {
+      console.error("Fetch bookings error:", err);
+      // Fallback to local storage ONLY if server is down
+      const saved = localStorage.getItem('beautifulindia_admin_bookings');
+      if (saved) {
+        setBookings(JSON.parse(saved));
+        setDataSource('cache');
+        showToast("⚠️ Using local cache (Server unreachable)");
+      } else {
+        setDataSource('error');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const saveBookings = (updated) => {
@@ -170,6 +184,16 @@ const AdminBookingManagementDashboard = () => {
           <p className="text-slate-500 dark:text-slate-400 font-bold italic">Oversee and process all tour reservations.</p>
         </div>
         <div className="flex items-center gap-4">
+          <div className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2 ${
+            dataSource === 'server' 
+              ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 border-emerald-100 dark:border-emerald-900/30' 
+              : dataSource === 'cache'
+              ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 border-amber-100 dark:border-amber-900/30'
+              : 'bg-red-50 dark:bg-red-950/20 text-red-600 border-red-100 dark:border-red-900/30'
+          }`}>
+            <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+            {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Auth Error'}
+          </div>
           <button onClick={handleSync} className="flex items-center gap-2 px-6 py-2.5 bg-[#0a6c75] text-white rounded-xl font-black hover:bg-[#085a62] transition-all text-sm shadow-lg shadow-teal-900/20">
             <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
             Save to System

@@ -213,11 +213,10 @@ const AdminNewArticleUploadForm = () => {
 
   useEffect(() => {
     if (id) {
-      // 1. Fetch source of truth from server only
-      // Added cache-busting and no-cache headers to ensure we get the latest data
-      fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+      // 1. Fetch source of truth from server only (Absolute Path)
+      fetch(`/data/guides.json?t=${Date.now()}`, {
         headers: {
-          'Cache-Control': 'no-cache',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
           'Expires': '0'
         }

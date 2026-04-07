@@ -17,18 +17,36 @@ const AdminPilgrimageTourDashboard = () => {
         }
     }, [user, navigate]);
 
+    const [dataSource, setDataSource] = useState('loading');
+
     const fetchTours = async () => {
+        setLoading(true);
         try {
-            const res = await fetch(`${import.meta.env.BASE_URL}data/pk_pilgrimage_tours.json?t=${Date.now()}`);
+            // Absolute path with cache-busting
+            const res = await fetch(`/data/pk_pilgrimage_tours.json?t=${Date.now()}`, {
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
             if (res.ok) {
                 const data = await res.json();
                 setTours(data);
+                setDataSource('server');
+                localStorage.setItem('beautifulindia_admin_pilgrimage_tours', JSON.stringify(data));
             } else {
-                setTours([]);
+                throw new Error(`Server returned ${res.status}`);
             }
         } catch (error) {
             console.error('Failed to fetch pilgrimages:', error);
-            setTours([]);
+            const saved = localStorage.getItem('beautifulindia_admin_pilgrimage_tours');
+            if (saved) {
+                setTours(JSON.parse(saved));
+                setDataSource('cache');
+            } else {
+                setDataSource('error');
+            }
         } finally {
             setLoading(false);
         }
@@ -45,9 +63,9 @@ const AdminPilgrimageTourDashboard = () => {
             // Filter out the tour to delete
             const updatedTours = tours.filter(t => t.slug !== slug);
 
-            const response = await fetch(`${import.meta.env.BASE_URL}api-save-pk-pilgrimages.php`, {
+            const response = await fetch(`/api-save-pk-pilgrimages.php`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/row' },
                 body: JSON.stringify(updatedTours)
             });
 
@@ -70,7 +88,7 @@ const AdminPilgrimageTourDashboard = () => {
                 : t
             );
 
-            const response = await fetch(`${import.meta.env.BASE_URL}api-save-pk-pilgrimages.php`, {
+            const response = await fetch(`/api-save-pk-pilgrimages.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedTours)
@@ -99,9 +117,18 @@ const AdminPilgrimageTourDashboard = () => {
         <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-700">
             {/* Header section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className="text-4xl font-black text-slate-800 dark:text-white uppercase tracking-tight mb-2">Sacred Directory</h1>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold italic">Curating and managing the divine journeys of Bharat.</p>
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-4xl font-black text-slate-800 dark:text-white uppercase tracking-tight mb-0">Sacred Directory</h1>
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border w-fit transition-all ${
+                        dataSource === 'server' 
+                            ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                            : dataSource === 'cache'
+                            ? 'bg-amber-50 text-amber-600 border-amber-100'
+                            : 'bg-red-50 text-red-600 border-red-100'
+                    }`}>
+                        <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+                        {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Syncing...'}
+                    </div>
                 </div>
                 <Link 
                     to="/admin/pilgrimages/create"

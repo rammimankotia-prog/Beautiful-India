@@ -37,41 +37,53 @@ const AdminOverviewDashboard = () => {
         alert("This record was hidden from your dashboard. For permanent system deletion, please use the specialized Management page.");
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const [bookingsRes, leadsRes, reviewsRes, trainRes] = await Promise.allSettled([
-                    fetch(`${import.meta.env.BASE_URL}data/bookings.json`),
-                    fetch(`${import.meta.env.BASE_URL}data/leads.json`),
-                    fetch(`${import.meta.env.BASE_URL}data/reviews.json`),
-                    fetch(`${import.meta.env.BASE_URL}api/train-queries`)
-                ]);
+    const [dataSource, setDataSource] = useState('loading');
 
-                const getJson = async (res) => {
-                    if (res.status === 'fulfilled' && res.value.ok) {
-                        try { return await res.value.json(); } catch(e) { return []; }
-                    }
-                    return [];
-                };
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            // Updated to absolute paths with cache-busting for all data sources
+            const timestamp = Date.now();
+            const fetchOptions = {
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            };
 
-                const bookings = await getJson(bookingsRes);
-                const leads = await getJson(leadsRes);
-                const reviews = await getJson(reviewsRes);
-                
-                // trainQueries returns {success:true, data:[...]} or just array depending on backend, 
-                // but AdminTrainQueries uses it as array so we assume it might be array directly.
-                let trainQueriesRaw = await getJson(trainRes);
-                const trainQueries = Array.isArray(trainQueriesRaw) ? trainQueriesRaw : [];
+            const [bookingsRes, leadsRes, reviewsRes, trainRes] = await Promise.allSettled([
+                fetch(`/data/bookings.json?t=${timestamp}`, fetchOptions),
+                fetch(`/data/leads.json?t=${timestamp}`, fetchOptions),
+                fetch(`/data/reviews.json?t=${timestamp}`, fetchOptions),
+                fetch(`/api/train-queries?t=${timestamp}`, fetchOptions)
+            ]);
 
-                const totalRevenue = bookings.reduce((sum, b) => sum + (parseFloat(b.amount || b.price) || 0), 0);
-                setStats({
-                    totalBookings: bookings.length,
-                    totalLeads: leads.length,
-                    totalReviews: reviews.length,
-                    totalTrainQueries: trainQueries.length,
-                    revenue: totalRevenue
-                });
+            const getJson = async (res) => {
+                if (res.status === 'fulfilled' && res.value.ok) {
+                    try { return await res.value.json(); } catch(e) { return []; }
+                }
+                return [];
+            };
+
+            const bookings = await getJson(bookingsRes);
+            const leads = await getJson(leadsRes);
+            const reviews = await getJson(reviewsRes);
+            let trainQueriesRaw = await getJson(trainRes);
+            const trainQueries = Array.isArray(trainQueriesRaw) ? trainQueriesRaw : [];
+
+            const totalRevenue = bookings.reduce((sum, b) => sum + (parseFloat(b.amount || b.price) || 0), 0);
+            setStats({
+                totalBookings: bookings.length,
+                totalLeads: leads.length,
+                totalReviews: reviews.length,
+                totalTrainQueries: trainQueries.length,
+                revenue: totalRevenue
+            });
+
+            // Set data source to server if at least one critical request was ok
+            const allOk = [bookingsRes, leadsRes, reviewsRes, trainRes].some(r => r.status === 'fulfilled' && r.value.ok);
+            setDataSource(allOk ? 'server' : 'cache');
 
                 const allActivity = [
                     ...bookings.map(b => {
@@ -166,8 +178,9 @@ const AdminOverviewDashboard = () => {
                 console.error("Dashboard fetch error:", error);
                 setLoading(false);
             }
-        };
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -179,9 +192,17 @@ const AdminOverviewDashboard = () => {
                     <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Executive Overview</h1>
                     <p className="text-slate-500 dark:text-slate-400 font-bold italic">Everything you need to know today.</p>
                 </div>
-                <div className="hidden md:flex bg-white dark:bg-slate-900 px-6 py-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Systems Operational</span>
+                <div className="flex items-center gap-4">
+                    <div className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        dataSource === 'server' 
+                            ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 border-emerald-100 dark:border-emerald-900/30' 
+                            : dataSource === 'cache'
+                            ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 border-amber-100 dark:border-amber-900/30'
+                            : 'bg-red-50 dark:bg-red-950/20 text-red-600 border-red-100 dark:border-red-900/30'
+                    }`}>
+                        <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+                        {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Auth Error'}
+                    </div>
                 </div>
             </div>
 

@@ -18,17 +18,22 @@ const AdminTourManagementDashboard = () => {
     setTimeout(() => setToastMsg(''), 3000);
   };
 
+  const [dataSource, setDataSource] = React.useState('loading');
+
+  React.useEffect(() => {
+    if (!loading) {
+      setDataSource(tours.length > 0 ? 'server' : 'cache');
+    }
+  }, [loading, tours]);
+
   const fetchTours = () => {
     refreshData();
   };
 
   const persistToursToServer = async (updatedTours) => {
     try {
-      const baseUrl = import.meta.env.BASE_URL || '/';
-      const targetUrl = import.meta.env.MODE === 'development' 
-        ? '/api/save-tours' 
-        : `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}api-save-tours.php`;
-      const response = await fetch(targetUrl, {
+      // Use absolute path for reliability
+      const response = await fetch(`/api-save-tours.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTours)
@@ -76,6 +81,16 @@ const AdminTourManagementDashboard = () => {
           <p className="text-slate-500 dark:text-slate-400 font-bold italic">Create, edit and manage your beautiful India tour packages.</p>
         </div>
         <div className="flex items-center gap-4">
+          <div className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2 ${
+            dataSource === 'server' 
+              ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 border-emerald-100 dark:border-emerald-900/30' 
+              : dataSource === 'cache'
+              ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 border-amber-100 dark:border-amber-900/30'
+              : 'bg-red-50 dark:bg-red-950/20 text-red-600 border-red-100 dark:border-red-900/30'
+          }`}>
+            <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+            {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Syncing...'}
+          </div>
           <button 
             onClick={fetchTours}
             className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-black text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all text-sm shadow-sm"
@@ -86,11 +101,7 @@ const AdminTourManagementDashboard = () => {
           <button 
             onClick={async () => {
               try {
-                const baseUrl = import.meta.env.BASE_URL || '/';
-                const targetUrl = import.meta.env.MODE === 'development' 
-                  ? '/api/save-tours' 
-                  : `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}api-save-tours.php`;
-                const response = await fetch(targetUrl, {
+                const response = await fetch(`/api-save-tours.php`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(tours)
@@ -208,7 +219,17 @@ const AdminTourManagementDashboard = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {tours
+                        {[...tours]
+                          .sort((a, b) => {
+                            // Unified Latest First Sorting
+                            // 1. By ID (BK-XXX) descending
+                            const aId = parseInt(String(a.id || '').replace('BK-', '')) || 0;
+                            const bId = parseInt(String(b.id || '').replace('BK-', '')) || 0;
+                            if (bId !== aId) return bId - aId;
+                            
+                            // 2. By createdAt date if IDs are same/missing
+                            return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+                          })
                           .filter(tour => {
                              if (viewMode === 'folders' && selectedDest && selectedState) {
                                 const tourDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;

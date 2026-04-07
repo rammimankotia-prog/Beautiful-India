@@ -7,6 +7,7 @@ const AdminArticleManagementDashboard = () => {
   const [loading, setLoading] = React.useState(true);
   const [isSyncing, setIsSyncing] = React.useState(false);
   const [toastMsg, setToastMsg] = React.useState('');
+  const [dataSource, setDataSource] = React.useState('loading');
 
   const showToast = (msg) => {
     setToastMsg(msg);
@@ -21,25 +22,43 @@ const AdminArticleManagementDashboard = () => {
     setLoading(true);
     try {
       // 1. Fetch Master List from Server (Ground Truth)
-      // Added cache-busting timestamp and no-cache headers to bypass Hostinger CDN
-      const res = await fetch(`${import.meta.env.BASE_URL}data/guides.json?t=${Date.now()}`, {
+      // Use absolute path to avoid relative routing issues in subfolders like /admin/
+      const res = await fetch(`/data/guides.json?t=${Date.now()}`, {
         headers: {
-          'Cache-Control': 'no-cache',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
           'Expires': '0'
         }
       });
+      
       if (res.ok) {
         const remoteGuides = await res.json();
-        setGuides(remoteGuides);
+        // Sort newest first: lastModified iso string first, fallback to date string
+        const sorted = [...remoteGuides].sort((a, b) => {
+          const valA = a.lastModified || a.date || '';
+          const valB = b.lastModified || b.date || '';
+          const dateA = new Date(valA).getTime() || 0;
+          const dateB = new Date(valB).getTime() || 0;
+          return dateB - dateA;
+        });
+        setGuides(sorted);
+        setDataSource('server');
         // Keep a backup in localStorage for session stability
-        localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(remoteGuides));
+        localStorage.setItem('beautifulindia_admin_guides', JSON.stringify(sorted));
+      } else {
+        throw new Error(`Server returned ${res.status}`);
       }
     } catch (err) {
       console.error("Fetch error:", err);
       // Fallback to local storage ONLY if server is down
       const saved = localStorage.getItem('beautifulindia_admin_guides');
-      if (saved) setGuides(JSON.parse(saved));
+      if (saved) {
+        setGuides(JSON.parse(saved));
+        setDataSource('cache');
+        showToast("⚠️ Using local cache (Server unreachable)");
+      } else {
+        setDataSource('error');
+      }
     } finally {
       setLoading(false);
     }
@@ -123,6 +142,17 @@ const AdminArticleManagementDashboard = () => {
           <p className="text-slate-500 dark:text-slate-400 font-bold italic">Manage travel tips, blogs, and destination guides.</p>
         </div>
         <div className="flex items-center gap-4 flex-wrap">
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+            dataSource === 'server' 
+              ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 border-emerald-100 dark:border-emerald-900/30' 
+              : dataSource === 'cache'
+              ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 border-amber-100 dark:border-amber-900/30'
+              : 'bg-red-50 dark:bg-red-950/20 text-red-600 border-red-100 dark:border-red-900/30'
+          }`}>
+            <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+            {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'System Error'}
+          </div>
+
           <button 
             onClick={handleExport}
             className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 rounded-xl font-black hover:border-slate-400 transition-all text-sm shadow-sm"

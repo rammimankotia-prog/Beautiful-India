@@ -93,7 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         header('Content-Type: application/json');
-        echo json_encode(["success" => true, "message" => "Sync completed."]);
+        echo json_encode([
+            "success" => true, 
+            "message" => "Sync completed.",
+            "final_count" => count($final_data)
+        ]);
     } else {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Missing data."]);

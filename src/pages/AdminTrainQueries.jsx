@@ -9,24 +9,48 @@ const AdminTrainQueries = () => {
   const [filter, setFilter] = useState('All');
   const [processing, setProcessing] = useState(false);
 
-  const fetchQueries = () => {
+  const [dataSource, setDataSource] = useState('loading');
+
+  const fetchQueries = async () => {
     setLoading(true);
-    fetch(`${import.meta.env.BASE_URL}api/train-queries`)
-      .then(res => res.json())
-      .then(data => {
-        setQueries(Array.isArray(data) ? data.reverse() : []);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setLoading(false);
+    try {
+      // Use absolute path with cache-busting
+      const res = await fetch(`/api/train-queries?t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setQueries(Array.isArray(data) ? data.reverse() : []);
+        setDataSource('server');
+        // Keep a backup in localStorage
+        localStorage.setItem('beautifulindia_admin_train_queries', JSON.stringify(data));
+      } else {
+        throw new Error(`Server returned ${res.status}`);
+      }
+    } catch (err) {
+      console.error("Fetch train queries error:", err);
+      // Fallback to local storage ONLY if server is down
+      const saved = localStorage.getItem('beautifulindia_admin_train_queries');
+      if (saved) {
+        setQueries(Array.isArray(JSON.parse(saved)) ? JSON.parse(saved).reverse() : []);
+        setDataSource('cache');
+      } else {
+        setDataSource('error');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateQueryStatus = (id, newStatus) => {
     if (!id || processing) return;
     setProcessing(true);
-    fetch(`${import.meta.env.BASE_URL}api/train-queries`, {
+    fetch(`/api/train-queries`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, status: newStatus })
@@ -51,7 +75,7 @@ const AdminTrainQueries = () => {
     if (!window.confirm("Permanently delete this query? This action cannot be undone.")) return;
     
     setProcessing(true);
-    fetch(`${import.meta.env.BASE_URL}api/train-queries?id=${id}`, {
+    fetch(`/api/train-queries?id=${id}`, {
       method: 'DELETE'
     })
       .then(res => res.json())
@@ -77,10 +101,19 @@ const AdminTrainQueries = () => {
     <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-500">
         
         <div className="flex justify-between items-center mb-8">
-           <div>
-              <h2 className="text-3xl font-black text-slate-800 tracking-tight">Recent Queries</h2>
-              <p className="text-slate-500 font-bold italic">Manage train travel requests from guests</p>
-           </div>
+            <div className="flex flex-col gap-2">
+               <h2 className="text-3xl font-black text-slate-800 tracking-tight">Recent Queries</h2>
+               <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border w-fit transition-all ${
+                  dataSource === 'server' 
+                     ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                     : dataSource === 'cache'
+                     ? 'bg-amber-50 text-amber-600 border-amber-100'
+                     : 'bg-red-50 text-red-600 border-red-100'
+               }`}>
+                  <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+                  {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Auth Error'}
+               </div>
+            </div>
            <div className="flex bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
              {['All', 'New', 'Contacted', 'Closed'].map(t => (
                <button 

@@ -9,13 +9,17 @@ const AdminBikeTourDashboard = () => {
     const [leads, setLeads] = useState([]);
     const [toastMsg, setToastMsg] = useState('');
 
+    const [dataSource, setDataSource] = useState('loading');
+
     const fetchLeads = async () => {
         try {
-            // Only try to fetch PHP leads if we're not in a dev environment that leaks PHP source
-            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            if (isDev) return; 
-
-            const response = await fetch('/api-save-leads.php');
+            // Updated to absolute path with cache-busting
+            const response = await fetch(`/api-save-leads.php?t=${Date.now()}`, {
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            });
             if (!response.ok) return;
             const data = await response.json();
             setLeads(Array.isArray(data) ? data : []);
@@ -32,22 +36,32 @@ const AdminBikeTourDashboard = () => {
     const fetchTours = async () => {
         setLoading(true);
         try {
-            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const targetUrl = isDev 
-                ? '/api/v1/bike-tours/admin' 
-                : `/data/bike-tours.json?t=${Date.now()}`;
+            // Unified absolute path with cache-busting
+            const targetUrl = `/data/bike-tours.json?t=${Date.now()}`;
                 
-            const response = await fetch(targetUrl);
+            const response = await fetch(targetUrl, {
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Server responded with ${response.status}`);
+                throw new Error(`Server responded with ${response.status}`);
             }
             const data = await response.json();
             setTours(Array.isArray(data) ? data : []);
+            setDataSource('server');
+            localStorage.setItem('beautifulindia_admin_bike_tours', JSON.stringify(data));
         } catch (error) {
             console.error('Error fetching bike tours:', error);
-            showToast(`❌ Error: ${error.message}`);
-            setTours([]); // Fallback to empty
+            const saved = localStorage.getItem('beautifulindia_admin_bike_tours');
+            if (saved) {
+                setTours(JSON.parse(saved));
+                setDataSource('cache');
+            } else {
+                setDataSource('error');
+            }
         } finally {
             setLoading(false);
         }
@@ -62,34 +76,20 @@ const AdminBikeTourDashboard = () => {
         if (!window.confirm('Are you sure you want to delete this bicycle tour?')) return;
 
         try {
-            const isDev = window.location.hostname === 'localhost';
             const updatedTours = tours.filter(t => (t._id || t.id) !== id);
 
-            if (isDev) {
-                // Node.js Delete
-                const response = await fetch(`/api/v1/bike-tours/admin/${id}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    setTours(updatedTours);
-                    showToast('🗑️ Tour deleted successfully');
-                } else {
-                    throw new Error('Failed to delete on server');
-                }
+            // PHP Persistence (Save the entire list)
+            const response = await fetch('/api-save-bike-tours.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTours)
+            });
+            const result = await response.json();
+            if (result.success) {
+                setTours(updatedTours);
+                showToast('🗑️ Tour deleted successfully');
             } else {
-                // PHP Persistence (Save the entire list)
-                const response = await fetch('/api-save-bike-tours.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updatedTours)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    setTours(updatedTours);
-                    showToast('🗑️ Tour deleted successfully');
-                } else {
-                    throw new Error(result.error || 'Failed to save to server');
-                }
+                throw new Error(result.error || 'Failed to save to server');
             }
         } catch (error) {
             console.error('Delete Error:', error);
@@ -99,36 +99,20 @@ const AdminBikeTourDashboard = () => {
 
     const handleStatusUpdate = async (id, newStatus) => {
         try {
-            const isDev = window.location.hostname === 'localhost';
             const updatedTours = tours.map(t => (t._id || t.id) === id ? { ...t, status: newStatus } : t);
 
-            if (isDev) {
-                // Node.js Update
-                const response = await fetch(`/api/v1/bike-tours/admin/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
-                });
-                if (response.ok) {
-                    setTours(updatedTours);
-                    showToast(`✅ Status updated to ${newStatus}`);
-                } else {
-                    throw new Error('Update failed');
-                }
+            // PHP Persistence (Save the entire list)
+            const response = await fetch('/api-save-bike-tours.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTours)
+            });
+            const result = await response.json();
+            if (result.success) {
+                setTours(updatedTours);
+                showToast(`✅ Status updated to ${newStatus}`);
             } else {
-                // PHP Persistence (Save the entire list)
-                const response = await fetch('/api-save-bike-tours.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updatedTours)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    setTours(updatedTours);
-                    showToast(`✅ Status updated to ${newStatus}`);
-                } else {
-                    throw new Error(result.error || 'Failed to save to server');
-                }
+                throw new Error(result.error || 'Failed to save to server');
             }
         } catch (error) {
             console.error('Status Error:', error);
@@ -165,9 +149,19 @@ const AdminBikeTourDashboard = () => {
 
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
-                <div>
-                    <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Bicycle & Bike Expeditions</h1>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold italic">Manage your premium cycling and motorcycling tour portfolio.</p>
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-0">Bicycle & Bike Expeditions</h1>
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border w-fit transition-all ${
+                        dataSource === 'server' 
+                            ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                            : dataSource === 'cache'
+                            ? 'bg-amber-50 text-amber-600 border-amber-100'
+                            : 'bg-red-50 text-red-600 border-red-100'
+                    }`}>
+                        <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+                        {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Syncing...'}
+                    </div>
+                    <p className="text-slate-500 dark:text-slate-400 font-bold italic mt-2">Manage your premium cycling and motorcycling tour portfolio.</p>
                 </div>
                 <Link 
                     to="/admin/bike-tours/new"

@@ -14,39 +14,47 @@ const AdminLeadsDashboard = () => {
         setTimeout(() => setToastMsg(''), 3000);
     };
 
+    const [dataSource, setDataSource] = useState('loading');
+
+    const fetchLeads = async () => {
+        setLoading(true);
+        try {
+            // Absolute path with cache-busting
+            const res = await fetch(`/api-save-leads.php?t=${Date.now()}`, {
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const dataArray = Array.isArray(data) ? data : [];
+                const sorted = dataArray.sort((a, b) => new Date(b.createdAt || b.timestamp) - new Date(a.createdAt || a.timestamp));
+                setLeads(sorted);
+                setDataSource('server');
+                localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(sorted));
+            } else {
+                throw new Error(`Server returned ${res.status}`);
+            }
+        } catch (err) {
+            console.error("Fetch leads error:", err);
+            const saved = localStorage.getItem('beautifulindia_admin_leads');
+            if (saved) {
+                setLeads(JSON.parse(saved));
+                setDataSource('cache');
+            } else {
+                setDataSource('error');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchLeads();
     }, []);
-
-    const fetchLeads = () => {
-        setLoading(true);
-        const saved = localStorage.getItem('beautifulindia_admin_leads');
-        const fetchData = () => {
-            fetch(`${import.meta.env.BASE_URL}api-save-leads.php`)
-                .then(res => res.json())
-                .then(data => {
-                    const dataArray = Array.isArray(data) ? data : [];
-                    const sorted = dataArray.sort((a, b) => new Date(b.createdAt || b.timestamp) - new Date(a.createdAt || a.timestamp));
-                    setLeads(sorted);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.error("Fetch leads error:", err);
-                    setLoading(false);
-                });
-        };
-
-        if (saved) {
-            try {
-                setLeads(JSON.parse(saved));
-                setLoading(false);
-            } catch (e) {
-                fetchData();
-            }
-        } else {
-            fetchData();
-        }
-    };
 
     const saveLeadsLocally = (updatedLeads) => {
         setLeads(updatedLeads);
@@ -117,6 +125,16 @@ const AdminLeadsDashboard = () => {
                     <p className="text-slate-500 dark:text-slate-400 font-bold italic">Manage customer inquiries and bot conversations.</p>
                 </div>
                 <div className="flex items-center gap-4">
+                    <div className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        dataSource === 'server' 
+                            ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 border-emerald-100 dark:border-emerald-900/30' 
+                            : dataSource === 'cache'
+                            ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 border-amber-100 dark:border-amber-900/30'
+                            : 'bg-red-50 dark:bg-red-950/20 text-red-600 border-red-100 dark:border-red-900/30'
+                    }`}>
+                        <span className="w-2 h-2 rounded-full animate-pulse bg-current"></span>
+                        {dataSource === 'server' ? 'Server Live' : dataSource === 'cache' ? 'Local Cache' : 'Auth Error'}
+                    </div>
                     <button onClick={handleSync} className="flex items-center gap-2 px-6 py-2.5 bg-[#0a6c75] text-white rounded-xl font-black hover:bg-[#085a62] transition-all text-sm shadow-lg shadow-teal-900/20">
                         <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
                         Save to System
