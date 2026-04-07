@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from 'react';
+import { Navigate } from 'react-router-dom';
 import LoadingSpinner from './components/LoadingSpinner';
 
 // Layouts - Keep static for structural stability
@@ -124,7 +125,7 @@ export const routes = [
     path: '/admin',
     element: <AdminLayout />,
     children: [
-      { path: '', element: Loadable(AdminTourManagementDashboard)() },
+      { path: '', element: <Navigate to="/admin/overview" replace /> },
       { path: 'users', element: Loadable(AdminUserManagement)() },
       { path: 'bookings', element: Loadable(AdminBookingManagementDashboard)() },
       { path: 'leads', element: Loadable(AdminLeadsDashboard)() },

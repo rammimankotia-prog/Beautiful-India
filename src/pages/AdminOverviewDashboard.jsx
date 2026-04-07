@@ -18,17 +18,28 @@ const AdminOverviewDashboard = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [bookingsRes, leadsRes, reviewsRes, trainRes] = await Promise.all([
+                const [bookingsRes, leadsRes, reviewsRes, trainRes] = await Promise.allSettled([
                     fetch(`${import.meta.env.BASE_URL}data/bookings.json`),
                     fetch(`${import.meta.env.BASE_URL}data/leads.json`),
                     fetch(`${import.meta.env.BASE_URL}data/reviews.json`),
-                    fetch(`${import.meta.env.BASE_URL}data/train_queries.json`)
+                    fetch(`${import.meta.env.BASE_URL}api/train-queries`)
                 ]);
 
-                const bookings = await bookingsRes.json();
-                const leads = await leadsRes.json();
-                const reviews = await reviewsRes.json();
-                const trainQueries = await trainRes.json();
+                const getJson = async (res) => {
+                    if (res.status === 'fulfilled' && res.value.ok) {
+                        try { return await res.value.json(); } catch(e) { return []; }
+                    }
+                    return [];
+                };
+
+                const bookings = await getJson(bookingsRes);
+                const leads = await getJson(leadsRes);
+                const reviews = await getJson(reviewsRes);
+                
+                // trainQueries returns {success:true, data:[...]} or just array depending on backend, 
+                // but AdminTrainQueries uses it as array so we assume it might be array directly.
+                let trainQueriesRaw = await getJson(trainRes);
+                const trainQueries = Array.isArray(trainQueriesRaw) ? trainQueriesRaw : [];
 
                 const totalRevenue = bookings.reduce((sum, b) => sum + (parseFloat(b.amount || b.price) || 0), 0);
                 setStats({
