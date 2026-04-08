@@ -135,9 +135,9 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Name */}
               <div className="space-y-1.5 sm:space-y-2">
-                <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Full Name *</label>
+                <label className="text-[10px] sm:text-[11px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest pl-1">Full Name *</label>
                 <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                   <input 
                     type="text"
                     name="name"
@@ -145,7 +145,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                     placeholder="Enter your full name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
+                    className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
                   />
                 </div>
               </div>
@@ -153,9 +153,9 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
               {/* Email & Phone */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Email Address *</label>
+                  <label className="text-[10px] sm:text-[11px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest pl-1">Email Address *</label>
                   <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                     <input 
                       type="email"
                       name="email"
@@ -163,14 +163,14 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                       placeholder="you@email.com"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
+                      className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
                     />
                   </div>
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Phone Number *</label>
+                  <label className="text-[10px] sm:text-[11px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest pl-1">Phone Number *</label>
                   <div className="relative group">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                     <input 
                       type="tel"
                       name="phone"
@@ -178,7 +178,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
                       placeholder="+91 00000 00000"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm"
+                      className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
                     />
                   </div>
                 </div>
@@ -186,16 +186,16 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
 
               {/* Message */}
               <div className="space-y-1.5 sm:space-y-2">
-                <label className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Custom Requirements</label>
+                <label className="text-[10px] sm:text-[11px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest pl-1">Custom Requirements</label>
                 <div className="relative group">
-                  <MessageSquare className="absolute left-4 top-4 sm:top-5 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
+                  <MessageSquare className="absolute left-4 top-4 sm:top-5 text-slate-500 dark:text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                   <textarea 
                     name="message"
                     rows={3}
                     placeholder="Tell us about your travel plans..."
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm resize-none"
+                    className="w-full pl-11 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-teal-500/30 focus:bg-white dark:focus:bg-slate-800 outline-none rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white font-bold transition-all placeholder:font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm resize-none"
                   ></textarea>
                 </div>
               </div>

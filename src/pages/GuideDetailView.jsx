@@ -234,23 +234,37 @@ const GuideDetailView = () => {
   }
 
   /* ─────────────── Helpers ─────────────── */
-  const relatedTours = tours
-    .filter((t) => {
-      const gDest = (guide.destination || '').toLowerCase();
-      const gCat = (guide.category || '').toLowerCase();
-      const tTitle = (t.title || '').toLowerCase();
-      const tDest = Array.isArray(t.destination)
-        ? t.destination.join(' ').toLowerCase()
-        : (t.destination || '').toLowerCase();
-      const tTheme = (t.theme || '').toLowerCase();
-      return (
-        tTitle.includes(gDest) ||
-        tDest.includes(gDest) ||
-        tTheme.includes(gCat) ||
-        tTitle.includes(gCat)
-      );
-    })
-    .slice(0, 3);
+  const gDest = (guide.destination || '').toLowerCase();
+  const gCat = (guide.category || '').toLowerCase();
+
+  let relatedTours = (tours || []).filter((t) => {
+    const tTitle = (t.title || '').toLowerCase();
+    const tDest = Array.isArray(t.destination)
+      ? t.destination.join(' ').toLowerCase()
+      : (t.destination || '').toLowerCase();
+    const tTheme = (t.theme || '').toLowerCase();
+    return (
+      (gDest && (tTitle.includes(gDest) || tDest.includes(gDest))) ||
+      (gCat && (tTheme.includes(gCat) || tTitle.includes(gCat)))
+    );
+  });
+
+  // If we don't have exactly 3 related tours, fill the rest with random active tours
+  if (relatedTours.length < 3) {
+    const relatedIds = new Set(relatedTours.map(t => t.id || t.slug));
+    const remainingCount = 3 - relatedTours.length;
+    
+    const otherActiveTours = tours.filter(t => 
+      t.status === 'active' && !relatedIds.has(t.id || t.slug)
+    );
+    
+    // Shuffle the other tours
+    const shuffledOthers = [...otherActiveTours].sort(() => 0.5 - Math.random());
+    relatedTours = [...relatedTours, ...shuffledOthers.slice(0, remainingCount)];
+  }
+
+  // Ensure we only ever show a maximum of 3
+  relatedTours = relatedTours.slice(0, 3);
 
   const calculateReadTime = (content) => {
     if (!content) return 0;
