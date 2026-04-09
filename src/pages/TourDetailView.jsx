@@ -154,11 +154,16 @@ const TourDetailView = () => {
     return currentRegions.some(region => targetRegions.includes(region));
   });
 
-  const similarTours = sameStateTours.length > 0 
-    ? sameStateTours.slice(0, 4) 
-    : allTours
-        .filter(t => t.id !== (tour?.id) && (t.destination === tour?.destination))
-        .slice(0, 4);
+  let similarTours = sameStateTours.length > 0 
+    ? sameStateTours 
+    : allTours.filter(t => t.id !== (tour?.id) && (t.destination === tour?.destination));
+
+  if (similarTours.length < 4) {
+    const additional = allTours.filter(t => t.id !== (tour?.id) && t.status !== 'paused' && !similarTours.some(s => s.id === t.id));
+    similarTours = [...similarTours, ...additional].slice(0, 4);
+  } else {
+    similarTours = similarTours.slice(0, 4);
+  }
 
   if (loading || dataLoading) return <LoadingSpinner />;
   
@@ -919,9 +924,17 @@ const TourDetailView = () => {
                             <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                               <div>
                                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starts from</p>
-                                <p className="text-base font-black text-primary">{formatPrice(t.price)}</p>
+                                <div className="flex items-baseline gap-1">
+                                  <p className="text-base font-black text-primary">{formatPrice(t.price, true)}</p>
+                                  <span className="text-[9px] text-slate-400 font-bold uppercase">/ {(() => {
+                                      if (t.pricePerPerson) return 'person';
+                                      if (t.pricePerCouple) return 'couple';
+                                      if (t.pricePerGroup) return `group`;
+                                      return t.priceBasis === 'per_package' ? 'pkg' : 'person';
+                                  })()}</span>
+                                </div>
                               </div>
-                              <div className="w-9 h-9 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
+                              <div className="w-9 h-9 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm shrink-0">
                                 <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                               </div>
                             </div>
