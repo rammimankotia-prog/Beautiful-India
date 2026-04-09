@@ -32,6 +32,103 @@ const formatContent = (content) => {
     .join('');
 };
 
+/* ─────────────────────────────────────────────
+   Rich Text Editor Component
+───────────────────────────────────────────── */
+const RichTextEditor = ({ value, onChange, placeholder, minHeight = "min-h-[160px]" }) => {
+  const [mode, setMode] = React.useState('visual');
+  const editorRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    if (mode === 'visual' && editorRef.current && editorRef.current.innerHTML !== (value || '')) {
+      editorRef.current.innerHTML = value || '';
+    }
+  }, [value, mode]);
+
+  const handleVisualInput = (e) => {
+    onChange(e.currentTarget.innerHTML);
+  };
+
+  const execCommand = (command, val = null) => {
+    document.execCommand(command, false, val);
+    if (editorRef.current) {
+        onChange(editorRef.current.innerHTML);
+        editorRef.current.focus();
+    }
+  };
+
+  return (
+    <div className="border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors bg-white dark:bg-slate-900 flex flex-col">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 p-2 bg-slate-50 dark:bg-slate-800/50">
+        <div className={`flex flex-wrap gap-1 items-center transition-opacity ${mode === 'html' ? 'opacity-50 pointer-events-none' : ''}`}>
+          {[
+              { cmd: 'bold', icon: 'format_bold' },
+              { cmd: 'italic', icon: 'format_italic' },
+              { cmd: 'underline', icon: 'format_underlined' },
+              { divider: true },
+              { cmd: 'formatBlock', val: '<h2>', label: 'H2' },
+              { cmd: 'formatBlock', val: '<h3>', label: 'H3' },
+              { divider: true },
+              { cmd: 'insertUnorderedList', icon: 'format_list_bulleted' },
+              { cmd: 'createLink', prompt: 'URL:', icon: 'link' }
+          ].map((btn, i) => (
+              btn.divider ? (
+                  <div key={i} className="w-px h-5 bg-slate-300 dark:bg-slate-600 mx-1"></div>
+              ) : (
+                  <button 
+                      key={i}
+                      type="button"
+                      onClick={() => btn.prompt ? execCommand(btn.cmd, prompt(btn.prompt)) : execCommand(btn.cmd, btn.val)} 
+                      className="w-7 h-7 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-primary rounded-md transition-all bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+                      title={btn.label || btn.cmd}
+                  >
+                      {btn.icon ? <span className="material-symbols-outlined text-[16px]">{btn.icon}</span> : <span className="font-bold text-[9px]">{btn.label}</span>}
+                  </button>
+              )
+          ))}
+        </div>
+
+        <div className="flex bg-slate-200 dark:bg-slate-800 p-0.5 rounded border border-slate-300 dark:border-slate-700 h-[28px] self-start sm:self-auto shrink-0 shadow-inner">
+            <button 
+                type="button"
+                onClick={() => setMode('visual')}
+                className={`px-3 py-0.5 rounded-sm text-[9px] font-black uppercase tracking-wider transition-all ${mode === 'visual' ? 'bg-white shadow-sm dark:bg-slate-700 text-primary' : 'text-slate-500 hover:text-slate-400'} flex items-center`}
+            >
+                Aesthetics
+            </button>
+            <button 
+                type="button"
+                onClick={() => setMode('html')}
+                className={`px-3 py-0.5 rounded-sm text-[9px] font-black uppercase tracking-wider transition-all ${mode === 'html' ? 'bg-white shadow-sm dark:bg-slate-700 text-primary' : 'text-slate-500 hover:text-slate-400'} flex items-center`}
+            >
+                Raw Code
+            </button>
+        </div>
+      </div>
+      
+      <div className="relative">
+        {mode === 'html' ? (
+          <textarea
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            className={`w-full bg-slate-900 text-emerald-400 font-mono text-[13px] p-4 border-0 focus:ring-0 resize-y placeholder-slate-700 ${minHeight} leading-relaxed`}
+            placeholder={`<!--\n${placeholder}\n-->`}
+          />
+        ) : (
+          <div
+            ref={editorRef}
+            contentEditable
+            onInput={handleVisualInput}
+            className={`w-full p-4 outline-none prose prose-sm dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 ${minHeight} overflow-auto cursor-text leading-relaxed marker:text-primary list-disc`}
+            suppressContentEditableWarning
+            data-placeholder={placeholder}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
 const AdminNewTourUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -1198,62 +1295,18 @@ const AdminNewTourUploadForm = () => {
                         </div>
                       )}
                     </div>
-                    {/* Description (Rich Text Mock) */}
+                    {/* Description */}
                     <div className="col-span-1 md:col-span-2">
-                      <label className="flex flex-col flex-1">
-                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                          Description
-                        </span>
-                        <div className="border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors">
-                          {/* Toolbar */}
-                          <div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 px-3 py-2 flex gap-2 text-slate-500 dark:text-slate-400">
-                            <button
-                              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
-                              type="button"
-                              onClick={() =>
-                                insertFormatting(null, "**", "**", true)
-                              }
-                              title="Bold"
-                            >
-                              <span className="material-symbols-outlined text-sm">
-                                format_bold
-                              </span>
-                            </button>
-                            <button
-                              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
-                              type="button"
-                              onClick={() =>
-                                insertFormatting(null, "- ", "", true)
-                              }
-                              title="Bullet List"
-                            >
-                              <span className="material-symbols-outlined text-sm">
-                                format_list_bulleted
-                              </span>
-                            </button>
-                            <button
-                              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
-                              type="button"
-                              onClick={() =>
-                                insertFormatting(null, "[", "](https://)", true)
-                              }
-                              title="Insert Link"
-                            >
-                              <span className="material-symbols-outlined text-sm">
-                                link
-                              </span>
-                            </button>
-                          </div>
-                          <textarea
-                            id="main-description"
-                            name="description"
+                       <label className="flex flex-col flex-1">
+                         <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
+                           Description
+                         </span>
+                         <RichTextEditor
                             value={formData.description}
-                            onChange={handleChange}
-                            className="w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 text-sm border-0 focus:ring-0 min-h-[160px] resize-y placeholder-slate-400"
+                            onChange={(val) => setFormData(prev => ({...prev, description: val}))}
                             placeholder="Write a compelling description of the tour..."
-                          ></textarea>
-                        </div>
-                      </label>
+                         />
+                       </label>
                     </div>
                     {/* Highlights */}
                     <div className="col-span-1 md:col-span-2">
@@ -1261,13 +1314,12 @@ const AdminNewTourUploadForm = () => {
                         <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
                           Highlights (one per line)
                         </span>
-                        <textarea
-                          name="highlights"
-                          value={Array.isArray(formData.highlights) ? formData.highlights.join('\n') : (formData.highlights || "")}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
-                          placeholder="Enjoy a trekking trip to Vaishno Devi Temple&#10;Enjoy skiing at Gulmarg"
-                        ></textarea>
+                        <RichTextEditor
+                           value={Array.isArray(formData.highlights) ? formData.highlights.join('\n') : (formData.highlights || "")}
+                           onChange={(val) => setFormData(prev => ({...prev, highlights: val}))}
+                           placeholder="Enjoy a trekking trip to Vaishno Devi Temple&#10;Enjoy skiing at Gulmarg"
+                           minHeight="min-h-[120px]"
+                        />
                       </label>
                     </div>
                     {/* Best Time to Visit */}
@@ -2120,112 +2172,14 @@ const AdminNewTourUploadForm = () => {
                             <div className="flex items-center justify-between pb-1 flex-wrap gap-y-2">
                               <span className="text-slate-700 dark:text-slate-300 text-sm font-medium gap-2 flex items-center">
                                 Day Description
-                                <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded uppercase tracking-wider font-bold">HTML Supported</span>
                               </span>
-                              
-                              <div className="flex items-center gap-2">
-                                <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700 h-[34px]">
-                                    <button 
-                                        type="button"
-                                        onClick={() => setDayEditorModes(prev => ({...prev, [index]: 'html'}))}
-                                        className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider transition-all ${(dayEditorModes[index] || 'html') === 'html' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-slate-400 hover:text-slate-600'}`}
-                                    >
-                                        HTML Format
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        onClick={() => setDayEditorModes(prev => ({...prev, [index]: 'visual'}))}
-                                        className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider transition-all ${dayEditorModes[index] === 'visual' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-slate-400 hover:text-slate-600'}`}
-                                    >
-                                        Real Format
-                                    </button>
-                                </div>
-                                <div className={`flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700/50 transition-opacity ${(dayEditorModes[index] || 'html') === 'visual' ? 'opacity-50 pointer-events-none' : ''}`}>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      insertFormatting(index, "**", "**")
-                                    }
-                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                    title="Bold"
-                                  >
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      format_bold
-                                    </span>
-                                  </button>
-                                  <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
-                                  <button
-                                    type="button"
-                                    onClick={() => insertFormatting(index, "- ")}
-                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                    title="Bullet List"
-                                  >
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      format_list_bulleted
-                                    </span>
-                                  </button>
-                                  <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      insertFormatting(index, "[", "](https://)")
-                                    }
-                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                    title="Insert Link"
-                                  >
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      link
-                                    </span>
-                                  </button>
-                                  <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      insertFormatting(index, "<br />\n", "")
-                                    }
-                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                    title="Insert Break (HTML)"
-                                  >
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      keyboard_return
-                                    </span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      insertFormatting(index, "<p>", "</p>")
-                                    }
-                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                    title="Insert HTML Paragraph"
-                                  >
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      code
-                                    </span>
-                                  </button>
-                                </div>
-                              </div>
                             </div>
-                            
-                            {(dayEditorModes[index] || 'html') === 'html' ? (
-                              <textarea
-                                id={`day-desc-${index}`}
-                                value={day.description || ""}
-                                onChange={(e) =>
-                                  handleItineraryChange(
-                                    index,
-                                    "description",
-                                    e.target.value,
-                                  )
-                                }
-                                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary min-h-[120px] resize-y"
-                                placeholder="Describe the activities for this day... (Use toolbar to format)"
-                              ></textarea>
-                            ) : (
-                              <div 
-                                  className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 p-4 min-h-[120px] prose prose-sm dark:prose-invert max-w-none max-h-[400px] overflow-auto shadow-inner"
-                                  dangerouslySetInnerHTML={{ __html: formatContent(day.description) || '<span class="text-slate-400 italic">No description provided for this day...</span>' }}
-                              />
-                            )}
+                            <RichTextEditor
+                               value={day.description || ""}
+                               onChange={(val) => handleItineraryChange(index, "description", val)}
+                               placeholder="Describe the activities for this day..."
+                               minHeight="min-h-[120px]"
+                            />
                           </label>
                           {/* Highlight Tags */}
                           <label className="flex flex-col">
