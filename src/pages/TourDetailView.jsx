@@ -91,7 +91,7 @@ const TourDetailView = () => {
   };
 
   const getDynamicPriceData = () => {
-    if (!tour) return { basePrice: 0, totalPrice: 0, advance: 0, barRate: 0, discountRate: 0 };
+    if (!tour) return { basePrice: 0, totalPrice: 0, advance: 0, barRate: 0, discountRate: 0, groupDiscountAmount: 0 };
     
     // Parse valid numbers
     const pPerson = parseFloat(tour.pricePerPerson) || tour.price;
@@ -101,6 +101,8 @@ const TourDetailView = () => {
     const bar = parseFloat(tour.barRate) || (pPerson * 1.55);
 
     let currentBase = pPerson;
+    const baseWithoutDiscount = (bookingGuests === 2) ? (pCouple / 2) : pPerson;
+    const totalWithoutGroupDiscount = baseWithoutDiscount * bookingGuests;
     
     if (bookingGuests === 1) {
       currentBase = pPerson;
@@ -121,6 +123,7 @@ const TourDetailView = () => {
     }
 
     const total = currentBase * bookingGuests;
+    const groupDiscountAmount = totalWithoutGroupDiscount - total;
     const advance = Math.round(total * 0.30);
     const aggregatedBar = bar * bookingGuests;
     const discountRate = Math.round(100 - (total / aggregatedBar) * 100);
@@ -130,7 +133,9 @@ const TourDetailView = () => {
        totalPrice: total, 
        advance, 
        barRate: bar, 
-       discountRate: discountRate > 0 ? discountRate : 0 
+       discountRate: discountRate > 0 ? discountRate : 0,
+       groupDiscountAmount: groupDiscountAmount > 0 ? groupDiscountAmount : 0,
+       totalBeforeGroupDiscount: totalWithoutGroupDiscount
     };
   };
 
@@ -907,16 +912,43 @@ const TourDetailView = () => {
                            </div>
                         </div>
 
-                        <div className="bg-slate-50 dark:bg-slate-800/40 rounded-xl p-3 border border-slate-200 dark:border-slate-700/50 mt-1">
-                           <div className="flex justify-between items-center mb-1.5 pb-1.5 border-b border-slate-200/50 dark:border-slate-700/30">
-                              <span className="text-[13px] font-black text-slate-900 dark:text-white tracking-tight uppercase">Total Amount</span>
-                              <span className="text-sm font-black text-emerald-600 tracking-tight">{formatPrice(getDynamicPriceData().totalPrice, true)}/-</span>
+                        <div className="bg-slate-50 dark:bg-slate-800/40 rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 mt-1 flex flex-col gap-3">
+                           {/* Calculation Breakdown */}
+                           <div className="space-y-3">
+                             {getDynamicPriceData().groupDiscountAmount > 0 && (
+                               <div className="flex justify-between items-center text-slate-500 font-bold text-xs uppercase tracking-wider px-1">
+                                 <span>Basic Price</span>
+                                 <span>{formatPrice(getDynamicPriceData().totalBeforeGroupDiscount, true)}</span>
+                               </div>
+                             )}
+
+                             {getDynamicPriceData().groupDiscountAmount > 0 && (
+                               <div className="flex justify-between items-center bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/10">
+                                 <div className="flex flex-col">
+                                   <span className="text-[13px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-tight">Group Discount</span>
+                                   <span className="text-[10px] font-bold text-emerald-600/60 uppercase">Special group rate applied</span>
+                                 </div>
+                                 <span className="text-base font-black text-emerald-600 tracking-tight">
+                                   -{formatPrice(getDynamicPriceData().groupDiscountAmount, true)}
+                                 </span>
+                               </div>
+                             )}
+
+                             <div className={`${getDynamicPriceData().groupDiscountAmount > 0 ? 'bg-slate-900/5 dark:bg-white/5 p-3 rounded-xl border border-slate-200 dark:border-slate-800' : 'pt-3 border-t border-slate-200 dark:border-slate-700'} flex justify-between items-center`}>
+                               <span className="text-[13px] font-black text-slate-900 dark:text-white tracking-tight uppercase">
+                                 {getDynamicPriceData().groupDiscountAmount > 0 ? 'Discounted Price' : 'Total Amount'}
+                               </span>
+                               <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter">
+                                 {formatPrice(getDynamicPriceData().totalPrice, true)}/-
+                               </span>
+                             </div>
                            </div>
-                           <div className="flex justify-between items-center">
+
+                           <div className="pt-3 border-t border-slate-200/50 dark:border-slate-700/30 flex justify-between items-center">
                               <div>
-                                 <p className="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase leading-none">Advance (30%)</p>
+                                 <p className="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase leading-none">Advance Payment (30%)</p>
                               </div>
-                              <span className="text-[13px] font-black text-orange-600 dark:text-orange-500">{formatPrice(getDynamicPriceData().advance, true)}/-</span>
+                              <span className="text-lg font-black text-orange-600 dark:text-orange-500">{formatPrice(getDynamicPriceData().advance, true)}/-</span>
                            </div>
                         </div>
 
