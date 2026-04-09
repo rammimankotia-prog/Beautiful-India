@@ -59,8 +59,8 @@ const RichTextEditor = ({ value, onChange, placeholder, minHeight = "min-h-[160p
 
   return (
     <div className="border border-slate-300 dark:border-slate-700 rounded-2xl overflow-hidden focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/5 transition-all bg-white dark:bg-slate-900 flex flex-col shadow-sm">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 p-2.5 bg-slate-50 dark:bg-slate-900/50">
-        <div className={`flex flex-wrap gap-1.5 items-center transition-all ${mode === 'html' ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 p-2.5 bg-slate-50 dark:bg-slate-900/50">
+        <div className={`flex flex-wrap gap-1 items-center transition-all ${mode === 'html' ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
           {[
               { cmd: 'bold', icon: 'format_bold', label: 'Bold' },
               { cmd: 'italic', icon: 'format_italic', label: 'Italic' },

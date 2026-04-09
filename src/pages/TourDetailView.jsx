@@ -828,24 +828,31 @@ const TourDetailView = () => {
                     {/* Dynamic Booking & Pricing Widget */}
                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-5 rounded-b-2xl shadow-sm relative z-10 w-full mb-6">
                         
-                        <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Starting From:</span>
-                            <div className="flex items-baseline gap-3">
-                               <span className="text-4xl font-black text-emerald-600 dark:text-emerald-500 tracking-tight">
-                                  {formatPrice(getDynamicPriceData().basePrice, true)}/-
-                               </span>
-                               {getDynamicPriceData().barRate > getDynamicPriceData().basePrice && (
-                                  <span className="text-base text-slate-300 dark:text-slate-600 line-through font-bold">
-                                    {formatPrice(getDynamicPriceData().barRate, true)}/-
-                                  </span>
-                               )}
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-end justify-between gap-2 overflow-hidden">
+                               <div className="flex flex-col">
+                                 <div className="flex items-baseline gap-2">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Starts:</span>
+                                    <span className="text-3xl font-black text-emerald-600 dark:text-emerald-500 tracking-tighter">
+                                       {formatPrice(getDynamicPriceData().basePrice, true)}
+                                    </span>
+                                    {getDynamicPriceData().barRate > getDynamicPriceData().basePrice && (
+                                       <span className="text-[12px] text-slate-300 dark:text-slate-600 line-through font-bold">
+                                         {formatPrice(getDynamicPriceData().barRate, true)}
+                                       </span>
+                                    )}
+                                 </div>
+                               </div>
+                               <div className="text-right flex flex-col items-end pb-1">
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap">Per {getPriceSubLabel().short} / sharing</p>
+                               </div>
                             </div>
-                            <p className="text-[13px] text-slate-700 dark:text-slate-300 font-bold mt-2">Per {getPriceSubLabel().long}.</p>
                             
-                            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700/50">
-                               <p className="text-[11px] font-black italic text-orange-600 dark:text-orange-400 leading-tight uppercase tracking-wider">
-                                 HOTEL COST MAY VARY - SUBMIT DETAILS FOR RATES!
+                            <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/50">
+                               <p className="text-[8px] font-black italic text-orange-600 dark:text-orange-500 leading-none uppercase tracking-tighter flex items-center gap-1 justify-center bg-orange-50/50 dark:bg-orange-500/5 py-1 rounded-sm whitespace-nowrap overflow-hidden">
+                                 <span className="material-symbols-outlined text-[10px] shrink-0">info</span>
+                                 <span>HOTEL COST VARIES - SUBMIT FOR EXACT RATES</span>
                                </p>
                             </div>
                           </div>
@@ -858,66 +865,60 @@ const TourDetailView = () => {
                           </div>
                         )}
 
-                       <div className="grid grid-cols-2 gap-3 mt-1">
-                           <div className="flex flex-col gap-1.5 group">
-                              <label className="text-[10px] font-bold text-slate-500 group-hover:text-primary transition-colors uppercase tracking-wider flex items-center gap-1">
-                                <span className="material-symbols-outlined text-[12px]">calendar_month</span>
-                                Journey Date
+                        <div className="flex flex-col gap-2 mt-1">
+                           {/* Journey Date */}
+                           <div className="flex items-center justify-between gap-3 group bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                              <label className="text-[10px] font-black text-slate-500 group-hover:text-primary transition-colors uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+                                <span className="material-symbols-outlined text-[14px]">calendar_month</span>
+                                Date
                               </label>
-                              <div className="relative">
+                              <div className="relative flex-1 max-w-[140px]">
                                 <input 
                                    type="date"
                                    value={bookingDate}
                                    onChange={(e) => setBookingDate(e.target.value)}
                                    min={new Date().toISOString().split('T')[0]}
-                                   className="w-full text-[12px] font-black text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer appearance-none"
+                                   className="w-full text-[11px] font-black text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 outline-none focus:border-primary transition-all cursor-pointer appearance-none text-right"
                                 />
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                   <span className="material-symbols-outlined text-[18px]">expand_more</span>
-                                </div>
                               </div>
                            </div>
-                          <div className="flex flex-col gap-1.5">
-                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Guests</label>
-                             <div className="flex items-center justify-between w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1 transition-all">
-                                <button 
-                                  onClick={() => setBookingGuests(Math.max(1, bookingGuests - 1))}
-                                  className="w-8 h-8 flex items-center justify-center rounded bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-100 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition"
-                                >
-                                  <span className="material-symbols-outlined text-[16px] font-bold">remove</span>
-                                </button>
-                                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{bookingGuests}</span>
-                                <button 
-                                  onClick={() => setBookingGuests(Math.min(20, bookingGuests + 1))}
-                                  className="w-8 h-8 flex items-center justify-center rounded bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-100 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition"
-                                >
-                                  <span className="material-symbols-outlined text-[16px] font-bold">add</span>
-                                </button>
-                             </div>
-                          </div>
-                       </div>
 
-                       <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 mt-2 shadow-inner">
-                          <div className="flex justify-between items-center mb-2">
-                             <span className="text-[11px] text-slate-600 dark:text-slate-400 font-bold uppercase">Basic Price</span>
-                             <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{formatPrice(getDynamicPriceData().basePrice, true)}/-</span>
-                          </div>
-                          <div className="flex justify-between items-center mb-3">
-                             <span className="text-[10px] text-slate-500 font-bold uppercase">Guests</span>
-                             <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400">x {bookingGuests}</span>
-                          </div>
-                          <div className="border-t border-slate-200 dark:border-slate-700 pt-3 flex justify-between items-center mb-3">
-                             <span className="text-[13px] font-black text-slate-900 dark:text-white uppercase tracking-tight">Total Price</span>
-                             <span className="text-sm font-black text-slate-800 dark:text-slate-100">{formatPrice(getDynamicPriceData().totalPrice, true)}/-</span>
-                          </div>
-                          <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-orange-200 dark:border-orange-800/30 flex justify-between items-center shadow-sm">
-                             <div>
-                                <p className="text-[11px] font-black leading-tight text-orange-800 dark:text-orange-400 uppercase tracking-tight">Advance Payment (30%)</p>
-                                <p className="text-[9px] text-orange-600/70 dark:text-orange-400/70 font-bold mt-0.5">Pay now to lock current rates</p>
-                             </div>
-                             <span className="text-base font-black text-orange-600 dark:text-orange-400">{formatPrice(getDynamicPriceData().advance, true)}/-</span>
-                          </div>
-                       </div>
+                           {/* Guests */}
+                           <div className="flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+                                 <span className="material-symbols-outlined text-[14px]">group</span>
+                                 Guests
+                              </label>
+                              <div className="flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5 transition-all">
+                                 <button 
+                                   onClick={() => setBookingGuests(Math.max(1, bookingGuests - 1))}
+                                   className="w-6 h-6 flex items-center justify-center rounded bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary transition"
+                                 >
+                                   <span className="material-symbols-outlined text-[14px] font-bold">remove</span>
+                                 </button>
+                                 <span className="text-[11px] font-black text-slate-800 dark:text-slate-100 min-w-[12px] text-center">{bookingGuests}</span>
+                                 <button 
+                                   onClick={() => setBookingGuests(Math.min(20, bookingGuests + 1))}
+                                   className="w-6 h-6 flex items-center justify-center rounded bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary transition"
+                                 >
+                                   <span className="material-symbols-outlined text-[14px] font-bold">add</span>
+                                 </button>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="bg-slate-50 dark:bg-slate-800/40 rounded-xl p-3 border border-slate-200 dark:border-slate-700/50 mt-1">
+                           <div className="flex justify-between items-center mb-1.5 pb-1.5 border-b border-slate-200/50 dark:border-slate-700/30">
+                              <span className="text-[13px] font-black text-slate-900 dark:text-white tracking-tight uppercase">Total Amount</span>
+                              <span className="text-sm font-black text-emerald-600 tracking-tight">{formatPrice(getDynamicPriceData().totalPrice, true)}/-</span>
+                           </div>
+                           <div className="flex justify-between items-center">
+                              <div>
+                                 <p className="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase leading-none">Advance (30%)</p>
+                              </div>
+                              <span className="text-[13px] font-black text-orange-600 dark:text-orange-500">{formatPrice(getDynamicPriceData().advance, true)}/-</span>
+                           </div>
+                        </div>
 
                        <button 
                           onClick={() => setIsAuthModalOpen(true)} 
