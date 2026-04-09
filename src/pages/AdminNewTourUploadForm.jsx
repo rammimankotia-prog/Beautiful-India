@@ -2093,8 +2093,9 @@ const AdminNewTourUploadForm = () => {
                           </label>
                           <label className="flex flex-col">
                             <div className="flex items-center justify-between pb-1">
-                              <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">
+                              <span className="text-slate-700 dark:text-slate-300 text-sm font-medium gap-2 flex items-center">
                                 Day Description
+                                <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded uppercase tracking-wider font-bold">HTML Supported</span>
                               </span>
                               <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700/50">
                                 <button
@@ -2131,6 +2132,31 @@ const AdminNewTourUploadForm = () => {
                                 >
                                   <span className="material-symbols-outlined text-[18px]">
                                     link
+                                  </span>
+                                </button>
+                                <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    insertFormatting(index, "<br />\n", "")
+                                  }
+                                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
+                                  title="Insert Break (HTML)"
+                                >
+                                  <span className="material-symbols-outlined text-[18px]">
+                                    keyboard_return
+                                  </span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    insertFormatting(index, "<p>", "</p>")
+                                  }
+                                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
+                                  title="Insert HTML Paragraph"
+                                >
+                                  <span className="material-symbols-outlined text-[18px]">
+                                    code
                                   </span>
                                 </button>
                               </div>
