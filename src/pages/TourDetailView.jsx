@@ -922,10 +922,10 @@ const TourDetailView = () => {
 
                        <button 
                           onClick={() => setIsAuthModalOpen(true)} 
-                          className="w-full flex items-center justify-center gap-2 rounded-xl py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[13px] font-black hover:opacity-90 transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-wider mt-1"
+                          className="w-full flex items-center justify-center gap-3 rounded-[20px] py-4 bg-[#0cb48a] text-white text-[15px] font-black hover:bg-[#0aa37c] transition-all shadow-xl shadow-emerald-500/10 uppercase tracking-widest mt-2"
                        >
                           Reserve Your Spot
-                          <span className="material-symbols-outlined text-[16px]">verified</span>
+                          <span className="material-symbols-outlined text-[20px]">verified</span>
                        </button>
                     </div>
 
@@ -938,8 +938,8 @@ const TourDetailView = () => {
                     />
 
                     {/* Bottom Action Card */}
-                    <div className="flex flex-col gap-3">
-                      <button onClick={() => setIsQuoteModalOpen(true)} className="w-full flex cursor-pointer items-center justify-center rounded-none rounded-b-xl h-14 bg-[#ff5a5f] text-white text-lg font-black hover:brightness-110 transition-all shadow-xl uppercase tracking-wider">
+                    <div className="flex flex-col gap-3 mt-4">
+                      <button onClick={() => setIsQuoteModalOpen(true)} className="w-full flex cursor-pointer items-center justify-center rounded-[20px] py-5 bg-[#ff5a5f] text-white text-xl font-black hover:bg-[#ef4c52] transition-all shadow-xl shadow-rose-500/10 uppercase tracking-widest">
                         Customize & Get Quotes
                       </button>
                       <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-4">
