@@ -1348,9 +1348,9 @@ const AdminNewTourUploadForm = () => {
                       </span>
                       Pricing & Duration
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       {/* Price Category */}
-                      <div className="md:col-span-2">
+                      <div className="md:col-span-1">
                         <label className="flex flex-col flex-1">
                           <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
                             Price Category
@@ -1368,6 +1368,45 @@ const AdminNewTourUploadForm = () => {
                             <option value="luxury">👑 Luxury</option>
                           </select>
                         </label>
+                      </div>
+
+                      {/* Bar Rate / Original Rate */}
+                      <div className="md:col-span-1">
+                        <label className="flex flex-col flex-1">
+                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
+                            Original "Bar" Rate (₹)
+                          </span>
+                          <input
+                            name="barRate"
+                            value={formData.barRate || ""}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
+                            placeholder="e.g. 45000"
+                            type="number"
+                            min="0"
+                          />
+                        </label>
+                        <p className="text-[10px] text-slate-400 mt-1">Crossed-out price shown on widget</p>
+                      </div>
+
+                      {/* Group Discount Percentage */}
+                      <div className="md:col-span-1">
+                        <label className="flex flex-col flex-1">
+                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
+                            Group Discount (%)
+                          </span>
+                          <input
+                            name="groupDiscountPercentage"
+                            value={formData.groupDiscountPercentage || ""}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
+                            placeholder="e.g. 15"
+                            type="number"
+                            min="0"
+                            max="100"
+                          />
+                        </label>
+                        <p className="text-[10px] text-slate-400 mt-1">Applied automatically when guests ≥ 4</p>
                       </div>
                     </div>
 

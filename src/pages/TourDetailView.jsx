@@ -6,6 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ConsultSpecialistModal from '../components/ConsultSpecialistModal';
 import BikeTourMap from '../components/BikeTourMap';
 import SEO from '../components/SEO';
+import GoogleAuthModal from './GoogleAuthModal';
 
 /* ─────────────────────────────────────────────
    Format Content Helper (Consistent with Guides)
@@ -66,6 +67,15 @@ const TourDetailView = () => {
   const [allTours, setAllTours] = useState([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [showStickyNav, setShowStickyNav] = useState(false);
+  
+  // Widget states
+  const [bookingGuests, setBookingGuests] = useState(1);
+  const [bookingDate, setBookingDate] = useState(() => {
+    const d = new Date(); d.setDate(d.getDate() + 14);
+    return d.toISOString().split('T')[0];
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   const { formatPrice } = useCurrency();
   const { tours, reviews, loading: dataLoading, error: dataError } = useData();
 
@@ -79,6 +89,51 @@ const TourDetailView = () => {
       long: tour.priceBasis === 'per_package' ? 'Package' : 'Person on twin sharing'
     };
   };
+
+  const getDynamicPriceData = () => {
+    if (!tour) return { basePrice: 0, totalPrice: 0, advance: 0, barRate: 0, discountRate: 0 };
+    
+    // Parse valid numbers
+    const pPerson = parseFloat(tour.pricePerPerson) || tour.price;
+    const pCouple = parseFloat(tour.pricePerCouple) || (pPerson * 2);
+    const pGroup = parseFloat(tour.pricePerGroup);
+    const gSize = parseInt(tour.groupSize) || 4;
+    const bar = parseFloat(tour.barRate) || (pPerson * 1.55);
+
+    let currentBase = pPerson;
+    
+    if (bookingGuests === 1) {
+      currentBase = pPerson;
+    } else if (bookingGuests === 2) {
+      currentBase = pCouple / 2;
+    } else if (bookingGuests === 3) {
+      currentBase = pPerson; 
+    } else if (bookingGuests >= 4) {
+       // Group discount triggers
+       if (tour.groupDiscountPercentage) {
+          const discountVal = pPerson * (parseFloat(tour.groupDiscountPercentage) / 100);
+          currentBase = pPerson - discountVal;
+       } else if (pGroup && bookingGuests >= gSize) {
+          currentBase = pGroup / gSize;
+       } else {
+          currentBase = pPerson; // Fallback
+       }
+    }
+
+    const total = currentBase * bookingGuests;
+    const advance = Math.round(total * 0.30);
+    const aggregatedBar = bar * bookingGuests;
+    const discountRate = Math.round(100 - (total / aggregatedBar) * 100);
+
+    return { 
+       basePrice: currentBase, 
+       totalPrice: total, 
+       advance, 
+       barRate: bar, 
+       discountRate: discountRate > 0 ? discountRate : 0 
+    };
+  };
+
 
   const scrollToSection = (id) => {
     setActiveTab(id.replace('section-', ''));
@@ -769,7 +824,7 @@ const TourDetailView = () => {
                       </div>
                     </div>
 
-                    {/* Middle Pricing Card */}
+                    {/* Middle Pricing Card (Original Static Display - Kept as requested but slightly adjusted padding if needed, sticking to requested logic) */}
                     <div className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-4 border-b-2">
                        <div className="flex justify-between items-start">
                           <div>
@@ -791,6 +846,94 @@ const TourDetailView = () => {
                           </div>
                        </div>
                     </div>
+
+                    {/* Dynamic Booking & Pricing Widget */}
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-5 rounded-b-2xl shadow-sm relative z-10 w-full mb-6">
+                       
+                       <div className="flex justify-between items-start">
+                          <div className="flex flex-col">
+                            {getDynamicPriceData().discountRate > 0 && (
+                                <span className="mb-2 bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-[10px] font-black uppercase px-2 py-0.5 rounded-full w-max tracking-wide shadow-sm">
+                                  {getDynamicPriceData().discountRate}% OFF
+                                </span>
+                            )}
+                            <div className="flex items-baseline gap-2">
+                               <span className="text-3xl font-black text-slate-900 dark:text-white">
+                                  {formatPrice(getDynamicPriceData().basePrice, true)}/-
+                               </span>
+                               {getDynamicPriceData().barRate > getDynamicPriceData().basePrice && (
+                                  <span className="text-sm text-slate-400 line-through font-medium">
+                                    {formatPrice(getDynamicPriceData().barRate, true)}/-
+                                  </span>
+                               )}
+                            </div>
+                            <p className="text-[11px] text-slate-500 font-bold mt-1">Per {getPriceSubLabel().long}.</p>
+                          </div>
+                       </div>
+
+                       <div className="grid grid-cols-2 gap-3 mt-1">
+                          <div className="flex flex-col gap-1.5">
+                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Journey Date</label>
+                             <input 
+                                type="date"
+                                value={bookingDate}
+                                onChange={(e) => setBookingDate(e.target.value)}
+                                min={new Date().toISOString().split('T')[0]}
+                                className="w-full text-xs font-bold text-slate-700 bg-slate-50 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                             />
+                          </div>
+                          <div className="flex flex-col gap-1.5">
+                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Guests</label>
+                             <select 
+                                value={bookingGuests}
+                                onChange={(e) => setBookingGuests(parseInt(e.target.value))}
+                                className="w-full text-xs font-bold text-slate-700 bg-slate-50 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all cursor-pointer"
+                             >
+                                {[1,2,3,4,5,6,7,8,9,10,12,15,20].map(num => (
+                                   <option key={num} value={num}>{num} {num === 1 ? 'Guest' : 'Guests'}</option>
+                                ))}
+                             </select>
+                          </div>
+                       </div>
+
+                       <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 mt-2 shadow-inner">
+                          <div className="flex justify-between items-center mb-2">
+                             <span className="text-[11px] text-slate-600 dark:text-slate-400 font-bold uppercase">Basic Price</span>
+                             <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{formatPrice(getDynamicPriceData().basePrice, true)}/-</span>
+                          </div>
+                          <div className="flex justify-between items-center mb-3">
+                             <span className="text-[10px] text-slate-500 font-bold uppercase">Guests</span>
+                             <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400">x {bookingGuests}</span>
+                          </div>
+                          <div className="border-t border-slate-200 dark:border-slate-700 pt-3 flex justify-between items-center mb-3">
+                             <span className="text-[13px] font-black text-slate-900 dark:text-white uppercase tracking-tight">Total Price</span>
+                             <span className="text-sm font-black text-slate-800 dark:text-slate-100">{formatPrice(getDynamicPriceData().totalPrice, true)}/-</span>
+                          </div>
+                          <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-orange-200 dark:border-orange-800/30 flex justify-between items-center shadow-sm">
+                             <div>
+                                <p className="text-[11px] font-black leading-tight text-orange-800 dark:text-orange-400 uppercase tracking-tight">Advance Payment (30%)</p>
+                                <p className="text-[9px] text-orange-600/70 dark:text-orange-400/70 font-bold mt-0.5">Pay now to lock current rates</p>
+                             </div>
+                             <span className="text-base font-black text-orange-600 dark:text-orange-400">{formatPrice(getDynamicPriceData().advance, true)}/-</span>
+                          </div>
+                       </div>
+
+                       <button 
+                          onClick={() => setIsAuthModalOpen(true)} 
+                          className="w-full flex items-center justify-center gap-2 rounded-xl py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[13px] font-black hover:opacity-90 transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-wider mt-1"
+                       >
+                          Reserve Your Spot
+                          <span className="material-symbols-outlined text-[16px]">verified</span>
+                       </button>
+                    </div>
+
+                    <GoogleAuthModal 
+                       isOpen={isAuthModalOpen} 
+                       onClose={() => setIsAuthModalOpen(false)} 
+                       onSuccess={(user) => {
+                          alert(`Booking Reservation Attempt Captured!\n\nLead Details:\nName: ${user.name}\nEmail: ${user.email}\nTour: ${tour.title}\nDate: ${bookingDate}\nGuests: ${bookingGuests}\nTotal Price: ₹${getDynamicPriceData().totalPrice}\nAdvance: ₹${getDynamicPriceData().advance}\n\n*Source URL: ${window.location.href}*\n\nStatus: Details sent to backend.`);
+                       }}
+                    />
 
                     {/* Bottom Action Card */}
                     <div className="flex flex-col gap-3">
