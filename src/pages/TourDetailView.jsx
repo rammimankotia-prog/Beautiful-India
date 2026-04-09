@@ -598,13 +598,21 @@ const TourDetailView = () => {
 
                   {/* Highlights */}
                   {tour.highlights && (
-                    <div className="flex flex-col gap-6 mt-4 p-8 border border-slate-200 dark:border-slate-800 rounded-[2px] bg-white dark:bg-slate-900 shadow-sm border-t-0 border-l-0 border-r-0 border-b-2">
-                      <h3 className="text-[26px] font-bold text-slate-800 dark:text-slate-200">Highlights</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                        {(Array.isArray(tour.highlights) ? tour.highlights : (tour.highlights || '').split(/(?:\n|<br\s*\/?>|<\/?p>|<\/?div>|<\/?li>)/i)).filter(h => h && h.trim().length > 0 && !/^<\/?ul>$/.test(h.trim())).map((highlight, idx) => (
-                          <div key={idx} className="flex gap-4 text-[#334155] dark:text-slate-300 items-start">
-                            <span className="material-symbols-outlined text-[#0a6c75] text-[20px] shrink-0 font-bold mt-0.5" style={{fontVariationSettings: "'FILL' 0, 'wght' 700"}}>check</span>
-                            <span className="leading-relaxed text-[16px] prose prose-sm dark:prose-invert max-w-none text-[#334155] dark:text-slate-300 m-0 p-0" dangerouslySetInnerHTML={{ __html: formatContent(highlight.trim()) }}></span>
+                    <div className="flex flex-col gap-6 mt-4 p-8 border border-slate-200 dark:border-slate-800 rounded-[2rem] bg-white dark:bg-slate-900 shadow-sm border-t-0 border-l-0 border-r-0 border-b-2">
+                      <h3 className="text-[26px] font-bold text-slate-800 dark:text-slate-200">Tour Highlights</h3>
+                      <div className="flex flex-col gap-y-6">
+                        {(() => {
+                           // Normalize and robustly split into individual points
+                           const raw = Array.isArray(tour.highlights) ? tour.highlights.join('\n') : (tour.highlights || '');
+                           return raw.split(/(?:\n|<br\s*\/?>|<\/?p>|<\/?div>|<\/?li>)/i)
+                             .map(h => h.replace(/<[^>]*>/g, '').trim()) // Strip remaining tags and trim
+                             .filter(h => h.length > 0 && !/^<\/?ul>$/.test(h));
+                        })().map((highlight, idx) => (
+                          <div key={idx} className="flex gap-4 text-[#334155] dark:text-slate-300 items-start group">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100/50 dark:bg-emerald-950/30 text-[#0a6c75] dark:text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                              <span className="material-symbols-outlined text-[20px] font-bold" style={{fontVariationSettings: "'FILL' 0, 'wght' 700"}}>check</span>
+                            </div>
+                            <span className="leading-relaxed text-[17px] font-medium text-[#334155] dark:text-slate-300 m-0 p-0 pt-0.5" dangerouslySetInnerHTML={{ __html: highlight.trim() }}></span>
                           </div>
                         ))}
                       </div>
