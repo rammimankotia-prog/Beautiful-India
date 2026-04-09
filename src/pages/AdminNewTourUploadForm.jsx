@@ -9,6 +9,29 @@ import { safeCacheTours, STORAGE_KEYS } from "../utils/storage";
  */
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
+/* ─────────────────────────────────────────────
+   Format Content Helper 
+───────────────────────────────────────────── */
+const formatContent = (content) => {
+  if (!content) return '';
+  if (/<(p|div|h[1-6]|ul|ol|li|blockquote|section|article|span|br)/i.test(content)) {
+    return content;
+  }
+  return content
+    .split(/\n\s*\n/)
+    .map((para) => {
+      let text = para.trim();
+      if (!text) return '';
+      text = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br />');
+      if (text.startsWith('>')) return `<blockquote>${text.substring(1).trim()}</blockquote>`;
+      return `<p>${text}</p>`;
+    })
+    .join('');
+};
+
 const AdminNewTourUploadForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -81,6 +104,8 @@ const AdminNewTourUploadForm = () => {
 
   const [destSearchQuery, setDestSearchQuery] = React.useState("");
   const [subreqSearchQuery, setSubreqSearchQuery] = React.useState("");
+  const [dayEditorModes, setDayEditorModes] = React.useState({});
+
   const [categories, setCategories] = React.useState({
     ...categoriesData.categories,
     destinationStates: categoriesData.categories.destinationStates || {
@@ -2092,88 +2117,115 @@ const AdminNewTourUploadForm = () => {
                             />
                           </label>
                           <label className="flex flex-col">
-                            <div className="flex items-center justify-between pb-1">
+                            <div className="flex items-center justify-between pb-1 flex-wrap gap-y-2">
                               <span className="text-slate-700 dark:text-slate-300 text-sm font-medium gap-2 flex items-center">
                                 Day Description
                                 <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded uppercase tracking-wider font-bold">HTML Supported</span>
                               </span>
-                              <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700/50">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    insertFormatting(index, "**", "**")
-                                  }
-                                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                  title="Bold"
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">
-                                    format_bold
-                                  </span>
-                                </button>
-                                <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
-                                <button
-                                  type="button"
-                                  onClick={() => insertFormatting(index, "- ")}
-                                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                  title="Bullet List"
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">
-                                    format_list_bulleted
-                                  </span>
-                                </button>
-                                <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    insertFormatting(index, "[", "](https://)")
-                                  }
-                                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                  title="Insert Link"
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">
-                                    link
-                                  </span>
-                                </button>
-                                <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    insertFormatting(index, "<br />\n", "")
-                                  }
-                                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                  title="Insert Break (HTML)"
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">
-                                    keyboard_return
-                                  </span>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    insertFormatting(index, "<p>", "</p>")
-                                  }
-                                  className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
-                                  title="Insert HTML Paragraph"
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">
-                                    code
-                                  </span>
-                                </button>
+                              
+                              <div className="flex items-center gap-2">
+                                <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700 h-[34px]">
+                                    <button 
+                                        type="button"
+                                        onClick={() => setDayEditorModes(prev => ({...prev, [index]: 'html'}))}
+                                        className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider transition-all ${(dayEditorModes[index] || 'html') === 'html' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-slate-400 hover:text-slate-600'}`}
+                                    >
+                                        HTML Format
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        onClick={() => setDayEditorModes(prev => ({...prev, [index]: 'visual'}))}
+                                        className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider transition-all ${dayEditorModes[index] === 'visual' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-slate-400 hover:text-slate-600'}`}
+                                    >
+                                        Real Format
+                                    </button>
+                                </div>
+                                <div className={`flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700/50 transition-opacity ${(dayEditorModes[index] || 'html') === 'visual' ? 'opacity-50 pointer-events-none' : ''}`}>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      insertFormatting(index, "**", "**")
+                                    }
+                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
+                                    title="Bold"
+                                  >
+                                    <span className="material-symbols-outlined text-[18px]">
+                                      format_bold
+                                    </span>
+                                  </button>
+                                  <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
+                                  <button
+                                    type="button"
+                                    onClick={() => insertFormatting(index, "- ")}
+                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
+                                    title="Bullet List"
+                                  >
+                                    <span className="material-symbols-outlined text-[18px]">
+                                      format_list_bulleted
+                                    </span>
+                                  </button>
+                                  <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      insertFormatting(index, "[", "](https://)")
+                                    }
+                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
+                                    title="Insert Link"
+                                  >
+                                    <span className="material-symbols-outlined text-[18px]">
+                                      link
+                                    </span>
+                                  </button>
+                                  <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      insertFormatting(index, "<br />\n", "")
+                                    }
+                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
+                                    title="Insert Break (HTML)"
+                                  >
+                                    <span className="material-symbols-outlined text-[18px]">
+                                      keyboard_return
+                                    </span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      insertFormatting(index, "<p>", "</p>")
+                                    }
+                                    className="p-1 hover:text-primary transition-colors flex items-center gap-0.5"
+                                    title="Insert HTML Paragraph"
+                                  >
+                                    <span className="material-symbols-outlined text-[18px]">
+                                      code
+                                    </span>
+                                  </button>
+                                </div>
                               </div>
                             </div>
-                            <textarea
-                              id={`day-desc-${index}`}
-                              value={day.description || ""}
-                              onChange={(e) =>
-                                handleItineraryChange(
-                                  index,
-                                  "description",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary min-h-[120px] resize-y"
-                              placeholder="Describe the activities for this day... (Use toolbar to format)"
-                            ></textarea>
+                            
+                            {(dayEditorModes[index] || 'html') === 'html' ? (
+                              <textarea
+                                id={`day-desc-${index}`}
+                                value={day.description || ""}
+                                onChange={(e) =>
+                                  handleItineraryChange(
+                                    index,
+                                    "description",
+                                    e.target.value,
+                                  )
+                                }
+                                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary min-h-[120px] resize-y"
+                                placeholder="Describe the activities for this day... (Use toolbar to format)"
+                              ></textarea>
+                            ) : (
+                              <div 
+                                  className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 p-4 min-h-[120px] prose prose-sm dark:prose-invert max-w-none max-h-[400px] overflow-auto shadow-inner"
+                                  dangerouslySetInnerHTML={{ __html: formatContent(day.description) || '<span class="text-slate-400 italic">No description provided for this day...</span>' }}
+                              />
+                            )}
                           </label>
                           {/* Highlight Tags */}
                           <label className="flex flex-col">
