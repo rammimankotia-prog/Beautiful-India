@@ -58,60 +58,70 @@ const RichTextEditor = ({ value, onChange, placeholder, minHeight = "min-h-[160p
   };
 
   return (
-    <div className="border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors bg-white dark:bg-slate-900 flex flex-col">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 p-2 bg-slate-50 dark:bg-slate-800/50">
-        <div className={`flex flex-wrap gap-1 items-center transition-opacity ${mode === 'html' ? 'opacity-50 pointer-events-none' : ''}`}>
+    <div className="border border-slate-300 dark:border-slate-700 rounded-2xl overflow-hidden focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/5 transition-all bg-white dark:bg-slate-900 flex flex-col shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 p-2.5 bg-slate-50 dark:bg-slate-900/50">
+        <div className={`flex flex-wrap gap-1.5 items-center transition-all ${mode === 'html' ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
           {[
-              { cmd: 'bold', icon: 'format_bold' },
-              { cmd: 'italic', icon: 'format_italic' },
-              { cmd: 'underline', icon: 'format_underlined' },
+              { cmd: 'bold', icon: 'format_bold', label: 'Bold' },
+              { cmd: 'italic', icon: 'format_italic', label: 'Italic' },
+              { cmd: 'underline', icon: 'format_underlined', label: 'Underline' },
               { divider: true },
-              { cmd: 'formatBlock', val: '<h2>', label: 'H2' },
-              { cmd: 'formatBlock', val: '<h3>', label: 'H3' },
+              { cmd: 'formatBlock', val: '<h2>', label: 'H2', text: 'H2' },
+              { cmd: 'formatBlock', val: '<h3>', label: 'H3', text: 'H3' },
               { divider: true },
-              { cmd: 'insertUnorderedList', icon: 'format_list_bulleted' },
-              { cmd: 'createLink', prompt: 'URL:', icon: 'link' }
+              { cmd: 'insertUnorderedList', icon: 'format_list_bulleted', label: 'Bullet List' },
+              { cmd: 'createLink', prompt: 'Enter URL (e.g. https://google.com):', icon: 'link', label: 'Add Link' }
           ].map((btn, i) => (
               btn.divider ? (
-                  <div key={i} className="w-px h-5 bg-slate-300 dark:bg-slate-600 mx-1"></div>
+                  <div key={i} className="w-px h-5 bg-slate-300 dark:bg-slate-700 mx-1.5"></div>
               ) : (
                   <button 
                       key={i}
                       type="button"
-                      onClick={() => btn.prompt ? execCommand(btn.cmd, prompt(btn.prompt)) : execCommand(btn.cmd, btn.val)} 
-                      className="w-7 h-7 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-primary rounded-md transition-all bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
-                      title={btn.label || btn.cmd}
+                      onClick={() => {
+                        if (btn.cmd === 'createLink') {
+                          const url = prompt(btn.prompt);
+                          if (url) execCommand(btn.cmd, url);
+                        } else {
+                          execCommand(btn.cmd, btn.val);
+                        }
+                      }} 
+                      className="w-8 h-8 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-primary hover:shadow-sm rounded-lg transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                      title={btn.label}
                   >
-                      {btn.icon ? <span className="material-symbols-outlined text-[16px]">{btn.icon}</span> : <span className="font-bold text-[9px]">{btn.label}</span>}
+                      {btn.icon ? <span className="material-symbols-outlined text-[18px]">{btn.icon}</span> : <span className="font-black text-[10px] tracking-tight">{btn.text}</span>}
                   </button>
               )
           ))}
         </div>
 
-        <div className="flex bg-slate-200 dark:bg-slate-800 p-0.5 rounded border border-slate-300 dark:border-slate-700 h-[28px] self-start sm:self-auto shrink-0 shadow-inner">
+        <div className="flex bg-slate-200/50 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 h-[34px] self-start sm:self-auto shrink-0 shadow-inner">
             <button 
                 type="button"
                 onClick={() => setMode('visual')}
-                className={`px-3 py-0.5 rounded-sm text-[9px] font-black uppercase tracking-wider transition-all ${mode === 'visual' ? 'bg-white shadow-sm dark:bg-slate-700 text-primary' : 'text-slate-500 hover:text-slate-400'} flex items-center`}
+                className={`px-4 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${mode === 'visual' ? 'bg-white shadow-md dark:bg-slate-700 text-primary scale-[1.02]' : 'text-slate-500 hover:text-slate-400'}`}
             >
+                <span className="material-symbols-outlined text-[14px]">auto_awesome</span>
                 Aesthetics
             </button>
             <button 
                 type="button"
                 onClick={() => setMode('html')}
-                className={`px-3 py-0.5 rounded-sm text-[9px] font-black uppercase tracking-wider transition-all ${mode === 'html' ? 'bg-white shadow-sm dark:bg-slate-700 text-primary' : 'text-slate-500 hover:text-slate-400'} flex items-center`}
+                className={`px-4 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${mode === 'html' ? 'bg-white shadow-md dark:bg-slate-700 text-primary scale-[1.02]' : 'text-slate-500 hover:text-slate-400'}`}
             >
+                <span className="material-symbols-outlined text-[14px]">code</span>
                 Raw Code
             </button>
         </div>
       </div>
       
-      <div className="relative">
+      <div className="relative bg-white dark:bg-slate-900">
         {mode === 'html' ? (
           <textarea
             value={value || ""}
             onChange={(e) => onChange(e.target.value)}
-            className={`w-full bg-slate-900 text-emerald-400 font-mono text-[13px] p-4 border-0 focus:ring-0 resize-y placeholder-slate-700 ${minHeight} leading-relaxed`}
+            className={`w-full bg-slate-950 text-emerald-400 font-mono text-[13px] p-5 border-0 focus:ring-0 resize-y placeholder-slate-800 ${minHeight} leading-relaxed selection:bg-emerald-500/20`}
+            spellCheck="false"
             placeholder={`<!--\n${placeholder}\n-->`}
           />
         ) : (
@@ -119,7 +129,7 @@ const RichTextEditor = ({ value, onChange, placeholder, minHeight = "min-h-[160p
             ref={editorRef}
             contentEditable
             onInput={handleVisualInput}
-            className={`w-full p-4 outline-none prose prose-sm dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 ${minHeight} overflow-auto cursor-text leading-relaxed marker:text-primary list-disc`}
+            className={`w-full p-5 outline-none prose prose-sm dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 ${minHeight} overflow-auto cursor-text leading-relaxed marker:text-primary list-disc selection:bg-primary/10`}
             suppressContentEditableWarning
             data-placeholder={placeholder}
           />

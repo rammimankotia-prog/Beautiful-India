@@ -209,16 +209,17 @@ const TourDetailView = () => {
     return currentRegions.some(region => targetRegions.includes(region));
   });
 
-  let similarTours = sameStateTours.length > 0 
-    ? sameStateTours 
-    : allTours.filter(t => t.id !== (tour?.id) && (t.destination === tour?.destination));
-
-  if (similarTours.length < 4) {
-    const additional = allTours.filter(t => t.id !== (tour?.id) && t.status !== 'paused' && !similarTours.some(s => s.id === t.id));
-    similarTours = [...similarTours, ...additional].slice(0, 4);
-  } else {
-    similarTours = similarTours.slice(0, 4);
-  }
+  let similarTours = sameStateTours.length >= 4 
+    ? sameStateTours.slice(0, 4) 
+    : (() => {
+        const destMatched = allTours.filter(t => t.id !== (tour?.id) && (t.destination === tour?.destination));
+        const combined = [...sameStateTours, ...destMatched.filter(d => !sameStateTours.some(s => s.id === d.id))];
+        if (combined.length < 4) {
+          const others = allTours.filter(t => t.id !== (tour?.id) && t.status !== 'paused' && !combined.some(c => c.id === t.id));
+          return [...combined, ...others].slice(0, 4);
+        }
+        return combined.slice(0, 4);
+      })();
 
   if (loading || dataLoading) return <LoadingSpinner />;
   
@@ -826,39 +827,56 @@ const TourDetailView = () => {
 
                     {/* Dynamic Booking & Pricing Widget */}
                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-5 rounded-b-2xl shadow-sm relative z-10 w-full mb-6">
-                       
-                       <div className="flex justify-between items-start">
+                        
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50">
                           <div className="flex flex-col">
-                            {getDynamicPriceData().discountRate > 0 && (
-                                <span className="mb-2 bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-[10px] font-black uppercase px-2 py-0.5 rounded-full w-max tracking-wide shadow-sm">
-                                  {getDynamicPriceData().discountRate}% OFF
-                                </span>
-                            )}
-                            <div className="flex items-baseline gap-2">
-                               <span className="text-3xl font-black text-slate-900 dark:text-white">
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Starting From:</span>
+                            <div className="flex items-baseline gap-3">
+                               <span className="text-4xl font-black text-emerald-600 dark:text-emerald-500 tracking-tight">
                                   {formatPrice(getDynamicPriceData().basePrice, true)}/-
                                </span>
                                {getDynamicPriceData().barRate > getDynamicPriceData().basePrice && (
-                                  <span className="text-sm text-slate-400 line-through font-medium">
+                                  <span className="text-base text-slate-300 dark:text-slate-600 line-through font-bold">
                                     {formatPrice(getDynamicPriceData().barRate, true)}/-
                                   </span>
                                )}
                             </div>
-                            <p className="text-[11px] text-slate-500 font-bold mt-1">Per {getPriceSubLabel().long}.</p>
+                            <p className="text-[13px] text-slate-700 dark:text-slate-300 font-bold mt-2">Per {getPriceSubLabel().long}.</p>
+                            
+                            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700/50">
+                               <p className="text-[11px] font-black italic text-orange-600 dark:text-orange-400 leading-tight uppercase tracking-wider">
+                                 HOTEL COST MAY VARY - SUBMIT DETAILS FOR RATES!
+                               </p>
+                            </div>
                           </div>
-                       </div>
+                        </div>
+
+                        {getDynamicPriceData().discountRate > 0 && (
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800/50 rounded-lg">
+                             <span className="material-symbols-outlined text-[16px] text-rose-500">sell</span>
+                             <span className="text-[11px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest">Special {getDynamicPriceData().discountRate}% Discount Applied</span>
+                          </div>
+                        )}
 
                        <div className="grid grid-cols-2 gap-3 mt-1">
-                          <div className="flex flex-col gap-1.5">
-                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Journey Date</label>
-                             <input 
-                                type="date"
-                                value={bookingDate}
-                                onChange={(e) => setBookingDate(e.target.value)}
-                                min={new Date().toISOString().split('T')[0]}
-                                className="w-full text-xs font-bold text-slate-700 bg-slate-50 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                             />
-                          </div>
+                           <div className="flex flex-col gap-1.5 group">
+                              <label className="text-[10px] font-bold text-slate-500 group-hover:text-primary transition-colors uppercase tracking-wider flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[12px]">calendar_month</span>
+                                Journey Date
+                              </label>
+                              <div className="relative">
+                                <input 
+                                   type="date"
+                                   value={bookingDate}
+                                   onChange={(e) => setBookingDate(e.target.value)}
+                                   min={new Date().toISOString().split('T')[0]}
+                                   className="w-full text-[12px] font-black text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer appearance-none"
+                                />
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                   <span className="material-symbols-outlined text-[18px]">expand_more</span>
+                                </div>
+                              </div>
+                           </div>
                           <div className="flex flex-col gap-1.5">
                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Guests</label>
                              <div className="flex items-center justify-between w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1 transition-all">
@@ -1051,7 +1069,7 @@ const TourDetailView = () => {
                               <div>
                                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starts from</p>
                                 <div className="flex items-baseline gap-1">
-                                  <p className="text-base font-black text-primary">{formatPrice(t.price, true)}</p>
+                                  <p className="text-base font-black text-primary">{formatPrice(t.pricePerPerson || t.price, true)}</p>
                                   <span className="text-[9px] text-slate-400 font-bold uppercase">/ {(() => {
                                       if (t.pricePerPerson) return 'person';
                                       if (t.pricePerCouple) return 'couple';
