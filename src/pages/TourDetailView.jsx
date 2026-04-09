@@ -69,6 +69,17 @@ const TourDetailView = () => {
   const { formatPrice } = useCurrency();
   const { tours, reviews, loading: dataLoading, error: dataError } = useData();
 
+  const getPriceSubLabel = () => {
+    if (!tour) return { short: 'person', long: 'Person on twin sharing' };
+    if (tour.pricePerPerson) return { short: 'person', long: 'Person on twin sharing' };
+    if (tour.pricePerCouple) return { short: 'couple', long: 'Couple' };
+    if (tour.pricePerGroup) return { short: `group of ${tour.groupSize || '?'}`, long: `Group of ${tour.groupSize || '?'}` };
+    return { 
+      short: tour.priceBasis === 'per_package' ? 'pkg' : 'person',
+      long: tour.priceBasis === 'per_package' ? 'Package' : 'Person on twin sharing'
+    };
+  };
+
   const scrollToSection = (id) => {
     setActiveTab(id.replace('section-', ''));
     const element = document.getElementById(id);
@@ -281,7 +292,7 @@ const TourDetailView = () => {
                <span className="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tighter">
                  {tour.price?.toLocaleString('en-IN') || '---'}
                </span>
-               <span className="text-[10px] uppercase font-bold text-slate-500">/{tour.priceBasis === 'per_package' ? 'pkg' : 'person'}</span>
+               <span className="text-[10px] uppercase font-bold text-slate-500">/{getPriceSubLabel().short}</span>
              </div>
            </div>
            <button onClick={() => setIsQuoteModalOpen(true)} className="bg-primary text-white text-xs font-black px-6 py-3 rounded-full hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/25 uppercase tracking-wider">
@@ -341,7 +352,7 @@ const TourDetailView = () => {
                        <span className="text-4xl font-black text-slate-900 dark:text-white leading-none tracking-tighter">
                          {tour.price?.toLocaleString('en-IN') || '---'}
                        </span>
-                       <span className="text-[10px] uppercase font-bold text-slate-500 ml-1">/{tour.priceBasis === 'per_package' ? 'pkg' : 'person'}</span>
+                       <span className="text-[10px] uppercase font-bold text-slate-500 ml-1">/{getPriceSubLabel().short}</span>
                      </div>
                    </div>
                   {(tour.nature === 'group' || tour.nature === 'private') && tour.minPersons > 1 && (
@@ -762,7 +773,7 @@ const TourDetailView = () => {
                                <span className="text-2xl font-black text-emerald-600 dark:text-emerald-500">{formatPrice(tour.price, true)}/-</span>
                                <span className="text-sm text-slate-400 line-through font-medium">{formatPrice(Math.round(tour.price * 1.15), true)}/-</span>
                             </div>
-                            <p className="text-[11px] text-slate-500 font-bold mt-1">Per {tour.priceBasis === 'per_package' ? 'Package' : 'Person on twin sharing'}.</p>
+                            <p className="text-[11px] text-slate-500 font-bold mt-1">Per {getPriceSubLabel().long}.</p>
                             <p className="text-[10px] text-orange-600 dark:text-orange-400 font-black mt-1 uppercase italic">Hotel cost may vary - submit details for rates!</p>
                           </div>
                           <div className="text-right">
