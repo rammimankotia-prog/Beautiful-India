@@ -824,29 +824,6 @@ const TourDetailView = () => {
                       </div>
                     </div>
 
-                    {/* Middle Pricing Card (Original Static Display - Kept as requested but slightly adjusted padding if needed, sticking to requested logic) */}
-                    <div className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-4 border-b-2">
-                       <div className="flex justify-between items-start">
-                          <div>
-                            <p className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Starting from:</p>
-                            <div className="flex items-baseline gap-2">
-                               <span className="text-2xl font-black text-emerald-600 dark:text-emerald-500">{formatPrice(tour.price, true)}/-</span>
-                               <span className="text-sm text-slate-400 line-through font-medium">{formatPrice(Math.round(tour.price * 1.15), true)}/-</span>
-                            </div>
-                            <p className="text-[11px] text-slate-500 font-bold mt-1">Per {getPriceSubLabel().long}.</p>
-                            <p className="text-[10px] text-orange-600 dark:text-orange-400 font-black mt-1 uppercase italic">Hotel cost may vary - submit details for rates!</p>
-                          </div>
-                          <div className="text-right">
-                             <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">Price For Month</p>
-                             <select className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-1 text-xs font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer">
-                                {availableMonths.map(month => (
-                                  <option key={month} value={month}>{month}</option>
-                                ))}
-                             </select>
-                          </div>
-                       </div>
-                    </div>
-
                     {/* Dynamic Booking & Pricing Widget */}
                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-5 rounded-b-2xl shadow-sm relative z-10 w-full mb-6">
                        
@@ -884,15 +861,21 @@ const TourDetailView = () => {
                           </div>
                           <div className="flex flex-col gap-1.5">
                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Guests</label>
-                             <select 
-                                value={bookingGuests}
-                                onChange={(e) => setBookingGuests(parseInt(e.target.value))}
-                                className="w-full text-xs font-bold text-slate-700 bg-slate-50 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all cursor-pointer"
-                             >
-                                {[1,2,3,4,5,6,7,8,9,10,12,15,20].map(num => (
-                                   <option key={num} value={num}>{num} {num === 1 ? 'Guest' : 'Guests'}</option>
-                                ))}
-                             </select>
+                             <div className="flex items-center justify-between w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1 transition-all">
+                                <button 
+                                  onClick={() => setBookingGuests(Math.max(1, bookingGuests - 1))}
+                                  className="w-8 h-8 flex items-center justify-center rounded bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-100 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition"
+                                >
+                                  <span className="material-symbols-outlined text-[16px] font-bold">remove</span>
+                                </button>
+                                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{bookingGuests}</span>
+                                <button 
+                                  onClick={() => setBookingGuests(Math.min(20, bookingGuests + 1))}
+                                  className="w-8 h-8 flex items-center justify-center rounded bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-100 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition"
+                                >
+                                  <span className="material-symbols-outlined text-[16px] font-bold">add</span>
+                                </button>
+                             </div>
                           </div>
                        </div>
 
