@@ -180,11 +180,11 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                          {/* Name Input with Deep Inset Label */}
                          <div className="group relative">
-                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
                                 <User size={20} />
                              </div>
                              <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
-                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Appellation / Full Name</label>
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-500 dark:text-slate-400 mb-0.5 opacity-80">Appellation / Full Name</label>
                                  <input 
                                      type="text"
                                      name="name"
@@ -192,18 +192,18 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
                                      placeholder="e.g. Alexander Walker"
                                      value={formData.name}
                                      onChange={handleChange}
-                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-400 dark:placeholder:text-slate-600"
                                  />
                              </div>
                          </div>
 
                          {/* Email Input */}
                          <div className="group relative">
-                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
                                 <Mail size={20} />
                              </div>
                              <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
-                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Digital Address / Email</label>
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-500 dark:text-slate-400 mb-0.5 opacity-80">Digital Address / Email</label>
                                  <input 
                                      type="email"
                                      name="email"
@@ -211,7 +211,7 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
                                      placeholder="alex@expedition.com"
                                      value={formData.email}
                                      onChange={handleChange}
-                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-400 dark:placeholder:text-slate-600"
                                  />
                              </div>
                          </div>
@@ -220,11 +220,11 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                          {/* Phone Input */}
                          <div className="group relative">
-                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
                                 <Phone size={20} />
                              </div>
                              <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
-                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Mobile Hotline / WhatsApp</label>
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-500 dark:text-slate-400 mb-0.5 opacity-80">Mobile Hotline / WhatsApp</label>
                                  <input 
                                      type="tel"
                                      name="phone"
@@ -232,18 +232,18 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
                                      placeholder="+91 — — — — —"
                                      value={formData.phone}
                                      onChange={handleChange}
-                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                     className="w-full bg-transparent outline-none text-slate-900 dark:text-white font-black text-base placeholder:text-slate-400 dark:placeholder:text-slate-600"
                                  />
                              </div>
                          </div>
 
                          {/* Date Input */}
                          <div className="group relative">
-                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-300 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
+                             <div className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-focus-within:bg-primary/10 group-focus-within:text-primary transition-all shadow-sm">
                                 <Calendar size={20} />
                              </div>
                              <div className="pl-24 pr-8 py-4 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-white/5 focus-within:border-primary/30 rounded-[2rem] transition-all">
-                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-400 mb-0.5 opacity-60">Planned Departure</label>
+                                 <label className="block text-[9px] font-black uppercase tracking-[3px] text-slate-500 dark:text-slate-400 mb-0.5 opacity-80">Planned Departure</label>
                                  <input 
                                      type="month"
                                      name="travelDate"
