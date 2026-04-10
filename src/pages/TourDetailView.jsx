@@ -800,6 +800,106 @@ const TourDetailView = () => {
                 {/* Sidebar (Right Column) */}
                 <aside className="lg:col-span-1">
                    <div className="flex flex-col gap-6 sticky top-24">
+                      {/* Tour Package Quick Info Widget */}
+                      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl p-8 overflow-hidden relative">
+                         <div className="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-12 -translate-x-12 blur-3xl"></div>
+                         
+                         <div className="space-y-6 relative">
+                            {/* Header */}
+                            <div>
+                               <h4 className="text-[10px] font-extrabold uppercase tracking-[4px] text-primary mb-1">Package Highlights</h4>
+                               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">At a Glance</p>
+                            </div>
+
+                            {/* City Path (Route Highlights) */}
+                            {tour.cityPath && (
+                               <div className="flex flex-col gap-2.5 bg-slate-50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Route Highlights</label>
+                                  <div className="flex flex-wrap items-center gap-2">
+                                     {tour.cityPath.split(/➔|-|->/).map((city, idx, arr) => (
+                                        <React.Fragment key={idx}>
+                                           <span className="text-[13px] font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">{city.trim()}</span>
+                                           {idx < arr.length - 1 && (
+                                              <span className="material-symbols-outlined text-primary text-[14px]">arrow_forward</span>
+                                           )}
+                                        </React.Fragment>
+                                     ))}
+                                  </div>
+                               </div>
+                            )}
+
+                            {/* Core Logistics Grid */}
+                            <div className="grid grid-cols-2 gap-4">
+                               {/* Hotel Category */}
+                               {tour.hotelCategory && tour.hotelCategory.length > 0 && (
+                                  <div className="flex flex-col gap-2">
+                                     <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Hotel Category</label>
+                                     <div className="flex flex-wrap gap-1">
+                                        {tour.hotelCategory.map(cat => (
+                                           <div key={cat} className="flex items-center gap-1.5 text-[10px] font-black text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/10 px-3 py-1.5 rounded-xl border border-amber-100 dark:border-amber-900/20 uppercase tracking-tight">
+                                              <span className="material-symbols-outlined text-[14px] filled" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                                              {cat.replace('_', ' ')}
+                                           </div>
+                                        ))}
+                                     </div>
+                                  </div>
+                                )}
+
+                               {/* Meal Plan */}
+                               {tour.mealPlan && tour.mealPlan.length > 0 && (
+                                  <div className="flex flex-col gap-2">
+                                     <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Meal Plan</label>
+                                     <div className="flex flex-wrap gap-1">
+                                        {tour.mealPlan.map(meal => (
+                                           <div key={meal} className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-900/30 uppercase tracking-tight">
+                                              <span className="material-symbols-outlined text-[14px]">restaurant_menu</span>
+                                              {meal}
+                                           </div>
+                                        ))}
+                                     </div>
+                                  </div>
+                               )}
+                            </div>
+
+                            {/* Transport Type */}
+                            {tour.transport && (
+                               <div className="flex flex-col gap-2">
+                                  <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Transport Type</label>
+                                  <div className="flex items-center gap-2.5 bg-slate-50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-100 dark:border-slate-800/50">
+                                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                        <span className="material-symbols-outlined text-[20px]">{getInclusionIcon(tour.transport)}</span>
+                                     </div>
+                                     <span className="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">{tour.transport} Included</span>
+                                  </div>
+                               </div>
+                            )}
+
+                            {/* Service Icons (Pills) */}
+                            {tour.tourFeatures && tour.tourFeatures.length > 0 && (
+                               <div className="flex flex-col gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+                                  <label className="text-[10px] font-black uppercase tracking-[2px] text-slate-400">Included Services</label>
+                                  <div className="flex flex-wrap gap-2">
+                                     {tour.tourFeatures.map(feature => {
+                                        const mapping = {
+                                           accommodation: { icon: 'hotel', label: 'Accommodation' },
+                                           sightseeing: { icon: 'photo_camera', label: 'Sightseeing' },
+                                           stay: { icon: 'bed', label: 'Stay' },
+                                           transfers: { icon: 'airport_shuttle', label: 'Transfers' }
+                                        };
+                                        const item = mapping[feature] || { icon: 'check_circle', label: feature };
+                                        return (
+                                           <div key={feature} className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.05]">
+                                              <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                                              <span className="text-[11px] font-black uppercase tracking-tight">{item.label}</span>
+                                           </div>
+                                        );
+                                     })}
+                                  </div>
+                               </div>
+                            )}
+                         </div>
+                      </div>
+
                       {/* Booking Widget */}
                       <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl p-8 overflow-hidden relative">
                          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-12 translate-x-12 blur-3xl"></div>
@@ -829,15 +929,32 @@ const TourDetailView = () => {
                             <div className="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/40 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-800/50">
                                <div className="flex flex-col gap-1 p-2">
                                   <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Guests</label>
-                                  <div className="flex items-center gap-2">
-                                     <span className="material-symbols-outlined text-sm text-slate-400">group</span>
-                                     <select 
-                                        value={bookingGuests} 
-                                        onChange={(e) => setBookingGuests(parseInt(e.target.value))}
-                                        className="bg-transparent text-sm font-black text-slate-700 dark:text-slate-200 outline-none w-full"
+                                  <div className="flex items-center gap-1.5 w-full mt-0.5">
+                                     <button 
+                                        type="button" 
+                                        onClick={() => setBookingGuests(prev => Math.max(1, prev - 1))}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all ${bookingGuests > 1 ? 'bg-primary/5 text-primary hover:bg-primary hover:text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800/50 text-slate-300 dark:text-slate-700 cursor-not-allowed'}`}
+                                        disabled={bookingGuests <= 1}
                                      >
-                                        {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{n} {n===1?'Guest':'Guests'}</option>)}
-                                     </select>
+                                        <span className="material-symbols-outlined text-[18px]">remove</span>
+                                     </button>
+                                     
+                                     <div className="flex-1 flex flex-col items-center justify-center min-w-[40px]">
+                                        <span className="text-sm font-black text-slate-800 dark:text-slate-100 tabular-nums leading-none">
+                                           {bookingGuests}
+                                        </span>
+                                        <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-tight mt-0.5">
+                                           {bookingGuests === 1 ? 'Guest' : 'Guests'}
+                                        </span>
+                                     </div>
+
+                                     <button 
+                                        type="button" 
+                                        onClick={() => setBookingGuests(prev => Math.min(20, prev + 1))}
+                                        className="w-8 h-8 flex items-center justify-center rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white shadow-sm transition-all"
+                                     >
+                                        <span className="material-symbols-outlined text-[18px]">add</span>
+                                     </button>
                                   </div>
                                </div>
                                <div className="flex flex-col gap-1 p-2 border-l border-slate-200 dark:border-slate-800">
