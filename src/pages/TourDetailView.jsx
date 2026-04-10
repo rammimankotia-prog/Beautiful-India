@@ -800,240 +800,234 @@ const TourDetailView = () => {
                 {/* Sidebar (Right Column) */}
                 <aside className="lg:col-span-1">
                    <div className="flex flex-col gap-6 sticky top-24">
-                      {/* Tour Package Quick Info Widget */}
-                      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl p-8 overflow-hidden relative">
-                         <div className="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-12 -translate-x-12 blur-3xl"></div>
-                         
-                         <div className="space-y-6 relative">
-                            {/* Header */}
+                      {/* ── Package Highlights Widget ── */}
+                      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800/70 shadow-sm overflow-hidden">
+                        {/* Coloured header */}
+                        <div className="bg-gradient-to-r from-primary/8 to-transparent px-5 pt-5 pb-4 border-b border-slate-100 dark:border-slate-800/60">
+                          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Package Highlights</p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">At a Glance</p>
+                        </div>
+
+                        <div className="px-5 py-5 space-y-5">
+
+                          {/* Route flow */}
+                          {tour.cityPath && (
                             <div>
-                               <h4 className="text-[10px] font-extrabold uppercase tracking-[4px] text-primary mb-1">Package Highlights</h4>
-                               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">At a Glance</p>
+                              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-2">Route</p>
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                {tour.cityPath.split(/➔|-|->/).map((city, idx, arr) => (
+                                  <React.Fragment key={idx}>
+                                    <span className="text-[11px] font-bold text-slate-700 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-lg">
+                                      {city.trim()}
+                                    </span>
+                                    {idx < arr.length - 1 && (
+                                      <span className="text-[11px] font-black text-primary">›</span>
+                                    )}
+                                  </React.Fragment>
+                                ))}
+                              </div>
                             </div>
+                          )}
 
-                            {/* City Path (Route Highlights) */}
-                            {tour.cityPath && (
-                               <div className="flex flex-col gap-2.5 bg-slate-50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800/50">
-                                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Route Highlights</label>
-                                  <div className="flex flex-wrap items-center gap-2">
-                                     {tour.cityPath.split(/➔|-|->/).map((city, idx, arr) => (
-                                        <React.Fragment key={idx}>
-                                           <span className="text-[13px] font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">{city.trim()}</span>
-                                           {idx < arr.length - 1 && (
-                                              <span className="material-symbols-outlined text-primary text-[14px]">arrow_forward</span>
-                                           )}
-                                        </React.Fragment>
-                                     ))}
+                          {/* Hotel + Meals */}
+                          {((tour.hotelCategory && tour.hotelCategory.length > 0) || (tour.mealPlan && tour.mealPlan.length > 0)) && (
+                            <div className="grid grid-cols-2 gap-3">
+                              {tour.hotelCategory && tour.hotelCategory.length > 0 && (
+                                <div>
+                                  <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-1.5">Hotel</p>
+                                  <div className="flex flex-wrap gap-1">
+                                    {tour.hotelCategory.map(cat => (
+                                      <span key={cat} className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200/60 dark:border-amber-800/40 px-2 py-1 rounded-lg">
+                                        <span className="material-symbols-outlined text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                                        {cat.replace('_', ' ')}
+                                      </span>
+                                    ))}
                                   </div>
-                               </div>
-                            )}
-
-                            {/* Core Logistics Grid */}
-                            <div className="grid grid-cols-2 gap-4">
-                               {/* Hotel Category */}
-                               {tour.hotelCategory && tour.hotelCategory.length > 0 && (
-                                  <div className="flex flex-col gap-2">
-                                     <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Hotel Category</label>
-                                     <div className="flex flex-wrap gap-1">
-                                        {tour.hotelCategory.map(cat => (
-                                           <div key={cat} className="flex items-center gap-1.5 text-[10px] font-black text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/10 px-3 py-1.5 rounded-xl border border-amber-100 dark:border-amber-900/20 uppercase tracking-tight">
-                                              <span className="material-symbols-outlined text-[14px] filled" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                              {cat.replace('_', ' ')}
-                                           </div>
-                                        ))}
-                                     </div>
+                                </div>
+                              )}
+                              {tour.mealPlan && tour.mealPlan.length > 0 && (
+                                <div>
+                                  <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-1.5">Meals</p>
+                                  <div className="flex flex-wrap gap-1">
+                                    {tour.mealPlan.map(meal => (
+                                      <span key={meal} className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200/60 dark:border-emerald-800/40 px-2 py-1 rounded-lg">
+                                        <span className="material-symbols-outlined text-[12px]">restaurant_menu</span>
+                                        {meal}
+                                      </span>
+                                    ))}
                                   </div>
-                                )}
-
-                               {/* Meal Plan */}
-                               {tour.mealPlan && tour.mealPlan.length > 0 && (
-                                  <div className="flex flex-col gap-2">
-                                     <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Meal Plan</label>
-                                     <div className="flex flex-wrap gap-1">
-                                        {tour.mealPlan.map(meal => (
-                                           <div key={meal} className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-900/30 uppercase tracking-tight">
-                                              <span className="material-symbols-outlined text-[14px]">restaurant_menu</span>
-                                              {meal}
-                                           </div>
-                                        ))}
-                                     </div>
-                                  </div>
-                               )}
+                                </div>
+                              )}
                             </div>
+                          )}
 
-                            {/* Transport Type */}
-                            {tour.transport && (
-                               <div className="flex flex-col gap-2">
-                                  <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Transport Type</label>
-                                  <div className="flex items-center gap-2.5 bg-slate-50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-100 dark:border-slate-800/50">
-                                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                        <span className="material-symbols-outlined text-[20px]">{getInclusionIcon(tour.transport)}</span>
-                                     </div>
-                                     <span className="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">{tour.transport} Included</span>
-                                  </div>
-                               </div>
-                            )}
+                          {/* Transport */}
+                          {tour.transport && (
+                            <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl px-3.5 py-3 border border-slate-100 dark:border-slate-700/40">
+                              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <span className="material-symbols-outlined text-primary text-[17px]">{getInclusionIcon(tour.transport)}</span>
+                              </div>
+                              <div>
+                                <p className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 leading-none mb-0.5">Transport</p>
+                                <p className="text-[12px] font-bold text-slate-700 dark:text-slate-200 capitalize">{tour.transport} — Included</p>
+                              </div>
+                            </div>
+                          )}
 
-                            {/* Service Icons (Pills) */}
-                            {tour.tourFeatures && tour.tourFeatures.length > 0 && (
-                               <div className="flex flex-col gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
-                                  <label className="text-[10px] font-black uppercase tracking-[2px] text-slate-400">Included Services</label>
-                                  <div className="flex flex-wrap gap-2">
-                                     {tour.tourFeatures.map(feature => {
-                                        const mapping = {
-                                           accommodation: { icon: 'hotel', label: 'Accommodation' },
-                                           sightseeing: { icon: 'photo_camera', label: 'Sightseeing' },
-                                           stay: { icon: 'bed', label: 'Stay' },
-                                           transfers: { icon: 'airport_shuttle', label: 'Transfers' }
-                                        };
-                                        const item = mapping[feature] || { icon: 'check_circle', label: feature };
-                                        return (
-                                           <div key={feature} className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.05]">
-                                              <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
-                                              <span className="text-[11px] font-black uppercase tracking-tight">{item.label}</span>
-                                           </div>
-                                        );
-                                     })}
-                                  </div>
-                               </div>
-                            )}
-                         </div>
+                          {/* Services */}
+                          {tour.tourFeatures && tour.tourFeatures.length > 0 && (
+                            <div className="pt-1">
+                              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-2.5">Included Services</p>
+                              <div className="flex flex-wrap gap-2">
+                                {tour.tourFeatures.map(feature => {
+                                  const mapping = {
+                                    accommodation: { icon: 'hotel', label: 'Accommodation' },
+                                    sightseeing:   { icon: 'photo_camera', label: 'Sightseeing' },
+                                    stay:          { icon: 'bed', label: 'Stay' },
+                                    transfers:     { icon: 'airport_shuttle', label: 'Transfers' }
+                                  };
+                                  const item = mapping[feature] || { icon: 'check_circle', label: feature };
+                                  return (
+                                    <span key={feature} className="inline-flex items-center gap-1.5 bg-slate-800 dark:bg-slate-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-tight hover:bg-primary transition-colors duration-200 cursor-default">
+                                      <span className="material-symbols-outlined text-[14px]">{item.icon}</span>
+                                      {item.label}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                        </div>
                       </div>
 
-                      {/* Booking Widget */}
-                      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl p-8 overflow-hidden relative">
-                         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-12 translate-x-12 blur-3xl"></div>
-                         
-                         <div className="relative mb-8">
-                            <h4 className="text-[10px] font-extrabold uppercase tracking-[4px] text-primary mb-1">Reserve Your Spot</h4>
-                            <div className="flex items-baseline gap-1.5">
-                               <span className="text-xl font-bold text-slate-400 dark:text-slate-500">₹</span>
-                               <span className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
-                                  {getDynamicPriceData().totalPrice.toLocaleString('en-IN')}
-                               </span>
-                               <span className="text-xs font-bold text-slate-400 dark:text-slate-500 ml-1">Total Stay</span>
+                      {/* ── Booking Widget ── */}
+                      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800/70 shadow-sm overflow-hidden">
+
+                        {/* Price header */}
+                        <div className="px-6 pt-6 pb-5 border-b border-slate-100 dark:border-slate-800/60">
+                          <p className="text-[9px] font-black uppercase tracking-[0.22em] text-slate-400 mb-2">Reserve Your Spot</p>
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-base font-bold text-slate-400">₹</span>
+                            <span className="text-[2rem] font-black text-slate-900 dark:text-white tracking-tight tabular-nums leading-none">
+                              {getDynamicPriceData().totalPrice.toLocaleString('en-IN')}
+                            </span>
+                            <span className="text-[11px] font-medium text-slate-400 ml-1">/ total</span>
+                          </div>
+                          {getDynamicPriceData().groupDiscountAmount > 0 && (
+                            <div className="flex items-center gap-1.5 mt-2.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30 px-2.5 py-1 rounded-full w-fit">
+                              <span className="material-symbols-outlined text-[13px]">auto_awesome</span>
+                              Group discount: -₹{getDynamicPriceData().groupDiscountAmount.toLocaleString('en-IN')}
                             </div>
-                            {getDynamicPriceData().groupDiscountAmount > 0 && (
-                               <div className="flex flex-col gap-1 mt-3">
-                                  <div className="flex items-center gap-2 text-[11px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-full w-fit border border-emerald-100 dark:border-emerald-900/30">
-                                     <span className="material-symbols-outlined text-sm">auto_awesome</span>
-                                     GROUP DISCOUNT APPLIED (-₹{getDynamicPriceData().groupDiscountAmount.toLocaleString('en-IN')})
-                                  </div>
-                                  <p className="text-[10px] text-slate-400 font-medium px-1">Original Price: <span className="line-through">₹{getDynamicPriceData().totalBeforeGroupDiscount.toLocaleString('en-IN')}</span></p>
-                               </div>
-                            )}
-                         </div>
+                          )}
+                        </div>
 
-                         <div className="space-y-6">
-                            {/* Inputs Row */}
-                            <div className="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/40 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-800/50">
-                               <div className="flex flex-col gap-1 p-2">
-                                  <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Guests</label>
-                                  <div className="flex items-center gap-1.5 w-full mt-0.5">
-                                     <button 
-                                        type="button" 
-                                        onClick={() => setBookingGuests(prev => Math.max(1, prev - 1))}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all ${bookingGuests > 1 ? 'bg-primary/5 text-primary hover:bg-primary hover:text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800/50 text-slate-300 dark:text-slate-700 cursor-not-allowed'}`}
-                                        disabled={bookingGuests <= 1}
-                                     >
-                                        <span className="material-symbols-outlined text-[18px]">remove</span>
-                                     </button>
-                                     
-                                     <div className="flex-1 flex flex-col items-center justify-center min-w-[40px]">
-                                        <span className="text-sm font-black text-slate-800 dark:text-slate-100 tabular-nums leading-none">
-                                           {bookingGuests}
-                                        </span>
-                                        <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-tight mt-0.5">
-                                           {bookingGuests === 1 ? 'Guest' : 'Guests'}
-                                        </span>
-                                     </div>
+                        <div className="px-5 py-5 space-y-4">
 
-                                     <button 
-                                        type="button" 
-                                        onClick={() => setBookingGuests(prev => Math.min(20, prev + 1))}
-                                        className="w-8 h-8 flex items-center justify-center rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white shadow-sm transition-all"
-                                     >
-                                        <span className="material-symbols-outlined text-[18px]">add</span>
-                                     </button>
-                                  </div>
-                               </div>
-                               <div className="flex flex-col gap-1 p-2 border-l border-slate-200 dark:border-slate-800">
-                                  <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Start Date</label>
-                                  <div className="flex items-center gap-2">
-                                     <span className="material-symbols-outlined text-sm text-slate-400">calendar_today</span>
-                                     <input 
-                                        type="date" 
-                                        value={bookingDate}
-                                        min={new Date().toISOString().split('T')[0]}
-                                        onChange={(e) => setBookingDate(e.target.value)}
-                                        className="bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 outline-none w-full"
-                                     />
-                                  </div>
-                               </div>
+                          {/* Guests + Date */}
+                          <div className="grid grid-cols-2 gap-2.5">
+                            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-3 border border-slate-100 dark:border-slate-700/50">
+                              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-2">Guests</p>
+                              <div className="flex items-center justify-between">
+                                <button
+                                  type="button"
+                                  onClick={() => setBookingGuests(prev => Math.max(1, prev - 1))}
+                                  disabled={bookingGuests <= 1}
+                                  className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-all ${
+                                    bookingGuests > 1
+                                      ? 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-primary hover:bg-primary hover:text-white hover:border-primary shadow-sm'
+                                      : 'border-slate-100 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 cursor-not-allowed'
+                                  }`}
+                                >
+                                  <span className="material-symbols-outlined text-[15px]">remove</span>
+                                </button>
+                                <span className="text-base font-black text-slate-800 dark:text-white tabular-nums">{bookingGuests}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setBookingGuests(prev => Math.min(20, prev + 1))}
+                                  className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-primary hover:bg-primary hover:text-white hover:border-primary shadow-sm transition-all"
+                                >
+                                  <span className="material-symbols-outlined text-[15px]">add</span>
+                                </button>
+                              </div>
                             </div>
+                            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-3 border border-slate-100 dark:border-slate-700/50">
+                              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-2">Start Date</p>
+                              <div className="flex items-center gap-1">
+                                <span className="material-symbols-outlined text-slate-400 text-[13px] flex-shrink-0">calendar_today</span>
+                                <input
+                                  type="date"
+                                  value={bookingDate}
+                                  min={new Date().toISOString().split('T')[0]}
+                                  onChange={(e) => setBookingDate(e.target.value)}
+                                  className="bg-transparent text-[11px] font-bold text-slate-700 dark:text-slate-200 outline-none w-full"
+                                />
+                              </div>
+                            </div>
+                          </div>
 
-                            {/* Booking Summary Section */}
-                            <div className="bg-slate-50/50 dark:bg-slate-950/20 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 space-y-4">
-                               <h5 className="text-[11px] font-black uppercase tracking-[2px] text-slate-400 mb-2 pl-1">Booking Summary</h5>
-                               
-                               {/* Basic Price */}
-                               <div className="flex justify-between items-center text-sm">
-                                  <span className="text-slate-500 font-medium">Basic Price</span>
-                                  <span className="text-slate-900 dark:text-white font-bold tabular-nums">
-                                     ₹{getDynamicPriceData().totalBeforeGroupDiscount.toLocaleString('en-IN')}
+                          {/* Booking Summary card */}
+                          <div className="rounded-2xl border border-slate-100 dark:border-slate-800/60 overflow-hidden">
+                            <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50">
+                              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Booking Summary</p>
+                            </div>
+                            <div className="px-4 pt-3.5 pb-3 space-y-3">
+                              <div className="flex justify-between items-center">
+                                <span className="text-[12px] text-slate-500">Base Price</span>
+                                <span className="text-[13px] font-bold text-slate-800 dark:text-slate-100 tabular-nums">
+                                  ₹{getDynamicPriceData().totalBeforeGroupDiscount.toLocaleString('en-IN')}
+                                </span>
+                              </div>
+                              {getDynamicPriceData().groupDiscountAmount > 0 && (
+                                <div className="flex justify-between items-center">
+                                  <span className="text-[12px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                    <span className="material-symbols-outlined text-[13px]">verified</span>
+                                    Group Discount
                                   </span>
-                               </div>
-
-                               {/* Group Discount (Conditional) */}
-                               {getDynamicPriceData().groupDiscountAmount > 0 && (
-                                  <div className="flex justify-between items-center text-sm animate-in fade-in slide-in-from-top-1 duration-500">
-                                     <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
-                                        <span className="material-symbols-outlined text-[16px]">verified</span>
-                                        Group Discount
-                                     </span>
-                                     <span className="text-emerald-600 dark:text-emerald-400 font-black tabular-nums">
-                                        -₹{getDynamicPriceData().groupDiscountAmount.toLocaleString('en-IN')}
-                                     </span>
-                                  </div>
-                               )}
-
-                               {/* Total Price Row */}
-                               <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-slate-800">
-                                  <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Discounted Price</span>
-                                  <span className="text-xl font-black text-slate-900 dark:text-white tabular-nums">
-                                     ₹{getDynamicPriceData().totalPrice.toLocaleString('en-IN')}
+                                  <span className="text-[13px] font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                                    -₹{getDynamicPriceData().groupDiscountAmount.toLocaleString('en-IN')}
                                   </span>
-                               </div>
-
-                               {/* Advance Payment Prompt */}
-                               <div className="bg-primary/5 dark:bg-primary/10 rounded-2xl p-4 border border-primary/10 flex justify-between items-center mt-4">
-                                  <div className="flex flex-col">
-                                     <span className="text-[10px] font-black text-primary uppercase tracking-wider">Pay Now (30%)</span>
-                                     <span className="text-[9px] text-slate-500 font-bold italic mt-0.5">To block this tour at this price</span>
-                                  </div>
-                                  <div className="text-right">
-                                     <span className="text-lg font-black text-primary tabular-nums">
-                                        ₹{getDynamicPriceData().advance.toLocaleString('en-IN')}
-                                     </span>
-                                  </div>
-                               </div>
-
-                               <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-1 px-1">
-                                  <span>Service Fee</span>
-                                  <span className="text-emerald-500">Included</span>
-                               </div>
+                                </div>
+                              )}
+                              <div className="flex justify-between items-center pt-3 border-t border-slate-100 dark:border-slate-800">
+                                <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">Total</span>
+                                <span className="text-[18px] font-black text-slate-900 dark:text-white tabular-nums">
+                                  ₹{getDynamicPriceData().totalPrice.toLocaleString('en-IN')}
+                                </span>
+                              </div>
                             </div>
 
-                            <button 
-                               onClick={() => setIsBookingModalOpen(true)}
-                               className="w-full h-14 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/25 hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all text-center uppercase tracking-widest flex items-center justify-center gap-3"
-                            >
-                               <span className="material-symbols-outlined">flash_on</span>
-                               Book This Expedition
-                            </button>
-                            
-                            <p className="text-[10px] text-center text-slate-400 font-medium">No cancellation fees for the first 48 hours</p>
-                         </div>
+                            {/* Pay Now gradient callout */}
+                            <div className="mx-3 mb-3 rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/15 px-4 py-3 flex items-center justify-between">
+                              <div>
+                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.18em] leading-none mb-0.5">Pay Now — 30%</p>
+                                <p className="text-[9px] text-slate-500 italic">Secures your booking at this price</p>
+                              </div>
+                              <p className="text-[20px] font-black text-primary tabular-nums leading-none">
+                                ₹{getDynamicPriceData().advance.toLocaleString('en-IN')}
+                              </p>
+                            </div>
+
+                            <div className="px-4 pb-3 flex justify-between items-center">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Service Fee</span>
+                              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">Included ✓</span>
+                            </div>
+                          </div>
+
+                          {/* CTA */}
+                          <button
+                            onClick={() => setIsBookingModalOpen(true)}
+                            className="w-full py-3.5 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white font-black text-[11px] uppercase tracking-[0.2em] rounded-2xl shadow-lg shadow-primary/25 transition-all duration-200 flex items-center justify-center gap-2"
+                          >
+                            <span className="material-symbols-outlined text-[17px]">flash_on</span>
+                            Book This Tour
+                          </button>
+
+                          <p className="text-[10px] text-center text-slate-400">
+                            🔒 Free cancellation within 48 hours
+                          </p>
+
+                        </div>
                       </div>
 
                       {/* Specialist Banner */}
