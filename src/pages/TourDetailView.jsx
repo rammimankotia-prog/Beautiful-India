@@ -76,6 +76,13 @@ const TourDetailView = () => {
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  // Booking modal state
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingForm, setBookingForm] = useState({ name: '', email: '', phone: '' });
+  const [bookingSubmitting, setBookingSubmitting] = useState(false);
+  const [bookingSubmitted, setBookingSubmitted] = useState(false);
+  const [bookingError, setBookingError] = useState('');
+
   const { formatPrice } = useCurrency();
   const { tours, reviews, loading: dataLoading, error: dataError } = useData();
 
@@ -1098,6 +1105,212 @@ const TourDetailView = () => {
           </div>
         </main>
       </div>
+
+      {/* ── Book This Tour Modal ── */}
+      {isBookingModalOpen && (() => {
+        const pd = getDynamicPriceData();
+        const tourUrl = window.location.href;
+        const handleClose = () => {
+          setIsBookingModalOpen(false);
+          setBookingSubmitted(false);
+          setBookingError('');
+          setBookingForm({ name: '', email: '', phone: '' });
+        };
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          setBookingSubmitting(true);
+          setBookingError('');
+          const payload = {
+            // Contact
+            name: bookingForm.name,
+            email: bookingForm.email,
+            phone: bookingForm.phone,
+            // Tour details
+            to: tour.title,
+            source: 'Tour Booking Form',
+            type: 'Tour Booking Query',
+            tourUrl,
+            departureDate: bookingDate,
+            travelers: `${bookingGuests} Guest${bookingGuests > 1 ? 's' : ''}`,
+            // Pricing snapshot
+            basePrice: `₹${pd.totalBeforeGroupDiscount.toLocaleString('en-IN')}`,
+            groupDiscount: pd.groupDiscountAmount > 0 ? `-₹${pd.groupDiscountAmount.toLocaleString('en-IN')}` : 'N/A',
+            totalPrice: `₹${pd.totalPrice.toLocaleString('en-IN')}`,
+            advanceAmount: `₹${pd.advance.toLocaleString('en-IN')} (30%)`,
+            // Meta
+            status: 'New',
+            timestamp: new Date().toISOString(),
+          };
+          try {
+            const res = await fetch(`${import.meta.env.BASE_URL}api-save-leads.php`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (data.success) {
+              setBookingSubmitted(true);
+            } else {
+              throw new Error(data.message || 'Submission failed');
+            }
+          } catch (err) {
+            setBookingError(err.message || 'Something went wrong. Please try again.');
+          } finally {
+            setBookingSubmitting(false);
+          }
+        };
+        return (
+          <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4">
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={handleClose} />
+
+            {/* Sheet */}
+            <div className="relative w-full max-w-lg bg-white dark:bg-slate-950 rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom duration-400 flex flex-col max-h-[95vh]">
+
+              {/* Gradient top strip */}
+              <div className="h-1 w-full bg-gradient-to-r from-primary via-emerald-400 to-primary" />
+
+              {/* Header */}
+              <div className="px-6 pt-5 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary mb-0.5">Confirm Your Booking</p>
+                  <h2 className="text-base font-black text-slate-900 dark:text-white leading-tight line-clamp-2">{tour.title}</h2>
+                </div>
+                <button onClick={handleClose} className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all flex-shrink-0 ml-4">
+                  <span className="material-symbols-outlined text-[19px]">close</span>
+                </button>
+              </div>
+
+              <div className="overflow-y-auto flex-1">
+
+                {bookingSubmitted ? (
+                  /* Success state */
+                  <div className="px-6 py-12 flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-emerald-500 text-[36px]">check_circle</span>
+                    </div>
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white">Booking Query Received!</h3>
+                    <p className="text-sm text-slate-500 max-w-xs">Our team will contact you within 2 hours to confirm your booking and advance payment details.</p>
+                    <button onClick={handleClose} className="mt-4 px-8 py-3 bg-primary text-white font-black text-[11px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/25">
+                      Close
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
+
+                    {/* Pricing Summary (read-only) */}
+                    <div className="rounded-2xl border border-slate-100 dark:border-slate-800/60 overflow-hidden">
+                      <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50">
+                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Price Summary</p>
+                      </div>
+                      <div className="px-4 py-3 space-y-2.5">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[12px] text-slate-500">{bookingGuests} Guest{bookingGuests > 1 ? 's' : ''} · {bookingDate}</span>
+                          <span className="text-[12px] font-bold text-slate-700 dark:text-slate-200 tabular-nums">₹{pd.totalBeforeGroupDiscount.toLocaleString('en-IN')}</span>
+                        </div>
+                        {pd.groupDiscountAmount > 0 && (
+                          <div className="flex justify-between items-center">
+                            <span className="text-[12px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[13px]">verified</span>Group Discount
+                            </span>
+                            <span className="text-[12px] font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">-₹{pd.groupDiscountAmount.toLocaleString('en-IN')}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 dark:border-slate-800">
+                          <span className="text-[11px] font-black uppercase tracking-wider text-slate-500">Total</span>
+                          <span className="text-lg font-black text-slate-900 dark:text-white tabular-nums">₹{pd.totalPrice.toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+
+                      {/* Advance payment callout */}
+                      <div className="mx-3 mb-3 rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/15 px-4 py-3 flex items-center justify-between">
+                        <div>
+                          <p className="text-[10px] font-black text-primary uppercase tracking-[0.18em] leading-none mb-0.5">Pay Now — 30% Advance</p>
+                          <p className="text-[9px] text-slate-500 italic">Blocks your seat at this price</p>
+                        </div>
+                        <p className="text-[20px] font-black text-primary tabular-nums">₹{pd.advance.toLocaleString('en-IN')}</p>
+                      </div>
+
+                      {/* Tour URL */}
+                      <div className="px-4 pb-3 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-slate-400 text-[14px]">link</span>
+                        <p className="text-[10px] text-slate-400 truncate">{tourUrl}</p>
+                      </div>
+                    </div>
+
+                    {/* Contact fields */}
+                    <div className="space-y-3">
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Your Details</p>
+
+                      {/* Name */}
+                      <div className="relative">
+                        <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[17px]">person</span>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Full Name"
+                          value={bookingForm.name}
+                          onChange={e => setBookingForm(p => ({ ...p, name: e.target.value }))}
+                          className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-primary focus:bg-white dark:focus:bg-slate-800 transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                        />
+                      </div>
+
+                      {/* Email */}
+                      <div className="relative">
+                        <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[17px]">mail</span>
+                        <input
+                          type="email"
+                          required
+                          placeholder="Email Address"
+                          value={bookingForm.email}
+                          onChange={e => setBookingForm(p => ({ ...p, email: e.target.value }))}
+                          className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-primary focus:bg-white dark:focus:bg-slate-800 transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                        />
+                      </div>
+
+                      {/* Mobile */}
+                      <div className="relative">
+                        <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[17px]">smartphone</span>
+                        <input
+                          type="tel"
+                          required
+                          placeholder="Mobile / WhatsApp Number"
+                          value={bookingForm.phone}
+                          onChange={e => setBookingForm(p => ({ ...p, phone: e.target.value }))}
+                          className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-primary focus:bg-white dark:focus:bg-slate-800 transition-all placeholder:font-medium placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Error */}
+                    {bookingError && (
+                      <div className="px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl text-[12px] font-bold text-red-600 dark:text-red-400">
+                        {bookingError}
+                      </div>
+                    )}
+
+                    {/* Submit */}
+                    <button
+                      type="submit"
+                      disabled={bookingSubmitting}
+                      className="w-full py-4 bg-primary hover:bg-primary/90 disabled:opacity-60 text-white font-black text-[11px] uppercase tracking-[0.2em] rounded-2xl shadow-lg shadow-primary/25 transition-all duration-200 flex items-center justify-center gap-2"
+                    >
+                      {bookingSubmitting ? (
+                        <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Processing...</>
+                      ) : (
+                        <><span className="material-symbols-outlined text-[17px]">send</span>Submit Booking Query</>
+                      )}
+                    </button>
+
+                    <p className="text-[10px] text-center text-slate-400">🔒 Your information is secure and will not be shared.</p>
+                  </form>
+                )}
+
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Consult Specialist Modal */}
       <ConsultSpecialistModal 
