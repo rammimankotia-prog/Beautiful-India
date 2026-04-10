@@ -32,8 +32,10 @@ const normalizeTour = (t) => {
         tour_dates_start: dateStart || t.tour_dates_start || '',
         // Inclusions
         tour_transport: toArray(t.meta?.transport_options),
-        tour_hotels: toArray(t.meta?.hotel_options),
-        tour_meals: toArray(t.meta?.meal_options),
+        tour_hotels:    toArray(t.meta?.hotel_options),
+        tour_meals:     toArray(t.meta?.meal_options),
+        tour_inclusions: t.meta?.inclusions || [],
+        tour_exclusions: t.meta?.exclusions || [],
         // Price fallback
         price: t.meta?.price_single || t.price || '',
     };
@@ -156,7 +158,7 @@ const PilgrimageTourDetailView = () => {
                                     {tour.tour_destination[0]}
                                 </span>
                             )}
-                            <h1 className="text-5xl md:text-7xl font-serif font-black text-white leading-tight drop-shadow-xl">
+                            <h1 className="text-4xl md:text-7xl font-serif font-black text-white leading-tight drop-shadow-xl">
                                 {tour.title}
                             </h1>
                             {cityPath.length > 0 && (
@@ -186,7 +188,7 @@ const PilgrimageTourDetailView = () => {
                 {/* ── Left: Content ──────────────────────────────────── */}
                 <div className="lg:col-span-2 space-y-16">
 
-                    {/* ── Package Inclusions ── */}
+                    {/* Signature Inclusions */}
                     {(tour.tour_transport?.length > 0 || tour.tour_hotels?.length > 0 || tour.tour_meals?.length > 0) && (
                         <section className="bg-orange-50/50 dark:bg-orange-950/20 p-8 rounded-[32px] border border-orange-100 dark:border-orange-900/30">
                             <h3 className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-6 flex items-center gap-2">
@@ -235,6 +237,47 @@ const PilgrimageTourDetailView = () => {
                                 )}
                             </div>
                         </section>
+                    )}
+
+                    {/* Detailed Terms (Inclusions/Exclusions) */}
+                    {(tour.tour_inclusions?.length > 0 || tour.tour_exclusions?.length > 0) && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Inclusions */}
+                            {tour.tour_inclusions?.length > 0 && (
+                                <div className="space-y-6">
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2 px-2">
+                                        <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                                        What's Included
+                                    </h3>
+                                    <ul className="space-y-4">
+                                        {tour.tour_inclusions.map((item, idx) => (
+                                            <li key={idx} className="flex flex-col p-4 bg-emerald-50/30 dark:bg-emerald-950/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+                                                <span className="text-sm font-black text-slate-800 dark:text-slate-200">{item.text}</span>
+                                                <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400/70 uppercase tracking-tighter mt-1">{item.option}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Exclusions */}
+                            {tour.tour_exclusions?.length > 0 && (
+                                <div className="space-y-6">
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 flex items-center gap-2 px-2">
+                                        <span className="material-symbols-outlined text-[20px]">cancel</span>
+                                        Not Included
+                                    </h3>
+                                    <ul className="space-y-4">
+                                        {tour.tour_exclusions.map((item, idx) => (
+                                            <li key={idx} className="flex flex-col p-4 bg-rose-50/20 dark:bg-rose-950/10 rounded-2xl border border-rose-100/50 dark:border-rose-900/20 opacity-80">
+                                                <span className="text-sm font-black text-slate-700 dark:text-slate-300 line-through decoration-rose-200">{item.text}</span>
+                                                <span className="text-[11px] font-bold text-rose-500 dark:text-rose-400/70 uppercase tracking-tighter mt-1">{item.option}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                     )}
 
                     {/* About the Yatra */}

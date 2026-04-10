@@ -592,7 +592,7 @@ const TourDetailView = () => {
                       dangerouslySetInnerHTML={{ __html: formatContent(tour.description) }} 
                     />
                     <p>
-                      Embark on an unforgettable journey specifically designed for the discerning traveler. Our {tour.duration} {tour.title} package combines thrilling activities with hand-picked premium accommodations. From the moment you arrive, every detail is taken care of by our professional guides.
+                      Embark on an unforgettable journey specifically designed for the discerning traveler. Our {tour.duration} {tour.title} package combines thrilling activities with hand-picked premium accommodations. From the moment you arrive, every detail is care of by our professional guides.
                     </p>
                   </div>
 
@@ -738,15 +738,17 @@ const TourDetailView = () => {
                           </div>
                           <ul className="grid grid-cols-1 gap-5">
                             {(Array.isArray(tour.inclusions) ? tour.inclusions : tour.inclusions.split('\n')).filter(Boolean).map((item, idx) => {
-                              const iconName = getInclusionIcon(item);
+                              const text = typeof item === 'object' ? item.text : item;
+                              const option = typeof item === 'object' ? item.option : 'Included in Package';
+                              const iconName = getInclusionIcon(text);
                               return (
                                 <li key={idx} className="flex items-start gap-4 group">
                                   <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-emerald-100/50 dark:border-emerald-800/50 shadow-sm text-emerald-600 dark:text-emerald-400 shrink-0 group-hover:scale-110 transition-transform">
                                     <span className="material-symbols-outlined text-[20px]">{iconName}</span>
                                   </div>
                                   <div className="flex flex-col">
-                                    <span className="text-[15px] font-bold text-slate-800 dark:text-slate-100 leading-tight">{item}</span>
-                                    <span className="text-[11px] font-medium text-emerald-600/70 dark:text-emerald-400/50 uppercase tracking-tighter mt-1">Included in Package</span>
+                                    <span className="text-[15px] font-bold text-slate-800 dark:text-slate-100 leading-tight">{text}</span>
+                                    <span className="text-[11px] font-medium text-emerald-600/70 dark:text-emerald-400/50 uppercase tracking-tighter mt-1">{option}</span>
                                   </div>
                                 </li>
                               );
@@ -769,15 +771,17 @@ const TourDetailView = () => {
                           </div>
                           <ul className="grid grid-cols-1 gap-5">
                             {(Array.isArray(tour.exclusions) ? tour.exclusions : tour.exclusions.split('\n')).filter(Boolean).map((item, idx) => {
-                              const iconName = getInclusionIcon(item);
+                              const text = typeof item === 'object' ? item.text : item;
+                              const option = typeof item === 'object' ? item.option : 'Extra Charges Apply';
+                              const iconName = getInclusionIcon(text);
                               return (
                                 <li key={idx} className="flex items-start gap-4 group opacity-80 hover:opacity-100 transition-opacity">
                                   <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-slate-400 dark:text-slate-500 shrink-0 group-hover:bg-rose-50 dark:group-hover:bg-rose-900/20 group-hover:text-rose-500 transition-colors">
                                     <span className="material-symbols-outlined text-[20px]">{iconName}</span>
                                   </div>
                                   <div className="flex flex-col border-l-2 border-slate-100 dark:border-slate-800 pl-4">
-                                    <span className="text-[15px] font-bold text-slate-500 dark:text-slate-400 leading-tight line-through decoration-slate-300 dark:decoration-slate-700">{item}</span>
-                                    <span className="text-[11px] font-medium text-rose-500/70 dark:text-rose-400/50 uppercase tracking-tighter mt-1">Extra Charges Apply</span>
+                                    <span className="text-[15px] font-bold text-slate-500 dark:text-slate-400 leading-tight line-through decoration-slate-300 dark:decoration-slate-700">{text}</span>
+                                    <span className="text-[11px] font-medium text-rose-500/70 dark:text-rose-400/50 uppercase tracking-tighter mt-1">{option}</span>
                                   </div>
                                 </li>
                               );
@@ -794,461 +798,162 @@ const TourDetailView = () => {
 
                 </div>
                 {/* Sidebar (Right Column) */}
-                <div className="lg:col-span-1">
-                  <div className="flex flex-col gap-0 sticky top-24">
-                    {/* Upper Features Card */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl rounded-b-none p-5 shadow-sm border-b-0">
-                      <div className="space-y-5">
-                        {/* Hotel Selection */}
-                        <div>
-                          <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-2">Hotel included in package:</p>
-                          <div className="flex items-center gap-3">
-                            <label className="flex items-center gap-2 cursor-pointer group">
-                              <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center p-0.5">
-                                <div className="w-full h-full bg-primary rounded-full"></div>
-                              </div>
-                              <span className="text-sm font-medium text-slate-600 dark:text-slate-400">3 Star</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        {/* Cities Path */}
-                        <div>
-                          <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1">Cities:</p>
-                          <p className="text-[13px] text-slate-500 dark:text-slate-400 leading-snug">
-                            {tour.cityPath || `${tour.stateRegion} (2D) → ${tour.destination} (2D) → ${tour.subregion || 'Local'} (2D)`}
-                          </p>
-                        </div>
-
-                        {/* Service Icons */}
-                        <div className="grid grid-cols-5 gap-1 pt-2">
-                          {[
-                            { icon: 'apartment', label: '3 Stars' },
-                            { icon: 'explore', label: 'Sightseeing' },
-                            { icon: 'restaurant', label: 'Breakfast' },
-                            { icon: 'bed', label: 'Stay' },
-                            { icon: 'local_taxi', label: 'Transfers' }
-                          ].map((item, idx) => (
-                            <div key={idx} className="flex flex-col items-center gap-1">
-                              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300 text-xl font-light">{item.icon}</span>
-                              <span className="text-[9px] text-slate-500 font-bold text-center uppercase leading-tight">{item.label}</span>
+                <aside className="lg:col-span-1">
+                   <div className="flex flex-col gap-6 sticky top-24">
+                      {/* Booking Widget */}
+                      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl p-8 overflow-hidden relative">
+                         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-12 translate-x-12 blur-3xl"></div>
+                         
+                         <div className="relative mb-8">
+                            <h4 className="text-[10px] font-extrabold uppercase tracking-[4px] text-primary mb-1">Reserve Your Spot</h4>
+                            <div className="flex items-baseline gap-1.5">
+                               <span className="text-xl font-bold text-slate-400 dark:text-slate-500">₹</span>
+                               <span className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+                                  {getDynamicPriceData().totalPrice.toLocaleString('en-IN')}
+                               </span>
+                               <span className="text-xs font-bold text-slate-400 dark:text-slate-500 ml-1">Total Stay</span>
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Dynamic Booking & Pricing Widget */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-5 rounded-b-2xl shadow-sm relative z-10 w-full mb-6">
-                        
-                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                          <div className="flex flex-col gap-2">
-                            <div className="flex items-end justify-between gap-2 overflow-hidden">
-                               <div className="flex flex-col">
-                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Starts:</span>
-                                    <span className="text-3xl font-black text-emerald-600 dark:text-emerald-500 tracking-tighter">
-                                       {formatPrice(getDynamicPriceData().basePrice, true)}
-                                    </span>
-                                    {getDynamicPriceData().barRate > getDynamicPriceData().basePrice && (
-                                       <span className="text-[12px] text-slate-300 dark:text-slate-600 line-through font-bold">
-                                         {formatPrice(getDynamicPriceData().barRate, true)}
-                                       </span>
-                                    )}
-                                 </div>
+                            {getDynamicPriceData().groupDiscountAmount > 0 && (
+                               <div className="flex flex-col gap-1 mt-3">
+                                  <div className="flex items-center gap-2 text-[11px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-full w-fit border border-emerald-100 dark:border-emerald-900/30">
+                                     <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                                     GROUP DISCOUNT APPLIED (-₹{getDynamicPriceData().groupDiscountAmount.toLocaleString('en-IN')})
+                                  </div>
+                                  <p className="text-[10px] text-slate-400 font-medium px-1">Original Price: <span className="line-through">₹{getDynamicPriceData().totalBeforeGroupDiscount.toLocaleString('en-IN')}</span></p>
                                </div>
-                               <div className="text-right flex flex-col items-end pb-1">
-                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap">Per {getPriceSubLabel().short} / sharing</p>
+                            )}
+                         </div>
+
+                         <div className="space-y-6">
+                            {/* Inputs Row */}
+                            <div className="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/40 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                               <div className="flex flex-col gap-1 p-2">
+                                  <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Guests</label>
+                                  <div className="flex items-center gap-2">
+                                     <span className="material-symbols-outlined text-sm text-slate-400">group</span>
+                                     <select 
+                                        value={bookingGuests} 
+                                        onChange={(e) => setBookingGuests(parseInt(e.target.value))}
+                                        className="bg-transparent text-sm font-black text-slate-700 dark:text-slate-200 outline-none w-full"
+                                     >
+                                        {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{n} {n===1?'Guest':'Guests'}</option>)}
+                                     </select>
+                                  </div>
+                               </div>
+                               <div className="flex flex-col gap-1 p-2 border-l border-slate-200 dark:border-slate-800">
+                                  <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 pl-1">Start Date</label>
+                                  <div className="flex items-center gap-2">
+                                     <span className="material-symbols-outlined text-sm text-slate-400">calendar_today</span>
+                                     <input 
+                                        type="date" 
+                                        value={bookingDate}
+                                        min={new Date().toISOString().split('T')[0]}
+                                        onChange={(e) => setBookingDate(e.target.value)}
+                                        className="bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 outline-none w-full"
+                                     />
+                                  </div>
                                </div>
                             </div>
+
+                            <div className="bg-slate-50/50 dark:bg-slate-950/20 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/50 space-y-3">
+                               <div className="flex justify-between items-center text-sm">
+                                  <span className="text-slate-500 font-medium">₹{getDynamicPriceData().basePrice.toLocaleString('en-IN')} × {bookingGuests} {bookingGuests===1?'Guest':'Guests'}</span>
+                                  <span className="text-slate-900 dark:text-white font-bold">₹{getDynamicPriceData().totalPrice.toLocaleString('en-IN')}</span>
+                               </div>
+                               <div className="flex justify-between items-center text-xs font-bold pt-3 border-t border-slate-200 dark:border-slate-800">
+                                  <span className="text-slate-500">Service Fee</span>
+                                  <span className="text-emerald-500 uppercase tracking-widest text-[10px]">Included</span>
+                               </div>
+                            </div>
+
+                            <button 
+                               onClick={() => setIsBookingModalOpen(true)}
+                               className="w-full h-14 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/25 hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all text-center uppercase tracking-widest flex items-center justify-center gap-3"
+                            >
+                               <span className="material-symbols-outlined">flash_on</span>
+                               Book This Expedition
+                            </button>
                             
-                            <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/50">
-                               <p className="text-[8px] font-black italic text-orange-600 dark:text-orange-500 leading-none uppercase tracking-tighter flex items-center gap-1 justify-center bg-orange-50/50 dark:bg-orange-500/5 py-1 rounded-sm whitespace-nowrap overflow-hidden">
-                                 <span className="material-symbols-outlined text-[10px] shrink-0">info</span>
-                                 <span>HOTEL COST VARIES - SUBMIT FOR EXACT RATES</span>
-                               </p>
+                            <p className="text-[10px] text-center text-slate-400 font-medium">No cancellation fees for the first 48 hours</p>
+                         </div>
+                      </div>
+
+                      {/* Specialist Banner */}
+                      <button 
+                        onClick={() => setIsQuoteModalOpen(true)}
+                        className="group flex flex-col gap-4 p-8 bg-slate-900 dark:bg-white rounded-[2.5rem] text-left transition-all hover:-translate-y-1 shadow-2xl shadow-slate-900/20"
+                      >
+                         <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl bg-white/10 dark:bg-primary/10 flex items-center justify-center text-white dark:text-primary">
+                               <span className="material-symbols-outlined text-2xl font-black">support_agent</span>
                             </div>
-                          </div>
-                        </div>
-
-                        {getDynamicPriceData().discountRate > 0 && (
-                          <div className="flex items-center gap-2 px-3 py-1.5 bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800/50 rounded-lg">
-                             <span className="material-symbols-outlined text-[16px] text-rose-500">sell</span>
-                             <span className="text-[11px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest">Special {getDynamicPriceData().discountRate}% Discount Applied</span>
-                          </div>
-                        )}
-
-                        <div className="flex flex-col gap-2 mt-1">
-                           {/* Journey Date */}
-                           <div className="flex items-center justify-between gap-3 group bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                              <label className="text-[10px] font-black text-slate-500 group-hover:text-primary transition-colors uppercase tracking-widest flex items-center gap-1.5 shrink-0">
-                                <span className="material-symbols-outlined text-[14px]">calendar_month</span>
-                                Date
-                              </label>
-                              <div className="relative flex-1 max-w-[140px]">
-                                <input 
-                                   type="date"
-                                   value={bookingDate}
-                                   onChange={(e) => setBookingDate(e.target.value)}
-                                   min={new Date().toISOString().split('T')[0]}
-                                   className="w-full text-[11px] font-black text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 outline-none focus:border-primary transition-all cursor-pointer appearance-none text-right"
-                                />
-                              </div>
-                           </div>
-
-                           {/* Guests */}
-                           <div className="flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 shrink-0">
-                                 <span className="material-symbols-outlined text-[14px]">group</span>
-                                 Guests
-                              </label>
-                              <div className="flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5 transition-all">
-                                 <button 
-                                   onClick={() => setBookingGuests(Math.max(1, bookingGuests - 1))}
-                                   className="w-6 h-6 flex items-center justify-center rounded bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary transition"
-                                 >
-                                   <span className="material-symbols-outlined text-[14px] font-bold">remove</span>
-                                 </button>
-                                 <span className="text-[11px] font-black text-slate-800 dark:text-slate-100 min-w-[12px] text-center">{bookingGuests}</span>
-                                 <button 
-                                   onClick={() => setBookingGuests(Math.min(20, bookingGuests + 1))}
-                                   className="w-6 h-6 flex items-center justify-center rounded bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary transition"
-                                 >
-                                   <span className="material-symbols-outlined text-[14px] font-bold">add</span>
-                                 </button>
-                              </div>
-                           </div>
-                        </div>
-
-                        <div className="bg-slate-50 dark:bg-slate-800/40 rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 mt-1 flex flex-col gap-3">
-                           {/* Calculation Breakdown */}
-                           <div className="space-y-3">
-                             {getDynamicPriceData().groupDiscountAmount > 0 && (
-                               <div className="flex justify-between items-center text-slate-500 font-bold text-xs uppercase tracking-wider px-1">
-                                 <span>Basic Price</span>
-                                 <span>{formatPrice(getDynamicPriceData().totalBeforeGroupDiscount, true)}</span>
-                               </div>
-                             )}
-
-                             {getDynamicPriceData().groupDiscountAmount > 0 && (
-                               <div className="flex justify-between items-center bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/10">
-                                 <div className="flex flex-col">
-                                   <span className="text-[13px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-tight">Group Discount</span>
-                                   <span className="text-[10px] font-bold text-emerald-600/60 uppercase">Special group rate applied</span>
-                                 </div>
-                                 <span className="text-base font-black text-emerald-600 tracking-tight">
-                                   -{formatPrice(getDynamicPriceData().groupDiscountAmount, true)}
-                                 </span>
-                               </div>
-                             )}
-
-                             <div className={`${getDynamicPriceData().groupDiscountAmount > 0 ? 'bg-slate-900/5 dark:bg-white/5 p-3 rounded-xl border border-slate-200 dark:border-slate-800' : 'pt-3 border-t border-slate-200 dark:border-slate-700'} flex justify-between items-center`}>
-                               <span className="text-[13px] font-black text-slate-900 dark:text-white tracking-tight uppercase">
-                                 {getDynamicPriceData().groupDiscountAmount > 0 ? 'Discounted Price' : 'Total Amount'}
-                               </span>
-                               <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter">
-                                 {formatPrice(getDynamicPriceData().totalPrice, true)}/-
-                               </span>
-                             </div>
-                           </div>
-
-                           <div className="pt-3 border-t border-slate-200/50 dark:border-slate-700/30 flex justify-between items-center">
-                              <div>
-                                 <p className="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase leading-none">Advance Payment (30%)</p>
-                              </div>
-                              <span className="text-lg font-black text-orange-600 dark:text-orange-500">{formatPrice(getDynamicPriceData().advance, true)}/-</span>
-                           </div>
-                        </div>
-
-                       <button 
-                          onClick={() => setIsAuthModalOpen(true)} 
-                          className="w-full flex items-center justify-center gap-3 rounded-[20px] py-4 bg-[#0cb48a] text-white text-[15px] font-black hover:bg-[#0aa37c] transition-all shadow-xl shadow-emerald-500/10 uppercase tracking-widest mt-2"
-                       >
-                          Reserve Your Spot
-                          <span className="material-symbols-outlined text-[20px]">verified</span>
-                       </button>
-                    </div>
-
-                    <GoogleAuthModal 
-                       isOpen={isAuthModalOpen} 
-                       onClose={() => setIsAuthModalOpen(false)} 
-                       onSuccess={(user) => {
-                          alert(`Booking Reservation Attempt Captured!\n\nLead Details:\nName: ${user.name}\nEmail: ${user.email}\nTour: ${tour.title}\nDate: ${bookingDate}\nGuests: ${bookingGuests}\nTotal Price: ₹${getDynamicPriceData().totalPrice}\nAdvance: ₹${getDynamicPriceData().advance}\n\n*Source URL: ${window.location.href}*\n\nStatus: Details sent to backend.`);
-                       }}
-                    />
-
-                    {/* Bottom Action Card */}
-                    <div className="flex flex-col gap-3 mt-4">
-                      <button onClick={() => setIsQuoteModalOpen(true)} className="w-full flex cursor-pointer items-center justify-center rounded-[20px] py-5 bg-[#ff5a5f] text-white text-xl font-black hover:bg-[#ef4c52] transition-all shadow-xl shadow-rose-500/10 uppercase tracking-widest">
-                        Customize & Get Quotes
-                      </button>
-                      <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-4">
-                         <h4 className="text-[13px] font-extrabold text-[#0a6c75] mb-4 uppercase tracking-tighter">Essential Information</h4>
-                         <div className="space-y-4">
-                            <div className="flex items-center gap-3">
-                               <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
-                                  <span className="material-symbols-outlined text-primary">sunny</span>
-                               </div>
-                               <div>
-                                  <p className="text-[11px] text-slate-500 font-bold uppercase">Best Time To Visit</p>
-                                  <p className="text-sm font-black text-slate-800 dark:text-slate-100 italic">{tour.bestTimeToVisit || 'Year-round'}</p>
-                               </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                               <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm shrink-0">
-                                  <span className="material-symbols-outlined text-primary">group</span>
-                               </div>
-                               <div>
-                                  <p className="text-[11px] text-slate-500 font-bold uppercase">Group Size</p>
-                                  <p className="text-sm font-black text-slate-800 dark:text-slate-100">{tour.minPersons > 1 ? `Min ${tour.minPersons}` : 'Private'} Persons</p>
-                               </div>
+                            <div>
+                               <h5 className="text-white dark:text-slate-900 font-black text-lg leading-tight uppercase tracking-tight">Need Help?</h5>
+                               <p className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-widest">Talk to a Specialist</p>
                             </div>
                          </div>
-                         <p className="text-[10px] text-center text-slate-400 font-bold mt-4 border-t border-primary/10 pt-3 italic">Free cancellation up to 30 days before departure.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                         <p className="text-slate-300 dark:text-slate-600 text-sm font-medium leading-relaxed italic">"Our destination experts can customize this itinerary to match your specific pace and preferences."</p>
+                         <div className="flex items-center gap-2 text-primary dark:text-slate-900 text-[10px] font-black uppercase tracking-widest mt-2 group-hover:gap-4 transition-all">
+                            Personalize My Trip
+                            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                         </div>
+                      </button>
+                   </div>
+                </aside>
               </div>
-
-              {/* ── FAQ Section ── */}
-              {/* ── FAQ Section ── */}
-              {tour.faq && tour.faq.length > 0 && tour.faq.some(f => f.question && f.answer) && (
-                <div id="section-faq" className="mt-20 mb-12 scroll-mt-24">
-                  {/* Header */}
-                  <div className="flex flex-col items-center text-center mb-12">
-                    <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-[0.2em] mb-4">
-                      <span className="material-symbols-outlined text-[16px]">help</span>
-                      Tour Queries
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Got Questions? We Have Answers.</h2>
-                    <p className="text-slate-500 mt-3 text-lg max-w-2xl mx-auto italic font-medium">Everything you need to know before embarking on your Beautiful India journey.</p>
+              
+              {/* Similar Tours Section */}
+              <div className="mt-24 pt-12 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between mb-10">
+                  <div className="space-y-1">
+                    <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Similar Expeditions</h3>
+                    <p className="text-slate-500 font-bold italic text-sm">Hand-picked alternatives that you might love.</p>
                   </div>
-
-                  {/* Accordion */}
-                  <div className="max-w-3xl mx-auto flex flex-col gap-4">
-                    {tour.faq.filter(f => f.question && f.answer).map((item, idx) => (
-                      <div
-                        key={idx}
-                        className={`rounded-[1.5rem] border transition-all duration-500 overflow-hidden ${
-                          openFaq === idx
-                            ? 'border-primary/40 bg-white dark:bg-slate-900 shadow-2xl shadow-primary/5'
-                            : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/20 hover:shadow-lg'
-                        }`}
-                      >
-                        <button
-                          onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                          className="flex justify-between items-center w-full px-8 py-6 text-left focus:outline-none group"
-                        >
-                          <div className="flex items-center gap-5">
-                            <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 font-black text-xs ${
-                              openFaq === idx ? 'bg-primary text-white scale-110 shadow-lg shadow-primary/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:bg-primary/10 group-hover:text-primary'
-                            }`}>
-                              Q
-                            </div>
-                            <span className={`dark:text-slate-100 font-extrabold text-lg transition-colors duration-300 ${openFaq === idx ? 'text-primary' : 'text-slate-800'}`}>{item.question}</span>
-                          </div>
-                          <div className={`w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center transition-all duration-500 ${
-                            openFaq === idx ? 'bg-primary border-primary text-white rotate-180' : 'text-slate-400'
-                          }`}>
-                            <span className="material-symbols-outlined text-[20px]">expand_more</span>
-                          </div>
-                        </button>
-                        <div className={`transition-all duration-500 ease-in-out px-8 ${
-                          openFaq === idx ? 'pb-8 opacity-100 max-h-[500px]' : 'max-h-0 opacity-0 pointer-events-none'
-                        }`}>
-                          <div className="flex gap-5 border-t border-slate-50 dark:border-slate-800 pt-6">
-                            <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-black text-xs">
-                              A
-                            </div>
-                            <p className="text-slate-600 dark:text-slate-400 text-[15px] leading-relaxed font-medium">
-                              {item.answer}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <Link to="/tours" className="text-[11px] font-black text-primary uppercase tracking-[4px] hover:tracking-[6px] transition-all">Explore All →</Link>
                 </div>
-              )}
-
-              {/* ── Similar Tours ── */}
-              {similarTours.length > 0 && (
-                <div className="mt-16 mb-16">
-                  <div className="flex justify-between items-center mb-8">
-                    <div>
-                      <p className="text-xs font-black text-primary uppercase tracking-widest mb-1">You Might Also Like</p>
-                      <h3 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight">Similar Tour Packages</h3>
-                    </div>
-                    <Link to="/tours" className="hidden md:flex items-center gap-1.5 text-primary font-black text-xs uppercase tracking-wider hover:gap-3 transition-all">
-                      View All <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                    </Link>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {similarTours.map((t, idx) => {
-                      const tSlug = encodeURIComponent((t.title || 'tour').toLowerCase().replace(/\s+/g, '-'));
-                      const firstRegion = Array.isArray(t.stateRegion) ? t.stateRegion[0] : t.stateRegion;
-                      const tPath = `/tours/${encodeURIComponent((t.destination || 'global').toLowerCase())}/${encodeURIComponent((firstRegion || 'region').toLowerCase())}/${encodeURIComponent((t.subRegion || 'sub-region').toLowerCase())}/${tSlug}`;
-                      const imgSrc = (() => {
-                        if (!t.image) return 'https://images.unsplash.com/photo-1596760407110-2f759c2b7188?auto=format&fit=crop&w=400&q=80';
-                        if (typeof t.image === 'string') return t.image;
-                        if (t.image?.url) return t.image.url;
-                        return 'https://images.unsplash.com/photo-1596760407110-2f759c2b7188?auto=format&fit=crop&w=400&q=80';
-                      })();
-                      return (
-                        <Link key={idx} to={tPath} className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-800 flex flex-col h-full active:scale-[0.98]">
-                          <div className="relative h-52 overflow-hidden">
-                            <img src={imgSrc} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-black text-primary shadow">
-                              {t.duration || 'Flexible'}
-                            </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {similarTours.map((t, i) => (
+                    <Link to={`/tours/detail/${t.slug}`} key={i} className="group relative flex flex-col gap-4 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800/80 shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden">
+                       <div className="relative aspect-[4/3] overflow-hidden">
+                          <img src={t.image} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                          <div className="absolute bottom-4 left-4 flex flex-col">
+                             <span className="text-[9px] font-black text-white/70 uppercase tracking-widest mb-1">{t.destination}</span>
+                             <h4 className="text-white font-bold leading-tight line-clamp-1">{t.title}</h4>
                           </div>
-                          <div className="p-4 flex flex-col flex-1">
-                            <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">{t.title}</h4>
-                            <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                              <div>
-                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starts from</p>
-                                <div className="flex items-baseline gap-1">
-                                  <p className="text-base font-black text-primary">{formatPrice(t.pricePerPerson || t.price, true)}</p>
-                                  <span className="text-[9px] text-slate-400 font-bold uppercase">/ {(() => {
-                                      if (t.pricePerPerson) return 'person';
-                                      if (t.pricePerCouple) return 'couple';
-                                      if (t.pricePerGroup) return `group`;
-                                      return t.priceBasis === 'per_package' ? 'pkg' : 'person';
-                                  })()}</span>
-                                </div>
-                              </div>
-                              <div className="w-9 h-9 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm shrink-0">
-                                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                              </div>
-                            </div>
+                          <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-1 rounded-lg text-[10px] font-black text-white uppercase">
+                             {t.duration}
                           </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* ── Traveler Reviews ── */}
-              <div className="mt-20 mb-12">
-                {/* Header Row */}
-                <div className="flex flex-col md:flex-row justify-between items-end gap-10 mb-12 pb-8 border-b border-slate-100 dark:border-slate-800">
-                  <div className="max-w-xl">
-                    <span className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest mb-4">
-                      Authentic Stories
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tight leading-none">Traveler Reviews</h2>
-                    <p className="text-slate-500 mt-4 text-lg font-medium italic leading-relaxed">Discover why over 40,000 travelers trust us with their dream holidays to Beautiful India.</p>
-                  </div>
-                  {/* Rating Badge */}
-                  <div className="flex items-center gap-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl px-8 py-5 shadow-2xl shadow-primary/5">
-                    <div className="text-center group">
-                      <p className="text-5xl font-black text-slate-900 dark:text-white leading-none mb-1 group-hover:scale-110 transition-transform">4.9</p>
-                      <div className="flex text-amber-400 mt-1 justify-center gap-0.5">{'★★★★★'.split('').map((s, i) => <span key={i} className="text-xl drop-shadow-sm">{s}</span>)}</div>
-                    </div>
-                    <div className="w-px h-16 bg-slate-200 dark:bg-slate-700" />
-                    <div className="flex flex-col gap-1">
-                      <p className="text-lg font-black text-primary uppercase tracking-wider">Exceptional</p>
-                      <p className="text-xs text-slate-400 font-bold">Based on {reviews.filter(r => r.tourId === tour.id).length || 24} Verified Reviews</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {reviews.filter(r => r.tourId === tour.id).length > 0 ? (
-                    reviews.filter(r => r.tourId === tour.id).map((review) => (
-                      <div key={review.id} className="group bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative flex flex-col gap-6">
-                        {/* Quote mark icon */}
-                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center -mt-12 mb-2 shadow-lg shadow-white dark:shadow-slate-900 ring-8 ring-white dark:ring-slate-950">
-                           <span className="material-symbols-outlined text-primary text-2xl">format_quote</span>
-                        </div>
-                        <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-base font-medium flex-1">
-                          "{review.comment}"
-                        </p>
-                        <div className="flex items-center justify-between pt-6 border-t border-slate-50 dark:border-slate-800">
-                          <div className="flex items-center gap-4">
-                            <img src={review.userImage || 'https://i.pravatar.cc/150?u=raman'} alt={review.userName} className="w-12 h-12 rounded-2xl object-cover shadow-md border border-white dark:border-slate-800 ring-2 ring-primary/5" />
-                            <div>
-                              <p className="font-black text-slate-900 dark:text-white text-[15px]">{review.userName}</p>
-                              <div className="flex text-amber-400 text-[10px] mt-0.5">
-                                {Array.from({ length: review.rating || 5 }).map((_, i) => <span key={i} className="drop-shadow-sm">★</span>)}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-[11px] font-black uppercase tracking-widest px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/20 rounded-md">
-                            <span className="material-symbols-outlined text-[14px]">verified</span>
-                            Verified
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    [1, 2, 3].map(i => (
-                      <div key={i} className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 animate-pulse">
-                         <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full mb-6" />
-                        <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4 mb-3" />
-                        <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-full mb-2" />
-                        <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-5/6 mb-8" />
-                        <div className="flex items-center gap-4 pt-6 border-t border-slate-50 dark:border-slate-800">
-                          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-2xl" />
-                          <div className="space-y-2">
-                            <div className="h-3 w-24 bg-slate-100 dark:bg-slate-800 rounded" />
-                            <div className="h-2 w-16 bg-slate-50 dark:bg-slate-800/50 rounded" />
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {/* CTA */}
-                <div className="mt-16 text-center">
-                  <Link
-                    to={`/account/review?tourId=${tour.id}&tourName=${encodeURIComponent(tour.title)}`}
-                    className="inline-flex items-center gap-3 px-10 py-5 bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] font-black text-slate-800 dark:text-white hover:border-primary hover:text-primary dark:hover:text-primary transition-all shadow-xl hover:shadow-primary/10 text-sm uppercase tracking-[0.15em]"
-                  >
-                    <span className="material-symbols-outlined">rate_review</span>
-                    Share Your Experience
-                  </Link>
-                </div>
-              </div>
-
-              {/* ── Confidence Bar (Trust Signals) ── */}
-              <div className="mt-8 mb-20">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-8 bg-[#006D77]/5 dark:bg-slate-900 border border-[#006D77]/10 dark:border-slate-800 rounded-[2.5rem]">
-                  {[
-                    { icon: 'verified_user', title: 'Verified Experts', desc: '100% Genuine Local Agents' },
-                    { icon: 'shield_lock', title: 'Safe & Secure', desc: 'ISO Certified Payments' },
-                    { icon: 'stars', title: 'Best Price Today', desc: 'Cheaper than Direct Booking' },
-                    { icon: 'support_agent', title: '24/7 Support', desc: 'Round-the-clock Assistant' },
-                  ].map((signal, idx) => (
-                    <div key={idx} className="flex flex-col items-center text-center group cursor-default">
-                       <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center text-[#006D77] dark:text-primary mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                         <span className="material-symbols-outlined text-3xl font-light">{signal.icon}</span>
                        </div>
-                       <h5 className="font-black text-slate-800 dark:text-white text-sm mb-1">{signal.title}</h5>
-                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-bold italic tracking-tight">{signal.desc}</p>
-                    </div>
+                       <div className="px-6 pb-6 pt-2 flex items-center justify-between">
+                          <div className="flex flex-col">
+                             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Starts At</span>
+                             <div className="flex items-baseline gap-1">
+                                <span className="text-[11px] font-bold text-primary">₹</span>
+                                <span className="text-xl font-black text-slate-900 dark:text-white tabular-nums">{t.price?.toLocaleString('en-IN') || '---'}</span>
+                             </div>
+                          </div>
+                          <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
+                             <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                          </div>
+                       </div>
+                    </Link>
                   ))}
                 </div>
               </div>
-
             </div>
           </div>
         </main>
       </div>
 
-            {/* ── Standardized Booking Modal ── */}
+      {/* Consult Specialist Modal */}
       <ConsultSpecialistModal 
         isOpen={isQuoteModalOpen} 
         onClose={() => setIsQuoteModalOpen(false)} 
-        tour={tour} 
+        tourTitle={tour.title}
+        tourImage={tour.image}
       />
-
-
     </div>
   );
 };

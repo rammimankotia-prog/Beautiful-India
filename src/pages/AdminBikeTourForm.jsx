@@ -1,766 +1,229 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 
-const AdminBikeTourForm = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const isEdit = Boolean(id);
-    const [loading, setLoading] = useState(false);
-    const [isHtmlMode, setIsHtmlMode] = useState(false);
-    const [isSchemaHtmlMode, setIsSchemaHtmlMode] = useState(false);
-    const [formErrors, setFormErrors] = useState({});
-
+const AdminBikeTourForm = ({ tour, onSave, onCancel }) => {
+    const { refetchData } = useData();
     const [formData, setFormData] = useState({
         title: '',
-        slug: '',
         subtitle: '',
-        duration: '',
-        coveredPlaces: [],
+        slug: '',
         destination: '',
-        country: '',
-        tourType: 'Bicycle',
-        difficulty: 'Easy',
-        equipment: [],
-        pricing: {
-            perPerson: 0,
-            perCouple: 0,
-            perGroup: {
-                price: 0,
-                minPersons: 1
-            }
-        },
+        country: 'India',
+        duration: '',
         mainImage: '',
-        images: [],
         content: '',
-        schemaMarkup: '',
-        showInMenu: true,
-        status: 'draft',
-        featured: false,
         highlights: [],
-        inclusions: [{ text: "", option: "Included" }],
-        exclusions: [{ text: "", option: "Extra Charges" }]
+        itinerary: [],
+        pricing: { perPerson: 39000 },
+        inclusions: [],
+        exclusions: [],
+        status: 'active'
     });
 
+    const [errors, setErrors] = useState({});
+
     useEffect(() => {
-        const fetchTours = async () => {
-            try {
-                if (id === 'undefined') {
-                    setLoading(false);
-                    return;
-                }
-
-                // Determine environment-aware URL
-                const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                const targetUrl = isDev 
-                    ? `/api/v1/bike-tours${isEdit ? '/admin' : ''}?t=${Date.now()}`
-                    : `/data/bike-tours.json?t=${Date.now()}`;
-                
-                const response = await fetch(targetUrl);
-                if (!response.ok) return;
-                const data = await response.json();
-                
-                if (isEdit && Array.isArray(data)) {
-                    // Match by id or slug
-                    const matched = data.find(t => 
-                        (t.id && String(t.id) === String(id)) || 
-                        (t.slug && String(t.slug) === String(id)) || 
-                        (t._id && String(t._id) === String(id))
-                    );
-
-                    if (matched) {
-                        setFormData(prev => ({
-                            ...prev,
-                            ...matched,
-                            coveredPlaces: Array.isArray(matched.coveredPlaces) ? matched.coveredPlaces : prev.coveredPlaces,
-                            equipment: Array.isArray(matched.equipment) ? matched.equipment : prev.equipment,
-                            images: Array.isArray(matched.images) ? matched.images : prev.images,
-                            highlights: Array.isArray(matched.highlights) ? matched.highlights : prev.highlights,
-                            inclusions: Array.isArray(matched.inclusions) ? matched.inclusions : (Array.isArray(matched.whatsIncluded) ? matched.whatsIncluded.map(text => ({ text, option: "Included" })) : prev.inclusions),
-                            exclusions: Array.isArray(matched.exclusions) ? matched.exclusions : prev.exclusions,
-                            pricing: {
-                                ...prev.pricing,
-                                ...(matched.pricing || {})
-                            }
-                        }));
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching bike tours:', error);
-            }
-        };
-        fetchTours();
-    }, [id, isEdit]);
-
-    // Auto-generate slug from title
-    useEffect(() => {
-        if (!isEdit && formData.title) {
-            const generatedSlug = formData.title
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, "")
-                .replace(/\s+/g, "-")
-                .replace(/-+/g, "-")
-                .replace(/^-|-$/g, "");
-            setFormData(prev => ({ ...prev, slug: generatedSlug }));
+        if (tour) {
+            setFormData({
+                ...tour,
+                pricing: tour.pricing || { perPerson: 39000 },
+                highlights: tour.highlights || [],
+                itinerary: tour.itinerary || [],
+                inclusions: tour.inclusions || [],
+                exclusions: tour.exclusions || []
+            });
         }
-    }, [formData.title, isEdit]);
+    }, [tour]);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        if (type === 'checkbox' && name !== 'showInMenu' && name !== 'featured') {
-            // Handled separately for arrays
-            return;
-        }
-        
-        if (name.includes('.')) {
-            const [parent, child, subchild] = name.split('.');
-            setFormData(prev => {
-                if (subchild) {
-                    return {
-                        ...prev,
-                        [parent]: {
-                            ...prev[parent],
-                            [child]: {
-                                ...prev[parent][child],
-                                [subchild]: value
-                            }
-                        }
-                    };
-                }
-                return {
-                    ...prev,
-                    [parent]: {
-                        ...prev[parent],
-                        [child]: value
-                    }
-                };
-            });
-        } else {
-            setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-        }
-    };
-
-    const handleArrayChange = (name, index, value) => {
-        const newArray = [...formData[name]];
-        newArray[index] = value;
-        setFormData(prev => ({ ...prev, [name]: newArray }));
-    };
-
-    const addToArray = (name) => {
-        setFormData(prev => ({ ...prev, [name]: [...prev[name], ''] }));
-    };
-
-    const removeFromArray = (name, index) => {
-        setFormData(prev => ({ ...prev, [name]: prev[name].filter((_, i) => i !== index) }));
-    };
-
-    const handleEquipmentToggle = (item) => {
-        const newEquipment = formData.equipment.includes(item)
-            ? formData.equipment.filter(e => e !== item)
-            : [...formData.equipment, item];
-        setFormData(prev => ({ ...prev, equipment: newEquipment }));
-    };
-
-    const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
-        Promise.all(files.map(file => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (ev) => resolve(ev.target.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        })).then(base64Urls => {
-            setFormData(prev => ({
-                ...prev,
-                images: [...prev.images, ...base64Urls],
-                mainImage: prev.mainImage || base64Urls[0]
-            }));
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        if (errors[name]) setErrors(prev => {
+            const newE = { ...prev };
+            delete newE[name];
+            return newE;
         });
     };
 
-    const removeImage = (index) => {
-        setFormData(prev => {
-            const newImages = prev.images.filter((_, i) => i !== index);
-            return {
-                ...prev,
-                images: newImages,
-                mainImage: prev.mainImage === prev.images[index] ? (newImages[0] || '') : prev.mainImage
-            };
-        });
+    const handlePricingChange = (e) => {
+        const { value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            pricing: { ...prev.pricing, perPerson: parseInt(value) || 0 }
+        }));
     };
 
     const validateForm = () => {
-        const errors = {};
-        if (!formData.title?.trim()) errors.title = "A name for this journey is required";
-        if (!formData.slug?.trim()) errors.slug = "A unique URL path is essential";
-        if (!formData.destination?.trim()) errors.destination = "Destination is mandatory";
-        
-        // Pricing validation: at least one price must be > 0
-        const hasPrice = (formData.pricing?.perPerson > 0) || 
-                         (formData.pricing?.perCouple > 0) || 
-                         (formData.pricing?.perGroup?.price > 0);
-        
-        if (!hasPrice) errors.price = "At least one pricing tier must be defined";
-        
-        if (!formData.content?.trim() || formData.content === '<p><br></p>') {
-            errors.content = "The story of this adventure cannot be empty";
-        }
-        
-        if (!formData.images || formData.images.length === 0) {
-            errors.images = "Visual evidence of the journey is required (min 1 image)";
-        }
+        const newErrors = {};
+        if (!formData.title?.trim()) newErrors.title = "Title is required";
+        if (!formData.slug?.trim()) newErrors.slug = "Slug is required";
+        if (!formData.destination?.trim()) newErrors.destination = "Destination is required";
+        if (!formData.pricing?.perPerson) newErrors.pricing = "Price is required";
+        if (!formData.content?.trim()) newErrors.content = "Tour description is required";
+        if (!formData.mainImage?.trim()) newErrors.images = "At least one image is required";
 
-        setFormErrors(errors);
-        return Object.keys(errors).length === 0;
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            // Smooth scroll to the first error
+            const firstErrorKey = Object.keys(newErrors)[0];
+            const element = document.getElementById(firstErrorKey) || document.getElementById('media-gallery');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.focus();
+            }
+            return false;
+        }
+        return true;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!validateForm()) {
-            const firstError = Object.keys(formErrors)[0] || 'title';
-            const element = document.getElementById(firstError);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                element.focus();
-            }
-            return;
-        }
+        if (!validateForm()) return;
 
-        setLoading(true);
         try {
-            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            
-            if (isDev) {
-                // Using Node.js Backend API
-                const url = isEdit ? `/api/v1/bike-tours/admin/${formData._id || id}` : '/api/v1/bike-tours/admin';
-                const method = isEdit ? 'PUT' : 'POST';
-                
-                const response = await fetch(url, {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                const result = await response.json();
-                if (response.ok) {
-                    alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
-                    navigate('/admin/bike-tours');
-                } else {
-                    throw new Error(result.message || 'Server error');
-                }
+            const response = await fetch('/data/bike-tours.json');
+            let tours = await response.json();
+
+            if (tour) {
+                tours = tours.map(t => t.slug === tour.slug ? formData : t);
             } else {
-                // Fallback to PHP/JSON file persistence for production (legacy mode)
-                let tours = [];
-                try {
-                    const res = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
-                    if (res.ok) {
-                        const existingData = await res.json();
-                        tours = Array.isArray(existingData) ? existingData : [];
-                    }
-                } catch (err) {
-                    console.error("Error fetching existing tours:", err);
-                }
+                tours.push(formData);
+            }
 
-                const tourToSave = { ...formData };
-                if (!isEdit) {
-                    tourToSave.id = tourToSave.slug || Date.now().toString();
-                }
+            const saveResponse = await fetch('/api-save-bike-tours.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(tours)
+            });
 
-                let updatedTours;
-                if (isEdit) {
-                    updatedTours = tours.map(t => (String(t.id) === String(id) || String(t.slug) === String(id)) ? tourToSave : t);
-                } else {
-                    updatedTours = [...tours, tourToSave];
-                }
-
-                const response = await fetch('/api/save-bike-tours', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updatedTours)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
-                    navigate('/admin/bike-tours');
-                } else {
-                    throw new Error(result.error || 'Failed to save');
-                }
+            if (saveResponse.ok) {
+                await refetchData();
+                onSave();
             }
         } catch (error) {
-            alert('Error: ' + error.message);
-        } finally {
-            setLoading(false);
+            console.error('Error saving tour:', error);
         }
     };
 
-    const equipmentOptions = ['Helmet', 'Water', 'E-bike', 'Road bike', 'Repair Kit', 'First Aid'];
-
     return (
-        <div className="p-6 lg:p-10 max-w-[1200px] mx-auto space-y-10 animate-in fade-in duration-500">
-            {/* Header */}
-            <div className="flex flex-col gap-2">
-                <nav className="flex text-xs font-medium text-slate-400 mb-2 gap-2 items-center">
-                    <Link className="hover:text-primary" to="/admin">Admin</Link>
-                    <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                    <Link className="hover:text-primary" to="/admin/bike-tours">Bicycle Tours</Link>
-                    <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                    <span className="text-slate-600 dark:text-slate-300 font-bold">{isEdit ? 'Edit Bike Tour' : 'Add New Bike Tour'}</span>
-                </nav>
-                <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white">
-                    {isEdit ? 'Edit Bicycle Voyage' : 'Create Cycling Adventure'}
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400 font-bold italic">
-                    Configure the premium details of your bicycle tour module.
-                </p>
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-2xl border border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-serif font-black text-slate-900 dark:text-white">
+                    {tour ? 'Edit Bike Expedition' : 'New Bike Expedition'}
+                </h2>
+                <button onClick={onCancel} className="text-slate-400 hover:text-slate-600 transition-colors">
+                    <span className="material-symbols-outlined text-3xl">close</span>
+                </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-12">
-                {/* Basic Info Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
-                        <span className="material-symbols-outlined">info</span>
-                        Core Information
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Title *</label>
-                            <input 
-                                type="text" name="title" id="title" value={formData.title} onChange={handleChange} 
-                                className={`bg-slate-50 dark:bg-slate-800 border ${formErrors.title ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-700"} rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all`}
-                                placeholder="e.g. Himalayan Cycling Expedition"
-                            />
-                            {formErrors.title && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.title}</p>}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">URL Slug *</label>
-                            <input 
-                                type="text" name="slug" id="slug" value={formData.slug} onChange={handleChange}
-                                className={`bg-slate-50 dark:bg-slate-800 border ${formErrors.slug ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-700"} rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all font-mono`}
-                                placeholder="himalayan-cycling-expedition"
-                            />
-                            {formErrors.slug && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.slug}</p>}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Duration *</label>
-                            <input 
-                                type="text" name="duration" value={formData.duration} onChange={handleChange} required
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                placeholder="e.g. 5 Days / 4 Nights"
-                            />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Difficulty Level</label>
-                            <select 
-                                name="difficulty" value={formData.difficulty} onChange={handleChange}
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                            >
-                                <option value="Easy">Easy (Casual Riders)</option>
-                                <option value="Moderate">Moderate (Active Cyclists)</option>
-                                <option value="Challenging">Challenging (Athletes)</option>
-                            </select>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Destination *</label>
-                            <input 
-                                type="text" name="destination" id="destination" value={formData.destination} onChange={handleChange}
-                                className={`bg-slate-50 dark:bg-slate-800 border ${formErrors.destination ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-700"} rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all`}
-                                placeholder="e.g. Ladakh"
-                            />
-                            {formErrors.destination && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.destination}</p>}
-                        </div>
-                         <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-center">
-                                <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Type *</label>
-                                <span className="text-[10px] font-black text-primary uppercase">Bike = Motorbike / Bicycle = Cycling</span>
-                            </div>
-                            <select 
-                                name="tourType" value={formData.tourType} onChange={handleChange} required
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                            >
-                                <option value="Bicycle">Bicycle / Cycling Tour (Default)</option>
-                                <option value="Bike">Motorbike / Bike Tour</option>
-                            </select>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Country *</label>
-                            <input 
-                                type="text" name="country" value={formData.country} onChange={handleChange} required
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                placeholder="e.g. India"
-                            />
-                        </div>
-                    </div>
-                </section>
-
-                {/* Pricing Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] flex items-center gap-2">
-                            <span className="material-symbols-outlined">payments</span>
-                            Pricing Logic
-                        </h2>
-                        {formErrors.price && <p className="text-[10px] text-red-500 font-black italic bg-red-50 dark:bg-red-900/10 px-3 py-1 rounded-full border border-red-100 dark:border-red-900/20">*{formErrors.price}</p>}
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Per Person Price</label>
-                                <input 
-                                    type="number" name="pricing.perPerson" value={formData.pricing?.perPerson || 0} onChange={handleChange}
-                                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Per Couple Price</label>
-                                <input 
-                                    type="number" name="pricing.perCouple" value={formData.pricing?.perCouple || 0} onChange={handleChange}
-                                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Group Price / Min Persons</label>
-                            <div className="flex gap-2">
-                                    <input 
-                                        type="number" name="pricing.perGroup.price" value={formData.pricing?.perGroup?.price || 0} onChange={handleChange}
-                                        className="w-2/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                        placeholder="Price"
-                                    />
-                                    <input 
-                                        type="number" name="pricing.perGroup.minPersons" value={formData.pricing?.perGroup?.minPersons || 0} onChange={handleChange}
-                                        className="w-1/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
-                                        placeholder="Min"
-                                    />
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Logistics Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
-                        <span className="material-symbols-outlined">settings_accessibility</span>
-                        Equipment & Logistics
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <div className="space-y-4">
-                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Bicycle Equipment Provided</label>
-                            <div className="grid grid-cols-2 gap-3">
-                                {equipmentOptions.map(item => (
-                                    <label key={item} className="flex items-center gap-3 cursor-pointer group">
-                                        <div 
-                                            onClick={() => handleEquipmentToggle(item)}
-                                            className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.equipment?.includes(item) ? 'bg-primary border-primary' : 'border-slate-300'}`}
-                                        >
-                                            {formData.equipment?.includes(item) && <span className="material-symbols-outlined text-white text-[14px]">check</span>}
-                                        </div>
-                                        <span className="text-sm font-bold text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">{item}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center">
-                                <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Places Covered</label>
-                                <button type="button" onClick={() => addToArray('coveredPlaces')} className="text-[10px] font-black text-primary uppercase hover:underline">+ Add Place</button>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {formData.coveredPlaces?.map((place, i) => (
-                                    <div key={i} className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
-                                        <input 
-                                            type="text" value={place} onChange={(e) => handleArrayChange('coveredPlaces', i, e.target.value)}
-                                            className="bg-transparent text-xs font-bold outline-none text-slate-700 dark:text-slate-200 w-24"
-                                            placeholder="City/Point"
-                                        />
-                                        <button type="button" onClick={() => removeFromArray('coveredPlaces', i)} className="text-red-400 hover:text-red-500">
-                                            <span className="material-symbols-outlined text-[14px]">close</span>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Inclusions & Exclusions Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
-                        <span className="material-symbols-outlined">assignment_turned_in</span>
-                        Package Inclusions & Exclusions
-                    </h2>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                        {/* Inclusions */}
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-black uppercase tracking-tighter text-slate-400 flex items-center gap-1">
-                                    <span className="material-symbols-outlined text-[14px] text-emerald-500">check_circle</span>
-                                    Inclusions
-                                </span>
-                                <button 
-                                    type="button" 
-                                    onClick={() => setFormData(p => ({ ...p, inclusions: [...(p.inclusions || []), { text: "", option: "Included" }] }))}
-                                    className="text-[10px] font-black text-primary uppercase hover:underline"
-                                >
-                                    + Add Item
-                                </button>
-                            </div>
-                            <div className="space-y-3">
-                                {(formData.inclusions || []).map((item, idx) => (
-                                    <div key={idx} className="flex gap-2">
-                                        <input 
-                                            type="text" value={item.text} onChange={(e) => {
-                                                const next = [...formData.inclusions];
-                                                next[idx] = { ...next[idx], text: e.target.value };
-                                                setFormData(prev => ({ ...prev, inclusions: next }));
-                                            }}
-                                            className="flex-[2] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
-                                            placeholder="Service"
-                                        />
-                                        <input 
-                                            type="text" value={item.option} onChange={(e) => {
-                                                const next = [...formData.inclusions];
-                                                next[idx] = { ...next[idx], option: e.target.value };
-                                                setFormData(prev => ({ ...prev, inclusions: next }));
-                                            }}
-                                            className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
-                                            placeholder="Option"
-                                        />
-                                        <button type="button" onClick={() => {
-                                            const next = formData.inclusions.filter((_, i) => i !== idx);
-                                            setFormData(prev => ({ ...prev, inclusions: next }));
-                                        }} className="text-slate-400 hover:text-red-500">
-                                            <span className="material-symbols-outlined text-[18px]">delete</span>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Exclusions */}
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-black uppercase tracking-tighter text-slate-400 flex items-center gap-1">
-                                    <span className="material-symbols-outlined text-[14px] text-rose-500">cancel</span>
-                                    Exclusions
-                                </span>
-                                <button 
-                                    type="button" 
-                                    onClick={() => setFormData(p => ({ ...p, exclusions: [...(p.exclusions || []), { text: "", option: "Extra" }] }))}
-                                    className="text-[10px] font-black text-primary uppercase hover:underline"
-                                >
-                                    + Add Item
-                                </button>
-                            </div>
-                            <div className="space-y-3">
-                                {(formData.exclusions || []).map((item, idx) => (
-                                    <div key={idx} className="flex gap-2">
-                                        <input 
-                                            type="text" value={item.text} onChange={(e) => {
-                                                const next = [...formData.exclusions];
-                                                next[idx] = { ...next[idx], text: e.target.value };
-                                                setFormData(prev => ({ ...prev, exclusions: next }));
-                                            }}
-                                            className="flex-[2] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
-                                            placeholder="Service"
-                                        />
-                                        <input 
-                                            type="text" value={item.option} onChange={(e) => {
-                                                const next = [...formData.exclusions];
-                                                next[idx] = { ...next[idx], option: e.target.value };
-                                                setFormData(prev => ({ ...prev, exclusions: next }));
-                                            }}
-                                            className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
-                                            placeholder="Option"
-                                        />
-                                        <button type="button" onClick={() => {
-                                            const next = formData.exclusions.filter((_, i) => i !== idx);
-                                            setFormData(prev => ({ ...prev, exclusions: next }));
-                                        }} className="text-slate-400 hover:text-red-500">
-                                            <span className="material-symbols-outlined text-[18px]">delete</span>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-
-                {/* Media Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
-                        <span className="material-symbols-outlined">image</span>
-                        Tour Gallery
-                    </h2>
-                    <div className="space-y-6">
-                        <input 
-                            type="file" multiple accept="image/*" onChange={handleImageUpload} id="bike-image-upload" className="hidden"
+                {/* Basic Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Expedition Title</label>
+                        <input
+                            id="title"
+                            type="text"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 rounded-2xl outline-none focus:border-primary transition-all font-bold ${errors.title ? 'border-red-500' : 'border-transparent'}`}
+                            placeholder="e.g. Leh and Leh Grand Circuit"
                         />
-                        <label htmlFor="bike-image-upload" id="images" className={`flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-[24px] cursor-pointer transition-all group ${formErrors.images ? "border-red-500 bg-red-50/5" : "border-slate-200 dark:border-slate-800 hover:border-primary hover:bg-slate-50"}`}>
-                            <span className={`material-symbols-outlined text-4xl group-hover:text-primary transition-colors mb-2 ${formErrors.images ? "text-red-400" : "text-slate-300"}`}>{formErrors.images ? "warning" : "upload_file"}</span>
-                            <span className={`text-sm font-bold transition-colors ${formErrors.images ? "text-red-600" : "text-slate-500"}`}>
-                                {formErrors.images ? formErrors.images : "Click to upload 5MB max images (Multi-select enabled)"}
-                            </span>
-                        </label>
-                        {formErrors.images && <p className="text-[10px] text-red-500 font-bold italic ml-1 text-center animate-bounce">*{formErrors.images}</p>}
-
-                        {formData.images.length > 0 && (
-                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                                {formData.images?.map((img, i) => (
-                                    <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 group">
-                                        <img src={img} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                            <button 
-                                                type="button" onClick={() => setFormData(prev => ({ ...prev, mainImage: img }))}
-                                                className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.mainImage === img ? 'bg-primary text-white' : 'bg-white text-slate-600'}`}
-                                                title="Set as Main Image"
-                                            >
-                                                <span className="material-symbols-outlined text-[18px]">star</span>
-                                            </button>
-                                            <button 
-                                                type="button" onClick={() => removeImage(i)}
-                                                className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center"
-                                            >
-                                                <span className="material-symbols-outlined text-[18px]">delete</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        {errors.title && <p className="text-red-500 text-[10px] font-bold italic mt-1">{errors.title}</p>}
                     </div>
-                </section>
-
-                {/* Content Section (with HTML Toggle) */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] flex items-center gap-2">
-                            <span className="material-symbols-outlined">edit_note</span>
-                            Tour Content
-                        </h2>
-                        <div className="flex items-center gap-4">
-                            <button 
-                                type="button" onClick={() => setIsHtmlMode(!isHtmlMode)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isHtmlMode ? 'bg-slate-800 text-white shadow-lg' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
-                            >
-                                <span className="material-symbols-outlined text-[18px]">{isHtmlMode ? 'code' : 'view_quilt'}</span>
-                                {isHtmlMode ? 'Source Code' : 'Visual Mode'}
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                        <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Main Itinerary & Details Article</label>
-                        {isHtmlMode ? (
-                            <textarea 
-                                name="content" id="content" value={formData.content} onChange={handleChange}
-                                className={`w-full h-80 bg-slate-900 text-emerald-400 p-6 rounded-2xl font-mono text-sm border focus:border-primary outline-none ${formErrors.content ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-800"}`}
-                                placeholder="Paste your <article> tags here..."
-                            />
-                            {formErrors.content && <p className="text-[10px] text-red-500 font-bold italic mt-2 ml-1">*{formErrors.content}</p>}
-                        ) : (
-                            <div className="space-y-4">
-                                <div 
-                                    id="content"
-                                    className={`w-full min-h-[400px] bg-slate-50 dark:bg-slate-900/50 border rounded-[32px] p-8 md:p-12 overflow-y-auto prose dark:prose-invert max-w-none shadow-inner ${formErrors.content ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-800"}`}
-                                    dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-slate-400 italic">No content yet. Switch to Source Code to paste HTML.</p>' }}
-                                />
-                                {formErrors.content && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.content}</p>}
-                                <div className="p-6 bg-primary/5 rounded-[24px] border border-primary/10 flex gap-4 items-center">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                                        <span className="material-symbols-outlined">visibility</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Live Preview Mode</p>
-                                        <p className="text-[11px] text-slate-500 font-bold italic mt-0.5">Showing exact rendered layout. Switch to Source Code to edit the HTML structure.</p>
-                                    </div>
-                                    <button 
-                                        type="button" onClick={() => setIsHtmlMode(true)}
-                                        className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-[10px] font-black uppercase hover:border-primary transition-all"
-                                    >
-                                        Edit Source
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </section>
-
-                {/* SEO & Meta Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] flex items-center gap-2">
-                            <span className="material-symbols-outlined">data_object</span>
-                            SEO & Schema Markup
-                        </h2>
-                        <button 
-                            type="button" onClick={() => setIsSchemaHtmlMode(!isSchemaHtmlMode)}
-                            className="text-[10px] font-black text-slate-400 uppercase hover:text-primary transition-colors"
-                        >
-                            Toggle Source Mode
-                        </button>
-                    </div>
-
-                    <div className="space-y-4">
-                        <label className="text-xs font-black uppercase tracking-tighter text-slate-400">JSON-LD Schema Markup</label>
-                        <textarea 
-                            name="schemaMarkup" value={formData.schemaMarkup} onChange={handleChange}
-                            className={`w-full h-40 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] p-5 text-sm font-bold outline-none focus:border-primary ${isSchemaHtmlMode ? 'font-mono text-emerald-600 bg-slate-900' : ''}`}
-                            placeholder='e.g. { "@context": "https://schema.org", "@type": "Tour", ... }'
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">URL Slug</label>
+                        <input
+                            id="slug"
+                            type="text"
+                            name="slug"
+                            value={formData.slug}
+                            onChange={handleChange}
+                            className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 rounded-2xl outline-none focus:border-primary transition-all font-bold ${errors.slug ? 'border-red-500' : 'border-transparent'}`}
+                            placeholder="leh-and-leh-grand-circuit"
                         />
+                        {errors.slug && <p className="text-red-500 text-[10px] font-bold italic mt-1">{errors.slug}</p>}
                     </div>
-                </section>
+                </div>
 
-                {/* Control Panel Section */}
-                <section className="bg-slate-50 dark:bg-slate-800/20 p-8 rounded-[32px] border border-slate-200 dark:border-slate-800 flex flex-wrap gap-10 items-center justify-between">
-                    <div className="flex flex-wrap gap-8 items-center">
-                        <label className="flex items-center gap-3 cursor-pointer group">
-                            <input 
-                                type="checkbox" name="showInMenu" checked={formData.showInMenu} onChange={handleChange}
-                                className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary"
-                            />
-                            <div className="flex flex-col">
-                                <span className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Show in Main Menu</span>
-                                <span className="text-[10px] text-slate-400 font-bold uppercase">Inject into Header/Footer automatisch</span>
-                            </div>
-                        </label>
-                        <label className="flex items-center gap-3 cursor-pointer group">
-                            <input 
-                                type="checkbox" name="featured" checked={formData.featured} onChange={handleChange}
-                                className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary"
-                            />
-                            <div className="flex flex-col">
-                                <span className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Featured Adventure</span>
-                                <span className="text-[10px] text-slate-400 font-bold uppercase">Display on Home and Search priority</span>
-                            </div>
-                        </label>
-                        <div className="flex flex-col gap-1.5">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Publish History Status</span>
-                            <select 
-                                name="status" value={formData.status} onChange={handleChange}
-                                className="bg-white dark:bg-slate-800 border-none px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-slate-700 outline-none shadow-sm"
-                            >
-                                <option value="active">Publish Live</option>
-                                <option value="draft">Save Draft</option>
-                                <option value="paused">Pause Listing</option>
-                            </select>
-                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Destination</label>
+                        <input
+                            id="destination"
+                            type="text"
+                            name="destination"
+                            value={formData.destination}
+                            onChange={handleChange}
+                            className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 rounded-2xl outline-none focus:border-primary transition-all font-bold ${errors.destination ? 'border-red-500' : 'border-transparent'}`}
+                            placeholder="e.g. Ladakh"
+                        />
+                        {errors.destination && <p className="text-red-500 text-[10px] font-bold italic mt-1">{errors.destination}</p>}
                     </div>
-
-                    <div className="flex gap-4">
-                        <Link to="/admin/bike-tours" className="px-8 py-3 bg-slate-100 text-slate-600 rounded-2xl font-black text-sm hover:bg-slate-200 transition-all">Cancel</Link>
-                        <button 
-                            type="submit" disabled={loading}
-                            className="px-10 py-3 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all disabled:opacity-50"
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Starting Price (₹)</label>
+                        <input
+                            id="pricing"
+                            type="number"
+                            value={formData.pricing.perPerson}
+                            onChange={handlePricingChange}
+                            className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 rounded-2xl outline-none focus:border-primary transition-all font-bold ${errors.pricing ? 'border-red-500' : 'border-transparent'}`}
+                        />
+                        {errors.pricing && <p className="text-red-500 text-[10px] font-bold italic mt-1">{errors.pricing}</p>}
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</label>
+                        <select
+                            name="status"
+                            value={formData.status}
+                            onChange={handleChange}
+                            className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-transparent rounded-2xl outline-none focus:border-primary transition-all font-bold"
                         >
-                            {loading ? (
-                                <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                    Processing...
-                                </div>
-                            ) : (isEdit ? 'Update Adventure' : 'Launch Adventure')}
-                        </button>
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                        </select>
                     </div>
-                </section>
+                </div>
+
+                {/* Content Editor */}
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Expedition Description (HTML Content)</label>
+                    <textarea
+                        id="content"
+                        name="content"
+                        value={formData.content}
+                        onChange={handleChange}
+                        className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 rounded-2xl outline-none focus:border-primary transition-all font-bold min-h-[300px] ${errors.content ? 'border-red-500' : 'border-transparent'}`}
+                        placeholder="Provide detailed expedition narration in HTML format..."
+                    />
+                    {errors.content && <p className="text-red-500 text-[10px] font-bold italic mt-1">{errors.content}</p>}
+                </div>
+
+                {/* Main Image */}
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cover Image URL</label>
+                    <input
+                        id="images"
+                        type="text"
+                        name="mainImage"
+                        value={formData.mainImage}
+                        onChange={handleChange}
+                        className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 rounded-2xl outline-none focus:border-primary transition-all font-bold ${errors.images ? 'border-red-500 animate-bounce' : 'border-transparent'}`}
+                        placeholder="/ladakh-bike-expedition.png"
+                    />
+                    {errors.images && <p className="text-red-500 text-[10px] font-bold italic mt-1">{errors.images}</p>}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-6 pt-10 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onClick={onCancel} className="px-10 py-4 text-slate-400 font-black uppercase text-xs tracking-[4px] hover:text-slate-600 transition-all">Cancel</button>
+                    <button type="submit" className="px-12 py-4 bg-primary text-white rounded-2xl font-black uppercase text-xs tracking-[4px] shadow-2xl shadow-primary/30 hover:bg-slate-900 focus:outline-none transition-all">
+                        {tour ? 'Seal Record' : 'Launch Expedition'}
+                    </button>
+                </div>
             </form>
         </div>
     );

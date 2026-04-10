@@ -5,6 +5,20 @@ import QueryModal from '../components/QueryModal';
 import ConsultSpecialistModal from '../components/ConsultSpecialistModal';
 import BikeTourMap from '../components/BikeTourMap';
 
+const getInclusionIcon = (text) => {
+  const t = text.toLowerCase();
+  if (t.includes('hotel') || t.includes('stay') || t.includes('accommodation')) return 'apartment';
+  if (t.includes('breakfast') || t.includes('meal') || t.includes('dinner') || t.includes('lunch')) return 'restaurant';
+  if (t.includes('transfer') || t.includes('pickup') || t.includes('airport')) return 'local_taxi';
+  if (t.includes('guide') || t.includes('escort')) return 'person_pin';
+  if (t.includes('permit') || t.includes('entry') || t.includes('ticket')) return 'confirmation_number';
+  if (t.includes('bike') || t.includes('motorcycle') || t.includes('cycle')) return 'motorcycle';
+  if (t.includes('fuel') || t.includes('gas')) return 'local_gas_station';
+  if (t.includes('backup') || t.includes('mechanic')) return 'build';
+  if (t.includes('medical') || t.includes('oxygen') || t.includes('first aid')) return 'medical_services';
+  return 'task_alt';
+};
+
 const BikeTourDetailView = () => {
     const { slug } = useParams();
     const location = useLocation();
@@ -37,10 +51,22 @@ const BikeTourDetailView = () => {
             }
 
             if (data) {
-                setTour(data);
+                // Normalize inclusions and exclusions for standardized rendering
+                const normalizedInclusions = Array.isArray(data.inclusions) && data.inclusions.length > 0
+                    ? data.inclusions
+                    : (Array.isArray(data.whatsIncluded) 
+                        ? data.whatsIncluded.map(item => typeof item === 'string' ? { text: item, option: "Included" } : item)
+                        : []);
                 
-                // Schema injection is now handled by Helmet in render
+                const normalizedExclusions = Array.isArray(data.exclusions)
+                    ? data.exclusions
+                    : [];
 
+                setTour({
+                    ...data,
+                    inclusions: normalizedInclusions,
+                    exclusions: normalizedExclusions
+                });
             }
         } catch (err) {
             console.error('Fetch error:', err);
@@ -285,6 +311,74 @@ const BikeTourDetailView = () => {
                         <section className="article-content max-w-none">
                             <div dangerouslySetInnerHTML={{ __html: tour.content }} />
                         </section>
+
+                        {/* Standardized Inclusions & Exclusions */}
+                        {( (tour.inclusions && tour.inclusions.length > 0) || (tour.exclusions && tour.exclusions.length > 0) ) && (
+                            <section className="space-y-12 py-12 border-t border-slate-100 dark:border-slate-800">
+                                <div className="space-y-4">
+                                    <h2 className="text-[10px] font-black uppercase tracking-[8px] text-primary">The Details</h2>
+                                    <h3 className="text-4xl font-serif font-black text-slate-900 dark:text-white italic">Package <span className="text-primary italic">Inclusions & Exclusions</span></h3>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                    {/* Inclusions */}
+                                    {tour.inclusions && tour.inclusions.length > 0 && (
+                                        <div className="inc-box included p-10 rounded-[40px] border border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-emerald-950/10 space-y-8 h-full">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-emerald-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                                                    <span className="material-symbols-outlined font-black">check_circle</span>
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-xl font-serif font-black text-slate-900 dark:text-white italic">Included</h4>
+                                                    <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Everything we cover</p>
+                                                </div>
+                                            </div>
+                                            <ul className="space-y-5">
+                                                {tour.inclusions.map((item, idx) => (
+                                                    <li key={idx} className="flex items-start gap-4 group">
+                                                        <div className="w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm">
+                                                            <span className="material-symbols-outlined text-[18px] text-emerald-500">{getInclusionIcon(item.text)}</span>
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{item.text}</span>
+                                                            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-tighter">{item.option}</span>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    {/* Exclusions */}
+                                    {tour.exclusions && tour.exclusions.length > 0 && (
+                                        <div className="inc-box excluded p-10 rounded-[40px] border border-rose-100 dark:border-rose-900/30 bg-rose-50/30 dark:bg-rose-950/10 space-y-8 h-full">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-rose-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20">
+                                                    <span className="material-symbols-outlined font-black">cancel</span>
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-xl font-serif font-black text-slate-900 dark:text-white italic">Not Included</h4>
+                                                    <p className="text-[9px] font-black uppercase tracking-widest text-rose-600 dark:text-rose-400">Extra charges apply</p>
+                                                </div>
+                                            </div>
+                                            <ul className="space-y-5">
+                                                {tour.exclusions.map((item, idx) => (
+                                                    <li key={idx} className="flex items-start gap-4 group">
+                                                        <div className="w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-rose-100 dark:border-rose-800 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm">
+                                                            <span className="material-symbols-outlined text-[18px] text-rose-500">{getInclusionIcon(item.text)}</span>
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm font-bold text-slate-500 dark:text-slate-400 line-through decoration-rose-300 dark:decoration-rose-900">{item.text}</span>
+                                                            <span className="text-[10px] font-black text-rose-500 uppercase tracking-tighter">{item.option}</span>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            </section>
+                        )}
 
                         {/* Interactive Itinerary / Tabs */}
                         <section className="space-y-12">
