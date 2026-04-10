@@ -972,14 +972,55 @@ const TourDetailView = () => {
                                </div>
                             </div>
 
-                            <div className="bg-slate-50/50 dark:bg-slate-950/20 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/50 space-y-3">
+                            {/* Booking Summary Section */}
+                            <div className="bg-slate-50/50 dark:bg-slate-950/20 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 space-y-4">
+                               <h5 className="text-[11px] font-black uppercase tracking-[2px] text-slate-400 mb-2 pl-1">Booking Summary</h5>
+                               
+                               {/* Basic Price */}
                                <div className="flex justify-between items-center text-sm">
-                                  <span className="text-slate-500 font-medium">₹{getDynamicPriceData().basePrice.toLocaleString('en-IN')} × {bookingGuests} {bookingGuests===1?'Guest':'Guests'}</span>
-                                  <span className="text-slate-900 dark:text-white font-bold">₹{getDynamicPriceData().totalPrice.toLocaleString('en-IN')}</span>
+                                  <span className="text-slate-500 font-medium">Basic Price</span>
+                                  <span className="text-slate-900 dark:text-white font-bold tabular-nums">
+                                     ₹{getDynamicPriceData().totalBeforeGroupDiscount.toLocaleString('en-IN')}
+                                  </span>
                                </div>
-                               <div className="flex justify-between items-center text-xs font-bold pt-3 border-t border-slate-200 dark:border-slate-800">
-                                  <span className="text-slate-500">Service Fee</span>
-                                  <span className="text-emerald-500 uppercase tracking-widest text-[10px]">Included</span>
+
+                               {/* Group Discount (Conditional) */}
+                               {getDynamicPriceData().groupDiscountAmount > 0 && (
+                                  <div className="flex justify-between items-center text-sm animate-in fade-in slide-in-from-top-1 duration-500">
+                                     <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                                        <span className="material-symbols-outlined text-[16px]">verified</span>
+                                        Group Discount
+                                     </span>
+                                     <span className="text-emerald-600 dark:text-emerald-400 font-black tabular-nums">
+                                        -₹{getDynamicPriceData().groupDiscountAmount.toLocaleString('en-IN')}
+                                     </span>
+                                  </div>
+                               )}
+
+                               {/* Total Price Row */}
+                               <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-slate-800">
+                                  <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Discounted Price</span>
+                                  <span className="text-xl font-black text-slate-900 dark:text-white tabular-nums">
+                                     ₹{getDynamicPriceData().totalPrice.toLocaleString('en-IN')}
+                                  </span>
+                               </div>
+
+                               {/* Advance Payment Prompt */}
+                               <div className="bg-primary/5 dark:bg-primary/10 rounded-2xl p-4 border border-primary/10 flex justify-between items-center mt-4">
+                                  <div className="flex flex-col">
+                                     <span className="text-[10px] font-black text-primary uppercase tracking-wider">Pay Now (30%)</span>
+                                     <span className="text-[9px] text-slate-500 font-bold italic mt-0.5">To block this tour at this price</span>
+                                  </div>
+                                  <div className="text-right">
+                                     <span className="text-lg font-black text-primary tabular-nums">
+                                        ₹{getDynamicPriceData().advance.toLocaleString('en-IN')}
+                                     </span>
+                                  </div>
+                               </div>
+
+                               <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-1 px-1">
+                                  <span>Service Fee</span>
+                                  <span className="text-emerald-500">Included</span>
                                </div>
                             </div>
 
