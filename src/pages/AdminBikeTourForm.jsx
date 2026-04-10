@@ -1,278 +1,530 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import { STORAGE_KEYS, safeCacheTours } from '../utils/storage';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 const AdminBikeTourForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const isEdit = !!id;
+    const isEdit = Boolean(id);
+    const [loading, setLoading] = useState(false);
+    const [isHtmlMode, setIsHtmlMode] = useState(false);
+    const [isSchemaHtmlMode, setIsSchemaHtmlMode] = useState(false);
 
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
-        destination: '',
+        subtitle: '',
         duration: '',
-        price: '',
-        content: '',
-        image: '',
+        coveredPlaces: [],
+        destination: '',
+        country: '',
+        tourType: 'Bicycle',
+        difficulty: 'Easy',
+        equipment: [],
+        pricing: {
+            perPerson: 0,
+            perCouple: 0,
+            perGroup: {
+                price: 0,
+                minPersons: 1
+            }
+        },
+        mainImage: '',
         images: [],
-        type: 'Adventure',
-        status: 'active',
-        bestTimeToVisit: '',
-        featured: false,
+        content: '',
+        schemaMarkup: '',
         showInMenu: true,
-        schemaMarkup: ''
+        status: 'draft',
+        featured: false,
+        highlights: [],
+        whatsIncluded: []
     });
 
-    const [loading, setLoading] = useState(false);
-    const [isHtmlMode, setIsHtmlMode] = useState(false);
-    const [isSchemaHtmlMode, setIsSchemaHtmlMode] = useState(true);
-
     useEffect(() => {
-        if (isEdit) {
-            const allTours = JSON.parse(localStorage.getItem(STORAGE_KEYS.BIKE_TOURS) || '[]');
-            const tour = allTours.find(t => t.id === id || t.slug === id);
-            if (tour) {
-                setFormData({
-                    ...tour,
-                    images: tour.images || []
-                });
+        const fetchTours = async () => {
+            try {
+                if (id === 'undefined') {
+                    setLoading(false);
+                    return;
+                }
+
+                // Determine environment-aware URL
+                const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const targetUrl = isDev 
+                    ? `/api/v1/bike-tours${isEdit ? '/admin' : ''}?t=${Date.now()}`
+                    : `/data/bike-tours.json?t=${Date.now()}`;
+                
+                const response = await fetch(targetUrl);
+                if (!response.ok) return;
+                const data = await response.json();
+                
+                if (isEdit && Array.isArray(data)) {
+                    // Match by id or slug
+                    const matched = data.find(t => 
+                        (t.id && String(t.id) === String(id)) || 
+                        (t.slug && String(t.slug) === String(id)) || 
+                        (t._id && String(t._id) === String(id))
+                    );
+
+                    if (matched) {
+                        setFormData(prev => ({
+                            ...prev,
+                            ...matched,
+                            coveredPlaces: Array.isArray(matched.coveredPlaces) ? matched.coveredPlaces : prev.coveredPlaces,
+                            equipment: Array.isArray(matched.equipment) ? matched.equipment : prev.equipment,
+                            images: Array.isArray(matched.images) ? matched.images : prev.images,
+                            highlights: Array.isArray(matched.highlights) ? matched.highlights : prev.highlights,
+                            whatsIncluded: Array.isArray(matched.whatsIncluded) ? matched.whatsIncluded : prev.whatsIncluded,
+                            pricing: {
+                                ...prev.pricing,
+                                ...(matched.pricing || {})
+                            }
+                        }));
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching bike tours:', error);
             }
-        }
+        };
+        fetchTours();
     }, [id, isEdit]);
+
+    // Auto-generate slug from title
+    useEffect(() => {
+        if (!isEdit && formData.title) {
+            const generatedSlug = formData.title
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, "")
+                .replace(/\s+/g, "-")
+                .replace(/-+/g, "-")
+                .replace(/^-|-$/g, "");
+            setFormData(prev => ({ ...prev, slug: generatedSlug }));
+        }
+    }, [formData.title, isEdit]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
-
-        if (name === 'title' && !isEdit) {
-            setFormData(prev => ({
-                ...prev,
-                slug: value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
-            }));
+        if (type === 'checkbox' && name !== 'showInMenu' && name !== 'featured') {
+            // Handled separately for arrays
+            return;
         }
+        
+        if (name.includes('.')) {
+            const [parent, child, subchild] = name.split('.');
+            setFormData(prev => {
+                if (subchild) {
+                    return {
+                        ...prev,
+                        [parent]: {
+                            ...prev[parent],
+                            [child]: {
+                                ...prev[parent][child],
+                                [subchild]: value
+                            }
+                        }
+                    };
+                }
+                return {
+                    ...prev,
+                    [parent]: {
+                        ...prev[parent],
+                        [child]: value
+                    }
+                };
+            });
+        } else {
+            setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+        }
+    };
+
+    const handleArrayChange = (name, index, value) => {
+        const newArray = [...formData[name]];
+        newArray[index] = value;
+        setFormData(prev => ({ ...prev, [name]: newArray }));
+    };
+
+    const addToArray = (name) => {
+        setFormData(prev => ({ ...prev, [name]: [...prev[name], ''] }));
+    };
+
+    const removeFromArray = (name, index) => {
+        setFormData(prev => ({ ...prev, [name]: prev[name].filter((_, i) => i !== index) }));
+    };
+
+    const handleEquipmentToggle = (item) => {
+        const newEquipment = formData.equipment.includes(item)
+            ? formData.equipment.filter(e => e !== item)
+            : [...formData.equipment, item];
+        setFormData(prev => ({ ...prev, equipment: newEquipment }));
     };
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData(prev => ({
-                    ...prev,
-                    images: [...prev.images, reader.result],
-                    image: prev.image || reader.result
-                }));
-            };
-            reader.readAsDataURL(file);
+        Promise.all(files.map(file => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (ev) => resolve(ev.target.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        })).then(base64Urls => {
+            setFormData(prev => ({
+                ...prev,
+                images: [...prev.images, ...base64Urls],
+                mainImage: prev.mainImage || base64Urls[0]
+            }));
         });
     };
 
     const removeImage = (index) => {
-        setFormData(prev => ({
-            ...prev,
-            images: prev.images.filter((_, i) => i !== index)
-        }));
+        setFormData(prev => {
+            const newImages = prev.images.filter((_, i) => i !== index);
+            return {
+                ...prev,
+                images: newImages,
+                mainImage: prev.mainImage === prev.images[index] ? (newImages[0] || '') : prev.mainImage
+            };
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
-            const finalData = {
-                ...formData,
-                id: formData.id || formData.slug,
-                updatedAt: new Date().toISOString()
-            };
-
-            const allTours = JSON.parse(localStorage.getItem(STORAGE_KEYS.BIKE_TOURS) || '[]');
-            let updatedTours;
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             
-            if (isEdit) {
-                updatedTours = allTours.map(t => (t.id === id || t.slug === id) ? finalData : t);
+            if (isDev) {
+                // Using Node.js Backend API
+                const url = isEdit ? `/api/v1/bike-tours/admin/${formData._id || id}` : '/api/v1/bike-tours/admin';
+                const method = isEdit ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
+                    navigate('/admin/bike-tours');
+                } else {
+                    throw new Error(result.message || 'Server error');
+                }
             } else {
-                updatedTours = [finalData, ...allTours];
+                // Fallback to PHP/JSON file persistence for production (legacy mode)
+                let tours = [];
+                try {
+                    const res = await fetch(`/data/bike-tours.json?t=${Date.now()}`);
+                    if (res.ok) {
+                        const existingData = await res.json();
+                        tours = Array.isArray(existingData) ? existingData : [];
+                    }
+                } catch (err) {
+                    console.error("Error fetching existing tours:", err);
+                }
+
+                const tourToSave = { ...formData };
+                if (!isEdit) {
+                    tourToSave.id = tourToSave.slug || Date.now().toString();
+                }
+
+                let updatedTours;
+                if (isEdit) {
+                    updatedTours = tours.map(t => (String(t.id) === String(id) || String(t.slug) === String(id)) ? tourToSave : t);
+                } else {
+                    updatedTours = [...tours, tourToSave];
+                }
+
+                const response = await fetch('/api/save-bike-tours', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTours)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert(isEdit ? 'Adventure updated successfully!' : 'Adventure launched successfully!');
+                    navigate('/admin/bike-tours');
+                } else {
+                    throw new Error(result.error || 'Failed to save');
+                }
             }
-
-            // 1. Sync LocalStorage for instant preview
-            safeCacheTours(updatedTours, STORAGE_KEYS.BIKE_TOURS);
-
-            // 2. Sync Backend File
-            const response = await fetch('/api-save-bike-tours.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedTours)
-            });
-
-            if (!response.ok) throw new Error('Failed to synchronize with backend');
-
-            navigate('/admin/bike-tours');
         } catch (error) {
-            console.error('Save failed:', error);
-            alert('Critial Error: Backend Protocol Sync Failed.');
+            alert('Error: ' + error.message);
         } finally {
             setLoading(false);
         }
     };
 
+    const equipmentOptions = ['Helmet', 'Water', 'E-bike', 'Road bike', 'Repair Kit', 'First Aid'];
+
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-slate-950 p-6 md:p-12">
-            <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                <div className="space-y-1">
-                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-2">
-                        <span className="w-8 h-[1px] bg-primary/30"></span>
-                        Strategic Adventure Protocol
-                    </p>
-                    <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic">
-                        {isEdit ? 'Re-Engineer Tour' : 'Initiate New Bike Expedition'}
-                    </h1>
-                </div>
+        <div className="p-6 lg:p-10 max-w-[1200px] mx-auto space-y-10 animate-in fade-in duration-500">
+            {/* Header */}
+            <div className="flex flex-col gap-2">
+                <nav className="flex text-xs font-medium text-slate-400 mb-2 gap-2 items-center">
+                    <Link className="hover:text-primary" to="/admin">Admin</Link>
+                    <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <Link className="hover:text-primary" to="/admin/bike-tours">Bicycle Tours</Link>
+                    <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <span className="text-slate-600 dark:text-slate-300 font-bold">{isEdit ? 'Edit Bike Tour' : 'Add New Bike Tour'}</span>
+                </nav>
+                <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white">
+                    {isEdit ? 'Edit Bicycle Voyage' : 'Create Cycling Adventure'}
+                </h1>
+                <p className="text-slate-500 dark:text-slate-400 font-bold italic">
+                    Configure the premium details of your bicycle tour module.
+                </p>
+            </div>
 
-                <div className="flex gap-4">
-                    <Link to="/admin/bike-tours" className="px-8 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-primary hover:text-primary transition-all">
-                        Abort Protocol
-                    </Link>
-                    <button 
-                        onClick={handleSubmit} disabled={loading}
-                        className="px-10 py-4 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
-                    >
-                        {loading ? 'Processing Sync...' : (isEdit ? 'Authorize Update' : 'Initialize Launch')}
-                    </button>
-                </div>
-            </header>
-
-            <form onSubmit={handleSubmit} className="max-w-7xl mx-auto space-y-10">
-                
-                {/* Core Manifest Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div className="space-y-8">
-                        <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                            <span className="material-symbols-outlined text-primary">analytics</span>
-                            <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75]">Core Manifest</h2>
+            <form onSubmit={handleSubmit} className="space-y-12">
+                {/* Basic Info Section */}
+                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined">info</span>
+                        Core Information
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Title *</label>
+                            <input 
+                                type="text" name="title" value={formData.title} onChange={handleChange} required
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                placeholder="e.g. Himalayan Cycling Expedition"
+                            />
                         </div>
-                        
-                        <div className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Expedition Alpha (Title)</label>
-                                <input 
-                                    type="text" name="title" value={formData.title} onChange={handleChange} required
-                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] px-6 py-4 text-sm font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
-                                    placeholder="e.g. Ladakh Mountain Pass Raid 2026"
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-tighter text-slate-400">System Slug</label>
-                                    <input 
-                                        type="text" name="slug" value={formData.slug} onChange={handleChange} required
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] px-6 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-500"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Hub Destination</label>
-                                    <input 
-                                        type="text" name="destination" value={formData.destination} onChange={handleChange} required
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] px-6 py-4 text-sm font-bold outline-none focus:border-primary transition-all"
-                                        placeholder="Leh, Ladakh"
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Temporal Span</label>
-                                    <input 
-                                        type="text" name="duration" value={formData.duration} onChange={handleChange} required
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] px-6 py-4 text-sm font-bold outline-none focus:border-primary transition-all"
-                                        placeholder="9 Days / 8 Nights"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Offering Value (₹)</label>
-                                    <input 
-                                        type="number" name="price" value={formData.price} onChange={handleChange} required
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] px-6 py-4 text-sm font-bold outline-none focus:border-primary transition-all"
-                                        placeholder="12999"
-                                    />
-                                </div>
-                            </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">URL Slug *</label>
+                            <input 
+                                type="text" name="slug" value={formData.slug} onChange={handleChange} required
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all font-mono"
+                                placeholder="himalayan-cycling-expedition"
+                            />
                         </div>
-                    </div>
-
-                    <div className="space-y-8">
-                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-                            <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-primary">gallery_thumbnail</span>
-                                <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75]">Visual Intel</h2>
-                            </div>
-                            <label className="px-4 py-2 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-emerald-600 transition-all">
-                                Upload Assets
-                                <input type="file" multiple onChange={handleImageUpload} className="hidden" />
-                            </label>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Duration *</label>
+                            <input 
+                                type="text" name="duration" value={formData.duration} onChange={handleChange} required
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                placeholder="e.g. 5 Days / 4 Nights"
+                            />
                         </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                            {formData.images.map((img, idx) => (
-                                <div key={idx} className="group relative aspect-square rounded-[24px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm">
-                                    <img src={img} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all p-3 flex flex-col justify-end gap-2">
-                                        <button 
-                                            onClick={() => removeImage(idx)}
-                                            className="w-full h-8 flex items-center justify-center bg-rose-500/80 backdrop-blur-md text-white rounded-xl hover:bg-rose-500 transition-all"
-                                        >
-                                            <span className="material-symbols-outlined text-[16px]">delete</span>
-                                        </button>
-                                        <button 
-                                            onClick={() => setFormData(p => ({...p, image: img}))}
-                                            className={`w-full py-1 text-[8px] font-black uppercase rounded-lg transition-all ${formData.image === img ? 'bg-emerald-500 text-white' : 'bg-white/20 text-white hover:bg-white/40'}`}
-                                        >
-                                            {formData.image === img ? 'Primary' : 'Set Main'}
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Difficulty Level</label>
+                            <select 
+                                name="difficulty" value={formData.difficulty} onChange={handleChange}
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                            >
+                                <option value="Easy">Easy (Casual Riders)</option>
+                                <option value="Moderate">Moderate (Active Cyclists)</option>
+                                <option value="Challenging">Challenging (Athletes)</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Destination *</label>
+                            <input 
+                                type="text" name="destination" value={formData.destination} onChange={handleChange} required
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                placeholder="e.g. Ladakh"
+                            />
+                        </div>
+                         <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Type *</label>
+                                <span className="text-[10px] font-black text-primary uppercase">Bike = Motorbike / Bicycle = Cycling</span>
+                            </div>
+                            <select 
+                                name="tourType" value={formData.tourType} onChange={handleChange} required
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                            >
+                                <option value="Bicycle">Bicycle / Cycling Tour (Default)</option>
+                                <option value="Bike">Motorbike / Bike Tour</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Country *</label>
+                            <input 
+                                type="text" name="country" value={formData.country} onChange={handleChange} required
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                placeholder="e.g. India"
+                            />
                         </div>
                     </div>
                 </section>
 
-                {/* Adventure Narrative Section */}
-                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-8">
-                    <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                {/* Pricing Section */}
+                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined">payments</span>
+                        Pricing Logic
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Per Person Price</label>
+                                <input 
+                                    type="number" name="pricing.perPerson" value={formData.pricing?.perPerson || 0} onChange={handleChange}
+                                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Per Couple Price</label>
+                                <input 
+                                    type="number" name="pricing.perCouple" value={formData.pricing?.perCouple || 0} onChange={handleChange}
+                                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Group Price / Min Persons</label>
+                            <div className="flex gap-2">
+                                    <input 
+                                        type="number" name="pricing.perGroup.price" value={formData.pricing?.perGroup?.price || 0} onChange={handleChange}
+                                        className="w-2/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                        placeholder="Price"
+                                    />
+                                    <input 
+                                        type="number" name="pricing.perGroup.minPersons" value={formData.pricing?.perGroup?.minPersons || 0} onChange={handleChange}
+                                        className="w-1/3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                        placeholder="Min"
+                                    />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Logistics Section */}
+                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined">settings_accessibility</span>
+                        Equipment & Logistics
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="space-y-4">
+                            <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Bicycle Equipment Provided</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                {equipmentOptions.map(item => (
+                                    <label key={item} className="flex items-center gap-3 cursor-pointer group">
+                                        <div 
+                                            onClick={() => handleEquipmentToggle(item)}
+                                            className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${formData.equipment?.includes(item) ? 'bg-primary border-primary' : 'border-slate-300'}`}
+                                        >
+                                            {formData.equipment?.includes(item) && <span className="material-symbols-outlined text-white text-[14px]">check</span>}
+                                        </div>
+                                        <span className="text-sm font-bold text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">{item}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                                <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Places Covered</label>
+                                <button type="button" onClick={() => addToArray('coveredPlaces')} className="text-[10px] font-black text-primary uppercase hover:underline">+ Add Place</button>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {formData.coveredPlaces?.map((place, i) => (
+                                    <div key={i} className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                                        <input 
+                                            type="text" value={place} onChange={(e) => handleArrayChange('coveredPlaces', i, e.target.value)}
+                                            className="bg-transparent text-xs font-bold outline-none text-slate-700 dark:text-slate-200 w-24"
+                                            placeholder="City/Point"
+                                        />
+                                        <button type="button" onClick={() => removeFromArray('coveredPlaces', i)} className="text-red-400 hover:text-red-500">
+                                            <span className="material-symbols-outlined text-[14px]">close</span>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Media Section */}
+                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined">image</span>
+                        Tour Gallery
+                    </h2>
+                    <div className="space-y-6">
+                        <input 
+                            type="file" multiple accept="image/*" onChange={handleImageUpload} id="bike-image-upload" className="hidden"
+                        />
+                        <label htmlFor="bike-image-upload" className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[24px] cursor-pointer hover:border-primary hover:bg-slate-50 transition-all group">
+                            <span className="material-symbols-outlined text-4xl text-slate-300 group-hover:text-primary transition-colors mb-2">upload_file</span>
+                            <span className="text-sm font-bold text-slate-500">Click to upload 5MB max images (Multi-select enabled)</span>
+                        </label>
+
+                        {formData.images.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                                {formData.images?.map((img, i) => (
+                                    <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 group">
+                                        <img src={img} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                            <button 
+                                                type="button" onClick={() => setFormData(prev => ({ ...prev, mainImage: img }))}
+                                                className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.mainImage === img ? 'bg-primary text-white' : 'bg-white text-slate-600'}`}
+                                                title="Set as Main Image"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">star</span>
+                                            </button>
+                                            <button 
+                                                type="button" onClick={() => removeImage(i)}
+                                                className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </section>
+
+                {/* Content Section (with HTML Toggle) */}
+                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
                         <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] flex items-center gap-2">
-                            <span className="material-symbols-outlined">auto_stories</span>
-                            Expedition Narrative
+                            <span className="material-symbols-outlined">edit_note</span>
+                            Tour Content
                         </h2>
-                        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div className="flex items-center gap-4">
                             <button 
-                                type="button" onClick={() => setIsHtmlMode(false)}
-                                className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${!isHtmlMode ? 'bg-white shadow-md text-primary' : 'text-slate-400'}`}
+                                type="button" onClick={() => setIsHtmlMode(!isHtmlMode)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isHtmlMode ? 'bg-slate-800 text-white shadow-lg' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
                             >
-                                Aesthetics
-                            </button>
-                            <button 
-                                type="button" onClick={() => setIsHtmlMode(true)}
-                                className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isHtmlMode ? 'bg-white shadow-md text-primary' : 'text-slate-400'}`}
-                            >
-                                Source Code
+                                <span className="material-symbols-outlined text-[18px]">{isHtmlMode ? 'code' : 'view_quilt'}</span>
+                                {isHtmlMode ? 'Source Code' : 'Visual Mode'}
                             </button>
                         </div>
                     </div>
-
-                    <div className="relative group">
+                    
+                    <div className="space-y-4">
+                        <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Main Itinerary & Details Article</label>
                         {isHtmlMode ? (
                             <textarea 
-                                name="content" value={formData.content} onChange={handleChange} required
-                                className="w-full h-[400px] bg-slate-900 text-emerald-500 font-mono text-sm p-8 rounded-[32px] border border-slate-800 outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                                placeholder="Paste your HTML module here..."
+                                name="content" value={formData.content} onChange={handleChange}
+                                className="w-full h-80 bg-slate-900 text-emerald-400 p-6 rounded-2xl font-mono text-sm border border-slate-800 focus:border-primary outline-none"
+                                placeholder="Paste your <article> tags here..."
                             />
                         ) : (
-                            <div 
-                                className="w-full min-h-[400px] bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-[32px] p-8 md:p-12 overflow-y-auto prose dark:prose-invert max-w-none shadow-inner"
-                                dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-slate-400 italic font-medium">No content synced. Switch to Source Code to paste HTML module.</p>' }}
-                            />
+                            <div className="space-y-4">
+                                <div 
+                                    className="w-full min-h-[400px] bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-[32px] p-8 md:p-12 overflow-y-auto prose dark:prose-invert max-w-none shadow-inner"
+                                    dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-slate-400 italic">No content yet. Switch to Source Code to paste HTML.</p>' }}
+                                />
+                                <div className="p-6 bg-primary/5 rounded-[24px] border border-primary/10 flex gap-4 items-center">
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                        <span className="material-symbols-outlined">visibility</span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Live Preview Mode</p>
+                                        <p className="text-[11px] text-slate-500 font-bold italic mt-0.5">Showing exact rendered layout. Switch to Source Code to edit the HTML structure.</p>
+                                    </div>
+                                    <button 
+                                        type="button" onClick={() => setIsHtmlMode(true)}
+                                        className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-[10px] font-black uppercase hover:border-primary transition-all"
+                                    >
+                                        Edit Source
+                                    </button>
+                                </div>
+                            </div>
                         )}
                     </div>
                 </section>
@@ -336,6 +588,21 @@ const AdminBikeTourForm = () => {
                                 <option value="paused">Pause Listing</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div className="flex gap-4">
+                        <Link to="/admin/bike-tours" className="px-8 py-3 bg-slate-100 text-slate-600 rounded-2xl font-black text-sm hover:bg-slate-200 transition-all">Cancel</Link>
+                        <button 
+                            type="submit" disabled={loading}
+                            className="px-10 py-3 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all disabled:opacity-50"
+                        >
+                            {loading ? (
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    Processing...
+                                </div>
+                            ) : (isEdit ? 'Update Adventure' : 'Launch Adventure')}
+                        </button>
                     </div>
                 </section>
             </form>
