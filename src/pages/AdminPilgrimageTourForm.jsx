@@ -1,286 +1,430 @@
 import React, { useState, useEffect } from 'react';
-import { useData } from '../context/DataContext';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { STORAGE_KEYS, safeCacheTours } from '../utils/storage';
 
-const AdminPilgrimageTourForm = ({ tour, onSave, onCancel }) => {
-    const { refetchData } = useData();
+const AdminPilgrimageTourForm = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const isEdit = !!id;
+
     const [formData, setFormData] = useState({
-        id: Date.now(),
+        id: '',
         title: '',
         slug: '',
-        content: '',
-        status: 'publish',
-        gallery: [],
-        itinerary: [],
-        taxonomies: {
-            destination: [],
-            type: []
-        },
-        meta: {
-            city_path: '',
-            price_single: '',
-            price_couple: '',
-            price_group: '',
-            is_ongoing: false,
-            dates: '',
-            inclusions: [],
-            exclusions: [],
-            transport_options: [],
-            hotel_options: [],
-            meal_options: []
-        }
+        tour_destination: [],
+        tour_type: [],
+        tour_price: '',
+        tour_duration: '',
+        tour_description: '',
+        tour_highlights: '',
+        tour_image: '',
+        tour_gallery: [],
+        tour_status: 'active',
+        is_featured: false,
+        last_updated: new Date().toISOString()
     });
 
-    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [dragActive, setDragActive] = useState(false);
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [editingValue, setEditingValue] = useState("");
+    const [uploadQueue, setUploadQueue] = useState([]);
 
     useEffect(() => {
-        if (tour) {
-            setFormData({
-                ...tour,
-                taxonomies: {
-                    destination: tour.taxonomies?.destination || [],
-                    type: tour.taxonomies?.type || []
-                },
-                meta: {
-                    ...tour.meta,
-                    inclusions: tour.meta?.inclusions || [],
-                    exclusions: tour.meta?.exclusions || [],
-                    transport_options: tour.meta?.transport_options || [],
-                    hotel_options: tour.meta?.hotel_options || [],
-                    meal_options: tour.meta?.meal_options || []
-                }
-            });
+        if (isEdit) {
+            const allTours = JSON.parse(localStorage.getItem(STORAGE_KEYS.PILGRIMAGE_TOURS) || '[]');
+            const tour = allTours.find(t => t.id === id || t.slug === id);
+            if (tour) {
+                setFormData({
+                    ...tour,
+                    tour_destination: tour.tour_destination || [],
+                    tour_type: tour.tour_type || [],
+                    tour_gallery: tour.tour_gallery || []
+                });
+            }
         }
-    }, [tour]);
+    }, [id, isEdit]);
 
-    const handleMetaChange = (field, value) => {
+    const handleInput = (e) => {
+        const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
-            meta: { ...prev.meta, [field]: value }
+            [name]: type === 'checkbox' ? checked : value
         }));
+        
+        if (name === 'title' && !isEdit) {
+            setFormData(prev => ({
+                ...prev,
+                slug: value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+            }));
+        }
     };
 
-    const validateForm = () => {
-        const newErrors = {};
-        
-        // Identity validation
-        if (!formData.title?.trim()) newErrors.title = "Yatra title is mandatory";
-        if (!formData.slug?.trim()) newErrors.slug = "Slug requires valid format";
-        
-        // Logistics validation
-        if (!formData.taxonomies?.destination?.length) newErrors.destination = "Define at least one destination";
-        
-        // Economy validation
-        if (!formData.meta?.price_single) newErrors.price = "Enter a valid base price";
-        
-        // Content validation
-        if (!formData.content?.trim()) newErrors.content = "Journey narration is missing";
-        
-        // Media validation
-        if (!formData.gallery?.length) newErrors.gallery = "At least one sacred image is required";
-
-        setErrors(newErrors);
-
-        // Fail-fast behavior with scroll-to-error
-        if (Object.keys(newErrors).length > 0) {
-            const firstErrorKey = Object.keys(newErrors)[0];
-            const errorElement = document.getElementById(firstErrorKey) || document.getElementById('media-gallery-p');
-            if (errorElement) {
-                errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                errorElement.focus();
-            }
-            return false;
-        }
-        return true;
+    const handleArrayInput = (field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            [`${field}_temp`]: value,
+            [field]: value.split(',').map(v => v.trim()).filter(v => v !== '')
+        }));
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
-        
-        if (!validateForm()) return;
+        setLoading(true);
 
         try {
-            // Robust sync: fetch-merge-repost
-            const res = await fetch(`${import.meta.env.BASE_URL}data/pk_pilgrimage_tours.json?t=${Date.now()}`);
-            let allTours = await res.json();
+            const finalData = {
+                ...formData,
+                id: formData.id || formData.slug,
+                last_updated: new Date().toISOString()
+            };
 
-            if (tour) {
-                allTours = allTours.map(t => t.id === tour.id ? formData : t);
+            const allTours = JSON.parse(localStorage.getItem(STORAGE_KEYS.PILGRIMAGE_TOURS) || '[]');
+            let updatedTours;
+            
+            if (isEdit) {
+                updatedTours = allTours.map(t => (t.id === id || t.slug === id) ? finalData : t);
             } else {
-                allTours = [formData, ...allTours];
+                updatedTours = [finalData, ...allTours];
             }
 
-            const saveRes = await fetch(`${import.meta.env.BASE_URL}api-save-pilgrimage.php`, {
+            // 1. Sync LocalStorage
+            safeCacheTours(updatedTours, STORAGE_KEYS.PILGRIMAGE_TOURS);
+
+            // 2. Sync Backend
+            const response = await fetch('/api-save-pilgrimage-tours.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(allTours)
+                body: JSON.stringify(updatedTours)
             });
 
-            if (saveRes.ok) {
-                await refetchData();
-                onSave();
-            }
-        } catch (err) {
-            console.error(err);
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            navigate('/admin/pilgrimages');
+        } catch (error) {
+            console.error('Save failed:', error);
+            alert('Protocol Sync Failed. Check terminal logs.');
+        } finally {
+            setLoading(false);
         }
     };
 
+    const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+        processFiles(files);
+    };
+
+    const processFiles = (files) => {
+        files.forEach(file => {
+            const queueId = Math.random().toString(36).substr(2, 9);
+            setUploadQueue(prev => [...prev, { id: queueId, name: file.name, progress: 0, status: 'uploading' }]);
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({
+                    ...prev,
+                    tour_gallery: [...prev.tour_gallery, reader.result],
+                    tour_image: prev.tour_image || reader.result
+                }));
+                setUploadQueue(prev => prev.map(item => item.id === queueId ? { ...item, progress: 100, status: 'done' } : item));
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const removeImage = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            tour_gallery: prev.tour_gallery.filter((_, i) => i !== index)
+        }));
+    };
+
+    const setMainImage = (url) => {
+        setFormData(prev => ({ ...prev, tour_image: url }));
+    };
+
+    const startEditing = (idx) => {
+        setEditingIndex(idx);
+        setEditingValue(formData.tour_gallery[idx]);
+    };
+
+    const commitEdit = (idx) => {
+        const newGallery = [...formData.tour_gallery];
+        newGallery[idx] = editingValue;
+        setFormData(prev => ({ ...prev, tour_gallery: newGallery }));
+        setEditingIndex(null);
+    };
+
+    const dismissQueueItem = (id) => {
+        setUploadQueue(prev => prev.filter(item => item.id !== id));
+    };
+
+    const handleDragStart = (e, index) => { e.dataTransfer.setData('index', index); };
+    const handleDragEnd = (e) => { e.target.classList.remove('opacity-50'); };
+    const handleDragOver = (e) => { e.preventDefault(); };
+    const handleDrop = (e, targetIdx) => {
+        const sourceIdx = e.dataTransfer.getData('index');
+        const newGallery = [...formData.tour_gallery];
+        const [movedItem] = newGallery.splice(sourceIdx, 1);
+        newGallery.splice(targetIdx, 0, movedItem);
+        setFormData(prev => ({ ...prev, tour_gallery: newGallery }));
+    };
+
     return (
-        <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-slate-100 dark:border-slate-800">
-            <div className="flex justify-between items-center mb-12">
-                <div>
-                    <h2 className="text-4xl font-serif font-black text-slate-900 dark:text-white italic">
-                        {tour ? 'Refine Pilgrimage' : 'New Sacred Yatra'}
-                    </h2>
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mt-2 italic shadow-orange-500/20">Divine Journey Configuration</p>
-                </div>
-                <button onClick={onCancel} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-slate-400 hover:text-slate-600 dark:hover:text-white transition-all shadow-sm">
-                    <span className="material-symbols-outlined text-3xl">close</span>
-                </button>
-            </div>
-
-            <form onSubmit={handleSave} className="space-y-16">
-                
-                {/* Section 1: Identity & Spirit */}
-                <div className="space-y-8">
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-orange-100 dark:bg-orange-950/30 rounded-xl flex items-center justify-center text-orange-600">
-                            <span className="material-symbols-outlined font-black">temple_hindu</span>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 md:p-12">
+            <div className="max-w-7xl mx-auto">
+                {/* Protocol Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-slate-400 mb-2">
+                            <span className="material-symbols-outlined text-sm">security</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Secure Admin Protocol</span>
                         </div>
-                        <h3 className="text-xl font-serif font-black text-slate-800 dark:text-white italic">Identity & Spirit</h3>
+                        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic">
+                            {isEdit ? 'Refining Sacred Instance' : 'Forge Spiritual Gateway'}
+                        </h1>
+                        <p className="text-slate-500 font-bold italic text-sm">Synchronizing pilgrimage data with the core motherboard.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Yatra Title <span className="text-rose-500 font-bold">*</span></label>
-                            <input
-                                id="title"
-                                value={formData.title}
-                                onChange={e => setFormData({...formData, title: e.target.value})}
-                                className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-2 rounded-2xl outline-none focus:border-orange-500 transition-all font-bold ${errors.title ? 'border-orange-500/50' : 'border-transparent'}`}
-                                placeholder="e.g. Vaishno Devi Special Yatra"
-                            />
-                            {errors.title && <p className="text-orange-500 text-[10px] font-bold italic mt-1">{errors.title}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">URL Slug <span className="text-rose-500 font-bold">*</span></label>
-                            <input
-                                id="slug"
-                                value={formData.slug}
-                                onChange={e => setFormData({...formData, slug: e.target.value})}
-                                className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-2 rounded-2xl outline-none focus:border-orange-500 transition-all font-bold ${errors.slug ? 'border-orange-500/50' : 'border-transparent'}`}
-                                placeholder="vaishno-devi-special"
-                            />
-                            {errors.slug && <p className="text-orange-500 text-[10px] font-bold italic mt-1">{errors.slug}</p>}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Section 2: Celestial Logistics */}
-                <div className="space-y-8">
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-orange-100 dark:bg-orange-950/30 rounded-xl flex items-center justify-center text-orange-600">
-                            <span className="material-symbols-outlined font-black">route</span>
-                        </div>
-                        <h3 className="text-xl font-serif font-black text-slate-800 dark:text-white italic">Celestial Logistics</h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Base Price (INR) <span className="text-rose-500 font-bold">*</span></label>
-                            <input
-                                id="price"
-                                type="number"
-                                value={formData.meta.price_single}
-                                onChange={e => handleMetaChange('price_single', e.target.value)}
-                                className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-2 rounded-2xl outline-none focus:border-orange-500 transition-all font-bold ${errors.price ? 'border-orange-500/50' : 'border-transparent'}`}
-                            />
-                            {errors.price && <p className="text-orange-500 text-[10px] font-bold italic mt-1">{errors.price}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Destinations (Comma-separated) <span className="text-rose-500 font-bold">*</span></label>
-                            <input
-                                id="destination"
-                                value={formData.taxonomies.destination.join(', ')}
-                                onChange={e => setFormData({...formData, taxonomies: {...formData.taxonomies, destination: e.target.value.split(',').map(d=>d.trim())}})}
-                                className={`w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-2 rounded-2xl outline-none focus:border-orange-500 transition-all font-bold ${errors.destination ? 'border-orange-500/50' : 'border-transparent'}`}
-                            />
-                            {errors.destination && <p className="text-orange-500 text-[10px] font-bold italic mt-1">{errors.destination}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Yatra Status</label>
-                            <select
-                                value={formData.status}
-                                onChange={e => setFormData({...formData, status: e.target.value})}
-                                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-2 border-transparent rounded-2xl outline-none focus:border-orange-500 transition-all font-bold"
-                            >
-                                <option value="publish">Publicly Visible</option>
-                                <option value="draft">Hidden / Draft</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Section 3: Spiritual Narration */}
-                <div className="space-y-4">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Spiritual Narration (Visual HTML Story) <span className="text-rose-500 font-bold">*</span></label>
-                    <textarea
-                        id="content"
-                        value={formData.content}
-                        onChange={e => setFormData({...formData, content: e.target.value})}
-                        className={`w-full px-8 py-6 bg-slate-50 dark:bg-slate-800/50 border-2 rounded-[2rem] outline-none focus:border-orange-500 transition-all font-medium text-slate-700 dark:text-slate-200 min-h-[400px] leading-relaxed ${errors.content ? 'border-orange-500/50' : 'border-transparent'}`}
-                        placeholder="Describe the divine experience using visual HTML tags..."
-                    />
-                    {errors.content && <p className="text-orange-500 text-[10px] font-bold italic mt-1">{errors.content}</p>}
-                </div>
-
-                {/* Sacred Media Vault */}
-                <div id="media-gallery-p" className="space-y-8 bg-slate-50 dark:bg-slate-900/50 p-10 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-serif font-black text-slate-800 dark:text-white italic">Sacred Media Vault <span className="text-rose-500 font-bold">*</span></h3>
+                    <div className="flex gap-4">
+                        <Link to="/admin/pilgrimages" className="px-8 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[20px] text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-primary hover:text-primary transition-all shadow-sm">
+                            Abort Mission
+                        </Link>
                         <button 
-                            type="button"
-                            onClick={() => setFormData({...formData, gallery: [...formData.gallery, '']})}
-                            className="px-6 py-2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105"
-                        >+ Add Image</button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {formData.gallery.map((url, i) => (
-                            <div key={i} className="flex gap-3">
-                                <input
-                                    id="gallery"
-                                    value={url}
-                                    onChange={e => {
-                                        const newGal = [...formData.gallery];
-                                        newGal[i] = e.target.value;
-                                        setFormData({...formData, gallery: newGal});
-                                    }}
-                                    className={`flex-1 px-6 py-4 bg-white dark:bg-slate-800 border-2 rounded-2xl outline-none focus:border-orange-500 font-bold text-xs ${errors.gallery ? 'border-orange-500/50 animate-bounce' : 'border-slate-100 dark:border-slate-700'}`}
-                                    placeholder="https://image-url.com/asset.jpg"
-                                />
-                                <button type="button" onClick={() => setFormData({...formData, gallery: formData.gallery.filter((_,idx)=>idx!==i)})} className="p-4 text-rose-500 hover:bg-rose-50 rounded-2xl transition-all">
-                                    <span className="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                    {errors.gallery && <p className="text-orange-500 text-[10px] font-bold italic mt-1">{errors.gallery}</p>}
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center gap-3 text-slate-400">
-                        <span className="material-symbols-outlined text-sm animate-pulse">check_circle</span>
-                        <p className="text-[10px] font-black uppercase tracking-widest italic tracking-tighter">Verified State Synchronized</p>
-                    </div>
-                    <div className="flex gap-6 w-full md:w-auto">
-                        <button type="button" onClick={onCancel} className="flex-1 px-10 py-5 text-slate-400 font-black uppercase text-xs tracking-[4px] hover:text-slate-600 transition-all">Cancel</button>
-                        <button type="submit" className="flex-[2] md:flex-none px-16 py-5 bg-orange-600 text-white rounded-[1.5rem] font-black uppercase text-xs tracking-[4px] shadow-2xl shadow-orange-600/30 hover:bg-orange-700 active:scale-95 transition-all">
-                            {tour ? 'Refine Record' : 'Launch Yatra'}
+                            onClick={handleSave}
+                            disabled={loading}
+                            className="px-10 py-4 bg-primary text-white rounded-[20px] text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                        >
+                            {loading ? 'Processing Sync...' : (isEdit ? 'Seal Record' : 'Launch Instance')}
                         </button>
                     </div>
                 </div>
 
-            </form>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    {/* Left Panel: Primary Data */}
+                    <div className="lg:col-span-12 space-y-12">
+                        
+                        {/* Core Data Block */}
+                        <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-10 shadow-sm">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                                <div className="space-y-8">
+                                    <div className="space-y-4">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Spiritual Title</label>
+                                        <div className="relative group">
+                                            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">title</span>
+                                            <input 
+                                                type="text" name="title" value={formData.title} onChange={handleInput}
+                                                className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
+                                                placeholder="e.g., Vaishno Devi Divine Yatra"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div className="space-y-4">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Identity Slug</label>
+                                            <input 
+                                                type="text" name="slug" value={formData.slug} onChange={handleInput}
+                                                className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
+                                                placeholder="vaishno-devi-yatra"
+                                            />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Time Horizon</label>
+                                            <input 
+                                                type="text" name="tour_duration" value={formData.tour_duration} onChange={handleInput}
+                                                className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
+                                                placeholder="e.g., 3 Days / 2 Nights"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-8">
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div className="space-y-4">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Base Offering (₹)</label>
+                                            <input 
+                                                type="number" name="tour_price" value={formData.tour_price} onChange={handleInput}
+                                                className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
+                                                placeholder="4999"
+                                            />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Visibility Status</label>
+                                            <select 
+                                                name="tour_status" value={formData.tour_status} onChange={handleInput}
+                                                className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200 appearance-none"
+                                            >
+                                                <option value="active">Protocol Active</option>
+                                                <option value="draft">Internal Draft</option>
+                                                <option value="paused">Sync Paused</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-6 bg-slate-900 rounded-3xl space-y-4">
+                                        <label className="flex items-center gap-3 cursor-pointer group">
+                                            <div className="relative">
+                                                <input 
+                                                    type="checkbox" name="is_featured" checked={formData.is_featured} onChange={handleInput}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-12 h-6 bg-slate-700 rounded-full peer peer-checked:bg-primary transition-all shadow-inner"></div>
+                                                <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-6 transition-all shadow-lg"></div>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-xs font-black text-white uppercase tracking-widest group-hover:text-primary transition-colors">Featured Shrine</span>
+                                                <span className="text-[9px] text-slate-400 font-bold italic uppercase tracking-tighter">Primary visibility on holostic terminals.</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Narrative Content */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                            <div className="space-y-4">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-[16px]">description</span>
+                                    Spiritual Narrative (HTML Supported)
+                                </label>
+                                <textarea 
+                                    name="tour_description" value={formData.tour_description} onChange={handleInput}
+                                    className="w-full h-[400px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200 leading-relaxed shadow-sm"
+                                    placeholder="Inscribe the full spiritual experience here..."
+                                />
+                            </div>
+                            <div className="space-y-4">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-[16px]">verified</span>
+                                    Divine Highlights (One per line)
+                                </label>
+                                <textarea 
+                                    name="tour_highlights" value={formData.tour_highlights} onChange={handleInput}
+                                    className="w-full h-[400px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200 leading-relaxed shadow-sm"
+                                    placeholder="• VIP Darshan Access&#10;• Luxury Stay Included&#10;• Sattvic Meal Plan..."
+                                />
+                            </div>
+                        </div>
+
+                        {/* Media Vault & Metadata */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                            <div className="space-y-8">
+                                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                                    <div className="flex items-center gap-3">
+                                        <span className="material-symbols-outlined text-primary">gallery_thumbnail</span>
+                                        <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Sacred Media Vault</h2>
+                                    </div>
+                                    <label className="px-4 py-2 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest cursor-pointer hover:bg-emerald-500 transition-all">
+                                        Upload Assets
+                                        <input type="file" multiple onChange={handleImageUpload} className="hidden" />
+                                    </label>
+                                </div>
+
+                                {uploadQueue.length > 0 && (
+                                    <div className="space-y-3 bg-slate-100 dark:bg-slate-800/50 p-4 rounded-3xl border border-slate-200 dark:border-slate-700">
+                                        {uploadQueue.map(item => (
+                                            <div key={item.id} className="space-y-1.5 px-1">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-[10px] font-black text-slate-500 truncate max-w-[150px] uppercase tracking-tighter">{item.name}</span>
+                                                    <span className={`text-[10px] font-black uppercase ${item.status === 'error' ? 'text-rose-500' : 'text-primary'}`}>
+                                                        {item.status === 'done' ? 'Protocol Sync' : item.status === 'error' ? 'Sync Failed' : `${item.progress}%`}
+                                                    </span>
+                                                </div>
+                                                <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                                    <div 
+                                                        className={`h-full transition-all duration-300 ${item.status === 'error' ? 'bg-rose-500' : 'bg-primary'}`}
+                                                        style={{ width: `${item.progress}%` }}
+                                                    />
+                                                </div>
+                                                {item.error && <p className="text-[9px] text-rose-500 font-bold mt-1 uppercase tracking-tighter">! {item.error}</p>}
+                                                {item.status !== 'uploading' && (
+                                                    <button onClick={() => dismissQueueItem(item.id)} className="mt-2 text-[9px] font-black text-slate-400 uppercase hover:text-primary">Dismiss</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    {formData.tour_gallery.map((img, idx) => (
+                                        <div 
+                                            key={idx} 
+                                            draggable
+                                            onDragStart={(e) => handleDragStart(e, idx)}
+                                            onDragEnd={handleDragEnd}
+                                            onDragOver={handleDragOver}
+                                            onDrop={(e) => handleDrop(e, idx)}
+                                            className="group relative aspect-square rounded-[30px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm cursor-grab active:cursor-grabbing"
+                                        >
+                                            <img src={img} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all p-3 flex flex-col justify-end gap-2">
+                                                {editingIndex === idx ? (
+                                                    <input 
+                                                        autoFocus
+                                                        value={editingValue}
+                                                        onBlur={() => commitEdit(idx)}
+                                                        onKeyDown={(e) => e.key === 'Enter' && commitEdit(idx)}
+                                                        onChange={(e) => setEditingValue(e.target.value)}
+                                                        className="w-full bg-white dark:bg-slate-800 rounded-lg py-1 px-2 text-[10px] font-bold outline-none"
+                                                    />
+                                                ) : (
+                                                    <button 
+                                                        onClick={() => startEditing(idx)}
+                                                        className="w-full h-8 flex items-center justify-center bg-white/20 backdrop-blur-md text-white rounded-xl hover:bg-white/40 transition-all border border-white/20"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[16px]">edit</span>
+                                                    </button>
+                                                )}
+                                                <button 
+                                                    onClick={() => removeImage(idx)}
+                                                    className="w-full h-8 flex items-center justify-center bg-rose-500/80 backdrop-blur-md text-white rounded-xl hover:bg-rose-500 transition-all"
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Route & Taxonomies Grid */}
+                            <div className="space-y-8 pt-4">
+                                <div className="space-y-4">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Spiritual Destination Hubs</label>
+                                    <div className="relative group">
+                                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">location_on</span>
+                                        <input 
+                                            type="text" 
+                                            value={formData.tour_destination_temp || formData.tour_destination.join(', ')}
+                                            onChange={(e) => handleArrayInput('tour_destination', e.target.value)}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
+                                            placeholder="E.g., Katra, Varanasi, Puri"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Universal Tag System</label>
+                                    <div className="relative group">
+                                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">sell</span>
+                                        <input 
+                                            type="text" 
+                                            value={formData.tour_type_temp || formData.tour_type.join(', ')}
+                                            onChange={(e) => handleArrayInput('tour_type', e.target.value)}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
+                                            placeholder="Devotional, Nature, Family..."
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
