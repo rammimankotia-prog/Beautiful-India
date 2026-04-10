@@ -8,6 +8,7 @@ const AdminBikeTourForm = () => {
     const [loading, setLoading] = useState(false);
     const [isHtmlMode, setIsHtmlMode] = useState(false);
     const [isSchemaHtmlMode, setIsSchemaHtmlMode] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
 
     const [formData, setFormData] = useState({
         title: '',
@@ -36,7 +37,8 @@ const AdminBikeTourForm = () => {
         status: 'draft',
         featured: false,
         highlights: [],
-        whatsIncluded: []
+        inclusions: [{ text: "", option: "Included" }],
+        exclusions: [{ text: "", option: "Extra Charges" }]
     });
 
     useEffect(() => {
@@ -73,7 +75,8 @@ const AdminBikeTourForm = () => {
                             equipment: Array.isArray(matched.equipment) ? matched.equipment : prev.equipment,
                             images: Array.isArray(matched.images) ? matched.images : prev.images,
                             highlights: Array.isArray(matched.highlights) ? matched.highlights : prev.highlights,
-                            whatsIncluded: Array.isArray(matched.whatsIncluded) ? matched.whatsIncluded : prev.whatsIncluded,
+                            inclusions: Array.isArray(matched.inclusions) ? matched.inclusions : (Array.isArray(matched.whatsIncluded) ? matched.whatsIncluded.map(text => ({ text, option: "Included" })) : prev.inclusions),
+                            exclusions: Array.isArray(matched.exclusions) ? matched.exclusions : prev.exclusions,
                             pricing: {
                                 ...prev.pricing,
                                 ...(matched.pricing || {})
@@ -186,8 +189,44 @@ const AdminBikeTourForm = () => {
         });
     };
 
+    const validateForm = () => {
+        const errors = {};
+        if (!formData.title?.trim()) errors.title = "A name for this journey is required";
+        if (!formData.slug?.trim()) errors.slug = "A unique URL path is essential";
+        if (!formData.destination?.trim()) errors.destination = "Destination is mandatory";
+        
+        // Pricing validation: at least one price must be > 0
+        const hasPrice = (formData.pricing?.perPerson > 0) || 
+                         (formData.pricing?.perCouple > 0) || 
+                         (formData.pricing?.perGroup?.price > 0);
+        
+        if (!hasPrice) errors.price = "At least one pricing tier must be defined";
+        
+        if (!formData.content?.trim() || formData.content === '<p><br></p>') {
+            errors.content = "The story of this adventure cannot be empty";
+        }
+        
+        if (!formData.images || formData.images.length === 0) {
+            errors.images = "Visual evidence of the journey is required (min 1 image)";
+        }
+
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!validateForm()) {
+            const firstError = Object.keys(formErrors)[0] || 'title';
+            const element = document.getElementById(firstError);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.focus();
+            }
+            return;
+        }
+
         setLoading(true);
         try {
             const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -286,18 +325,20 @@ const AdminBikeTourForm = () => {
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Tour Title *</label>
                             <input 
-                                type="text" name="title" value={formData.title} onChange={handleChange} required
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                type="text" name="title" id="title" value={formData.title} onChange={handleChange} 
+                                className={`bg-slate-50 dark:bg-slate-800 border ${formErrors.title ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-700"} rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all`}
                                 placeholder="e.g. Himalayan Cycling Expedition"
                             />
+                            {formErrors.title && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.title}</p>}
                         </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">URL Slug *</label>
                             <input 
-                                type="text" name="slug" value={formData.slug} onChange={handleChange} required
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all font-mono"
+                                type="text" name="slug" id="slug" value={formData.slug} onChange={handleChange}
+                                className={`bg-slate-50 dark:bg-slate-800 border ${formErrors.slug ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-700"} rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all font-mono`}
                                 placeholder="himalayan-cycling-expedition"
                             />
+                            {formErrors.slug && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.slug}</p>}
                         </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Duration *</label>
@@ -321,10 +362,11 @@ const AdminBikeTourForm = () => {
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Destination *</label>
                             <input 
-                                type="text" name="destination" value={formData.destination} onChange={handleChange} required
-                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all"
+                                type="text" name="destination" id="destination" value={formData.destination} onChange={handleChange}
+                                className={`bg-slate-50 dark:bg-slate-800 border ${formErrors.destination ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-700"} rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-primary transition-all`}
                                 placeholder="e.g. Ladakh"
                             />
+                            {formErrors.destination && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.destination}</p>}
                         </div>
                          <div className="flex flex-col gap-2">
                             <div className="flex justify-between items-center">
@@ -352,10 +394,13 @@ const AdminBikeTourForm = () => {
 
                 {/* Pricing Section */}
                 <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
-                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
-                        <span className="material-symbols-outlined">payments</span>
-                        Pricing Logic
-                    </h2>
+                    <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
+                        <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] flex items-center gap-2">
+                            <span className="material-symbols-outlined">payments</span>
+                            Pricing Logic
+                        </h2>
+                        {formErrors.price && <p className="text-[10px] text-red-500 font-black italic bg-red-50 dark:bg-red-900/10 px-3 py-1 rounded-full border border-red-100 dark:border-red-900/20">*{formErrors.price}</p>}
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="flex flex-col gap-2">
                             <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Per Person Price</label>
@@ -435,6 +480,111 @@ const AdminBikeTourForm = () => {
                     </div>
                 </section>
 
+                {/* Inclusions & Exclusions Section */}
+                <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                    <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined">assignment_turned_in</span>
+                        Package Inclusions & Exclusions
+                    </h2>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        {/* Inclusions */}
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-black uppercase tracking-tighter text-slate-400 flex items-center gap-1">
+                                    <span className="material-symbols-outlined text-[14px] text-emerald-500">check_circle</span>
+                                    Inclusions
+                                </span>
+                                <button 
+                                    type="button" 
+                                    onClick={() => setFormData(p => ({ ...p, inclusions: [...(p.inclusions || []), { text: "", option: "Included" }] }))}
+                                    className="text-[10px] font-black text-primary uppercase hover:underline"
+                                >
+                                    + Add Item
+                                </button>
+                            </div>
+                            <div className="space-y-3">
+                                {(formData.inclusions || []).map((item, idx) => (
+                                    <div key={idx} className="flex gap-2">
+                                        <input 
+                                            type="text" value={item.text} onChange={(e) => {
+                                                const next = [...formData.inclusions];
+                                                next[idx] = { ...next[idx], text: e.target.value };
+                                                setFormData(prev => ({ ...prev, inclusions: next }));
+                                            }}
+                                            className="flex-[2] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
+                                            placeholder="Service"
+                                        />
+                                        <input 
+                                            type="text" value={item.option} onChange={(e) => {
+                                                const next = [...formData.inclusions];
+                                                next[idx] = { ...next[idx], option: e.target.value };
+                                                setFormData(prev => ({ ...prev, inclusions: next }));
+                                            }}
+                                            className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
+                                            placeholder="Option"
+                                        />
+                                        <button type="button" onClick={() => {
+                                            const next = formData.inclusions.filter((_, i) => i !== idx);
+                                            setFormData(prev => ({ ...prev, inclusions: next }));
+                                        }} className="text-slate-400 hover:text-red-500">
+                                            <span className="material-symbols-outlined text-[18px]">delete</span>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Exclusions */}
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-black uppercase tracking-tighter text-slate-400 flex items-center gap-1">
+                                    <span className="material-symbols-outlined text-[14px] text-rose-500">cancel</span>
+                                    Exclusions
+                                </span>
+                                <button 
+                                    type="button" 
+                                    onClick={() => setFormData(p => ({ ...p, exclusions: [...(p.exclusions || []), { text: "", option: "Extra" }] }))}
+                                    className="text-[10px] font-black text-primary uppercase hover:underline"
+                                >
+                                    + Add Item
+                                </button>
+                            </div>
+                            <div className="space-y-3">
+                                {(formData.exclusions || []).map((item, idx) => (
+                                    <div key={idx} className="flex gap-2">
+                                        <input 
+                                            type="text" value={item.text} onChange={(e) => {
+                                                const next = [...formData.exclusions];
+                                                next[idx] = { ...next[idx], text: e.target.value };
+                                                setFormData(prev => ({ ...prev, exclusions: next }));
+                                            }}
+                                            className="flex-[2] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
+                                            placeholder="Service"
+                                        />
+                                        <input 
+                                            type="text" value={item.option} onChange={(e) => {
+                                                const next = [...formData.exclusions];
+                                                next[idx] = { ...next[idx], option: e.target.value };
+                                                setFormData(prev => ({ ...prev, exclusions: next }));
+                                            }}
+                                            className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:border-primary"
+                                            placeholder="Option"
+                                        />
+                                        <button type="button" onClick={() => {
+                                            const next = formData.exclusions.filter((_, i) => i !== idx);
+                                            setFormData(prev => ({ ...prev, exclusions: next }));
+                                        }} className="text-slate-400 hover:text-red-500">
+                                            <span className="material-symbols-outlined text-[18px]">delete</span>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
                 {/* Media Section */}
                 <section className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
                     <h2 className="text-lg font-black uppercase tracking-widest text-[#0a6c75] border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center gap-2">
@@ -445,10 +595,13 @@ const AdminBikeTourForm = () => {
                         <input 
                             type="file" multiple accept="image/*" onChange={handleImageUpload} id="bike-image-upload" className="hidden"
                         />
-                        <label htmlFor="bike-image-upload" className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[24px] cursor-pointer hover:border-primary hover:bg-slate-50 transition-all group">
-                            <span className="material-symbols-outlined text-4xl text-slate-300 group-hover:text-primary transition-colors mb-2">upload_file</span>
-                            <span className="text-sm font-bold text-slate-500">Click to upload 5MB max images (Multi-select enabled)</span>
+                        <label htmlFor="bike-image-upload" id="images" className={`flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-[24px] cursor-pointer transition-all group ${formErrors.images ? "border-red-500 bg-red-50/5" : "border-slate-200 dark:border-slate-800 hover:border-primary hover:bg-slate-50"}`}>
+                            <span className={`material-symbols-outlined text-4xl group-hover:text-primary transition-colors mb-2 ${formErrors.images ? "text-red-400" : "text-slate-300"}`}>{formErrors.images ? "warning" : "upload_file"}</span>
+                            <span className={`text-sm font-bold transition-colors ${formErrors.images ? "text-red-600" : "text-slate-500"}`}>
+                                {formErrors.images ? formErrors.images : "Click to upload 5MB max images (Multi-select enabled)"}
+                            </span>
                         </label>
+                        {formErrors.images && <p className="text-[10px] text-red-500 font-bold italic ml-1 text-center animate-bounce">*{formErrors.images}</p>}
 
                         {formData.images.length > 0 && (
                             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -499,16 +652,19 @@ const AdminBikeTourForm = () => {
                         <label className="text-xs font-black uppercase tracking-tighter text-slate-400">Main Itinerary & Details Article</label>
                         {isHtmlMode ? (
                             <textarea 
-                                name="content" value={formData.content} onChange={handleChange}
-                                className="w-full h-80 bg-slate-900 text-emerald-400 p-6 rounded-2xl font-mono text-sm border border-slate-800 focus:border-primary outline-none"
+                                name="content" id="content" value={formData.content} onChange={handleChange}
+                                className={`w-full h-80 bg-slate-900 text-emerald-400 p-6 rounded-2xl font-mono text-sm border focus:border-primary outline-none ${formErrors.content ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-800"}`}
                                 placeholder="Paste your <article> tags here..."
                             />
+                            {formErrors.content && <p className="text-[10px] text-red-500 font-bold italic mt-2 ml-1">*{formErrors.content}</p>}
                         ) : (
                             <div className="space-y-4">
                                 <div 
-                                    className="w-full min-h-[400px] bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-[32px] p-8 md:p-12 overflow-y-auto prose dark:prose-invert max-w-none shadow-inner"
+                                    id="content"
+                                    className={`w-full min-h-[400px] bg-slate-50 dark:bg-slate-900/50 border rounded-[32px] p-8 md:p-12 overflow-y-auto prose dark:prose-invert max-w-none shadow-inner ${formErrors.content ? "border-red-500 ring-2 ring-red-500/10" : "border-slate-200 dark:border-slate-800"}`}
                                     dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-slate-400 italic">No content yet. Switch to Source Code to paste HTML.</p>' }}
                                 />
+                                {formErrors.content && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.content}</p>}
                                 <div className="p-6 bg-primary/5 rounded-[24px] border border-primary/10 flex gap-4 items-center">
                                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                         <span className="material-symbols-outlined">visibility</span>

@@ -21,7 +21,9 @@ const initialFormState = {
     tour_itinerary: [],
     tour_transport: [],
     tour_hotels: [],
-    tour_meals: []
+    tour_meals: [],
+    tour_inclusions: [],
+    tour_exclusions: []
 };
 
 const AdminPilgrimageTourForm = () => {
@@ -32,6 +34,7 @@ const AdminPilgrimageTourForm = () => {
     const [formData, setFormData] = useState(initialFormState);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
     
     // Editor State
     const [editorMode, setEditorMode] = useState('html'); // 'html' | 'visual'
@@ -68,6 +71,8 @@ const AdminPilgrimageTourForm = () => {
         tour_transport: nested.meta?.transport_options || [],
         tour_hotels: nested.meta?.hotel_options || [],
         tour_meals: nested.meta?.meal_options || [],
+        tour_inclusions: nested.meta?.inclusions || [],
+        tour_exclusions: nested.meta?.exclusions || [],
         tour_gallery: nested.gallery || [],
         tour_itinerary: nested.itinerary || [],
         created: nested.createdAt
@@ -76,11 +81,16 @@ const AdminPilgrimageTourForm = () => {
     useEffect(() => {
         if (slug) {
             setLoading(true);
+            const normalizedSlug = slug.replace(/\/$/, '');
             fetch(`${import.meta.env.BASE_URL}data/pk_pilgrimage_tours.json?t=${Date.now()}`)
                 .then(res => res.json())
                 .then(data => {
-                    const found = data.find(t => t.slug === slug);
-                    if (found) setFormData(mapNestedToFlatten(found));
+                    const found = data.find(t => (t.slug || '').replace(/\/$/, '') === normalizedSlug);
+                    if (found) {
+                        setFormData(mapNestedToFlatten(found));
+                    } else {
+                        console.warn(`Tour with slug "${normalizedSlug}" not found in database.`);
+                    }
                 })
                 .catch(err => console.error(err))
                 .finally(() => setLoading(false));
@@ -89,6 +99,51 @@ const AdminPilgrimageTourForm = () => {
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+        // Clear error when field is edited
+        if (formErrors[field]) {
+            setFormErrors(prev => {
+                const updated = { ...prev };
+                delete updated[field];
+                return updated;
+            });
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+        if (!formData.title?.trim()) errors.title = "Title is mandatory";
+        
+        const hasDestination = Array.isArray(formData.tour_destination) && formData.tour_destination.length > 0;
+        if (!hasDestination) errors.destination = "At least one destination is required";
+
+        const hasPrice = (formData.price && formData.price > 0) || 
+                         (formData.tour_price_single && formData.tour_price_single > 0) || 
+                         (formData.tour_price_couple && formData.tour_price_couple > 0) || 
+                         (formData.tour_price_group && formData.tour_price_group > 0);
+        if (!hasPrice) errors.price = "At least one price field is required";
+
+        if (!formData.tour_gallery || formData.tour_gallery.length === 0) {
+            errors.image = "At least one image is mandatory";
+        }
+
+        if (!formData.content?.trim()) {
+            errors.content = "Tour description is mandatory";
+        }
+
+        setFormErrors(errors);
+
+        if (Object.keys(errors).length > 0) {
+            // Scroll to the first error
+            const firstErrorField = Object.keys(errors)[0];
+            const element = document.getElementById(firstErrorField) || document.getElementsByName(firstErrorField)[0];
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            return false;
+        }
+        return true;
     };
 
     const generateSlug = (text) => {
@@ -307,7 +362,9 @@ const AdminPilgrimageTourForm = () => {
     };
 
     // --- Array Fields Helper ---
+    // Improved handleArrayInput to allow commas while typing
     const handleArrayInput = (field, evtValue) => {
+        setFormData(prev => ({ ...prev, [field + '_temp']: evtValue }));
         const arr = evtValue.split(',').map(s => s.trim()).filter(Boolean);
         handleChange(field, arr);
     };
@@ -342,10 +399,11 @@ const AdminPilgrimageTourForm = () => {
             dates: (flat.tour_dates_start && flat.tour_dates_end) ? `${flat.tour_dates_start} - ${flat.tour_dates_end}` : '',
             is_ongoing: flat.tour_dates_ongoing === 'true',
             city_path: flat.tour_city_path,
-            batch_status: flat.status === 'publish' ? 'Open' : 'Draft',
             transport_options: flat.tour_transport || [],
             hotel_options: flat.tour_hotels || [],
-            meal_options: flat.tour_meals || []
+            meal_options: flat.tour_meals || [],
+            inclusions: flat.tour_inclusions || [],
+            exclusions: flat.tour_exclusions || []
         },
         seo: {
             meta_title: flat.title,
@@ -361,8 +419,7 @@ const AdminPilgrimageTourForm = () => {
     });
 
     const handleSave = async () => {
-        if (!formData.title || !formData.slug) {
-            alert('Title and slug are required.');
+        if (!validateForm()) {
             return;
         }
 
@@ -483,11 +540,13 @@ const AdminPilgrimageTourForm = () => {
                                 <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Journey Title</label>
                                 <input 
                                     type="text" 
+                                    id="title"
                                     value={formData.title} 
                                     onChange={handleTitleChange}
-                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[24px] px-6 py-4 font-serif font-black text-2xl outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all text-slate-800 dark:text-white"
+                                    className={`w-full bg-slate-50 dark:bg-slate-800/50 border rounded-[24px] px-6 py-4 font-serif font-black text-2xl outline-none focus:ring-4 transition-all text-slate-800 dark:text-white ${formErrors.title ? "border-red-500 focus:ring-red-500/10 focus:border-red-500" : "border-slate-100 dark:border-slate-800 focus:ring-primary/5 focus:border-primary"}`}
                                     placeholder="E.g., Complete Chardham Yatra 2026"
                                 />
+                                {formErrors.title && <p className="text-[10px] text-red-500 mt-2 font-black italic ml-1">*{formErrors.title}</p>}
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -498,9 +557,10 @@ const AdminPilgrimageTourForm = () => {
                                             type="text" 
                                             value={formData.slug} 
                                             onChange={(e) => handleChange('slug', e.target.value)}
-                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[20px] pl-12 pr-4 py-3 font-mono text-xs outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300"
+                                            className={`w-full bg-slate-50 dark:bg-slate-800/50 border rounded-[20px] pl-12 pr-4 py-3 font-mono text-xs outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300 ${formErrors.slug ? "border-red-500" : "border-slate-100 dark:border-slate-800"}`}
                                         />
                                     </div>
+                                    {formErrors.slug && <p className="text-[9px] text-red-500 mt-1 font-black italic ml-1">*{formErrors.slug}</p>}
                                 </div>
                                 <div>
                                     <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Base Price (₹)</label>
@@ -508,12 +568,14 @@ const AdminPilgrimageTourForm = () => {
                                         <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-black">₹</span>
                                         <input 
                                             type="number" 
+                                            id="price"
                                             value={formData.price || ''} 
                                             onChange={(e) => handleChange('price', e.target.value)}
-                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[20px] pl-10 pr-4 py-3 font-black text-lg outline-none focus:border-primary transition-all text-slate-800 dark:text-white"
+                                            className={`w-full bg-slate-50 dark:bg-slate-800/50 border rounded-[20px] pl-10 pr-4 py-3 font-black text-lg outline-none focus:border-primary transition-all text-slate-800 dark:text-white ${formErrors.price ? "border-red-500" : "border-slate-100 dark:border-slate-800"}`}
                                             placeholder="0.00"
                                         />
                                     </div>
+                                    {formErrors.price && <p className="text-[9px] text-red-500 mt-1 font-black italic ml-1">*{formErrors.price}</p>}
                                 </div>
                             </div>
                         </div>
@@ -592,6 +654,130 @@ const AdminPilgrimageTourForm = () => {
                         </div>
                     </div>
 
+                    {/* Detailed Inclusions & Exclusions */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-50 dark:border-slate-800 pb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary">lists</span>
+                                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Detailed Terms (Inclusions & Exclusions)</h2>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            {/* Inclusions */}
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-[18px]">add_task</span> Inclusions
+                                    </h3>
+                                    <button 
+                                        onClick={() => setFormData(prev => ({ ...prev, tour_inclusions: [...prev.tour_inclusions, { text: '', option: '' }] }))}
+                                        className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                                    >
+                                        + Add Inclusion
+                                    </button>
+                                </div>
+                                <div className="space-y-3">
+                                    {formData.tour_inclusions.map((item, idx) => (
+                                        <div key={idx} className="flex gap-2 items-center group">
+                                            <input 
+                                                type="text" 
+                                                placeholder="Service name..."
+                                                value={item.text}
+                                                onChange={(e) => {
+                                                    const newInc = [...formData.tour_inclusions];
+                                                    newInc[idx].text = e.target.value;
+                                                    handleChange('tour_inclusions', newInc);
+                                                }}
+                                                className="flex-1 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-emerald-500 transition-all font-bold"
+                                            />
+                                            <input 
+                                                type="text" 
+                                                placeholder="Option..."
+                                                value={item.option}
+                                                onChange={(e) => {
+                                                    const newInc = [...formData.tour_inclusions];
+                                                    newInc[idx].option = e.target.value;
+                                                    handleChange('tour_inclusions', newInc);
+                                                }}
+                                                className="w-24 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-[10px] outline-none focus:border-emerald-500 transition-all font-black uppercase tracking-tighter text-emerald-600"
+                                            />
+                                            <button 
+                                                onClick={() => {
+                                                    const newInc = [...formData.tour_inclusions];
+                                                    newInc.splice(idx, 1);
+                                                    handleChange('tour_inclusions', newInc);
+                                                }}
+                                                className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">close</span>
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {formData.tour_inclusions.length === 0 && (
+                                        <p className="text-[10px] text-slate-400 italic">No inclusions defined.</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Exclusions */}
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-[18px]">cancel_schedule_send</span> Exclusions
+                                    </h3>
+                                    <button 
+                                        onClick={() => setFormData(prev => ({ ...prev, tour_exclusions: [...prev.tour_exclusions, { text: '', option: '' }] }))}
+                                        className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                                    >
+                                        + Add Exclusion
+                                    </button>
+                                </div>
+                                <div className="space-y-3">
+                                    {formData.tour_exclusions.map((item, idx) => (
+                                        <div key={idx} className="flex gap-2 items-center group">
+                                            <input 
+                                                type="text" 
+                                                placeholder="Service name..."
+                                                value={item.text}
+                                                onChange={(e) => {
+                                                    const newExc = [...formData.tour_exclusions];
+                                                    newExc[idx].text = e.target.value;
+                                                    handleChange('tour_exclusions', newExc);
+                                                }}
+                                                className="flex-1 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-rose-500 transition-all font-bold"
+                                            />
+                                            <input 
+                                                type="text" 
+                                                placeholder="Option..."
+                                                value={item.option}
+                                                onChange={(e) => {
+                                                    const newExc = [...formData.tour_exclusions];
+                                                    newExc[idx].option = e.target.value;
+                                                    handleChange('tour_exclusions', newExc);
+                                                }}
+                                                className="w-24 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-[10px] outline-none focus:border-rose-500 transition-all font-black uppercase tracking-tighter text-rose-600"
+                                            />
+                                            <button 
+                                                onClick={() => {
+                                                    const newExc = [...formData.tour_exclusions];
+                                                    newExc.splice(idx, 1);
+                                                    handleChange('tour_exclusions', newExc);
+                                                }}
+                                                className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">close</span>
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {formData.tour_exclusions.length === 0 && (
+                                        <p className="text-[10px] text-slate-400 italic">No exclusions defined.</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Content Engine */}
                     <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-50 dark:border-slate-800 pb-6">
@@ -615,433 +801,254 @@ const AdminPilgrimageTourForm = () => {
                             </div>
                         </div>
 
-                        {editorMode === 'visual' && (
-                            <div className="flex flex-wrap gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner">
-                                {[
-                                    { cmd: 'bold', icon: 'format_bold' },
-                                    { cmd: 'italic', icon: 'format_italic' },
-                                    { cmd: 'underline', icon: 'format_underlined' },
-                                    { divider: true },
-                                    { cmd: 'formatBlock', val: '<h2>', label: 'H2' },
-                                    { cmd: 'formatBlock', val: '<h3>', label: 'H3' },
-                                    { divider: true },
-                                    { cmd: 'insertUnorderedList', icon: 'format_list_bulleted' },
-                                    { cmd: 'createLink', prompt: 'URL:', icon: 'link' }
-                                ].map((btn, i) => (
-                                    btn.divider ? (
-                                        <div key={i} className="w-px h-8 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-                                    ) : (
-                                        <button 
-                                            key={i}
-                                            onClick={() => btn.prompt ? execCommand(btn.cmd, prompt(btn.prompt)) : execCommand(btn.cmd, btn.val)} 
-                                            className="w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 hover:border-primary hover:text-primary rounded-xl shadow-sm transition-all"
-                                        >
-                                            {btn.icon ? <span className="material-symbols-outlined text-[20px]">{btn.icon}</span> : <span className="font-black text-xs">{btn.label}</span>}
-                                        </button>
-                                    )
-                                ))}
+                        <div className="space-y-4">
+                            <div id="content" className="flex items-center justify-between px-1">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Master Narrative</label>
+                                {editorMode === 'visual' && (
+                                    <div className="flex gap-1">
+                                        {['bold', 'italic', 'formatBlock_h2', 'formatBlock_h3', 'insertUnorderedList'].map(cmd => (
+                                            <button 
+                                                key={cmd} 
+                                                onClick={() => {
+                                                    const parts = cmd.split('_');
+                                                    execCommand(parts[0], parts[1]);
+                                                }}
+                                                className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-primary transition-colors"
+                                            >
+                                                <span className="material-symbols-outlined text-[16px]">{cmd === 'formatBlock_h2' ? 'h2' : cmd === 'formatBlock_h3' ? 'h3' : cmd}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                        )}
-
-                        <div className="relative group">
-                            {editorMode === 'html' ? (
-                                <textarea 
-                                    className="w-full h-[500px] bg-slate-900 text-emerald-400 font-mono text-sm p-8 rounded-[32px] outline-none border-4 border-transparent focus:border-primary/10 transition-all shadow-2xl"
-                                    value={formData.content}
-                                    onChange={(e) => handleChange('content', e.target.value)}
-                                    placeholder="<!-- Begin writing your sacred story here... -->"
-                                />
-                            ) : (
-                                <div
-                                    ref={editorRef}
-                                    contentEditable
-                                    onInput={handleVisualInput}
-                                    className="w-full min-h-[500px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 outline-none focus:ring-4 focus:ring-primary/5 transition-all prose prose-lg dark:prose-invert prose-orange max-w-none text-slate-700 dark:text-slate-300 shadow-inner overflow-auto leading-relaxed marker:text-orange-500"
-                                    suppressContentEditableWarning
-                                    data-placeholder="Start composing the yatra story here…"
-                                />
-                            )}
+                            <div className={`relative border rounded-[32px] overflow-hidden transition-all duration-500 ${formErrors.content ? "border-red-500 ring-2 ring-red-500/10 shadow-lg shadow-red-500/5 animate-pulse" : "border-slate-100 dark:border-slate-800"}`}>
+                                {editorMode === 'html' ? (
+                                    <textarea 
+                                        value={formData.content}
+                                        onChange={(e) => handleChange('content', e.target.value)}
+                                        className="w-full min-h-[500px] bg-slate-900 text-emerald-400 p-8 font-mono text-sm outline-none resize-y"
+                                        placeholder="Paste divine HTML content here..."
+                                    />
+                                ) : (
+                                    <div 
+                                        ref={editorRef}
+                                        contentEditable
+                                        onInput={handleVisualInput}
+                                        className="w-full min-h-[500px] bg-white dark:bg-slate-900 p-8 prose dark:prose-invert max-w-none outline-none overflow-y-auto cursor-text shadow-inner"
+                                        style={{ fontFamily: 'var(--font-serif)' }}
+                                    />
+                                )}
+                            </div>
+                            {formErrors.content && <p className="text-[10px] text-red-500 font-black italic ml-2">*{formErrors.content}</p>}
                         </div>
                     </div>
 
-                    {/* Sacred Sequence (Itinerary) */}
+                    {/* Itinerary Progress */}
                     <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
-                        <div className="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-6">
+                        <div className="flex items-center justify-between border-b border-slate-50 dark:border-slate-800 pb-6">
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-primary">route</span>
-                                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Sacred Sequence</h2>
+                                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Sacred Itinerary Progress</h2>
                             </div>
                             <button 
-                                onClick={addItineraryDay} 
-                                className="flex items-center gap-2 px-5 py-2 bg-primary/10 text-primary hover:bg-primary text-[10px] font-black uppercase tracking-wider rounded-xl transition-all hover:text-white"
+                                onClick={addItineraryDay}
+                                className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-[2px] shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all"
                             >
-                                <span className="material-symbols-outlined text-[18px]">add_circle</span> Add Milestone
+                                <span className="material-symbols-outlined text-[16px]">add_circle</span>
+                                Reveal Another Day
                             </button>
                         </div>
-                        
-                        <div className="space-y-6">
+
+                        <div className="space-y-8">
                             {formData.tour_itinerary.map((day, idx) => (
-                                <div key={idx} className="group relative bg-slate-50 dark:bg-slate-800/50 rounded-[32px] p-8 border border-slate-100 dark:border-slate-800/80 transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none">
-                                    <div className="absolute top-6 right-6 translate-x-4 -translate-y-4 opacity-0 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                                        <button 
-                                            onClick={() => removeItineraryDay(idx)} 
-                                            className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-xl shadow-lg shadow-red-500/20 active:scale-95 transition-transform"
-                                        >
-                                            <span className="material-symbols-outlined text-[20px]">delete_forever</span>
-                                        </button>
+                                <div key={idx} className="group relative bg-slate-50/50 dark:bg-slate-800/30 rounded-[35px] border border-slate-100 dark:border-slate-800 p-8 transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none">
+                                    <div className="absolute -top-3 left-10 px-5 py-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-[2px] text-primary shadow-sm z-10">
+                                        Day 0{day.day} Sequence
                                     </div>
-                                    <div className="flex items-start gap-6">
-                                        <div className="w-14 h-14 bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow-xl shadow-slate-200/50 dark:shadow-none shrink-0 border border-slate-100 dark:border-slate-600 transition-transform group-hover:scale-105">
-                                            {day.day}
+                                    <button 
+                                        onClick={() => removeItineraryDay(idx)}
+                                        className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-xl"
+                                    >
+                                        <span className="material-symbols-outlined text-[18px]">close</span>
+                                    </button>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
+                                        <div className="md:col-span-1">
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Daily Revelation</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={day.title}
+                                                    onChange={(e) => updateItineraryDay(idx, 'title', e.target.value)}
+                                                    className="w-full bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-4 text-sm font-bold outline-none focus:border-primary transition-all shadow-sm"
+                                                    placeholder="E.g., The Sacred Aarti"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex-1 space-y-4">
-                                            <input 
-                                                type="text" 
-                                                value={day.title}
-                                                onChange={(e) => updateItineraryDay(idx, 'title', e.target.value)}
-                                                placeholder="Inscribe milestone title..."
-                                                className="w-full bg-transparent border-b-2 border-slate-200 dark:border-slate-700 px-0 py-2 font-black text-xl text-slate-800 dark:text-white outline-none focus:border-primary transition-all"
-                                            />
-                                            <textarea 
-                                                value={day.description}
-                                                onChange={(e) => updateItineraryDay(idx, 'description', e.target.value)}
-                                                placeholder="Detailed description of the day's divine events..."
-                                                className="w-full h-32 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 text-sm outline-none focus:ring-4 focus:ring-primary/5 transition-all font-mono text-slate-600 dark:text-slate-400 shadow-inner"
-                                            />
+                                        <div className="md:col-span-2">
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Experience Description</label>
+                                                <textarea 
+                                                    value={day.description}
+                                                    onChange={(e) => updateItineraryDay(idx, 'description', e.target.value)}
+                                                    className="w-full bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-4 text-xs font-medium outline-none focus:border-primary transition-all shadow-sm min-h-[120px]"
+                                                    placeholder="Narrate the spiritual milestones of this day..."
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                             {formData.tour_itinerary.length === 0 && (
-                                <div className="flex flex-col items-center justify-center py-20 text-slate-300 dark:text-slate-700 border-4 border-dashed border-slate-50 dark:border-slate-800/50 rounded-[40px]">
-                                    <span className="material-symbols-outlined text-[64px] mb-4 opacity-20">history_edu</span>
-                                    <p className="font-black uppercase tracking-widest text-[11px]">The scroll is empty. Add a new milestone.</p>
+                                <div className="text-center py-10 bg-slate-50 dark:bg-slate-800/30 rounded-[35px] border-2 border-dashed border-slate-200 dark:border-slate-800">
+                                    <p className="text-xs font-bold text-slate-400 italic">No itinerary steps defined. The path remains hidden.</p>
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
 
-                {/* Secondary Column */}
-                <div className="lg:col-span-1 space-y-8">
+                {/* Secondary Column: Parameters */}
+                <div className="space-y-8">
                     
-                    {/* Taxonomies & Routing */}
-                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
+                    {/* Visual Media Vault */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8 sticky top-6">
                         <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
-                            <span className="material-symbols-outlined text-primary">sell</span>
-                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Taxonomies & Routing</h2>
-                        </div>
-                        
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Destinations</label>
-                                <input 
-                                    type="text" 
-                                    value={formData.tour_destination.join(', ')} 
-                                    onChange={(e) => handleArrayInput('tour_destination', e.target.value)}
-                                    placeholder="Uttarakhand, Haridwar"
-                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300"
-                                />
-                            </div>
-                            
-                            <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tour Types</label>
-                                <input 
-                                    type="text" 
-                                    value={formData.tour_type.join(', ')} 
-                                    onChange={(e) => handleArrayInput('tour_type', e.target.value)}
-                                    placeholder="Chardham, Heritage"
-                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sacred Path (Cities)</label>
-                                <textarea 
-                                    value={formData.tour_city_path} 
-                                    onChange={(e) => handleChange('tour_city_path', e.target.value)}
-                                    placeholder="Haridwar, Barkot, Uttarkashi..."
-                                    className="w-full h-24 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all text-slate-600 dark:text-slate-300 resize-none font-mono"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Logistics & Economics */}
-                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
-                        <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
-                            <span className="material-symbols-outlined text-primary">payments</span>
-                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Economics</h2>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="col-span-2">
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Single Occupancy</label>
-                                <input 
-                                    type="number" 
-                                    value={formData.tour_price_single} 
-                                    onChange={(e) => handleChange('tour_price_single', e.target.value)}
-                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Couple</label>
-                                <input 
-                                    type="number" 
-                                    value={formData.tour_price_couple} 
-                                    onChange={(e) => handleChange('tour_price_couple', e.target.value)}
-                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Group Rate</label>
-                                <input 
-                                    type="number" 
-                                    value={formData.tour_price_group} 
-                                    onChange={(e) => handleChange('tour_price_group', e.target.value)}
-                                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm outline-none focus:border-primary transition-all"
-                                />
-                            </div>
+                            <span className="material-symbols-outlined text-primary">collections</span>
+                            <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Media Vault</h2>
                         </div>
 
-                        <div className="pt-6 border-t border-slate-50 dark:border-slate-800 space-y-5">
-                            <label className="flex items-center gap-4 cursor-pointer group">
-                                <div className="relative flex items-center">
-                                    <input 
-                                        type="checkbox"
-                                        checked={formData.tour_dates_ongoing === 'true'}
-                                        onChange={(e) => handleChange('tour_dates_ongoing', e.target.checked ? 'true' : 'false')}
-                                        className="peer w-6 h-6 rounded-lg border-2 border-slate-200 dark:border-slate-700 checked:bg-primary checked:border-primary appearance-none transition-all cursor-pointer"
-                                    />
-                                    <span className="material-symbols-outlined absolute text-white text-[18px] left-0 translate-x-[3px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none">done_all</span>
+                        <div className="space-y-6">
+                            <div 
+                                onClick={() => fileInputRef.current?.click()}
+                                onDragOver={handleDragOver}
+                                onDragLeave={() => setIsDragOver(false)}
+                                onDrop={handleDropZone}
+                                id="image"
+                                className={`relative flex flex-col items-center justify-center w-full h-[250px] border-2 border-dashed rounded-[35px] cursor-pointer transition-all group overflow-hidden ${isDragOver ? 'border-primary bg-primary/5' : formErrors.image ? 'border-red-500 bg-red-50/10 animate-pulse' : 'border-slate-200 dark:border-slate-800 hover:border-primary hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                            >
+                                <input 
+                                    type="file" 
+                                    ref={fileInputRef}
+                                    onChange={handleFilePick}
+                                    className="hidden" 
+                                    multiple 
+                                    accept="image/*"
+                                />
+                                <div className="flex flex-col items-center gap-3 transition-transform group-hover:scale-110">
+                                    <span className={`material-symbols-outlined text-5xl group-hover:text-primary transition-colors ${formErrors.image ? 'text-red-400' : 'text-slate-200'}`}>
+                                        {formErrors.image ? 'warning' : 'cloud_upload'}
+                                    </span>
+                                    <div className="text-center">
+                                        <p className={`text-xs font-black uppercase tracking-widest ${formErrors.image ? 'text-red-600' : 'text-slate-800 dark:text-white'}`}>
+                                            {formErrors.image ? formErrors.image : 'Summon Journey Photos'}
+                                        </p>
+                                        <p className="text-[10px] font-bold text-slate-400 italic">Drag & drop or click to reveal</p>
+                                    </div>
                                 </div>
-                                <span className="text-[11px] font-black uppercase tracking-[2px] text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">Flexible Departures</span>
-                            </label>
+                            </div>
+                            {formErrors.image && <p className="text-[10px] text-red-500 font-black italic ml-2 text-center animate-bounce">*{formErrors.image}</p>}
 
-                            {formData.tour_dates_ongoing !== 'true' && (
-                                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-500">
-                                    <div>
-                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Departure</label>
-                                        <input 
-                                            type="date" 
-                                            value={formData.tour_dates_start} 
-                                            onChange={(e) => handleChange('tour_dates_start', e.target.value)}
-                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-3 text-[10px] uppercase font-black outline-none"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Return</label>
-                                        <input 
-                                            type="date" 
-                                            value={formData.tour_dates_end} 
-                                            onChange={(e) => handleChange('tour_dates_end', e.target.value)}
-                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-4 py-3 text-[10px] uppercase font-black outline-none"
-                                        />
-                                    </div>
+                            {/* Upload Queue */}
+                            {uploadQueue.length > 0 && (
+                                <div className="space-y-3">
+                                    {uploadQueue.map(item => (
+                                        <div key={item.id} className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-[10px] font-black text-slate-500 truncate max-w-[150px] uppercase tracking-tighter">{item.name}</span>
+                                                <span className={`text-[10px] font-black uppercase ${item.status === 'error' ? 'text-rose-500' : 'text-primary'}`}>
+                                                    {item.status === 'done' ? 'Protocol Sync' : item.status === 'error' ? 'Sync Failed' : `${item.progress}%`}
+                                                </span>
+                                            </div>
+                                            <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                                <div 
+                                                    className={`h-full transition-all duration-300 ${item.status === 'error' ? 'bg-rose-500' : 'bg-primary'}`}
+                                                    style={{ width: `${item.progress}%` }}
+                                                />
+                                            </div>
+                                            {item.error && <p className="text-[9px] text-rose-500 font-bold mt-1 uppercase tracking-tighter">! {item.error}</p>}
+                                            {item.status !== 'uploading' && (
+                                                <button onClick={() => dismissQueueItem(item.id)} className="mt-2 text-[9px] font-black text-slate-400 uppercase hover:text-primary">Dismiss</button>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
                             )}
-                        </div>
-                    </div>
 
-                    {/* ═══════════════ MEDIA VAULT ═══════════════ */}
-                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
-                        {/* Header */}
-                        <div className="flex items-center justify-between border-b border-slate-50 dark:border-slate-800 pb-6">
-                            <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-primary">perm_media</span>
-                                <div>
-                                    <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Media Vault</h2>
-                                    <p className="text-[9px] text-slate-300 dark:text-slate-600 mt-0.5">Max 5 MB · JPG, PNG, WebP, GIF</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-black text-slate-300 dark:text-slate-600">{formData.tour_gallery.length} image{formData.tour_gallery.length !== 1 ? 's' : ''}</span>
-                            </div>
-                        </div>
-
-                        {/* ── Drop Zone ── */}
-                        <div
-                            onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-                            onDragLeave={() => setIsDragOver(false)}
-                            onDrop={handleDropZone}
-                            onClick={() => fileInputRef.current?.click()}
-                            className={`relative flex flex-col items-center justify-center gap-3 py-10 rounded-[28px] border-2 border-dashed cursor-pointer transition-all select-none ${
-                                isDragOver
-                                    ? 'border-primary bg-primary/5 scale-[1.01]'
-                                    : 'border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                            }`}
-                        >
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
-                                isDragOver ? 'bg-primary text-white scale-110' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-                            }`}>
-                                <span className="material-symbols-outlined text-[32px]">
-                                    {isDragOver ? 'file_download' : 'cloud_upload'}
-                                </span>
-                            </div>
-                            <div className="text-center">
-                                <p className="font-black text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                                    {isDragOver ? 'Release to Upload' : 'Drop images here or click to browse'}
-                                </p>
-                                <p className="text-[10px] text-slate-300 dark:text-slate-600 mt-1">Multiple files supported · Max 5 MB each</p>
-                            </div>
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/jpeg,image/png,image/webp,image/gif"
-                                multiple
-                                className="hidden"
-                                onChange={handleFilePick}
-                            />
-                        </div>
-
-                        {/* ── Upload Queue (progress) ── */}
-                        {uploadQueue.length > 0 && (
-                            <div className="space-y-2">
-                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-300 dark:text-slate-600 mb-3">Upload Queue</p>
-                                {uploadQueue.map(item => (
-                                    <div key={item.id} className={`flex items-center gap-3 rounded-2xl p-3 border transition-all ${
-                                        item.status === 'error'
-                                            ? 'bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-900/30'
-                                            : item.status === 'done'
-                                            ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-900/30'
-                                            : 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800'
-                                    }`}>
-                                        {/* Icon */}
-                                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                                            item.status === 'error' ? 'bg-red-100 dark:bg-red-900/20 text-red-500'
-                                            : item.status === 'done' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-500'
-                                            : 'bg-primary/10 text-primary'
-                                        }`}>
-                                            <span className="material-symbols-outlined text-[18px]">
-                                                {item.status === 'error' ? 'error' : item.status === 'done' ? 'check_circle' : 'upload'}
-                                            </span>
-                                        </div>
-                                        {/* Info */}
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-[10px] font-bold text-slate-600 dark:text-slate-300 truncate">{item.name}</p>
-                                            {item.status === 'uploading' && (
-                                                <div className="mt-1.5 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-primary rounded-full transition-all duration-300"
-                                                        style={{ width: `${item.progress}%` }}
-                                                    />
-                                                </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                {formData.tour_gallery.map((img, idx) => (
+                                    <div 
+                                        key={idx} 
+                                        draggable
+                                        onDragStart={(e) => handleDragStart(e, idx)}
+                                        onDragEnd={handleDragEnd}
+                                        onDragOver={handleDragOver}
+                                        onDrop={(e) => handleDrop(e, idx)}
+                                        className="group relative aspect-square rounded-[30px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm cursor-grab active:cursor-grabbing"
+                                    >
+                                        <img src={img} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all p-3 flex flex-col justify-end gap-2">
+                                            {editingIndex === idx ? (
+                                                <input 
+                                                    autoFocus
+                                                    value={editingValue}
+                                                    onBlur={() => commitEdit(idx)}
+                                                    onKeyDown={(e) => e.key === 'Enter' && commitEdit(idx)}
+                                                    onChange={(e) => setEditingValue(e.target.value)}
+                                                    className="w-full bg-white dark:bg-slate-800 rounded-lg py-1 px-2 text-[10px] font-bold outline-none"
+                                                />
+                                            ) : (
+                                                <button 
+                                                    onClick={() => startEditing(idx)}
+                                                    className="w-full h-8 flex items-center justify-center bg-white/20 backdrop-blur-md text-white rounded-xl hover:bg-white/40 transition-all border border-white/20"
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">edit</span>
+                                                </button>
                                             )}
-                                            {item.status === 'error' && (
-                                                <p className="text-[9px] text-red-400 mt-0.5">{item.error}</p>
-                                            )}
-                                            {item.status === 'done' && (
-                                                <p className="text-[9px] text-emerald-500 mt-0.5 truncate font-mono">{item.url}</p>
-                                            )}
-                                        </div>
-                                        {/* Dismiss */}
-                                        {item.status !== 'uploading' && (
-                                            <button
-                                                onClick={() => dismissQueueItem(item.id)}
-                                                className="w-7 h-7 flex items-center justify-center text-slate-300 hover:text-slate-500 rounded-lg transition-all hover:bg-slate-100 dark:hover:bg-slate-700 shrink-0"
+                                            <button 
+                                                onClick={() => removeImage(idx)}
+                                                className="w-full h-8 flex items-center justify-center bg-rose-500/80 backdrop-blur-md text-white rounded-xl hover:bg-rose-500 transition-all"
                                             >
-                                                <span className="material-symbols-outlined text-[16px]">close</span>
+                                                <span className="material-symbols-outlined text-[16px]">delete</span>
                                             </button>
-                                        )}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
-                        )}
-
-                        {/* ── URL add (manual) ── */}
-                        <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800/50 rounded-[24px] border border-slate-200/50 dark:border-slate-800 shadow-inner">
-                            <input
-                                type="text"
-                                value={newImage}
-                                onChange={(e) => setNewImage(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && addImage()}
-                                placeholder="Or paste an image URL..."
-                                className="flex-1 bg-transparent px-5 py-3 text-xs outline-none text-slate-600 dark:text-slate-300 font-bold"
-                            />
-                            <button onClick={addImage} className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-[18px] shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
-                                <span className="material-symbols-outlined">add_link</span>
-                            </button>
                         </div>
 
-                        {/* ── Image List ── */}
-                        <div className="space-y-3 max-h-[460px] overflow-y-auto custom-scrollbar pr-1">
-                            {formData.tour_gallery.length === 0 && uploadQueue.filter(q => q.status === 'uploading').length === 0 && (
-                                <div className="flex flex-col items-center justify-center py-10 text-slate-200 dark:text-slate-700">
-                                    <span className="material-symbols-outlined text-[48px] mb-2 opacity-30">photo_library</span>
-                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-40">No images yet</p>
+                        {/* Route & Taxonomies Grid */}
+                        <div className="space-y-8 pt-4">
+                            <div className="space-y-4">
+                                <label id="destination" className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Spiritual Destination Hubs</label>
+                                <div className="relative group">
+                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">location_on</span>
+                                    <input 
+                                        type="text" 
+                                        value={formData.tour_destination_temp || formData.tour_destination.join(', ')}
+                                        onChange={(e) => handleArrayInput('tour_destination', e.target.value)}
+                                        className={`w-full bg-slate-50 dark:bg-slate-800/50 border rounded-2xl pl-12 pr-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200 ${formErrors.destination ? 'border-red-500' : 'border-slate-100 dark:border-slate-800'}`}
+                                        placeholder="E.g., Katra, Varanasi, Puri"
+                                    />
                                 </div>
-                            )}
+                                {formErrors.destination && <p className="text-[10px] text-red-500 font-black italic ml-2">*{formErrors.destination}</p>}
+                            </div>
 
-                            {formData.tour_gallery.map((img, idx) => (
-                                <div
-                                    key={`${img}-${idx}`}
-                                    draggable
-                                    onDragStart={(e) => handleDragStart(e, idx)}
-                                    onDragEnd={handleDragEnd}
-                                    onDrop={(e) => handleDrop(e, idx)}
-                                    onDragOver={handleDragOver}
-                                    className="group flex items-center gap-3 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800/50 rounded-[24px] p-2.5 cursor-move transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-primary/20"
-                                >
-                                    {/* Thumbnail */}
-                                    <div className="w-14 h-14 bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm shrink-0 border border-slate-100 dark:border-slate-800 relative group-hover:border-primary/30 transition-colors">
-                                        <img src={img} alt={`gallery-${idx}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                        {idx === 0 && (
-                                            <div className="absolute bottom-0 left-0 right-0 bg-primary text-white text-[7px] font-black uppercase text-center leading-4">Cover</div>
-                                        )}
-                                        {idx > 0 && (
-                                            <div className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/50 backdrop-blur text-white text-[9px] font-black rounded-md flex items-center justify-center">{idx + 1}</div>
-                                        )}
-                                    </div>
-
-                                    {/* URL (inline edit) */}
-                                    <div className="flex-1 min-w-0">
-                                        {editingIndex === idx ? (
-                                            <input
-                                                autoFocus
-                                                type="text"
-                                                value={editingValue}
-                                                onChange={(e) => setEditingValue(e.target.value)}
-                                                onBlur={() => commitEdit(idx)}
-                                                onKeyDown={(e) => { if (e.key === 'Enter') commitEdit(idx); if (e.key === 'Escape') setEditingIndex(null); }}
-                                                className="w-full bg-white dark:bg-slate-900 border border-primary rounded-lg px-3 py-1.5 text-[10px] font-mono outline-none text-slate-700 dark:text-slate-200"
-                                            />
-                                        ) : (
-                                            <p
-                                                className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 truncate cursor-text hover:text-primary transition-colors"
-                                                title={img}
-                                                onClick={() => startEditing(idx)}
-                                            >
-                                                {img}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-all">
-                                        {/* Edit */}
-                                        <button
-                                            onClick={() => startEditing(idx)}
-                                            className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all active:scale-95"
-                                            title="Edit URL"
-                                        >
-                                            <span className="material-symbols-outlined text-[16px]">edit</span>
-                                        </button>
-                                        {/* Delete */}
-                                        <button
-                                            onClick={() => removeImage(idx)}
-                                            className="w-8 h-8 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-500 rounded-lg transition-all active:scale-95"
-                                            title="Remove"
-                                        >
-                                            <span className="material-symbols-outlined text-[16px]">delete</span>
-                                        </button>
-                                        {/* Drag handle */}
-                                        <div className="w-6 flex items-center justify-center text-slate-300 dark:text-slate-700">
-                                            <span className="material-symbols-outlined text-[18px]">drag_indicator</span>
-                                        </div>
-                                    </div>
+                            <div className="space-y-4">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Universal Tag System</label>
+                                <div className="relative group">
+                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">sell</span>
+                                    <input 
+                                        type="text" 
+                                        value={formData.tour_type_temp || formData.tour_type.join(', ')}
+                                        onChange={(e) => handleArrayInput('tour_type', e.target.value)}
+                                        className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-4 text-xs font-bold outline-none focus:border-primary transition-all text-slate-700 dark:text-slate-200"
+                                        placeholder="Devotional, Nature, Family..."
+                                    />
                                 </div>
-                            ))}
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>

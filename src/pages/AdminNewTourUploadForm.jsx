@@ -11,7 +11,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 /* ─────────────────────────────────────────────
    Format Content Helper 
-───────────────────────────────────────────── */
+ ───────────────────────────────────────────── */
 const formatContent = (content) => {
   if (!content) return '';
   if (/<(p|div|h[1-6]|ul|ol|li|blockquote|section|article|span|br)/i.test(content)) {
@@ -34,7 +34,7 @@ const formatContent = (content) => {
 
 /* ─────────────────────────────────────────────
    Rich Text Editor Component
-───────────────────────────────────────────── */
+ ───────────────────────────────────────────── */
 const RichTextEditor = ({ value, onChange, placeholder, minHeight = "min-h-[160px]" }) => {
   const [mode, setMode] = React.useState('visual');
   const editorRef = React.useRef(null);
@@ -159,6 +159,11 @@ const AdminNewTourUploadForm = () => {
   const isEdit = Boolean(id);
   const typeParam = searchParams.get("type");
   const [loading, setLoading] = React.useState(false);
+  const [idExists, setIdExists] = React.useState(false);
+  const [formErrors, setFormErrors] = React.useState({});
+
+  // Buffer state to prevent cursor jumping for comma-separated inputs
+  const [_tempTags, setTempTags] = React.useState({});
   const [formData, setFormData] = React.useState({
     slug: "",
     title: "",
@@ -184,8 +189,8 @@ const AdminNewTourUploadForm = () => {
     image:
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200",
     images: [],
-    inclusions: "",
-    exclusions: "",
+    inclusions: [{ text: "", option: "" }],
+    exclusions: [{ text: "", option: "" }],
     highlights: "",
     isFeatured: false,
     itinerary: [{ day: 1, title: "", description: "", tags: [], services: [] }],
@@ -340,6 +345,14 @@ const AdminNewTourUploadForm = () => {
           const tours = JSON.parse(savedTours);
           const matched = tours.find((t) => String(t.id) === String(id));
           if (matched) {
+            // Normalize inclusions/exclusions if they are strings
+            if (matched.inclusions && typeof matched.inclusions[0] === 'string') {
+              matched.inclusions = matched.inclusions.map(text => ({ text, option: "Included" }));
+            }
+            if (matched.exclusions && typeof matched.exclusions[0] === 'string') {
+              matched.exclusions = matched.exclusions.map(text => ({ text, option: "Extra Charges" }));
+            }
+            
             setFormData((prev) => ({
               ...prev,
               ...matched,
@@ -357,12 +370,27 @@ const AdminNewTourUploadForm = () => {
         .then((res) => res.json())
         .then((data) => {
           const matched = data.find((t) => String(t.id) === String(id));
-          if (matched)
+          if (matched) {
+            // Normalize inclusions/exclusions if they are strings
+            if (matched.inclusions && typeof matched.inclusions[0] === 'string') {
+              matched.inclusions = matched.inclusions.map(text => ({ text, option: "Included" }));
+            }
+            if (!matched.inclusions || matched.inclusions.length === 0) {
+              matched.inclusions = [{ text: "", option: "" }];
+            }
+            if (matched.exclusions && typeof matched.exclusions[0] === 'string') {
+              matched.exclusions = matched.exclusions.map(text => ({ text, option: "Extra Charges" }));
+            }
+            if (!matched.exclusions || matched.exclusions.length === 0) {
+              matched.exclusions = [{ text: "", option: "" }];
+            }
+
             setFormData((prev) => ({
               ...prev,
               ...matched,
               slug: matched.slug || matched.id || "",
             }));
+          }
         })
         .catch((err) => {
           console.error("Failed to load tour:", err);
@@ -493,8 +521,48 @@ const AdminNewTourUploadForm = () => {
     setFormData((prev) => ({ ...prev, faq: newFaq }));
   };
 
+  const validateForm = () => {
+    const e = {};
+    if (!formData.title?.trim()) e.title = "Title is required";
+    if (!formData.destination?.trim()) e.destination = "Destination is required";
+    if (!formData.duration?.trim()) e.duration = "Duration is required";
+    if (!formData.description?.trim() && !formData.content?.trim()) e.content = "Description/Content is required";
+    
+    // Price validation
+    const hasPrice = (
+      (parseFloat(formData.pricePerPerson) > 0) || 
+      (parseFloat(formData.pricePerCouple) > 0) || 
+      (parseFloat(formData.pricePerGroup) > 0) ||
+      (parseFloat(formData.price) > 0)
+    );
+    if (!hasPrice) e.price = "At least one price field must be greater than zero";
+
+    // Main image
+    if (!formData.image && (!formData.images || formData.images.length === 0)) e.image = "Main image is required";
+
+    setFormErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const getInputClasses = (fieldName, extra = "") => {
+    const base = "w-full rounded-lg border bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors";
+    const status = formErrors[fieldName] 
+      ? "border-red-500 ring-1 ring-red-500 focus:ring-red-500 focus:border-red-500" 
+      : "border-slate-300 dark:border-slate-700";
+    return `${base} ${status} ${extra}`;
+  };
+
   const handleSubmit = async (e, forcedStatus = null) => {
     if (e && e.preventDefault) e.preventDefault();
+    
+    // Run validation
+    if (!validateForm()) {
+      const firstError = Object.keys(formErrors)[0];
+      const errorEl = document.getElementsByName(firstError)[0] || document.getElementById(firstError);
+      if (errorEl) errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -530,14 +598,16 @@ const AdminNewTourUploadForm = () => {
         }));
       }
 
-      // Normalize highlights, inclusions, exclusions to arrays before saving
-      ['highlights', 'inclusions', 'exclusions'].forEach(field => {
-        if (tourToSave[field] && typeof tourToSave[field] === 'string') {
-          tourToSave[field] = tourToSave[field].split('\n').map(s => s.trim()).filter(Boolean);
-        } else if (!tourToSave[field]) {
-          tourToSave[field] = [];
-        }
-      });
+      // Normalize highlights (legacy string to array)
+      if (tourToSave.highlights && typeof tourToSave.highlights === 'string') {
+        tourToSave.highlights = tourToSave.highlights.split('\n').map(s => s.trim()).filter(Boolean);
+      } else if (!tourToSave.highlights) {
+        tourToSave.highlights = [];
+      }
+
+      // Filter empty inclusions/exclusions
+      tourToSave.inclusions = (tourToSave.inclusions || []).filter(item => item.text.trim());
+      tourToSave.exclusions = (tourToSave.exclusions || []).filter(item => item.text.trim());
 
       // ─── Regional Normalization Safety Net ───
       if (tourToSave.stateRegion) {
@@ -728,2103 +798,985 @@ const AdminNewTourUploadForm = () => {
         // Use filename (without extension) as default caption
         const newImgs = base64Urls.map((url, i) => ({
           url,
-          caption: (files[i]?.name || "")
-            .replace(/\.[^.]+$/, "")
-            .replace(/[-_]/g, " "),
+          caption: files[i].name.split(".").slice(0, -1).join("."),
         }));
-        const all = [...existing, ...newImgs];
-        return { ...prev, images: all, image: all[0]?.url || prev.image };
+        const final = [...existing, ...newImgs];
+        return {
+          ...prev,
+          images: final,
+          image: final[0]?.url || prev.image, // Fallback for legacy components
+        };
       });
     });
   };
 
-  const handleCaptionChange = (index, caption) => {
+  const removeImage = (index) => {
     setFormData((prev) => {
-      const imgs = normalizeImages(prev.images);
-      imgs[index] = { ...imgs[index], caption };
-      return { ...prev, images: imgs };
+      const updated = (prev.images || []).filter((_, i) => i !== index);
+      return {
+        ...prev,
+        images: updated,
+        image: updated.length > 0 ? updated[0].url : "",
+      };
     });
   };
 
-  const handleRemoveImage = (index) => {
+  const updateImageCaption = (index, newCaption) => {
     setFormData((prev) => {
-      const imgs = normalizeImages(
-        prev.images && prev.images.length > 0
-          ? prev.images
-          : prev.image
-            ? [prev.image]
-            : [],
-      );
-      imgs.splice(index, 1);
-      return { ...prev, images: imgs, image: imgs[0]?.url || "" };
+      const updated = [...(prev.images || [])];
+      updated[index] = { ...updated[index], caption: newCaption };
+      return { ...prev, images: updated };
     });
-  };
-
-  const [draggedImgIdx, setDraggedImgIdx] = React.useState(null);
-  const handleDragStartImg = (idx) => setDraggedImgIdx(idx);
-  const handleDragOverImg = (e) => e.preventDefault();
-  const handleDropImg = (idx) => {
-    if (draggedImgIdx === null || draggedImgIdx === idx) return;
-    setFormData((prev) => {
-      const imgs = normalizeImages(
-        prev.images && prev.images.length > 0
-          ? prev.images
-          : prev.image
-            ? [prev.image]
-            : [],
-      );
-      const [moved] = imgs.splice(draggedImgIdx, 1);
-      imgs.splice(idx, 0, moved);
-      return { ...prev, images: imgs, image: imgs[0]?.url || "" };
-    });
-    setDraggedImgIdx(null);
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-500">
-            {/* Page Heading component adapted */}
-            <div className="flex flex-col gap-2 mb-8">
-              <nav className="flex text-xs font-medium text-slate-400 mb-2 gap-2 items-center">
-                <Link className="hover:text-primary" to="/admin">
-                  Admin
-                </Link>
-                <span className="material-symbols-outlined text-[14px]">
-                  chevron_right
-                </span>
-                <Link className="hover:text-primary" to="/admin/tours">
-                  Tours
-                </Link>
-                <span className="material-symbols-outlined text-[14px]">
-                  chevron_right
-                </span>
-                {typeParam === "train" ? (
-                  <>
-                    <span className="text-slate-600 dark:text-slate-300">
-                      Train Tours
-                    </span>
-                    <span className="material-symbols-outlined text-[14px]">
-                      chevron_right
-                    </span>
-                    <span className="text-slate-600 dark:text-slate-300 font-bold">
-                      Create New Train tour
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-slate-600 dark:text-slate-300">
-                    {isEdit ? "Edit Tour" : "Add New"}
-                  </span>
-                )}
-              </nav>
-              <h1 className="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight">
-                {typeParam === "train"
-                  ? "Create New Train Tour"
-                  : isEdit
-                    ? "Edit Tour Package"
-                    : "Create New Tour"}
-              </h1>
-              <p className="text-slate-500 dark:text-slate-400 text-base font-normal">
-                {isEdit
-                  ? "Modify the existing tour details below."
-                  : "Fill in the comprehensive details below to publish a new tour package."}
-              </p>
-            </div>
-            {/* Form Container */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-              <form className="p-6 md:p-8 space-y-8" onSubmit={handleSubmit}>
-                {/* Section 1: Basic Info */}
-                <div className="space-y-6">
-                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
-                    Basic Information
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Title */}
-                    <div className="col-span-1 md:col-span-2 space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <label className="flex flex-col md:col-span-2">
-                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                            Tour Title <span className="text-red-500">*</span>
-                          </span>
-                          <input
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
-                            placeholder="e.g. 7-Day Majestic Alps Adventure"
-                            required=""
-                            type="text"
-                          />
-                        </label>
+    <div className="p-6 lg:p-10 max-w-[1240px] mx-auto space-y-10 animate-in fade-in duration-500">
+      {/* Premium Sub-Header Navigation */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+        <div className="space-y-2">
+          <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+            <Link to="/admin" className="hover:text-primary transition-colors">Admin Dashboard</Link>
+            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            <Link to="/admin/tours" className="hover:text-primary transition-colors">Inventory</Link>
+          </nav>
+          <h1 className="text-4xl font-black text-slate-800 dark:text-white uppercase tracking-tight">
+            {isEdit ? "Update Tour Module" : "Launch New Tour"}
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 font-bold italic">
+            Configure premium metadata and itinerary structure for better conversion.
+          </p>
+        </div>
 
-                        <div className="flex flex-col">
-                          <div className="flex items-center justify-between pb-2">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">
-                              Tour Duration{" "}
-                              <span className="text-red-500">*</span>
-                            </span>
-                            <label className="flex items-center gap-1.5 cursor-pointer group">
-                              <input
-                                type="checkbox"
-                                name="isDayTour"
-                                checked={formData.isDayTour}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    isDayTour: e.target.checked,
-                                  }))
-                                }
-                                className="w-3.5 h-3.5 rounded border-slate-300 text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
-                              />
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-tighter group-hover:text-primary/80 transition-colors">
-                                Day Use Tour
-                              </span>
-                            </label>
-                          </div>
-                          <input
-                            name="duration"
-                            value={formData.duration || ""}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
-                            placeholder="e.g. 5 Days / 4 Nights"
-                            type="text"
-                          />
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="relative group">
+            <select
+              value={formData.status}
+              onChange={(e) => handleChange(e)}
+              name="status"
+              className={`pl-10 pr-8 py-4 rounded-2xl font-black uppercase tracking-[2px] text-[10px] outline-none transition-all appearance-none cursor-pointer border shadow-sm ${
+                formData.status === "active"
+                  ? "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"
+                  : "bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20"
+              }`}
+            >
+              <option value="active">Active Listing</option>
+              <option value="draft">Review Draft</option>
+              <option value="paused">Paused Listing</option>
+            </select>
+            <span
+              className={`material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[18px] ${
+                formData.status === "active"
+                  ? "text-emerald-500 animate-pulse"
+                  : "text-amber-500"
+              }`}
+            >
+              {formData.status === "active"
+                ? "online_prediction"
+                : "edit_notifications"}
+            </span>
+          </div>
+
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="group relative flex items-center gap-3 px-10 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black uppercase text-xs tracking-[2px] transition-all hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 overflow-hidden"
+          >
+            <span
+              className={`material-symbols-outlined transition-transform ${
+                loading ? "animate-spin" : "group-hover:scale-110"
+              }`}
+            >
+              {loading ? "progress_activity" : "verified_user"}
+            </span>
+            {loading ? "Syncing..." : isEdit ? "Sync Changes" : "Deploy Tour"}
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Core Data */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Section: Basic Metadata */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+            <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+              <span className="material-symbols-outlined text-primary">
+                auto_awesome
+              </span>
+              <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">
+                Core Identity
+              </h2>
+            </div>
+
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Internal System ID (Auto-Sync)
+                  </label>
+                  <input
+                    type="text"
+                    name="slug"
+                    value={formData.slug}
+                    onChange={handleChange}
+                    className={getInputClasses("slug", "font-mono font-black text-xs h-[52px]")}
+                    placeholder="e.g., golden-triangle-tour"
+                  />
+                  {formErrors.slug && <p className="text-[10px] text-red-500 font-bold italic ml-1 mt-1">*{formErrors.slug}</p>}
+                </div>
+                <div className="space-y-4">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Theme / Category
+                  </label>
+                  <div className="relative group">
+                    <select
+                      name="theme"
+                      value={formData.theme}
+                      onChange={handleChange}
+                      className={getInputClasses("theme", "font-bold h-[52px] appearance-none cursor-pointer")}
+                    >
+                      <option value="">Select Theme Strategy</option>
+                      {categories.themes.map((theme) => (
+                        <option key={theme.value} value={theme.value}>
+                          {theme.label}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none transition-transform group-hover:translate-y-1">
+                      expand_more
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                  Public Product Title
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  id="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className={getInputClasses("title", "font-serif font-black text-2xl h-[72px] px-6 rounded-2xl")}
+                  placeholder="e.g. Majestic Himalayan Expedition: 7 Days Luxury Special"
+                />
+                {formErrors.title && <p className="text-[10px] text-red-500 font-bold italic ml-1 mt-1">*{formErrors.title}</p>}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="space-y-3">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Duration
+                  </label>
+                  <div className="relative group">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+                      schedule
+                    </span>
+                    <input
+                      type="text"
+                      name="duration"
+                      id="duration"
+                      value={formData.duration}
+                      onChange={handleChange}
+                      className={getInputClasses("duration", "pl-12 font-bold")}
+                      placeholder="e.g. 5D/4N"
+                    />
+                  </div>
+                  {formErrors.duration && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.duration}</p>}
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Group Size
+                  </label>
+                  <div className="relative group">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+                      groups
+                    </span>
+                    <input
+                      type="number"
+                      name="groupSize"
+                      value={formData.groupSize}
+                      onChange={handleChange}
+                      className={getInputClasses("groupSize", "pl-12 font-bold")}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-3 md:col-span-2">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Best Time to Experience
+                  </label>
+                  <div className="relative group">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+                      calendar_month
+                    </span>
+                    <input
+                      type="text"
+                      name="bestTimeToVisit"
+                      value={formData.bestTimeToVisit}
+                      onChange={handleChange}
+                      className={getInputClasses("bestTimeToVisit", "pl-12 font-bold")}
+                      placeholder="e.g. Apr to Oct"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* New Section: Pricing Logic Hub */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-50 dark:border-slate-800 pb-6">
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-primary">
+                  payments
+                </span>
+                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">
+                  Pricing Hierarchy
+                </h2>
+              </div>
+              <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <button
+                  onClick={() =>
+                    setFormData({ ...formData, priceBasis: "per_person" })
+                  }
+                  className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                    formData.priceBasis === "per_person"
+                      ? "bg-white shadow-xl dark:bg-slate-700 text-primary"
+                      : "text-slate-400 opacity-60"
+                  }`}
+                >
+                  B2C / Solo
+                </button>
+                <button
+                  onClick={() =>
+                    setFormData({ ...formData, priceBasis: "per_package" })
+                  }
+                  className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                    formData.priceBasis === "per_package"
+                      ? "bg-white shadow-xl dark:bg-slate-700 text-primary"
+                      : "text-slate-400 opacity-60"
+                  }`}
+                >
+                  B2B / Group
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                {
+                  id: "person",
+                  key: "pricePerPerson",
+                  label: "Individual / Person",
+                  icon: "person",
+                },
+                {
+                  id: "couple",
+                  key: "pricePerCouple",
+                  label: "Couple / Duo",
+                  icon: "favorite",
+                },
+                {
+                  id: "group",
+                  key: "pricePerGroup",
+                  label: "Group (Min 4+)",
+                  icon: "groups_3",
+                },
+              ].map((tier) => (
+                <div
+                  key={tier.id}
+                  className={`p-6 rounded-3xl border transition-all ${
+                    formData[tier.key] > 0
+                      ? "bg-primary/5 border-primary/20 scale-[1.02]"
+                      : "bg-slate-50 border-slate-100 dark:bg-slate-800/30 dark:border-slate-800"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <span
+                      className={`material-symbols-outlined text-[18px] ${
+                        formData[tier.key] > 0
+                          ? "text-primary"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      {tier.icon}
+                    </span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                      {tier.label}
+                    </span>
+                  </div>
+                  <div className="relative group">
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 text-lg font-serif font-black text-slate-400">
+                      ₹
+                    </span>
+                    <input
+                      type="number"
+                      name={tier.key}
+                      id="price"
+                      value={formData[tier.key]}
+                      onChange={handleChange}
+                      className={`w-full bg-transparent border-0 border-b-2 pl-6 py-2 text-2xl font-serif font-black outline-none transition-all ${
+                        formData[tier.key] > 0
+                          ? "border-primary text-slate-800 dark:text-white"
+                          : "border-slate-200 dark:border-slate-800 text-slate-400"
+                      }`}
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            {formErrors.price && <p className="text-[10px] text-red-500 font-bold italic ml-1 text-center bg-red-50 dark:bg-red-900/10 py-3 rounded-2xl border border-red-100 dark:border-red-900/20">*{formErrors.price}</p>}
+          </div>
+
+          {/* New Section: Inclusions & Exclusions */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-50 dark:border-slate-800 pb-6">
+                <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-primary">lists</span>
+                    <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Inventory Status (Inclusions / Exclusions)</h2>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                {/* Inclusions */}
+                <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                           <span className="material-symbols-outlined text-[18px]">add_task</span> Included Assets
+                        </h3>
+                        <button 
+                            onClick={() => setFormData(prev => ({ ...prev, inclusions: [...prev.inclusions, { text: '', option: '' }] }))}
+                            className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                        >
+                            + Add Item
+                        </button>
+                    </div>
+                    <div className="space-y-3">
+                        {formData.inclusions.map((item, idx) => (
+                            <div key={idx} className="flex gap-2 items-center group">
+                                <input 
+                                    type="text" 
+                                    placeholder="e.g. Daily Breakfast"
+                                    value={item.text}
+                                    onChange={(e) => {
+                                        const newInc = [...formData.inclusions];
+                                        newInc[idx].text = e.target.value;
+                                        setFormData(prev => ({ ...prev, inclusions: newInc }));
+                                    }}
+                                    className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-emerald-500 transition-all font-bold"
+                                />
+                                <input 
+                                    type="text" 
+                                    placeholder="Option..."
+                                    value={item.option}
+                                    onChange={(e) => {
+                                        const newInc = [...formData.inclusions];
+                                        newInc[idx].option = e.target.value;
+                                        setFormData(prev => ({ ...prev, inclusions: newInc }));
+                                    }}
+                                    className="w-24 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-[10px] outline-none focus:border-emerald-500 transition-all font-black uppercase tracking-tighter text-emerald-600"
+                                />
+                                <button 
+                                    onClick={() => {
+                                        const newInc = [...formData.inclusions];
+                                        newInc.splice(idx, 1);
+                                        setFormData(prev => ({ ...prev, inclusions: newInc }));
+                                    }}
+                                    className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">close</span>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Exclusions */}
+                <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                           <span className="material-symbols-outlined text-[18px]">cancel_schedule_send</span> Excluded Items
+                        </h3>
+                        <button 
+                            onClick={() => setFormData(prev => ({ ...prev, exclusions: [...prev.exclusions, { text: '', option: '' }] }))}
+                            className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                        >
+                            + Add Item
+                        </button>
+                    </div>
+                    <div className="space-y-3">
+                        {formData.exclusions.map((item, idx) => (
+                            <div key={idx} className="flex gap-2 items-center group">
+                                <input 
+                                    type="text" 
+                                    placeholder="e.g. Flight Tickets"
+                                    value={item.text}
+                                    onChange={(e) => {
+                                        const newExc = [...formData.exclusions];
+                                        newExc[idx].text = e.target.value;
+                                        setFormData(prev => ({ ...prev, exclusions: newExc }));
+                                    }}
+                                    className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-rose-500 transition-all font-bold"
+                                />
+                                <input 
+                                    type="text" 
+                                    placeholder="Option..."
+                                    value={item.option}
+                                    onChange={(e) => {
+                                        const newExc = [...formData.exclusions];
+                                        newExc[idx].option = e.target.value;
+                                        setFormData(prev => ({ ...prev, exclusions: newExc }));
+                                    }}
+                                    className="w-24 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 text-[10px] outline-none focus:border-rose-500 transition-all font-black uppercase tracking-tighter text-rose-600"
+                                />
+                                <button 
+                                    onClick={() => {
+                                        const newExc = [...formData.exclusions];
+                                        newExc.splice(idx, 1);
+                                        setFormData(prev => ({ ...prev, exclusions: newExc }));
+                                    }}
+                                    className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">close</span>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          {/* Section: Rich Storytelling Content */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-50 dark:border-slate-800 pb-6">
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-primary">
+                  description
+                </span>
+                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">
+                  Interactive Storyline
+                </h2>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                Main Adventure Description
+              </label>
+              <div id="content">
+                <RichTextEditor
+                    value={formData.description || formData.content}
+                    onChange={(val) => setFormData(prev => ({ ...prev, description: val, content: val }))}
+                    placeholder="Describe the magical experience awaiting travellers... Markdown and HTML tags are supported."
+                />
+              </div>
+              {formErrors.content && <p className="text-[10px] text-red-500 font-bold italic ml-1 mt-1">*{formErrors.content}</p>}
+            </div>
+          </div>
+
+          {/* New Section: Itinerary Evolution */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+            <div className="flex items-center justify-between border-b border-slate-50 dark:border-slate-800 pb-6">
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-primary">
+                  route
+                </span>
+                <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">
+                  Progressive Itinerary
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={handleAddDay}
+                className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all"
+              >
+                <span className="material-symbols-outlined text-[14px]">
+                  add_circle
+                </span>
+                Inscribe New Day
+              </button>
+            </div>
+
+            <div className="space-y-8">
+              {(formData.itinerary || []).map((day, index) => (
+                <div
+                  key={index}
+                  className="group relative bg-slate-50 dark:bg-slate-800/20 rounded-[32px] border border-slate-100 dark:border-slate-800 p-8 transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5"
+                >
+                  <div className="absolute -top-3 left-8 px-4 py-1.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-sm">
+                    Sequence {day.day}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveDay(index)}
+                    className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-500 transition-all shadow-xl"
+                  >
+                    <span className="material-symbols-outlined text-[14px]">
+                      close
+                    </span>
+                  </button>
+
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="md:col-span-2 space-y-3">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                          Daily Milestone Title
+                        </label>
+                        <input
+                          type="text"
+                          value={day.title}
+                          onChange={(e) =>
+                            handleItineraryChange(index, "title", e.target.value)
+                          }
+                          className="w-full bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all"
+                          placeholder="e.g. Arrival in Manali & Local Exploration"
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                          Experience Tags
+                        </label>
+                        <input
+                          type="text"
+                          value={
+                            Array.isArray(day.tags)
+                              ? day.tags.join(", ")
+                              : day.tags || ""
+                          }
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setTempTags((prev) => ({ ...prev, [index]: val }));
+                            handleItineraryChange(index, "tags", val);
+                          }}
+                          className="w-full bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-3 text-[11px] font-mono outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all"
+                          placeholder="Nature, Culture, Spa..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between ml-1">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                          Experience Narrative
+                        </label>
+                        <div className="flex bg-slate-200/50 dark:bg-slate-800 p-1 rounded-xl">
+                          <button 
+                            type="button"
+                            onClick={() => setDayEditorModes(prev => ({...prev, [index]: 'visual'}))}
+                            className={`px-3 py-1 rounded-lg text-xs font-black uppercase tracking-tight transition-all ${(dayEditorModes[index] || 'visual') === 'visual' ? 'bg-white shadow text-primary' : 'text-slate-400'}`}
+                          >Visual</button>
+                          <button 
+                            type="button"
+                            onClick={() => setDayEditorModes(prev => ({...prev, [index]: 'html'}))}
+                            className={`px-3 py-1 rounded-lg text-xs font-black uppercase tracking-tight transition-all ${dayEditorModes[index] === 'html' ? 'bg-white shadow text-primary' : 'text-slate-400'}`}
+                          >HTML</button>
                         </div>
                       </div>
 
-                      <label className="flex flex-col flex-1">
-                        <div className="flex items-center justify-between pb-2">
-                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal">
-                            Tour Slug{" "}
-                            <span className="text-[10px] text-slate-400 ml-2">
-                              (Used in URL)
-                            </span>
-                          </span>
+                      <div className="relative border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm">
+                        <RichTextEditor
+                            minHeight="min-h-[120px]"
+                            value={day.description}
+                            onChange={(val) => handleItineraryChange(index, "description", val)}
+                            placeholder={`Narrate the wonders of Day ${day.day}...`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Taxonomies & Settings */}
+        <div className="space-y-8">
+          {/* Section: Regional Mapping */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+            <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+              <span className="material-symbols-outlined text-primary">
+                distance
+              </span>
+              <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">
+                Geography Engine
+              </h2>
+            </div>
+
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                  Primary Destination
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {Object.keys(categories.destinationStates).map((dest) => (
+                    <button
+                      key={dest}
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          destination: dest,
+                          stateRegion: "",
+                          subregion: "",
+                        }))
+                      }
+                      className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-xs font-black ${
+                        formData.destination === dest
+                          ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 translate-y-[-2px]"
+                          : "bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 text-slate-500 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[18px]">
+                        {dest === "India" ? "temple_hindu" : "public"}
+                      </span>
+                      {dest}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const custom = prompt("Enter Custom Destination Hub:");
+                      if (custom) setFormData({ ...formData, destination: custom });
+                    }}
+                    className="flex items-center justify-center p-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 text-[10px] font-black uppercase text-slate-400 hover:border-primary hover:text-primary transition-all"
+                  >
+                    + Custom Hub
+                  </button>
+                </div>
+                {formErrors.destination && <p className="text-[10px] text-red-500 font-bold italic ml-1">*{formErrors.destination}</p>}
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between ml-1">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                    State / Provencial Grid
+                  </label>
+                  <span className="text-[8px] font-black text-primary px-2 py-0.5 bg-primary/10 rounded-full animate-pulse">
+                    Dynamic Search
+                  </span>
+                </div>
+                <div className="relative group">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    explore
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search States..."
+                    value={destSearchQuery}
+                    onChange={(e) => setDestSearchQuery(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold outline-none focus:border-primary transition-all"
+                  />
+                  <div className="mt-4 flex flex-wrap gap-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                    {availableStates
+                      .filter((s) =>
+                        s.toLowerCase().includes(destSearchQuery.toLowerCase()),
+                      )
+                      .map((state) => {
+                          const stateVal = String(state).toLowerCase();
+                          const currentRegions = Array.isArray(formData.stateRegion) 
+                            ? formData.stateRegion.map(r => String(r).toLowerCase())
+                            : [String(formData.stateRegion || "").toLowerCase()];
+                          const isActive = currentRegions.includes(stateVal);
+
+                          return (
+                            <button
+                                key={state}
+                                type="button"
+                                onClick={() => {
+                                    setFormData(prev => {
+                                        const current = Array.isArray(prev.stateRegion) ? prev.stateRegion : (prev.stateRegion ? [prev.stateRegion] : []);
+                                        const normalizedCurrent = current.map(c => normalizeBucket(c));
+                                        const normalizedState = normalizeBucket(state);
+                                        
+                                        if (normalizedCurrent.includes(normalizedState)) {
+                                            return { ...prev, stateRegion: current.filter(c => normalizeBucket(c) !== normalizedState) };
+                                        } else {
+                                            return { ...prev, stateRegion: [...current, displayState(state)] };
+                                        }
+                                    });
+                                }}
+                                className={`px-4 py-2.5 rounded-xl border text-[11px] font-bold transition-all flex items-center gap-2 ${
+                                    isActive
+                                    ? "bg-slate-900 text-white border-slate-900 shadow-lg dark:bg-white dark:text-slate-900"
+                                    : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-500 hover:border-primary"
+                                }`}
+                            >
+                                <span className="text-base leading-none">{DEST_ICON_MAP[state] || "📍"}</span>
+                                {state}
+                            </button>
+                        );
+                      })}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const custom = prompt("Enter Custom Region Name:");
+                          if (custom) {
+                            setFormData(prev => ({
+                                ...prev,
+                                stateRegion: Array.isArray(prev.stateRegion) ? [...prev.stateRegion, custom] : [custom]
+                            }));
+                          }
+                        }}
+                        className="px-4 py-2.5 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-[10px] font-black uppercase text-slate-400 hover:border-primary hover:text-primary transition-all"
+                      >
+                        + Custom State
+                      </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                  Local District / Subregion
+                </label>
+                <div className="relative group">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    location_on
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search Subregions..."
+                    value={subreqSearchQuery}
+                    onChange={(e) => setSubreqSearchQuery(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold outline-none focus:border-primary transition-all"
+                  />
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {availableSubregions
+                    .filter((s) => s.toLowerCase().includes(subreqSearchQuery.toLowerCase()))
+                    .map((sub) => {
+                        const currentSubs = Array.isArray(formData.subregion) ? formData.subregion : (formData.subregion ? [formData.subregion] : []);
+                        const isActive = currentSubs.includes(sub);
+                        return (
                           <button
+                            key={sub}
                             type="button"
                             onClick={() => {
-                              const s = (formData.title || "")
-                                .toLowerCase()
-                                .replace(/[^a-z0-9\s-]/g, "")
-                                .replace(/\s+/g, "-")
-                                .replace(/-+/g, "-")
-                                .replace(/^-|-$/g, "");
-                              setFormData((prev) => ({ ...prev, slug: s }));
+                                setFormData(prev => {
+                                    const current = Array.isArray(prev.subregion) ? prev.subregion : (prev.subregion ? [prev.subregion] : []);
+                                    if (current.includes(sub)) {
+                                        return { ...prev, subregion: current.filter(c => c !== sub) };
+                                    } else {
+                                        return { ...prev, subregion: [...current, sub] };
+                                    }
+                                });
                             }}
-                            className="text-[10px] text-primary hover:underline"
+                            className={`px-3 py-2 rounded-lg border text-[10px] font-black uppercase transition-all ${
+                                isActive
+                                ? "bg-primary/20 text-primary border-primary"
+                                : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-400 hover:border-primary"
+                            }`}
                           >
-                            Regenerate from Title
+                            {sub}
                           </button>
-                        </div>
-                        <div className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
-                            /tours/dest/state/sub/
-                          </span>
-                          <input
-                            name="slug"
-                            value={formData.slug}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-36 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors font-mono"
-                            placeholder="majestic-alps-adventure"
-                            type="text"
-                          />
-                        </div>
-                        <p className="text-[10px] text-slate-400 mt-1">
-                          Leave empty to auto-generate from title. If the slug
-                          exists, a number will be appended automatically.
-                        </p>
-                      </label>
-
-                      {/* City Path */}
-                      <label className="flex flex-col flex-1 pb-4">
-                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                          City Path (Highlight Cities)
-                        </span>
-                        <input
-                          name="cityPath"
-                          value={formData.cityPath || ""}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
-                          placeholder="e.g. Kashmir (2D) → Srinagar (2D) → Gulmarg (2D) - Pahalgam (1D)"
-                          type="text"
-                        />
-                      </label>
-                    </div>
-
-                    {/* ── HOTEL & ACCOMMODATION (Shifted here - Multi-select) ── */}
-                    <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50 dark:bg-slate-800/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
-                      {(() => {
-                        return (
-                          <>
-                            {!formData.isDayTour && (
-                              <>
-                                <div>
-                                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      star
-                                    </span>{" "}
-                                    Hotel Category
-                                    <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">
-                                      Multi-select
-                                    </span>
-                                  </p>
-                                  <div className="flex flex-wrap gap-2">
-                                    {categories.hotelCategories.map((cat) => {
-                                      const isSelected = (
-                                        formData.hotelCategory || []
-                                      ).includes(cat.value);
-                                      return (
-                                        <button
-                                          key={cat.value}
-                                          type="button"
-                                          onClick={() => {
-                                            const current =
-                                              formData.hotelCategory || [];
-                                            const updated = current.includes(
-                                              cat.value,
-                                            )
-                                              ? current.filter(
-                                                  (v) => v !== cat.value,
-                                                )
-                                              : [...current, cat.value];
-                                            setFormData((prev) => ({
-                                              ...prev,
-                                              hotelCategory: updated,
-                                            }));
-                                          }}
-                                          className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-                                            isSelected
-                                              ? "bg-primary text-white border-primary shadow-md transform scale-105"
-                                              : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/50"
-                                          }`}
-                                        >
-                                          <span>{cat.icon}</span> {cat.label}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-
-                                <div className="flex flex-col">
-                                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      apartment
-                                    </span>{" "}
-                                    Accommodation Type
-                                    <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">
-                                      Single-select
-                                    </span>
-                                  </p>
-                                  <div className="flex flex-wrap gap-2">
-                                    {categories.accommodationTypes.map(
-                                      (type) => {
-                                        const isSelected =
-                                          formData.accommodationType ===
-                                          type.value;
-                                        return (
-                                          <button
-                                            key={type.value}
-                                            type="button"
-                                            onClick={() =>
-                                              setFormData((prev) => ({
-                                                ...prev,
-                                                accommodationType: type.value,
-                                              }))
-                                            }
-                                            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-                                              isSelected
-                                                ? "bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105"
-                                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50"
-                                            }`}
-                                          >
-                                            <span>{type.icon}</span>{" "}
-                                            {type.label}
-                                          </button>
-                                        );
-                                      },
-                                    )}
-                                  </div>
-
-                                  {formData.accommodationType === "mixed" && (
-                                    <div className="bg-slate-100 dark:bg-slate-800/80 p-4 rounded-xl mt-4 border border-slate-200 dark:border-slate-700 w-full">
-                                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-[18px]">
-                                          account_tree
-                                        </span>{" "}
-                                        Specific Mixed Stays
-                                        <span className="text-[10px] font-normal text-slate-400 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">
-                                          Multi-select
-                                        </span>
-                                      </p>
-                                      <div className="flex flex-wrap gap-2">
-                                        {categories.accommodationTypes
-                                          .filter((t) => t.value !== "mixed")
-                                          .map((type) => {
-                                            const isSelected = (
-                                              formData.mixedAccommodations || []
-                                            ).includes(type.value);
-                                            return (
-                                              <button
-                                                key={`mixed-${type.value}`}
-                                                type="button"
-                                                onClick={() => {
-                                                  const current =
-                                                    formData.mixedAccommodations ||
-                                                    [];
-                                                  const updated =
-                                                    current.includes(type.value)
-                                                      ? current.filter(
-                                                          (v) =>
-                                                            v !== type.value,
-                                                        )
-                                                      : [
-                                                          ...current,
-                                                          type.value,
-                                                        ];
-                                                  setFormData((prev) => ({
-                                                    ...prev,
-                                                    mixedAccommodations:
-                                                      updated,
-                                                  }));
-                                                }}
-                                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
-                                                  isSelected
-                                                    ? "bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105"
-                                                    : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50"
-                                                }`}
-                                              >
-                                                <span>{type.icon}</span>{" "}
-                                                {type.label}
-                                              </button>
-                                            );
-                                          })}
-                                      </div>
-                                      <p className="text-xs text-slate-400 mt-3 italic">
-                                        Select all modes of stay involved in
-                                        this tour.
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-                              </>
-                            )}
-
-                            <div className="md:col-span-2 space-y-5 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                <div className="space-y-3">
-                                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[18px]">
-                                      restaurant
-                                    </span>{" "}
-                                    Included Meal Plans
-                                    <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">
-                                      Multi-select
-                                    </span>
-                                  </p>
-                                  <div className="flex flex-wrap gap-2">
-                                    {(categories.mealPlans || []).map(
-                                      (meal) => {
-                                        const isSelected = (
-                                          formData.mealPlan || []
-                                        ).includes(meal.value);
-                                        return (
-                                          <button
-                                            key={meal.value}
-                                            type="button"
-                                            onClick={() => {
-                                              const current =
-                                                formData.mealPlan || [];
-                                              const updated = current.includes(
-                                                meal.value,
-                                              )
-                                                ? current.filter(
-                                                    (v) => v !== meal.value,
-                                                  )
-                                                : [...current, meal.value];
-                                              setFormData((prev) => ({
-                                                ...prev,
-                                                mealPlan: updated,
-                                              }));
-                                            }}
-                                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-                                              isSelected
-                                                ? "bg-primary text-white border-primary shadow-md"
-                                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700"
-                                            }`}
-                                          >
-                                            <span>{meal.icon}</span>{" "}
-                                            {meal.label}
-                                          </button>
-                                        );
-                                      },
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-
-                            <div className="md:col-span-2 space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
-                              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                                <span className="material-symbols-outlined text-[18px]">
-                                  featured_play_list
-                                </span>{" "}
-                                Display Service Icons
-                                <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">
-                                  Multi-select
-                                </span>
-                              </p>
-                              <div className="flex flex-wrap gap-2">
-                                {(categories.tourFeatures || []).map(
-                                  (feature) => {
-                                    const isSelected = (
-                                      formData.tourFeatures || []
-                                    ).includes(feature.value);
-                                    return (
-                                      <button
-                                        key={feature.value}
-                                        type="button"
-                                        onClick={() => {
-                                          const current =
-                                            formData.tourFeatures || [];
-                                          const updated = current.includes(
-                                            feature.value,
-                                          )
-                                            ? current.filter(
-                                                (v) => v !== feature.value,
-                                              )
-                                            : [...current, feature.value];
-                                          setFormData((prev) => ({
-                                            ...prev,
-                                            tourFeatures: updated,
-                                          }));
-                                        }}
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-                                          isSelected
-                                            ? "bg-slate-900 text-white border-slate-900 shadow-md"
-                                            : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700"
-                                        }`}
-                                      >
-                                        <span className="material-symbols-outlined text-[16px]">
-                                          {feature.icon}
-                                        </span>{" "}
-                                        {feature.label}
-                                      </button>
-                                    );
-                                  },
-                                )}
-                              </div>
-                              <p className="text-[10px] text-slate-400 italic">
-                                Toggle the core feature icons shown on the tour
-                                details dashboard.
-                              </p>
-                            </div>
-                          </>
                         );
-                      })()}
-                    </div>
+                    })}
+                    <button
+                        type="button"
+                        onClick={() => {
+                          const custom = prompt("Enter Custom Sub-location:");
+                          if (custom) {
+                            setFormData(prev => ({
+                                ...prev,
+                                subregion: Array.isArray(prev.subregion) ? [...prev.subregion, custom] : [custom]
+                            }));
+                          }
+                        }}
+                        className="px-3 py-2 rounded-lg border border-dashed border-slate-200 dark:border-slate-700 text-[10px] font-black uppercase text-slate-400 hover:border-primary hover:text-primary transition-all"
+                      >
+                        + Custom
+                      </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                    <div className="col-span-1 md:col-span-2">
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2 border-t border-slate-100 dark:border-slate-800 pt-5 mt-2">
-                        <span className="material-symbols-outlined text-[18px]">
-                          directions_transit
-                        </span>{" "}
-                        Transport Type
-                        <span className="text-[10px] font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">
-                          Single-select
-                        </span>
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {categories.transports.map((tr) => {
-                          const isSelected = formData.transport === tr.value;
-                          return (
-                            <button
-                              key={tr.value}
-                              type="button"
-                              onClick={() =>
+          {/* Section: Product Strategy */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+            <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+              <span className="material-symbols-outlined text-primary">
+                architecture
+              </span>
+              <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">
+                Product Architecture
+              </h2>
+            </div>
+
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                  Tour Modality / Style
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {categories.styles.map((style) => (
+                    <button
+                      key={style.value}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, style: style.value })}
+                      className={`flex flex-col items-start gap-1 p-4 rounded-2xl border transition-all ${
+                        formData.style === style.value
+                          ? "bg-primary border-primary shadow-lg shadow-primary/20"
+                          : "bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span className={`text-[18px] ${formData.style === style.value ? "text-white" : "text-primary"}`}>{style.icon}</span>
+                      <span className={`text-[11px] font-black uppercase tracking-tight ${formData.style === style.value ? "text-white" : "text-slate-800 dark:text-slate-200"}`}>
+                        {style.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                  Nature of Expedition
+                </label>
+                <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                  {categories.natures.map((nature) => (
+                    <button
+                      key={nature.value}
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, nature: nature.value })
+                      }
+                      className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                        formData.nature === nature.value
+                          ? "bg-white shadow-xl dark:bg-slate-700 text-primary scale-[1.05] z-10"
+                          : "text-slate-400 opacity-60"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[16px]">
+                        {nature.icon}
+                      </span>
+                      {nature.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6 bg-slate-900 rounded-3xl space-y-4">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={formData.isFeatured}
+                      onChange={(e) =>
+                        setFormData({ ...formData, isFeatured: e.target.checked })
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-12 h-6 bg-slate-700 rounded-full peer peer-checked:bg-primary transition-all shadow-inner"></div>
+                    <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-6 transition-all shadow-lg"></div>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-black text-white uppercase tracking-widest group-hover:text-primary transition-colors">
+                      Promote as Featured
+                    </span>
+                    <span className="text-[9px] text-slate-400 font-bold italic">
+                      Boost to homepage and top search results.
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Visual Gallery Vault */}
+          <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-8">
+            <div className="flex items-center gap-3 border-b border-slate-50 dark:border-slate-800 pb-6">
+              <span className="material-symbols-outlined text-primary">
+                gallery_thumbnail
+              </span>
+              <h2 className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">
+                Media Vault
+              </h2>
+            </div>
+
+            <div className="space-y-6">
+              <label id="image" className={`relative flex flex-col items-center justify-center w-full h-[240px] border-2 border-dashed rounded-[32px] cursor-pointer transition-all group overflow-hidden ${formErrors.image ? "border-red-500 bg-red-50/5" : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-primary hover:bg-slate-100"}`}>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                />
+                <div className="flex flex-col items-center gap-2 group-hover:scale-110 transition-transform">
+                  <span className={`material-symbols-outlined text-4xl group-hover:text-primary transition-colors ${formErrors.image ? "text-red-400" : "text-slate-300"}`}>
+                    {formErrors.image ? "warning" : "cloud_upload"}
+                  </span>
+                  <div className="text-center">
+                    <p className={`text-sm font-black uppercase tracking-widest ${formErrors.image ? "text-red-600" : "text-slate-900 dark:text-white"}`}>
+                      {formErrors.image ? formErrors.image : "Inscribe Journey Photos"}
+                    </p>
+                    <p className={`text-[10px] font-bold italic ${formErrors.image ? "text-red-400" : "text-slate-400"}`}>
+                      Upload multiple JPEG/WebP assets (Max 5MB each)
+                    </p>
+                  </div>
+                </div>
+              </label>
+              {formErrors.image && <p className="text-[10px] text-red-500 font-bold italic ml-1 text-center animate-bounce">*{formErrors.image}</p>}
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                {(formData.images || []).map((img, index) => (
+                  <div
+                    key={index}
+                    className="group relative h-[180px] rounded-[24px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm"
+                  >
+                    <img
+                      src={img.url}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      alt={img.caption}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all p-4 flex flex-col justify-end gap-3">
+                      <input
+                        type="text"
+                        value={img.caption}
+                        onChange={(e) =>
+                          updateImageCaption(index, e.target.value)
+                        }
+                        className="w-full bg-white/20 backdrop-blur-md border border-white/20 rounded-lg px-3 py-1.5 text-[10px] text-white font-bold outline-none placeholder:text-white/40 shadow-xl"
+                        placeholder="Inscribe caption..."
+                      />
+                      <div className="flex gap-2">
+                        <button
+                            type="button"
+                            onClick={() =>
                                 setFormData((prev) => ({
                                   ...prev,
-                                  transport: tr.value,
+                                  image: img.url,
+                                  images: [
+                                    img,
+                                    ...prev.images.filter((_, i) => i !== index),
+                                  ],
                                 }))
                               }
-                              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-                                isSelected
-                                  ? "bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105"
-                                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50"
-                              }`}
-                            >
-                              <span>{tr.icon}</span> {tr.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {formData.transport === "mixed" && (
-                        <div className="bg-slate-100 dark:bg-slate-800/80 p-4 rounded-xl mt-4 border border-slate-200 dark:border-slate-700">
-                          <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[18px]">
-                              account_tree
-                            </span>{" "}
-                            Specific Mixed Transport Types
-                            <span className="text-[10px] font-normal text-slate-400 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full ml-auto">
-                              Multi-select
-                            </span>
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {categories.transports
-                              .filter((t) => t.value !== "mixed")
-                              .map((tr) => {
-                                const isSelected = (
-                                  formData.mixedTransports || []
-                                ).includes(tr.value);
-                                return (
-                                  <button
-                                    key={`mixed-${tr.value}`}
-                                    type="button"
-                                    onClick={() => {
-                                      const current =
-                                        formData.mixedTransports || [];
-                                      const updated = current.includes(tr.value)
-                                        ? current.filter((v) => v !== tr.value)
-                                        : [...current, tr.value];
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        mixedTransports: updated,
-                                      }));
-                                    }}
-                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
-                                      isSelected
-                                        ? "bg-[#0a6c75] text-white border-[#0a6c75] shadow-md transform scale-105"
-                                        : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75]/50"
-                                    }`}
-                                  >
-                                    <span>{tr.icon}</span> {tr.label}
-                                  </button>
-                                );
-                              })}
-                          </div>
-                          <p className="text-xs text-slate-400 mt-3 italic">
-                            Select all modes of transport involved in this
-                            multi-leg journey.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    {/* Description */}
-                    <div className="col-span-1 md:col-span-2">
-                       <label className="flex flex-col flex-1">
-                         <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                           Description
-                         </span>
-                         <RichTextEditor
-                            value={formData.description}
-                            onChange={(val) => setFormData(prev => ({...prev, description: val}))}
-                            placeholder="Write a compelling description of the tour..."
-                         />
-                       </label>
-                    </div>
-                    {/* Highlights */}
-                    <div className="col-span-1 md:col-span-2">
-                      <label className="flex flex-col flex-1">
-                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                          Highlights (one per line)
-                        </span>
-                        <RichTextEditor
-                           value={Array.isArray(formData.highlights) ? formData.highlights.join('\n') : (formData.highlights || "")}
-                           onChange={(val) => setFormData(prev => ({...prev, highlights: val}))}
-                           placeholder="Enjoy a trekking trip to Vaishno Devi Temple&#10;Enjoy skiing at Gulmarg"
-                           minHeight="min-h-[120px]"
-                        />
-                      </label>
-                    </div>
-                    {/* Best Time to Visit */}
-                    <div className="col-span-1 md:col-span-2 mt-4">
-                      <label className="flex flex-col flex-1">
-                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                          Best Time to Visit
-                        </span>
-                        <input
-                          name="bestTimeToVisit"
-                          value={formData.bestTimeToVisit || ""}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
-                          placeholder="e.g. Mar - Jun & Oct - Nov"
-                          type="text"
-                        />
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Section: Pricing & Duration */}
-                  <div className="space-y-6">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[20px]">
-                        payments
-                      </span>
-                      Pricing & Duration
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {/* Price Category */}
-                      <div className="md:col-span-1">
-                        <label className="flex flex-col flex-1">
-                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                            Price Category
-                          </span>
-                          <select
-                            name="priceCategory"
-                            value={formData.priceCategory || ""}
-                            onChange={handleChange}
-                            className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                          >
-                            <option value="">Select category</option>
-                            <option value="budget">💰 Budget</option>
-                            <option value="standard">⭐ Standard</option>
-                            <option value="premium">💎 Premium</option>
-                            <option value="luxury">👑 Luxury</option>
-                          </select>
-                        </label>
-                      </div>
-
-                      {/* Bar Rate / Original Rate */}
-                      <div className="md:col-span-1">
-                        <label className="flex flex-col flex-1">
-                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                            Original "Bar" Rate (₹)
-                          </span>
-                          <input
-                            name="barRate"
-                            value={formData.barRate || ""}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
-                            placeholder="e.g. 45000"
-                            type="number"
-                            min="0"
-                          />
-                        </label>
-                        <p className="text-[10px] text-slate-400 mt-1">Crossed-out price shown on widget</p>
-                      </div>
-
-                      {/* Group Discount Percentage */}
-                      <div className="md:col-span-1">
-                        <label className="flex flex-col flex-1">
-                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                            Group Discount (%)
-                          </span>
-                          <input
-                            name="groupDiscountPercentage"
-                            value={formData.groupDiscountPercentage || ""}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
-                            placeholder="e.g. 15"
-                            type="number"
-                            min="0"
-                            max="100"
-                          />
-                        </label>
-                        <p className="text-[10px] text-slate-400 mt-1">Applied automatically when guests ≥ 4</p>
-                      </div>
-                    </div>
-
-                    {/* Pricing Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                      {/* Per Person Price */}
-                      <div
-                        className={`relative rounded-2xl border-2 p-5 transition-all ${
-                          formData.pricePerPerson
-                            ? "border-primary/40 bg-primary/5 shadow-sm"
-                            : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-blue-600 text-[18px]">
-                              person
-                            </span>
-                          </span>
-                          <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                            Per Person
-                          </span>
-                        </div>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
-                            ₹
-                          </span>
-                          <input
-                            name="pricePerPerson"
-                            value={formData.pricePerPerson || ""}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 transition-colors font-semibold"
-                            placeholder="e.g. 15000"
-                            type="number"
-                            min="0"
-                          />
-                        </div>
-                        <p className="text-[11px] text-slate-400 mt-2">
-                          Standard price for one traveler
-                        </p>
-                      </div>
-
-                      {/* Per Couple Price */}
-                      <div
-                        className={`relative rounded-2xl border-2 p-5 transition-all ${
-                          formData.pricePerCouple
-                            ? "border-pink-400/40 bg-pink-50/50 dark:bg-pink-900/10 shadow-sm"
-                            : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="w-8 h-8 rounded-lg bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-pink-600 text-[18px]">
-                              favorite
-                            </span>
-                          </span>
-                          <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                            Per Couple
-                          </span>
-                          {formData.pricePerPerson &&
-                            formData.pricePerCouple &&
-                            Number(formData.pricePerCouple) <
-                              Number(formData.pricePerPerson) * 2 && (
-                              <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-auto">
-                                SAVE{" "}
-                                {Math.round(
-                                  100 -
-                                    (Number(formData.pricePerCouple) /
-                                      (Number(formData.pricePerPerson) * 2)) *
-                                      100,
-                                )}
-                                %
-                              </span>
-                            )}
-                        </div>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
-                            ₹
-                          </span>
-                          <input
-                            name="pricePerCouple"
-                            value={formData.pricePerCouple || ""}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 transition-colors font-semibold"
-                            placeholder="e.g. 25000"
-                            type="number"
-                            min="0"
-                          />
-                        </div>
-                        <p className="text-[11px] text-slate-400 mt-2">
-                          Discounted price for 2 travelers together
-                        </p>
-                      </div>
-
-                      {/* Per Group Price */}
-                      <div
-                        className={`relative rounded-2xl border-2 p-5 transition-all ${
-                          formData.pricePerGroup
-                            ? "border-emerald-400/40 bg-emerald-50/50 dark:bg-emerald-900/10 shadow-sm"
-                            : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-emerald-600 text-[18px]">
-                              groups
-                            </span>
-                          </span>
-                          <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                            Per Group
-                          </span>
-                          {formData.pricePerPerson &&
-                            formData.pricePerGroup &&
-                            formData.groupSize &&
-                            Number(formData.pricePerGroup) <
-                              Number(formData.pricePerPerson) *
-                                Number(formData.groupSize) && (
-                              <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-auto">
-                                SAVE{" "}
-                                {Math.round(
-                                  100 -
-                                    (Number(formData.pricePerGroup) /
-                                      (Number(formData.pricePerPerson) *
-                                        Number(formData.groupSize))) *
-                                      100,
-                                )}
-                                %
-                              </span>
-                            )}
-                        </div>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
-                            ₹
-                          </span>
-                          <input
-                            name="pricePerGroup"
-                            value={formData.pricePerGroup || ""}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-8 pr-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 transition-colors font-semibold"
-                            placeholder="e.g. 100000"
-                            type="number"
-                            min="0"
-                          />
-                        </div>
-                        <div className="mt-2 flex items-center gap-2">
-                          <span className="text-[11px] text-slate-400">
-                            Group size:
-                          </span>
-                          <input
-                            name="groupSize"
-                            value={formData.groupSize || ""}
-                            onChange={(e) =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                groupSize: parseInt(e.target.value) || "",
-                              }))
-                            }
-                            className="w-16 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-2 py-1 text-xs text-center focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                            placeholder="10"
-                            type="number"
-                            min="2"
-                          />
-                          <span className="text-[11px] text-slate-400">
-                            persons
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pricing Preview */}
-                  {(formData.pricePerPerson ||
-                    formData.pricePerCouple ||
-                    formData.pricePerGroup) && (
-                    <div className="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl px-5 py-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="material-symbols-outlined text-primary text-[18px]">
-                          receipt_long
-                        </span>
-                        <span className="text-sm font-bold text-teal-800 dark:text-teal-300">
-                          Price Preview (as seen by visitors)
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-4 text-sm">
-                        {formData.pricePerPerson && (
-                          <span className="inline-flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-teal-200 dark:border-teal-800">
-                            <span className="material-symbols-outlined text-blue-500 text-[16px]">
-                              person
-                            </span>
-                            <span className="font-bold text-slate-800 dark:text-slate-200">
-                              ₹
-                              {Number(formData.pricePerPerson).toLocaleString(
-                                "en-IN",
-                              )}
-                            </span>
-                            <span className="text-slate-400 text-xs">
-                              /person
-                            </span>
-                          </span>
-                        )}
-                        {formData.pricePerCouple && (
-                          <span className="inline-flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-pink-200 dark:border-pink-800">
-                            <span className="material-symbols-outlined text-pink-500 text-[16px]">
-                              favorite
-                            </span>
-                            <span className="font-bold text-slate-800 dark:text-slate-200">
-                              ₹
-                              {Number(formData.pricePerCouple).toLocaleString(
-                                "en-IN",
-                              )}
-                            </span>
-                            <span className="text-slate-400 text-xs">
-                              /couple
-                            </span>
-                          </span>
-                        )}
-                        {formData.pricePerGroup && (
-                          <span className="inline-flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                            <span className="material-symbols-outlined text-emerald-500 text-[16px]">
-                              groups
-                            </span>
-                            <span className="font-bold text-slate-800 dark:text-slate-200">
-                              ₹
-                              {Number(formData.pricePerGroup).toLocaleString(
-                                "en-IN",
-                              )}
-                            </span>
-                            <span className="text-slate-400 text-xs">
-                              /group of {formData.groupSize || "?"}
-                            </span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Section 2: Categorization */}
-                <div className="space-y-8">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                      Categorization &amp; Discovery
-                    </h2>
-                    <span className="text-xs text-slate-400 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-full">
-                      Controls where this tour appears on the homepage &amp;
-                      tours page
-                    </span>
-                  </div>
-
-                  {/* ── POPULAR DESTINATION QUICK-PICKS ── */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        📍 Popular Destination
-                        <span className="font-normal text-slate-400 ml-1">
-                          (Quick-pick from Bharat Darshan)
-                        </span>
-                      </p>
-                      <Link
-                        to="/admin/categorization"
-                        target="_blank"
-                        className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">
-                          edit
-                        </span>
-                        Manage destinations ↗
-                      </Link>
-                    </div>
-                    <div className="mb-3 relative max-w-sm mt-3">
-                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
-                      <input 
-                        type="search" 
-                        value={destSearchQuery} 
-                        onChange={(e) => setDestSearchQuery(e.target.value)} 
-                        placeholder="Search & filter states..." 
-                        className="w-full text-sm py-2 pl-9 pr-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none"
-                      />
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4 max-h-60 overflow-y-auto p-1 custom-scrollbar">
-                      {(
-                        categories.destinationStates?.India ||
-                        categories.destinationStates?.india ||
-                        []
-                      )
-                        .filter(s => s.toLowerCase().includes(destSearchQuery.toLowerCase()))
-                        .map((stateName) => {
-                          const currentStates = Array.isArray(formData.stateRegion)
-                            ? formData.stateRegion
-                            : formData.stateRegion
-                              ? [formData.stateRegion]
-                              : [];
-                          
-                          const normalizedState = displayState(stateName);
-                          const isSelected = currentStates.some(s => displayState(s) === normalizedState);
-
-                          return (
-                            <button
-                              key={stateName}
-                              type="button"
-                              onClick={() => {
-                                let newStates;
-                                if (isSelected) {
-                                  newStates = currentStates.filter((s) => displayState(s) !== normalizedState);
-                                } else {
-                                  // Add normalized version and deduplicate
-                                  const updated = [...currentStates, normalizedState];
-                                  newStates = [...new Set(updated.map(displayState))];
-                                }
-
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  destination: "India",
-                                  stateRegion: newStates,
-                                }));
-                              }}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-                                isSelected
-                                  ? "bg-primary text-white border-primary shadow-sm transform scale-105"
-                                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary"
-                              }`}
-                            >
-                              <span>{DEST_ICON_MAP[stateName] || "📍"}</span>{" "}
-                              {stateName}
-                            </button>
-                          );
-                        })}
-                    </div>
-                  </div>
-
-                  {/* ── POPULAR SUBREGIONS / CITIES ── */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2 mt-4">
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        🌆 Subregions & Cities
-                        <span className="font-normal text-slate-400 ml-1">
-                          (Specify key cities for this tour)
-                        </span>
-                      </p>
-                    </div>
-                    <div className="mb-3 relative max-w-sm mt-2">
-                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
-                      <input 
-                        type="search" 
-                        value={subreqSearchQuery} 
-                        onChange={(e) => setSubreqSearchQuery(e.target.value)} 
-                        placeholder="Search & filter cities..." 
-                        className="w-full text-sm py-2 pl-9 pr-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none"
-                      />
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4 max-h-60 overflow-y-auto p-1 custom-scrollbar">
-                      {(
-                        categories.subregions || 
-                        Object.values(categories.subregionsByState || {}).flat() ||
-                        []
-                      )
-                        .filter(s => s.toLowerCase().includes(subreqSearchQuery.toLowerCase()))
-                        .map((city) => {
-                          const currentCities = Array.isArray(formData.subregion)
-                            ? formData.subregion
-                            : formData.subregion
-                              ? [formData.subregion]
-                              : [];
-                          const isSelected = currentCities.includes(city);
-                          return (
-                            <button
-                              key={city}
-                              type="button"
-                              onClick={() => {
-                                const newCities = isSelected
-                                  ? currentCities.filter((s) => s !== city)
-                                  : [...currentCities, city];
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  subregion: newCities,
-                                }));
-                              }}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-                                isSelected
-                                  ? "bg-primary text-white border-primary shadow-sm transform scale-105"
-                                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary"
-                              }`}
-                            >
-                              <span>🌆</span> {city}
-                            </button>
-                          );
-                        })}
-                    </div>
-                  </div>
-
-                  {/* ── TRAVEL THEME CHIPS ── */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        🏷️ Travel Theme
-                        <span className="font-normal text-slate-400 ml-1">
-                          (Appears in "Travel by Theme" on homepage)
-                        </span>
-                      </p>
-                      <Link
-                        to="/admin/categorization"
-                        target="_blank"
-                        className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">
-                          edit
-                        </span>
-                        Manage themes ↗
-                      </Link>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {(categories.themes || []).map((t) => {
-                        const themeObj =
-                          typeof t === "string"
-                            ? {
-                                value: t,
-                                label: t.charAt(0).toUpperCase() + t.slice(1),
-                                icon: "🏷️",
-                              }
-                            : t;
-                        return (
-                          <button
-                            key={themeObj.value}
-                            type="button"
-                            onClick={() =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                theme: themeObj.value,
-                              }))
-                            }
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-                              formData.theme === themeObj.value
-                                ? "bg-primary text-white border-primary shadow-sm"
-                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary"
-                            }`}
-                          >
-                            <span>{themeObj.icon || "🏷️"}</span>{" "}
-                            {themeObj.label || themeObj.value}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* ── TOUR NATURE CHIPS ── */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        🤝 Tour Nature
-                        <span className="font-normal text-slate-400 ml-1">
-                          (Group type, Private, etc.)
-                        </span>
-                      </p>
-                      <Link
-                        to="/admin/categorization"
-                        target="_blank"
-                        className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">
-                          edit
-                        </span>
-                        Manage nature ↗
-                      </Link>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {(categories.natures || []).map((n) => {
-                        const val = typeof n === "string" ? n : n.value;
-                        const lab =
-                          typeof n === "string"
-                            ? n.charAt(0).toUpperCase() + n.slice(1)
-                            : n.label;
-                        return (
-                          <button
-                            key={val}
-                            type="button"
-                            onClick={() =>
-                              setFormData((prev) => ({ ...prev, nature: val }))
-                            }
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-                              formData.nature === val
-                                ? "bg-primary text-white border-primary shadow-sm"
-                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary hover:text-primary"
-                            }`}
-                          >
-                            <span>{formData.nature === val ? "✅" : "🤝"}</span>{" "}
-                            {lab}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* ── ACCOMMODATION STYLE CHIPS ── */}
-                  {(() => {
-                    if (formData.isDayTour) return null;
-
-                    return (
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                            🏨 Accommodation Style
-                            <span className="font-normal text-slate-400 ml-1">
-                              (Budget vs Luxury tier)
-                            </span>
-                          </p>
-                          <Link
-                            to="/admin/categorization"
-                            target="_blank"
-                            className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
-                          >
-                            <span className="material-symbols-outlined text-[14px]">
-                              edit
-                            </span>
-                            Manage styles ↗
-                          </Link>
-                        </div>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {(categories.styles || []).map((s) => {
-                            const val = typeof s === "string" ? s : s.value;
-                            const lab =
-                              typeof s === "string"
-                                ? s.charAt(0).toUpperCase() + s.slice(1)
-                                : s.label;
-                            return (
-                              <button
-                                key={val}
-                                type="button"
-                                onClick={() =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    style: val,
-                                  }))
-                                }
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-                                  formData.style === val
-                                    ? "bg-[#0a6c75] text-white border-[#0a6c75] shadow-md"
-                                    : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0a6c75] hover:text-[#0a6c75]"
-                                }`}
-                              >
-                                <span>
-                                  {formData.style === val ? "✨" : "🏨"}
-                                </span>{" "}
-                                {lab}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Live Preview Badge */}
-                  {((formData.stateRegion && formData.stateRegion.length > 0) || formData.theme) && (
-                    <div className="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl px-5 py-4 flex flex-wrap items-center gap-3">
-                      <span className="material-symbols-outlined text-primary text-[20px]">
-                        visibility
-                      </span>
-                      <span className="text-sm font-semibold text-teal-800 dark:text-teal-300">
-                        This tour will appear when visitors:
-                      </span>
-                      {formData.stateRegion && formData.stateRegion.length > 0 && (
-                        <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
-                          📍 Click "{Array.isArray(formData.stateRegion) ? formData.stateRegion.join(", ") : formData.stateRegion}" on homepage
-                        </span>
-                      )}
-                      {formData.theme && (
-                        <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
-                          🏷️ Filter by "
-                          {formData.theme.charAt(0).toUpperCase() +
-                            formData.theme.slice(1)}
-                          " theme
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-                {/* end Section 2 */}
-
-                {/* Section: Visibility, Requirements & Ordering */}
-                <div className="space-y-6 mt-8">
-                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary text-[20px]">
-                      tune
-                    </span>
-                    Visibility, Requirements & Ordering
-                  </h2>
-
-                  {/* Row: Min Persons, Status, Order */}
-                  <div className="flex flex-col md:flex-row gap-6 w-full">
-                    {/* Conditional: Min Persons for Group/Private Tours */}
-                    {(formData.nature === "group" ||
-                      formData.nature === "private") && (
-                      <div className="flex-1">
-                        <label className="flex flex-col h-full">
-                          <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                            Minimum Persons Required
-                          </span>
-                          <input
-                            name="minPersons"
-                            value={formData.minPersons}
-                            onChange={(e) =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                minPersons: parseInt(e.target.value),
-                              }))
-                            }
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
-                            min="1"
-                            type="number"
-                          />
-                          <p className="text-xs text-slate-500 mt-1">
-                            Required for "Group" or "Private"
-                          </p>
-                        </label>
-                      </div>
-                    )}
-
-                    {/* Status */}
-                    <div className="flex-1">
-                      <label className="flex flex-col h-full">
-                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                          Status
-                        </span>
-                        <select
-                          name="status"
-                          value={formData.status}
-                          onChange={handleChange}
-                          className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                          className="flex-1 py-1.5 bg-white text-slate-900 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-emerald-400 hover:text-white transition-all shadow-xl"
                         >
-                          <option value="active">Active</option>
-                          <option value="paused">Paused</option>
-                        </select>
-                        <p className="text-xs text-slate-500 mt-1">
-                          Controls public visibility
-                        </p>
-                      </label>
-                    </div>
-
-                    {/* Display Order */}
-                    <div className="flex-1">
-                      <label className="flex flex-col h-full">
-                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                          Display Hierarchy (Order)
-                        </span>
-                        <input
-                          name="order"
-                          value={formData.order}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              order: parseInt(e.target.value),
-                            }))
-                          }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
-                          min="0"
-                          placeholder="e.g. 1"
-                          type="number"
-                        />
-                        <p className="text-xs text-slate-500 mt-1">
-                          Lower numbers appear first
-                        </p>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Dynamic Home Page Placements */}
-                  <div className="space-y-3 mt-4">
-                    <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2 block">
-                      Show this tour on the Home Page in the following sections:
-                    </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {[
-                        "Popular Destinations",
-                        "Recommended Tour Packages",
-                        "Top 4 Metro Cities of India",
-                        "Travel by Train",
-                      ].map((section) => (
-                        <label
-                          key={section}
-                          className="flex items-center gap-3 cursor-pointer group bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors"
+                          Main Hero
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="w-8 h-8 bg-white/10 backdrop-blur-md text-white rounded-lg flex items-center justify-center hover:bg-red-500 transition-all shadow-xl border border-white/10"
                         >
-                          <div className="relative flex items-center justify-center">
-                            <input
-                              type="checkbox"
-                              name="homePagePlacements"
-                              checked={(
-                                formData.homePagePlacements || []
-                              ).includes(section)}
-                              onChange={(e) => {
-                                const currentPlacements =
-                                  formData.homePagePlacements || [];
-                                const newPlacements = e.target.checked
-                                  ? [...currentPlacements, section]
-                                  : currentPlacements.filter(
-                                      (p) => p !== section,
-                                    );
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  homePagePlacements: newPlacements,
-                                }));
-                              }}
-                              className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded cursor-pointer checked:bg-primary checked:border-primary transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                            />
-                            <span className="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">
-                              check
-                            </span>
-                          </div>
-                          <span className="text-slate-800 dark:text-slate-200 text-sm font-semibold group-hover:text-primary transition-colors">
-                            {section}
+                          <span className="material-symbols-outlined text-[16px]">
+                            delete
                           </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Is Featured */}
-                  <div className="mt-6 flex items-center">
-                    <label className="flex items-center cursor-pointer">
-                      <input
-                        name="isFeatured"
-                        type="checkbox"
-                        checked={formData.isFeatured || false}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            isFeatured: e.target.checked,
-                          }))
-                        }
-                        className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary focus:ring-2 cursor-pointer transition-colors"
-                      />
-                      <span className="ml-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        Feature on Home Page
-                      </span>
-                    </label>
-                    <p className="ml-8 mt-1 text-xs text-slate-500">
-                      Checking this box will display this tour in the "Featured
-                      Tours" section on the main landing page.
-                    </p>
-                  </div>
-                </div>
-                {/* Section 3: Itinerary */}
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                      Day-by-Day Itinerary
-                    </h2>
-                    <button
-                      type="button"
-                      onClick={handleAddDay}
-                      className="text-sm bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">
-                        add
-                      </span>{" "}
-                      Add Day
-                    </button>
-                  </div>
-
-                  <div className="space-y-4">
-                    {(formData.itinerary || []).map((day, index) => (
-                      <div
-                        key={index}
-                        className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50"
-                      >
-                        <div className="flex justify-between items-center mb-3">
-                          <h3 className="font-semibold text-slate-800 dark:text-slate-200">
-                            Day {day.day}
-                          </h3>
-                          {(formData.itinerary || []).length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveDay(index)}
-                              className="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1 rounded transition-colors"
-                            >
-                              <span className="material-symbols-outlined text-[18px]">
-                                delete
-                              </span>
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4">
-                          <label className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-1">
-                              Day Title
-                            </span>
-                            <input
-                              value={day.title || ""}
-                              onChange={(e) =>
-                                handleItineraryChange(
-                                  index,
-                                  "title",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                              placeholder="e.g. Arrival & Orientation"
-                              type="text"
-                            />
-                          </label>
-                          <label className="flex flex-col">
-                            <div className="flex items-center justify-between pb-1 flex-wrap gap-y-2">
-                              <span className="text-slate-700 dark:text-slate-300 text-sm font-medium gap-2 flex items-center">
-                                Day Description
-                              </span>
-                            </div>
-                            <RichTextEditor
-                               value={day.description || ""}
-                               onChange={(val) => handleItineraryChange(index, "description", val)}
-                               placeholder="Describe the activities for this day..."
-                               minHeight="min-h-[120px]"
-                            />
-                          </label>
-                          {/* Highlight Tags */}
-                          <label className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-1 flex items-center gap-1">
-                              <span className="material-symbols-outlined text-[14px] text-primary">
-                                label
-                              </span>
-                              Highlight Tags
-                            </span>
-                            <input
-                              value={
-                                typeof day.tags === "string"
-                                  ? day.tags
-                                  : Array.isArray(day.tags)
-                                    ? day.tags.join(", ")
-                                    : ""
-                              }
-                              onChange={(e) =>
-                                handleItineraryChange(
-                                  index,
-                                  "tags",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                              placeholder="e.g. Dal Lake, Gondola Ride, Gulmarg (comma-separated)"
-                              type="text"
-                            />
-                            <p className="text-xs text-slate-400 mt-1">
-                              These appear as pill-shaped tags on the tour
-                              detail page.
-                            </p>
-                          </label>
-                          {/* Services Checkboxes */}
-                          <div className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-2 flex items-center gap-1">
-                              <span className="material-symbols-outlined text-[14px] text-primary">
-                                room_service
-                              </span>
-                              Services Included
-                            </span>
-                            <div className="flex flex-wrap gap-3">
-                              {[
-                                {
-                                  id: "breakfast",
-                                  icon: "free_breakfast",
-                                  label: "Breakfast",
-                                  color: "text-amber-600",
-                                },
-                                {
-                                  id: "lunch",
-                                  icon: "lunch_dining",
-                                  label: "Lunch",
-                                  color: "text-green-600",
-                                },
-                                {
-                                  id: "dinner",
-                                  icon: "dinner_dining",
-                                  label: "Dinner",
-                                  color: "text-orange-600",
-                                },
-                                {
-                                  id: "stay",
-                                  icon: "hotel",
-                                  label: "Stay",
-                                  color: "text-blue-600",
-                                },
-                                {
-                                  id: "transfer",
-                                  icon: "airport_shuttle",
-                                  label: "Transfer",
-                                  color: "text-purple-600",
-                                },
-                                {
-                                  id: "sightseeing",
-                                  icon: "photo_camera",
-                                  label: "Sightseeing",
-                                  color: "text-teal-600",
-                                },
-                                {
-                                  id: "flight",
-                                  icon: "flight",
-                                  label: "Flight",
-                                  color: "text-sky-600",
-                                },
-                                {
-                                  id: "train",
-                                  icon: "train",
-                                  label: "Train",
-                                  color: "text-indigo-600",
-                                },
-                              ].map((svc) => {
-                                const currentServices = Array.isArray(
-                                  day.services,
-                                )
-                                  ? day.services
-                                  : [];
-                                const isSelected = currentServices.includes(
-                                  svc.id,
-                                );
-                                return (
-                                  <button
-                                    key={svc.id}
-                                    type="button"
-                                    onClick={() => {
-                                      const updated = isSelected
-                                        ? currentServices.filter(
-                                            (s) => s !== svc.id,
-                                          )
-                                        : [...currentServices, svc.id];
-                                      handleItineraryChange(
-                                        index,
-                                        "services",
-                                        updated,
-                                      );
-                                    }}
-                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
-                                      isSelected
-                                        ? "bg-primary/10 border-primary/40 text-primary shadow-sm"
-                                        : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-primary/30"
-                                    }`}
-                                  >
-                                    <span
-                                      className={`material-symbols-outlined text-[18px] ${svc.color}`}
-                                      style={{
-                                        fontVariationSettings:
-                                          "'FILL' 0, 'wght' 300",
-                                      }}
-                                    >
-                                      {svc.icon}
-                                    </span>
-                                    <span className="text-xs font-semibold">
-                                      {svc.label}
-                                    </span>
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </div>
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                </div>
-                {/* Section 4: FAQs */}
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                      Frequently Asked Questions
-                    </h2>
-                    <button
-                      type="button"
-                      onClick={handleAddFaq}
-                      className="text-sm bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">
-                        add
-                      </span>{" "}
-                      Add FAQ
-                    </button>
-                  </div>
-
-                  <div className="space-y-4">
-                    {(formData.faq || []).map((item, index) => (
-                      <div
-                        key={index}
-                        className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50"
-                      >
-                        <div className="flex justify-between items-center mb-3">
-                          <h3 className="font-semibold text-slate-800 dark:text-slate-200">
-                            Question {index + 1}
-                          </h3>
-                          {(formData.faq || []).length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveFaq(index)}
-                              className="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1 rounded transition-colors"
-                            >
-                              <span className="material-symbols-outlined text-[18px]">
-                                delete
-                              </span>
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4">
-                          <label className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-1">
-                              Question
-                            </span>
-                            <input
-                              value={item.question || ""}
-                              onChange={(e) =>
-                                handleFaqChange(
-                                  index,
-                                  "question",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                              placeholder="e.g. Is this tour suitable for children?"
-                              type="text"
-                            />
-                          </label>
-                          <label className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-1">
-                              Answer
-                            </span>
-                            <textarea
-                              value={item.answer || ""}
-                              onChange={(e) =>
-                                handleFaqChange(index, "answer", e.target.value)
-                              }
-                              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary min-h-[60px] resize-y"
-                              placeholder="Your answer..."
-                            ></textarea>
-                          </label>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {/* Section 4.5: Inclusions & Exclusions */}
-                <div className="space-y-6 mb-12">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                      Package Inclusions & Exclusions
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Inclusions */}
-                    <label className="flex flex-col flex-1">
-                      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                        Inclusions (one per line)
-                      </span>
-                      <textarea
-                        name="inclusions"
-                        value={Array.isArray(formData.inclusions) ? formData.inclusions.join('\n') : (formData.inclusions || "")}
-                        onChange={handleChange}
-                        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
-                        placeholder="Accommodation&#10;Meals&#10;Transportation"
-                      ></textarea>
-                    </label>
-                    {/* Exclusions */}
-                    <label className="flex flex-col flex-1">
-                      <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
-                        Exclusions (one per line)
-                      </span>
-                      <textarea
-                        name="exclusions"
-                        value={Array.isArray(formData.exclusions) ? formData.exclusions.join('\n') : (formData.exclusions || "")}
-                        onChange={handleChange}
-                        className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 min-h-[120px] resize-y"
-                        placeholder="Visas&#10;Personal travel insurance&#10;Optional activities"
-                      ></textarea>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Section 5: Media Gallery */}
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                      Media Gallery
-                    </h2>
-                    <span className="text-xs text-slate-400">
-                      {normalizeImages(formData.images).length} photo
-                      {normalizeImages(formData.images).length !== 1 ? "s" : ""}{" "}
-                      · First photo is the primary cover
-                    </span>
-                  </div>
-
-                  {/* Drop Zone - Using div + ref to avoid form submission interference */}
-                  <div
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // Programmatically trigger the hidden file input
-                      const fileInput = document.getElementById("file-upload");
-                      if (fileInput) fileInput.click();
-                    }}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onDragEnter={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onDragLeave={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (
-                        e.dataTransfer.files &&
-                        e.dataTransfer.files.length > 0
-                      ) {
-                        handleImageUpload({
-                          target: { files: e.dataTransfer.files },
-                        });
-                      }
-                    }}
-                    className="flex flex-col items-center justify-center w-full rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 px-6 py-10 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-primary/50 transition-all group"
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        document.getElementById("file-upload")?.click();
-                      }
-                    }}
-                  >
-                    <span className="material-symbols-outlined text-5xl text-slate-400 group-hover:text-primary transition-colors mb-3">
-                      add_photo_alternate
-                    </span>
-                    <p className="text-sm font-semibold text-primary">
-                      Click to upload photos
-                    </p>
-                    <p className="text-xs text-slate-400 mt-1">
-                      Select multiple photos at once · JPG, PNG, WEBP
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      Photos are auto-compressed to WebP for fast loading
-                    </p>
-                  </div>
-                  {/* Hidden file input - placed outside the clickable div to prevent event conflicts */}
-                  <input
-                    onChange={handleImageUpload}
-                    accept="image/*"
-                    className="sr-only"
-                    id="file-upload"
-                    multiple
-                    name="file-upload"
-                    type="file"
-                  />
-
-                  {/* Photo Grid with captions */}
-                  {normalizeImages(
-                    formData.images && formData.images.length > 0
-                      ? formData.images
-                      : formData.image
-                        ? [formData.image]
-                        : [],
-                  ).length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {normalizeImages(
-                        formData.images && formData.images.length > 0
-                          ? formData.images
-                          : formData.image
-                            ? [formData.image]
-                            : [],
-                      ).map((img, idx) => (
-                        <div
-                          key={idx}
-                          draggable
-                          onDragStart={() => handleDragStartImg(idx)}
-                          onDragOver={handleDragOverImg}
-                          onDrop={() => handleDropImg(idx)}
-                          className="group flex flex-col rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow cursor-move"
-                        >
-                          {/* Image thumbnail */}
-                          <div className="relative aspect-video bg-slate-100 dark:bg-slate-700">
-                            <div
-                              className="absolute inset-0 bg-center bg-cover"
-                              style={{ backgroundImage: `url(${img.url})` }}
-                            />
-                            {/* Overlay controls */}
-                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                              <span className="text-white/80 text-[10px] font-medium tracking-wide">
-                                Drag to reorder
-                              </span>
-                            </div>
-                            {/* Primary badge */}
-                            {idx === 0 && (
-                              <div className="absolute top-2 left-2 bg-primary text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-bold z-10 flex items-center gap-1">
-                                <span className="material-symbols-outlined text-[10px]">
-                                  star
-                                </span>{" "}
-                                Primary
-                              </div>
-                            )}
-                            {/* Delete button */}
-                            <button
-                              onClick={() => handleRemoveImage(idx)}
-                              type="button"
-                              className="absolute top-2 right-2 z-10 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md"
-                              title="Remove photo"
-                            >
-                              <span className="material-symbols-outlined text-[14px]">
-                                close
-                              </span>
-                            </button>
-                          </div>
-                          {/* Caption input */}
-                          <div className="p-2">
-                            <input
-                              type="text"
-                              value={img.caption || ""}
-                              onChange={(e) =>
-                                handleCaptionChange(idx, e.target.value)
-                              }
-                              placeholder={
-                                idx === 0
-                                  ? "e.g. Taj Mahal at sunrise"
-                                  : `Caption for photo ${idx + 1}…`
-                              }
-                              className="w-full text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 px-2.5 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-300 dark:placeholder-slate-600"
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Helper tip */}
-                  {normalizeImages(formData.images).length > 0 && (
-                    <p className="text-xs text-slate-400 flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[14px]">
-                        info
-                      </span>
-                      Captions appear below photos in the tour gallery on the
-                      user-facing tour page.
-                    </p>
-                  )}
-                </div>
-
-                {/* Redesigned Booking & Operation Dates section */}
-                <div className="mt-12 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:shadow-md">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="bg-primary/10 p-2 rounded-lg text-primary flex items-center justify-center">
-                      <span className="material-symbols-outlined text-[20px]">
-                        calendar_today
-                      </span>
-                    </div>
-                    <div>
-                      <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-none">
-                        Booking & Operation Dates
-                      </h2>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Define when travelers can book and when the tour
-                        operates.
-                      </p>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {/* Booking Period */}
-                    <div className="space-y-4 pt-1">
-                      <label className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                          <span className="w-1 h-1 bg-primary rounded-full"></span>{" "}
-                          Booking Starts
-                        </span>
-                        <input
-                          type="date"
-                          name="bookingStart"
-                          value={formData.bookingStart || ""}
-                          onChange={handleChange}
-                          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
-                        />
-                      </label>
-                    </div>
-
-                    <div className="space-y-4 pt-1">
-                      <label className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                          <span className="w-1 h-1 bg-red-400 rounded-full"></span>{" "}
-                          Booking Ends
-                        </span>
-                        <input
-                          type="date"
-                          name="bookingEnd"
-                          value={
-                            formData.noBookingEnd
-                              ? ""
-                              : formData.bookingEnd || ""
-                          }
-                          onChange={handleChange}
-                          disabled={formData.noBookingEnd}
-                          className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm ${formData.noBookingEnd ? "opacity-40 cursor-not-allowed" : ""}`}
-                        />
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={formData.noBookingEnd || false}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              noBookingEnd: e.target.checked,
-                              bookingEnd: e.target.checked
-                                ? ""
-                                : prev.bookingEnd,
-                            }))
-                          }
-                          className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
-                        />
-                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                          No end date (open-ended)
-                        </span>
-                      </label>
-                    </div>
-
-                    {/* Operation Period */}
-                    <div className="space-y-4 pt-1 sm:border-l sm:pl-6 border-slate-200 dark:border-slate-700 lg:border-l-0 lg:pl-0">
-                      <label className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                          <span className="w-1 h-1 bg-emerald-400 rounded-full"></span>{" "}
-                          Operation From
-                        </span>
-                        <input
-                          type="date"
-                          name="availableFrom"
-                          value={formData.availableFrom || ""}
-                          onChange={handleChange}
-                          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm"
-                        />
-                      </label>
-                    </div>
-
-                    <div className="space-y-4 pt-1 sm:pl-6 lg:pl-0 border-slate-200 dark:border-slate-700">
-                      <label className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                          <span className="w-1 h-1 bg-emerald-600 rounded-full"></span>{" "}
-                          Operation To
-                        </span>
-                        <input
-                          type="date"
-                          name="availableTo"
-                          value={
-                            formData.noAvailableTo
-                              ? ""
-                              : formData.availableTo || ""
-                          }
-                          onChange={handleChange}
-                          disabled={formData.noAvailableTo}
-                          className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm ${formData.noAvailableTo ? "opacity-40 cursor-not-allowed" : ""}`}
-                        />
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={formData.noAvailableTo || false}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              noAvailableTo: e.target.checked,
-                              availableTo: e.target.checked
-                                ? ""
-                                : prev.availableTo,
-                            }))
-                          }
-                          className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
-                        />
-                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                          No end date (ongoing)
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </form>
+                ))}
+              </div>
             </div>
-            {/* Form Actions Footer */}
-            <div className="bg-slate-50 dark:bg-slate-800/50 px-6 md:px-8 py-5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3 rounded-b-xl">
-              <button
-                onClick={() => navigate("/admin")}
-                className="px-5 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent"
-                type="button"
-              >
-                Discard Draft
-              </button>
-              <button
-                onClick={(e) => {
-                  handleSubmit(e, "draft");
-                }}
-                className="px-5 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/10 transition-colors border border-primary/20"
-                type="button"
-              >
-                Save as Draft
-              </button>
-              <button
-                type="button"
-                onClick={(e) => handleSubmit(e, isEdit ? formData.status : "active")}
-                className="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all shadow-sm flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined text-sm">
-                  check_circle
-                </span>
-                {isEdit ? "Update Tour" : "Publish Tour"}
-              </button>
-            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
