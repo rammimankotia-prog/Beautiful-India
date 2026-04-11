@@ -803,6 +803,50 @@ const TourDetailView = () => {
                     </div>
                   )}
 
+                  {/* FAQ */}
+                  {tour.faq && tour.faq.length > 0 && tour.faq.some(f => f.question) && (
+                    <div id="section-faq" className="flex flex-col gap-6 mt-12 scroll-mt-24">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Frequently Asked Questions</h3>
+                        <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-primary/10 text-primary rounded">{tour.faq.filter(f => f.question).length} Q&A</span>
+                      </div>
+                      <div className="flex flex-col gap-3">
+                        {tour.faq.filter(f => f.question).map((item, idx) => (
+                          <div
+                            key={idx}
+                            className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                              openFaq === idx
+                                ? 'border-primary/30 bg-primary/5 dark:bg-primary/10 shadow-sm'
+                                : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/20'
+                            }`}
+                          >
+                            <button
+                              onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                              className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                            >
+                              <span className={`text-base font-bold leading-snug ${
+                                openFaq === idx ? 'text-primary' : 'text-slate-800 dark:text-slate-100'
+                              }`}>
+                                {item.question}
+                              </span>
+                              <span className={`material-symbols-outlined text-[20px] shrink-0 transition-transform duration-300 ${
+                                openFaq === idx ? 'rotate-180 text-primary' : 'text-slate-400'
+                              }`}>expand_more</span>
+                            </button>
+                            {openFaq === idx && (
+                              <div className="px-6 pb-5">
+                                <div
+                                  className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed prose prose-sm dark:prose-invert"
+                                  dangerouslySetInnerHTML={{ __html: formatContent(item.answer) }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                 </div>
                 {/* Sidebar (Right Column) */}
                 <aside className="lg:col-span-1">
@@ -1073,7 +1117,7 @@ const TourDetailView = () => {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {similarTours.map((t, i) => (
-                    <Link to={`/tours/detail/${t.slug}`} key={i} className="group relative flex flex-col gap-4 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800/80 shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden">
+                    <Link to={`/tour/${t.slug || t.id}`} key={i} className="group relative flex flex-col gap-4 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800/80 shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden">
                        <div className="relative aspect-[4/3] overflow-hidden">
                           <img src={t.image} alt={t.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
