@@ -109,18 +109,18 @@ const AdminTourManagementDashboard = () => {
       });
     }
 
-    // Sort
-    list.sort((a, b) => {
-      const aId = parseInt(String(a.id || '').replace('BK-', '')) || 0;
-      const bId = parseInt(String(b.id || '').replace('BK-', '')) || 0;
-      const byDate = new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-      const byId = bId - aId;
+    // Sort — use original array index as insertion-order proxy
+    // (tours have slug-based IDs and no reliable createdAt)
+    const getIndex = (t) => {
+      const idx = tours.indexOf(t);
+      return idx === -1 ? 0 : idx;
+    };
 
-      if (sortOrder === 'newest') {
-        return byId !== 0 ? byId : byDate;
-      } else {
-        return byId !== 0 ? aId - bId : -byDate;
-      }
+    list.sort((a, b) => {
+      const aIdx = getIndex(a);
+      const bIdx = getIndex(b);
+      // "Newest first" → higher index (last added) comes first
+      return sortOrder === 'newest' ? bIdx - aIdx : aIdx - bIdx;
     });
 
     return list;
