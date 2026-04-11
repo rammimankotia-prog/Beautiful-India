@@ -207,6 +207,7 @@ const AdminNewTourUploadForm = () => {
     homePagePlacements: [],
     noBookingEnd: false,
     noAvailableTo: false,
+    groupDiscountMinGuests: 4,
   });
 
   const [destSearchQuery, setDestSearchQuery] = React.useState("");
@@ -1399,24 +1400,41 @@ const AdminNewTourUploadForm = () => {
                         <p className="text-[10px] text-slate-400 mt-1">Crossed-out price shown on widget</p>
                       </div>
 
-                      {/* Group Discount Percentage */}
+                      {/* Group Discount Percentage + Min Guests */}
                       <div className="md:col-span-1">
                         <label className="flex flex-col flex-1">
                           <span className="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal pb-2">
                             Group Discount (%)
                           </span>
-                          <input
-                            name="groupDiscountPercentage"
-                            value={formData.groupDiscountPercentage || ""}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
-                            placeholder="e.g. 15"
-                            type="number"
-                            min="0"
-                            max="100"
-                          />
+                          <div className="flex items-center gap-2">
+                            <input
+                              name="groupDiscountPercentage"
+                              value={formData.groupDiscountPercentage || ""}
+                              onChange={handleChange}
+                              className="flex-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400"
+                              placeholder="e.g. 15"
+                              type="number"
+                              min="0"
+                              max="100"
+                            />
+                            <div className="flex flex-col items-center shrink-0">
+                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap mb-1">Min. Guests</span>
+                              <input
+                                name="groupDiscountMinGuests"
+                                value={formData.groupDiscountMinGuests ?? 4}
+                                onChange={handleChange}
+                                className="w-16 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-2 py-3 text-sm text-center focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-bold"
+                                placeholder="4"
+                                type="number"
+                                min="2"
+                                max="50"
+                              />
+                            </div>
+                          </div>
                         </label>
-                        <p className="text-[10px] text-slate-400 mt-1">Applied automatically when guests ≥ 4</p>
+                        <p className="text-[10px] text-slate-400 mt-1">
+                          Applied automatically when guests ≥ {formData.groupDiscountMinGuests ?? 4}
+                        </p>
                       </div>
                     </div>
 

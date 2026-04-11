@@ -117,7 +117,7 @@ const TourDetailView = () => {
       currentBase = pCouple / 2;
     } else if (bookingGuests === 3) {
       currentBase = pPerson; 
-    } else if (bookingGuests >= 4) {
+    } else if (bookingGuests >= (parseInt(tour.groupDiscountMinGuests) || 4)) {
        // Group discount triggers
        if (tour.groupDiscountPercentage) {
           const discountVal = pPerson * (parseFloat(tour.groupDiscountPercentage) / 100);
