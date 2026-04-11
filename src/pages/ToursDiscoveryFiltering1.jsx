@@ -542,14 +542,41 @@ const ToursDiscoveryFiltering1 = () => {
                 <div className="relative z-10 w-full pb-8 px-4 sm:px-6 lg:px-8">
                     <div className="max-w-[1400px] mx-auto">
                         {/* Breadcrumb */}
-                        <nav className="flex items-center gap-1.5 text-white/60 text-xs font-medium mb-3">
-                            <Link to="/" className="hover:text-white transition-colors">Home</Link>
-                            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                            <span className="text-white/80">Tour Packages</span>
-                            {stateRegion !== 'All States' && (
+                        <nav aria-label="breadcrumb" className="flex items-center gap-1.5 text-white/60 text-xs font-semibold mb-3 flex-wrap">
+                            {/* India — always links to all tours */}
+                            <Link
+                              to="/tours"
+                              className="hover:text-white transition-colors uppercase tracking-widest"
+                            >
+                              India
+                            </Link>
+                            <span className="material-symbols-outlined text-[14px] text-white/40">chevron_right</span>
+
+                            {/* Tours — clickable only when a destination filter is active */}
+                            {destination !== 'Any Destination' ? (
+                                <Link
+                                  to="/tours"
+                                  className="hover:text-white transition-colors uppercase tracking-widest"
+                                >
+                                  Tours
+                                </Link>
+                            ) : (
+                                <span className="text-white uppercase tracking-widest">Tours</span>
+                            )}
+
+                            {/* Active destination crumb */}
+                            {destination !== 'Any Destination' && (
                                 <>
-                                    <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                                    <span className="text-white">{stateRegion}</span>
+                                    <span className="material-symbols-outlined text-[14px] text-white/40">chevron_right</span>
+                                    <span className="text-white font-black uppercase tracking-widest">{destination}</span>
+                                </>
+                            )}
+
+                            {/* Active state/region sub-crumb (only if different from destination) */}
+                            {stateRegion !== 'All States' && stateRegion !== destination && (
+                                <>
+                                    <span className="material-symbols-outlined text-[14px] text-white/40">chevron_right</span>
+                                    <span className="text-white/80 uppercase tracking-widest">{stateRegion}</span>
                                 </>
                             )}
                         </nav>
