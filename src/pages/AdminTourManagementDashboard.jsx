@@ -4,6 +4,8 @@ import { useCurrency } from '../context/CurrencyContext';
 import { useData } from '../context/DataContext';
 import { safeCacheTours, STORAGE_KEYS } from '../utils/storage';
 
+const TOURS_PER_PAGE = 15;
+
 const AdminTourManagementDashboard = () => {
   const { tours, setTours, loading, refreshData } = useData();
   const [viewMode, setViewMode] = React.useState('list'); // 'list' | 'folders'
@@ -12,6 +14,11 @@ const AdminTourManagementDashboard = () => {
   const [activeTab, setActiveTab] = React.useState('All Tours');
   const { formatPrice } = useCurrency();
   const [toastMsg, setToastMsg] = React.useState('');
+
+  // New state for search, sort, pagination
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [sortOrder, setSortOrder] = React.useState('newest'); // 'newest' | 'oldest'
+  const [currentPage, setCurrentPage] = React.useState(1);
 
   const showToast = (msg) => {
     setToastMsg(msg);
@@ -26,13 +33,17 @@ const AdminTourManagementDashboard = () => {
     }
   }, [loading, tours]);
 
+  // Reset page to 1 whenever filter/search/sort/tab changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, sortOrder, activeTab, selectedDest, selectedState, viewMode]);
+
   const fetchTours = () => {
     refreshData();
   };
 
   const persistToursToServer = async (updatedTours) => {
     try {
-      // Use absolute path for reliability
       const response = await fetch(`/api-save-tours.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,9 +68,95 @@ const AdminTourManagementDashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this tour package permanently?")) {
       const updated = tours.filter(t => t.id !== id);
-      saveTours(updated, true); // Immediate persistence
+      saveTours(updated, true);
       showToast('🗑️ Tour deleted successfully');
     }
+  };
+
+  // ── Derived filtered + sorted + paginated list ──────────────────────────────
+  const filteredAndSorted = React.useMemo(() => {
+    let list = [...tours];
+
+    // Tab filter
+    if (activeTab === 'Active') list = list.filter(t => t.status === 'active');
+    else if (activeTab === 'Train Tours') list = list.filter(t => t.transport === 'train');
+    else if (activeTab === 'Drafts') list = list.filter(t => t.status === 'draft');
+    else if (activeTab === 'Archived') list = list.filter(t => t.status === 'archived');
+
+    // Folder filter
+    if (viewMode === 'folders' && selectedDest && selectedState) {
+      list = list.filter(t => {
+        const tourDest = Array.isArray(t.destination) ? t.destination[0] : t.destination;
+        const tourState = Array.isArray(t.stateRegion) ? t.stateRegion[0] : t.stateRegion;
+        return (tourDest || 'Uncategorized') === selectedDest && (tourState || 'Unspecified') === selectedState;
+      });
+    }
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(t => {
+        const dest = Array.isArray(t.destination) ? t.destination.join(' ') : (t.destination || '');
+        const state = Array.isArray(t.stateRegion) ? t.stateRegion.join(' ') : (t.stateRegion || '');
+        return (
+          (t.title || '').toLowerCase().includes(q) ||
+          (t.slug || '').toLowerCase().includes(q) ||
+          (t.id || '').toLowerCase().includes(q) ||
+          dest.toLowerCase().includes(q) ||
+          state.toLowerCase().includes(q) ||
+          (t.description || '').toLowerCase().includes(q)
+        );
+      });
+    }
+
+    // Sort
+    list.sort((a, b) => {
+      const aId = parseInt(String(a.id || '').replace('BK-', '')) || 0;
+      const bId = parseInt(String(b.id || '').replace('BK-', '')) || 0;
+      const byDate = new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      const byId = bId - aId;
+
+      if (sortOrder === 'newest') {
+        return byId !== 0 ? byId : byDate;
+      } else {
+        return byId !== 0 ? aId - bId : -byDate;
+      }
+    });
+
+    return list;
+  }, [tours, activeTab, viewMode, selectedDest, selectedState, searchQuery, sortOrder]);
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / TOURS_PER_PAGE));
+  const paginatedTours = filteredAndSorted.slice(
+    (currentPage - 1) * TOURS_PER_PAGE,
+    currentPage * TOURS_PER_PAGE
+  );
+
+  const goToPage = (page) => {
+    setCurrentPage(Math.min(Math.max(1, page), totalPages));
+  };
+
+  // Render page number buttons (smart window)
+  const pageButtons = () => {
+    const pages = [];
+    const WINDOW = 2;
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - WINDOW && i <= currentPage + WINDOW)
+      ) {
+        pages.push(i);
+      } else if (
+        i === currentPage - WINDOW - 1 ||
+        i === currentPage + WINDOW + 1
+      ) {
+        pages.push('...');
+      }
+    }
+    // Deduplicate consecutive '...'
+    return pages.filter((v, idx, arr) => !(v === '...' && arr[idx - 1] === '...'));
   };
 
   return (
@@ -149,6 +246,51 @@ const AdminTourManagementDashboard = () => {
         </div>
       </div>
 
+      {/* ── Search + Sort toolbar ── */}
+      {(viewMode === 'list' || (viewMode === 'folders' && selectedDest && selectedState)) && (
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Search bar */}
+          <div className="relative flex-1 min-w-[240px] max-w-[480px]">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">search</span>
+            <input
+              id="tour-search-input"
+              type="text"
+              value={searchQuery}
+              onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              placeholder="Search tours by name, destination, keyword…"
+              className="w-full pl-12 pr-10 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0a6c75]/40 focus:border-[#0a6c75] transition-all shadow-sm"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => { setSearchQuery(''); setCurrentPage(1); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px]">close</span>
+              </button>
+            )}
+          </div>
+
+          {/* Sort selector */}
+          <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 shadow-sm">
+            <span className="material-symbols-outlined text-[18px] text-slate-400">sort</span>
+            <select
+              id="tour-sort-select"
+              value={sortOrder}
+              onChange={e => { setSortOrder(e.target.value); setCurrentPage(1); }}
+              className="bg-transparent text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest outline-none cursor-pointer"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
+
+          {/* Result count */}
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">
+            {filteredAndSorted.length} tour{filteredAndSorted.length !== 1 ? 's' : ''} found
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="min-h-[400px]">
         {loading ? (
@@ -219,29 +361,23 @@ const AdminTourManagementDashboard = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {[...tours]
-                          .sort((a, b) => {
-                            // Unified Latest First Sorting
-                            // 1. By ID (BK-XXX) descending
-                            const aId = parseInt(String(a.id || '').replace('BK-', '')) || 0;
-                            const bId = parseInt(String(b.id || '').replace('BK-', '')) || 0;
-                            if (bId !== aId) return bId - aId;
-                            
-                            // 2. By createdAt date if IDs are same/missing
-                            return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-                          })
-                          .filter(tour => {
-                             if (viewMode === 'folders' && selectedDest && selectedState) {
-                                const tourDest = Array.isArray(tour.destination) ? tour.destination[0] : tour.destination;
-                                const tourState = Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : tour.stateRegion;
-                                if ((tourDest || 'Uncategorized') !== selectedDest || (tourState || 'Unspecified') !== selectedState) return false;
-                             }
-                             if (activeTab === 'Active' && tour.status !== 'active') return false;
-                             if (activeTab === 'Train Tours' && tour.transport !== 'train') return false;
-                             if (activeTab === 'Drafts' && tour.status !== 'draft') return false;
-                             return true; 
-                          })
-                          .map(tour => (
+                        {paginatedTours.length === 0 ? (
+                          <tr>
+                            <td colSpan={5} className="px-8 py-16 text-center">
+                              <span className="material-symbols-outlined text-5xl text-slate-200 dark:text-slate-700 block mb-3">search_off</span>
+                              <p className="text-slate-400 font-bold italic text-sm">No tours match your search.</p>
+                              {searchQuery && (
+                                <button
+                                  onClick={() => setSearchQuery('')}
+                                  className="mt-4 text-[#0a6c75] font-black text-xs uppercase tracking-widest hover:underline"
+                                >
+                                  Clear search
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ) : (
+                          paginatedTours.map(tour => (
                             <tr key={tour.id} className="hover:bg-slate-50/50 transition-colors group">
                                <td className="px-8 py-6">
                                   <div className="flex items-center gap-4">
@@ -270,7 +406,7 @@ const AdminTourManagementDashboard = () => {
                                     onChange={(e) => {
                                       const newStatus = e.target.value;
                                       const updated = tours.map(t => t.id === tour.id ? { ...t, status: newStatus } : t);
-                                      saveTours(updated, true); // Immediate persistence
+                                      saveTours(updated, true);
                                       showToast(`✅ Status updated to ${newStatus}`);
                                     }}
                                   >
@@ -291,10 +427,62 @@ const AdminTourManagementDashboard = () => {
                                </td>
                             </tr>
                           ))
-                        }
+                        )}
                       </tbody>
                     </table>
                   </div>
+
+                  {/* ── Pagination Bar ── */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-between px-8 py-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+                      {/* Left: page info */}
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                        Page {currentPage} of {totalPages} &nbsp;·&nbsp; {filteredAndSorted.length} tours
+                      </p>
+
+                      {/* Right: page buttons */}
+                      <div className="flex items-center gap-1">
+                        {/* Prev */}
+                        <button
+                          id="pagination-prev"
+                          disabled={currentPage === 1}
+                          onClick={() => goToPage(currentPage - 1)}
+                          className="w-9 h-9 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white hover:text-[#0a6c75] disabled:opacity-30 disabled:pointer-events-none transition-all"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+                        </button>
+
+                        {pageButtons().map((btn, idx) =>
+                          btn === '...'
+                            ? <span key={`ellipsis-${idx}`} className="w-9 h-9 flex items-center justify-center text-slate-400 text-sm font-bold select-none">…</span>
+                            : (
+                              <button
+                                key={btn}
+                                id={`pagination-page-${btn}`}
+                                onClick={() => goToPage(btn)}
+                                className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-black transition-all border ${
+                                  currentPage === btn
+                                    ? 'bg-[#0a6c75] text-white border-[#0a6c75] shadow-sm'
+                                    : 'border-slate-200 dark:border-slate-700 text-slate-600 hover:bg-white hover:text-[#0a6c75]'
+                                }`}
+                              >
+                                {btn}
+                              </button>
+                            )
+                        )}
+
+                        {/* Next */}
+                        <button
+                          id="pagination-next"
+                          disabled={currentPage === totalPages}
+                          onClick={() => goToPage(currentPage + 1)}
+                          className="w-9 h-9 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white hover:text-[#0a6c75] disabled:opacity-30 disabled:pointer-events-none transition-all"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
