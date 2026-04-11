@@ -582,7 +582,7 @@ const BharatDarshanPage = () => {
                   <p className="text-slate-500 text-sm font-medium mb-4 leading-relaxed">
                     {city.description}
                   </p>
-                  <Link to="/tours" className="inline-flex items-center text-[#0a6c75] font-black text-sm hover:translate-x-1 transition-transform">
+                  <Link to={`/tours?destination=${encodeURIComponent(city.name)}`} className="inline-flex items-center text-[#0a6c75] font-black text-sm hover:translate-x-1 transition-transform">
                     View All Tours <span className="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
                   </Link>
                 </div>
