@@ -195,16 +195,23 @@ const BikeTourListingPage = () => {
                                 {/* Destination Selector */}
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-black uppercase tracking-[3px] text-slate-400">Enclave</label>
-                                    <select 
-                                        value={filters.destination}
-                                        onChange={(e) => updateFilter('destination', e.target.value)}
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest outline-none focus:border-primary transition-colors text-slate-700 dark:text-slate-200"
-                                    >
-                                        <option value="">All Destinations</option>
+                                    <div className="flex flex-col gap-3">
+                                        <button
+                                            onClick={() => updateFilter('destination', '')}
+                                            className={`text-left px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${!filters.destination ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-500 hover:bg-white/5'}`}
+                                        >
+                                            All Destinations
+                                        </button>
                                         {destinations.map(d => (
-                                            <option key={d} value={d} className="bg-slate-900">{d}</option>
+                                            <button
+                                                key={d}
+                                                onClick={() => updateFilter('destination', d)}
+                                                className={`text-left px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${filters.destination === d ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-500 hover:bg-white/5'}`}
+                                            >
+                                                {d}
+                                            </button>
                                         ))}
-                                    </select>
+                                    </div>
                                 </div>
 
                                 {/* Tour Type */}
