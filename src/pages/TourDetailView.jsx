@@ -386,10 +386,31 @@ const TourDetailView = () => {
                 {/* Left: Title + Badges */}
                 <div className="flex flex-col gap-3 flex-1">
                   {/* Breadcrumb */}
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[13px]">explore</span>
-                    {tour.destination || 'India'} · {tour.stateRegion || ''}
-                  </p>
+                  <div className="flex items-center gap-1 flex-wrap">
+                    <button
+                      onClick={() => navigate(-1)}
+                      className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary/10 hover:text-primary text-slate-500 dark:text-slate-400 transition-all mr-1 shrink-0"
+                      title="Go back"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+                    </button>
+                    <Link
+                      to="/tours"
+                      className="text-xs font-semibold text-slate-400 uppercase tracking-widest hover:text-primary transition-colors"
+                    >
+                      <span className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[13px]">explore</span>
+                        {tour.destination || 'India'}
+                      </span>
+                    </Link>
+                    <span className="text-slate-300 dark:text-slate-700 text-xs font-bold">·</span>
+                    <Link
+                      to={`/tours?destination=${encodeURIComponent(Array.isArray(tour.stateRegion) ? tour.stateRegion[0] : (tour.stateRegion || ''))}`}
+                      className="text-xs font-semibold text-slate-400 uppercase tracking-widest hover:text-primary transition-colors"
+                    >
+                      {Array.isArray(tour.stateRegion) ? tour.stateRegion.join(', ') : (tour.stateRegion || '')}
+                    </Link>
+                  </div>
                   <h1 className="text-4xl md:text-5xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white">{tour.title}</h1>
                   {/* Info Pills */}
                   <div className="flex flex-wrap items-center gap-2 mt-1">

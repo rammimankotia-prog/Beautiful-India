@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Beautiful India - Latest Tours</title>
+    <link>https://bhaktikishakti.com/tours</link>
+    <description>The latest tour packages to explore India's wonders.</description>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Mar 2026 12:00:00 +0530</lastBuildDate>
+    <item>
+      <title>Kashmir Tour Package</title>
+      <link>https://bhaktikishakti.com/tours/kashmir-tour-package</link>
+      <description>Experience the paradise on earth with our Kashmir tour package.</description>
+      <pubDate>Fri, 20 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Kerala Tour Package</title>
+      <link>https://bhaktikishakti.com/tours/kerala-tour-package</link>
+      <description>A Kerala tour offers beautiful backwaters, hill stations, beaches, and wildlife.</description>
+      <pubDate>Fri, 20 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+    <item>
+      <title>Golden Triangle Train Tour</title>
+      <link>https://bhaktikishakti.com/tours/golden-triangle-train-tour</link>
+      <description>Explore Delhi, Agra, and Jaipur by the luxurious Gatimaan Express and Shatabdi.</description>
+      <pubDate>Fri, 20 Mar 2026 00:00:00 +0530</pubDate>
+    </item>
+  </channel>
+</rss>

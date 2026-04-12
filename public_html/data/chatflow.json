@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "questionText": "Hello! I'm Bharat Bot, your personal tour matchmaker. Let's find your perfect escape. First, could you tell me your name?",
+    "options": []
+  },
+  {
+    "id": 2,
+    "questionText": "Nice to meet you, {userName}! What kind of experience are you looking for?",
+    "options": [
+      "Adventure",
+      "Relaxation",
+      "Cultural",
+      "Wildlife",
+      "Spiritual",
+      "Romantic"
+    ]
+  },
+  {
+    "id": 3,
+    "questionText": "Great choice! I have some amazing {userInterest} tours for you. Would you like to see them?",
+    "options": [
+      "Yes, Show Me My Matches"
+    ]
+  },
+  {
+    "id": 4,
+    "questionText": "Perfect! Here are my top recommendations for you based on your preferences.",
+    "options": [
+      "View Recommended Tours"
+    ]
+  }
+]
