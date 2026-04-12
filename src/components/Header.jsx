@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useAuth } from '../context/AuthContext';
@@ -17,6 +17,7 @@ const Header = () => {
     const [isToursDropdownOpen, setIsToursDropdownOpen] = useState(false);
     const [isMobileToursOpen, setIsMobileToursOpen] = useState(false);
     const [settings, setSettings] = useState(settingsData);
+    const tourDropdownRef = useRef(null);
 
     useEffect(() => {
         // Fetch latest settings from API
@@ -28,6 +29,17 @@ const Header = () => {
              } catch (err) {}
         };
         fetchSettings();
+    }, []);
+
+    // Close Tours dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (tourDropdownRef.current && !tourDropdownRef.current.contains(e.target)) {
+                setIsToursDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const navLinks = [
@@ -64,13 +76,13 @@ const Header = () => {
                     
                     if (link.subItems) {
                         return (
-                            <div 
+                            <div
                                 key={link.name}
-                                className="relative group"
-                                onMouseEnter={() => setIsToursDropdownOpen(true)}
-                                onMouseLeave={() => setIsToursDropdownOpen(false)}
+                                className="relative"
+                                ref={tourDropdownRef}
                             >
-                                <button 
+                                <button
+                                    onClick={() => setIsToursDropdownOpen(prev => !prev)}
                                     className={`flex items-center gap-1 text-[15px] font-medium transition-colors ${isActive ? 'text-white font-bold' : 'text-slate-300 hover:text-white'}`}
                                 >
                                     {link.name}
@@ -82,22 +94,24 @@ const Header = () => {
                                     )}
                                 </button>
 
-                                {/* Dropdown Menu */}
-                                <div className={`absolute left-1/2 -translate-x-1/2 mt-[12px] w-56 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl py-3 transition-all duration-300 origin-top overflow-hidden z-50 ${isToursDropdownOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
-                                    <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-xl -z-10"></div>
-                                    {link.subItems.map(subItem => (
-                                        <Link
-                                            key={subItem.name}
-                                            to={subItem.path}
-                                            className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all font-medium"
-                                        >
-                                            <span className="material-symbols-outlined text-[20px] text-primary">{subItem.icon}</span>
-                                            <span>{subItem.name}</span>
-                                            {subItem.isNew && (
-                                                <span className="ml-auto px-1.5 py-0.5 bg-primary text-[8px] font-black text-white rounded-md uppercase tracking-tighter">NEW</span>
-                                            )}
-                                        </Link>
-                                    ))}
+                                {/* Dropdown Menu — click-based, closes on link click or outside click */}
+                                <div className={`absolute left-1/2 -translate-x-1/2 top-full pt-3 w-60 z-50 transition-all duration-300 origin-top ${isToursDropdownOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
+                                    <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl py-2 overflow-hidden">
+                                        {link.subItems.map(subItem => (
+                                            <Link
+                                                key={subItem.name}
+                                                to={subItem.path}
+                                                onClick={() => setIsToursDropdownOpen(false)}
+                                                className="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-300 hover:text-white hover:bg-slate-800 transition-all font-medium"
+                                            >
+                                                <span className="material-symbols-outlined text-[20px] text-primary">{subItem.icon}</span>
+                                                <span>{subItem.name}</span>
+                                                {subItem.isNew && (
+                                                    <span className="ml-auto px-1.5 py-0.5 bg-primary text-[8px] font-black text-white rounded-md uppercase tracking-tighter">NEW</span>
+                                                )}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         );
