@@ -37,11 +37,12 @@ const Header = () => {
             path: '/tours',
             subItems: [
                 { name: 'All Tours', path: '/tours', icon: 'explore' },
-                { name: 'Tours by Train', path: '/tours/tours-by-train', icon: 'train' }
+                { name: 'Tours by Train', path: '/tours/tours-by-train', icon: 'train' },
+                { name: 'Bicycle Tours', path: '/tours/bike-tours', icon: 'pedal_bike', isNew: true }
             ]
         },
         { name: 'Destinations', path: '/guides' },
-        { name: 'Bicycle Tours', path: '/tours/bike-tours', isNew: true },
+        { name: 'Train Booking', path: '/booking/train', icon: 'confirmation_number' },
         { name: 'Pilgrimages', path: '/pilgrimage-tours', isNew: true },
         { name: 'About Us', path: '/about' },
         { name: 'Contact', path: '/contact' }
@@ -91,7 +92,10 @@ const Header = () => {
                                             className="flex items-center gap-3 px-4 py-2.5 text-[14px] text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all font-medium"
                                         >
                                             <span className="material-symbols-outlined text-[20px] text-primary">{subItem.icon}</span>
-                                            {subItem.name}
+                                            <span>{subItem.name}</span>
+                                            {subItem.isNew && (
+                                                <span className="ml-auto px-1.5 py-0.5 bg-primary text-[8px] font-black text-white rounded-md uppercase tracking-tighter">NEW</span>
+                                            )}
                                         </Link>
                                     ))}
                                 </div>
@@ -254,15 +258,19 @@ const Header = () => {
                                                 </span>
                                             </button>
                                             
-                                            <div className={`flex flex-col gap-1 pl-12 overflow-hidden transition-all duration-300 ${isMobileToursOpen ? 'max-h-40 opacity-100 mt-1 mb-2' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                                            <div className={`flex flex-col gap-1 pl-12 overflow-hidden transition-all duration-300 ${isMobileToursOpen ? 'max-h-56 opacity-100 mt-1 mb-2' : 'max-h-0 opacity-0 pointer-events-none'}`}>
                                                 {link.subItems.map(subItem => (
                                                     <Link 
                                                         key={subItem.name} 
                                                         to={subItem.path}
                                                         onClick={() => setIsMobileMenuOpen(false)}
-                                                        className={`text-sm py-2.5 transition-colors font-semibold ${currentPath === subItem.path ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+                                                        className={`flex items-center gap-2 text-sm py-2.5 transition-colors font-semibold ${currentPath === subItem.path ? 'text-white' : 'text-slate-400 hover:text-white'}`}
                                                     >
+                                                        <span className="material-symbols-outlined text-[16px] text-primary">{subItem.icon}</span>
                                                         {subItem.name}
+                                                        {subItem.isNew && (
+                                                            <span className="ml-auto px-1.5 py-0.5 bg-primary text-[8px] font-black text-white rounded-md uppercase tracking-tighter">NEW</span>
+                                                        )}
                                                     </Link>
                                                 ))}
                                             </div>
@@ -278,7 +286,7 @@ const Header = () => {
                                         className={`flex items-center gap-3 text-[16px] font-bold py-3 px-3 rounded-xl transition-all relative ${isActive ? 'bg-primary/10 text-primary' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
                                     >
                                         <span className="material-symbols-outlined text-[22px]">
-                                            {link.name === 'Home' ? 'home' : link.name === 'Destinations' ? 'map' : link.name === 'Bicycle Tours' ? 'pedal_bike' : link.name === 'Pilgrimages' ? 'temple_hindu' : link.name === 'About Us' ? 'info' : 'mail'}
+                                            {link.name === 'Home' ? 'home' : link.name === 'Destinations' ? 'map' : link.name === 'Train Booking' ? 'confirmation_number' : link.name === 'Pilgrimages' ? 'temple_hindu' : link.name === 'About Us' ? 'info' : 'mail'}
                                         </span>
                                         {link.name}
                                         {link.isNew && (
