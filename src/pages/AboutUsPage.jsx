@@ -165,14 +165,13 @@ const AboutUsPage = () => {
     },
   ];
 
-  const festivals = ['Holi', 'Diwali', 'Kumbh & Mahakumbh', 'Ganesh Chaturthi', 'Gudi Padwa', 'Baisakhi', 'Hornbill Festival', 'Rann Utsav', 'Eid', 'Christmas'];
   const services = [
     { icon: 'hotel', label: 'Hotel Bookings', desc: 'Premium stays from budget to luxury via our verified hotel network' },
     { icon: 'flight', label: 'Flight Tickets', desc: 'Domestic & international flights at minimal service charges' },
-    { icon: 'train', label: 'Train Bookings', desc: 'Tatkal and advance reservations across all Indian Railways routes' },
+    { icon: 'train', label: 'Train Bookings', desc: 'Tatkal and advance reservations across all Indian Railways routes', link: '/booking/train' },
     { icon: 'directions_car', label: 'Cab Services', desc: 'Comfortable, safe cabs for pick-ups, drops, and full-day hire' },
     { icon: 'tour', label: 'Guided Tours', desc: 'Expert-curated inbound & international tour packages' },
-    { icon: 'backpack', label: 'Custom Packages', desc: 'Tailor-made itineraries built around your dates, budget & interests' },
+    { icon: 'backpack', label: 'Custom Packages', desc: 'Tailor-made itineraries built around your dates, budget & interests', link: '/tours' },
   ];
 
   return (
@@ -373,15 +372,29 @@ const AboutUsPage = () => {
           <p className="text-slate-500 mt-3 text-base max-w-xl mx-auto">Our hotel and transport network lets us deliver individual services or full packages — always at minimal service charges.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {services.map((s, i) => (
-            <div key={i} className="group bg-white rounded-3xl p-7 border border-slate-100 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
-              <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary transition-colors rounded-2xl flex items-center justify-center mb-5">
-                <span className="material-symbols-outlined text-primary group-hover:text-white text-[24px] transition-colors">{s.icon}</span>
-              </div>
-              <h3 className="font-black text-slate-800 text-base mb-2">{s.label}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
-            </div>
-          ))}
+          {services.map((s, i) => {
+            const CardWrapper = s.link ? Link : 'div';
+            return (
+              <CardWrapper 
+                key={i} 
+                to={s.link} 
+                className={`group bg-white rounded-3xl p-7 border border-slate-100 hover:border-primary/20 hover:shadow-xl transition-all duration-300 ${s.link ? 'cursor-pointer block' : ''}`}
+              >
+                <div className="flex justify-between items-start mb-5">
+                  <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary transition-colors rounded-2xl flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary group-hover:text-white text-[24px] transition-colors">{s.icon}</span>
+                  </div>
+                  {s.link && (
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="material-symbols-outlined text-primary text-[20px]">arrow_outward</span>
+                    </div>
+                  )}
+                </div>
+                <h3 className={`font-black text-base mb-2 transition-colors ${s.link ? 'text-slate-800 group-hover:text-primary' : 'text-slate-800'}`}>{s.label}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
+              </CardWrapper>
+            );
+          })}
         </div>
       </section>
 
