@@ -107,7 +107,7 @@ const BharatBotChatPopup = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed bottom-28 right-8 w-[380px] h-[550px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300 z-[99999] border border-slate-200">
+        <div className="fixed bottom-24 sm:bottom-28 right-4 sm:right-8 w-[calc(100%-2rem)] sm:w-[380px] h-[calc(100dvh-140px)] sm:h-[550px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300 z-[99999] border border-slate-200">
             {/* Header: Based on reference image */}
             <div className="bg-[#0a6c75] p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -120,10 +120,10 @@ const BharatBotChatPopup = ({ onClose }) => {
             </div>
 
             {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8fafd] custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 bg-[#f8fafd] custom-scrollbar">
                 {messages.map(msg => (
                     <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[85%] p-3.5 rounded-2xl text-[13px] leading-relaxed shadow-sm ${
+                        <div className={`max-w-[85%] p-3 sm:p-3.5 rounded-2xl text-[12px] sm:text-[13px] leading-relaxed shadow-sm ${
                             msg.sender === 'bot' 
                             ? 'bg-[#e5ecf3] text-slate-700 rounded-bl-none' 
                             : 'bg-[#0a6c75] text-white rounded-br-none'
@@ -168,21 +168,21 @@ const BharatBotChatPopup = ({ onClose }) => {
             </div>
 
             {/* Footer: Based on reference image */}
-            <div className="p-4 bg-slate-100 border-t border-slate-200">
+            <div className="p-3 sm:p-4 bg-slate-100 border-t border-slate-200">
                 <div className="flex gap-2 bg-white rounded-xl p-1.5 shadow-sm border border-slate-200">
                     <input 
                         type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         placeholder="Select or type your destination..."
-                        className="flex-1 bg-transparent border-none outline-none px-3 text-[13px] text-slate-600 placeholder:text-slate-400"
+                        className="flex-1 bg-transparent border-none outline-none px-2 sm:px-3 text-[12px] sm:text-[13px] text-slate-600 placeholder:text-slate-400"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && inputText) handleNextStep(inputText);
                         }}
                     />
                     <button 
                         onClick={() => inputText && handleNextStep(inputText)}
-                        className="bg-[#3b82f6] text-white px-5 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest hover:bg-blue-600 transition-colors"
+                        className="bg-[#3b82f6] text-white px-3 sm:px-5 py-2 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest hover:bg-blue-600 transition-colors"
                     >
                         SEND
                     </button>
