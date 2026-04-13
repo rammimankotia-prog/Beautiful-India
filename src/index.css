@@ -86,7 +86,62 @@ body {
 
 /* ── Dark mode base ── */
 @media (prefers-color-scheme: dark) {
-  .article-content { color: #CBD5E1; }  /* slate-300 */
+
+  /* Body */
+  body {
+    background-color: #020617;   /* slate-950 */
+    color: #E2E8F0;              /* slate-200 */
+  }
+
+  /* Article base text */
+  .article-content {
+    color: #CBD5E1;              /* slate-300 */
+  }
+
+  /* Headings h1–h5: pitch-black → near-white */
+  .article-content h1,
+  .article-content h2,
+  .article-content h3,
+  .article-content h4,
+  .article-content h5 {
+    color: #F1F5F9;             /* slate-100 */
+  }
+
+  /* h6 stays teal — already works */
+
+  /* Bold/strong */
+  .article-content strong {
+    color: #F8FAFC;             /* slate-50  */
+    background-color: rgba(13, 148, 136, 0.12);
+    border-bottom-color: rgba(13, 148, 136, 0.35);
+  }
+
+  /* Blockquote */
+  .article-content blockquote {
+    color: #CBD5E1;
+    background-color: rgba(13, 148, 136, 0.08);
+  }
+
+  /* Table cells */
+  .article-content td {
+    color: #CBD5E1;
+    border-bottom-color: rgba(255,255,255,0.06);
+  }
+  .article-content tr:hover td {
+    background-color: rgba(13, 148, 136, 0.06);
+  }
+
+  /* Inline code */
+  .article-content code {
+    background-color: #1E293B;  /* slate-800 */
+    border-color: #334155;      /* slate-700 */
+    color: #5EEAD4;             /* teal-300  */
+  }
+
+  /* Figcaption */
+  .article-content figcaption {
+    color: #94A3B8;             /* slate-400 */
+  }
 }
 
 /* ── Drop cap on first paragraph ── */
