@@ -1,21 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const BharatBotTourMatchmakerChatbot = () => {
     const navigate = useNavigate();
+    const [flowSteps, setFlowSteps] = useState([]);
+    const [manualQs, setManualQs] = useState([]);
     const [messages, setMessages] = useState([]);
     const [step, setStep] = useState(1);
-    const [capturedData, setCapturedData] = useState({
-        name: '',
-        category: '',
-        destination: '',
-        email: '',
-        phone: '',
-        requestedTourId: '',
-        requestedTourName: '',
-    });
-    const [recommendedTours, setRecommendedTours] = useState([]);
+    const [capturedData, setCapturedData] = useState({});
     const [isBotTyping, setIsBotTyping] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const messagesEndRef = useRef(null);
@@ -26,160 +18,80 @@ const BharatBotTourMatchmakerChatbot = () => {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isBotTyping, isAnalyzing, recommendedTours]);
+    }, [messages, isBotTyping, isAnalyzing]);
 
-    // Initial Greeting
     useEffect(() => {
-        setIsBotTyping(true);
-        setTimeout(() => {
-            setIsBotTyping(false);
-            setMessages([{ 
-                id: 1, 
-                sender: 'bot', 
-                text: "Namaste! Welcome to Bhakti Ki Shakti. 🙏 Where are you dreaming of going...?" 
-            }]);
-        }, 1200);
+        // Fetch Flow
+        fetch(`${import.meta.env.BASE_URL}data/chatflow.json`)
+            .then(res => res.json())
+            .then(data => {
+                setFlowSteps(data);
+                if (data.length > 0) {
+                    setIsBotTyping(true);
+                    setTimeout(() => {
+                        setIsBotTyping(false);
+                        setMessages([{ id: 1, sender: 'bot', text: data[0].questionText }]);
+                    }, 1200);
+                }
+            })
+            .catch(err => console.error("Error fetching chatflow:", err));
+
+        // Fetch Manual Q&A
+        fetch(`${import.meta.env.BASE_URL}data/manual-qa.json`)
+            .then(res => res.json())
+            .then(data => setManualQs(data))
+            .catch(() => {});
     }, []);
 
-    const saveLead = async (dataToSave) => {
-        try {
-            await axios.post(`${import.meta.env.BASE_URL}api/v1/chatbot/lead`, {
-                name: dataToSave.name,
-                email: dataToSave.email,
-                phone: dataToSave.phone,
-                requestedTourId: dataToSave.requestedTourId,
-                requestedTourName: dataToSave.requestedTourName,
-                // store all chat history except recommendations list
-                conversationHistory: messages.map(m => ({ 
-                    role: m.sender, 
-                    content: m.text 
-                }))
-            });
-        } catch (error) {
-            console.error("Failed to capture lead", error);
-        }
-    };
-
-    const fetchRecommendations = async (queryText) => {
-        setIsAnalyzing(true);
-        try {
-            const res = await axios.post(`${import.meta.env.BASE_URL}api/v1/chatbot/recommend`, { text: queryText });
-            const tours = res.data;
-            setTimeout(() => {
-                setIsAnalyzing(false);
-                setRecommendedTours(tours);
-                if (tours.length > 0) {
-                     setMessages(prev => [...prev, { 
-                        id: Date.now() + 2, 
-                        sender: 'bot', 
-                        text: "I've found some brilliant options! Which of these catches your eye?" 
-                     }]);
-                } else {
-                     setMessages(prev => [...prev, { 
-                        id: Date.now() + 2, 
-                        sender: 'bot', 
-                        text: "I don't have exactly that right now, but our experts can customize it! Would you like me to send you details?" 
-                     }]);
-                }
-                setStep(4);
-            }, 3000); // simulate thinking
-        } catch (error) {
-            setIsAnalyzing(false);
-            console.error(error);
-            setStep(4);
-        }
-    };
-
-    const handleNextStep = (text, userChoice = null, tourChoice = null) => {
+    const handleNextStep = (text, userChoice = null) => {
         const userInput = userChoice || text;
-        if (!userInput && !tourChoice) return;
+        if (!userInput) return;
 
-        const newMessages = [...messages, { 
-            id: Date.now(), 
-            sender: 'user', 
-            text: tourChoice ? `I like: ${tourChoice.title}` : userInput 
-        }];
+        const currentStepConfig = flowSteps[step - 1];
+        const newMessages = [...messages, { id: Date.now(), sender: 'user', text: userInput }];
         setMessages(newMessages);
-        
-        let newData = { ...capturedData };
+        setIsBotTyping(true);
 
-        if (step === 1) {
-            // Received Destination Intent, ask Name
-            setIsBotTyping(true);
-            newData.destination = userInput;
+        setTimeout(() => {
+            let newData = { ...capturedData };
+            if (currentStepConfig?.mappedField) {
+                newData[currentStepConfig.mappedField] = userInput;
+            }
             setCapturedData(newData);
-            setTimeout(() => {
+
+            // Check for triggered action
+            if (currentStepConfig?.action === 'RECOMMEND_TOURS') {
                 setIsBotTyping(false);
-                setMessages(prev => [...prev, { 
-                    id: Date.now() + 1, 
-                    sender: 'bot', 
-                    text: "Excellent choice! Before I pull up the best itineraries, who do I have the pleasure of chatting with?" 
-                }]);
-                setStep(2);
-            }, 800);
-        } 
-        else if (step === 2) {
-            // Received Name, ask Preference
-            setIsBotTyping(true);
-            newData.name = userInput;
-            setCapturedData(newData);
-            setTimeout(() => {
-                setIsBotTyping(false);
-                setMessages(prev => [...prev, { 
-                    id: Date.now() + 1, 
-                    sender: 'bot', 
-                    text: `Nice to meet you, ${userInput}! Are you looking for a Spiritual Pilgrimage, a Motorcycle Expedition, or a Leisure Holiday?` 
-                }]);
-                setStep(3);
-            }, 800);
-        }
-        else if (step === 3) {
-             // Received Category, Fetch Recommendations
-             newData.category = userInput;
-             setCapturedData(newData);
-             const queryCombo = `${newData.destination} ${newData.category}`;
-             fetchRecommendations(queryCombo);
-        }
-        else if (step === 4) {
-             // Received Selected Tour
-             setIsBotTyping(true);
-             if (tourChoice) {
-                 newData.requestedTourId = tourChoice._id;
-                 newData.requestedTourName = tourChoice.title;
-             }
-             setCapturedData(newData);
-             setTimeout(() => {
-                setIsBotTyping(false);
-                setMessages(prev => [...prev, { 
-                    id: Date.now() + 1, 
-                    sender: 'bot', 
-                    text: "Great choice! Our full itinerary has day-by-day details and pricing. Where should I send the complete PDF? Please enter your Email ID or WhatsApp Number." 
-                }]);
-                setStep(5);
-             }, 800);
-        }
-        else if (step === 5) {
-             // Received Contact Info, Save Lead
-             setIsBotTyping(true);
-             if (userInput.includes('@')) {
-                 newData.email = userInput;
-             } else {
-                 newData.phone = userInput;
-             }
-             setCapturedData(newData);
-             
-             saveLead(newData).then(() => {
+                setIsAnalyzing(true);
+                handleViewRecommendations(newData);
+                return;
+            }
+
+            let nextStepNum = step + 1;
+            if (nextStepNum <= flowSteps.length) {
+                 let botResponse = flowSteps[nextStepNum - 1].questionText;
+                 
+                 // Inject variables
+                 Object.keys(newData).forEach(key => {
+                     botResponse = botResponse.replace(`{${key}}`, newData[key]);
+                 });
+                 
                  setTimeout(() => {
                     setIsBotTyping(false);
-                    setMessages(prev => [...prev, { 
-                        id: Date.now() + 1, 
-                        sender: 'bot', 
-                        text: "Got it! Thank you 🙏. Our travel expert will send the details and reach out shortly. Have a great day!" 
-                    }]);
-                    setStep(6);
+                    setStep(nextStepNum);
+                    setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: botResponse }]);
                  }, 800);
-             });
-        }
+            } else {
+                setIsBotTyping(false);
+            }
+        }, 500);
+    };
+
+    const handleViewRecommendations = async (finalData) => {
+        // Intelligence Loop
+        setTimeout(() => {
+            navigate('/bharatbot/recommendations', { state: finalData || capturedData });
+        }, 3500);
     };
 
     return (
@@ -215,8 +127,8 @@ const BharatBotTourMatchmakerChatbot = () => {
                         {/* Progress Tracker */}
                         <div className="px-10 py-5 bg-slate-50/30 dark:bg-slate-800/20 border-b border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
                              <div className="flex gap-2">
-                                {[1, 2, 3, 4, 5, 6].map((st) => (
-                                    <div key={st} className={`h-1 rounded-full transition-all duration-700 ${st <= step ? 'w-8 bg-primary' : 'w-4 bg-slate-200 dark:bg-slate-800'}`}></div>
+                                {[...Array(Math.max(4, flowSteps.length))].map((_, i) => (
+                                    <div key={i} className={`h-1 rounded-full transition-all duration-700 ${i < step ? 'w-8 bg-primary' : 'w-4 bg-slate-200 dark:bg-slate-800'}`}></div>
                                 ))}
                              </div>
                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Matching Module 1.0</span>
@@ -268,64 +180,24 @@ const BharatBotTourMatchmakerChatbot = () => {
                                     </div>
                                     <div className="text-center space-y-2">
                                         <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest">Analyzing Expedition Catalog</h3>
-                                        <p className="text-sm text-slate-400 font-bold italic">Cross-referencing parameters with our travel index...</p>
+                                        <p className="text-sm text-slate-400 font-bold italic">Cross-referencing {capturedData.userInterest || 'adventure'} archetypes with your preferences...</p>
                                     </div>
                                 </div>
                             )}
-
-                            {/* Render Recommended Tours */}
-                            {!isAnalyzing && step === 4 && recommendedTours.length > 0 && (
-                                <div className="flex flex-col gap-3 py-4 animate-in slide-in-from-bottom-5">
-                                    {recommendedTours.map((tour) => (
-                                        <button 
-                                            key={tour._id}
-                                            onClick={() => handleNextStep('', null, tour)}
-                                            className="text-left bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 p-5 rounded-[24px] hover:border-primary hover:bg-primary/5 transition-all group flex items-center justify-between"
-                                        >
-                                            <div className="pr-4">
-                                                <h4 className="font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">{tour.title}</h4>
-                                                <p className="text-sm text-slate-500 mt-1 line-clamp-2">{tour.chatbotTeaser}</p>
-                                            </div>
-                                            <div className="size-10 shrink-0 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center group-hover:bg-primary transition-colors">
-                                                <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">arrow_forward</span>
-                                            </div>
-                                        </button>
-                                    ))}
-                                    <button 
-                                        onClick={() => handleNextStep('None of these', null, { _id: 'custom', title: 'I want a Custom Package' })}
-                                        className="text-center mt-2 text-sm font-bold text-primary hover:underline"
-                                    >
-                                        None of these, I want a Custom Route
-                                    </button>
-                                </div>
-                            )}
-                            
                             <div ref={messagesEndRef} />
                         </div>
 
                         {/* Interactive Zone */}
                         <div className="p-8 border-t border-slate-100 dark:border-slate-800/50 bg-white/50 dark:bg-slate-900/50">
-                            {!isAnalyzing && step !== 6 && (
+                            {flowSteps.length > 0 && Math.min(step, flowSteps.length) === step && !isAnalyzing && (
                                 <div className="space-y-4">
-                                    {step === 3 ? (
-                                        <div className="flex flex-wrap gap-2 justify-center">
-                                            {['Spiritual Pilgrimage', 'Motorcycle Expedition', 'Leisure & Heritage', 'Wildlife'].map(choice => (
-                                                <button 
-                                                    key={choice}
-                                                    onClick={() => handleNextStep('', choice)}
-                                                    className="px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black uppercase tracking-widest hover:border-primary hover:bg-primary/5 transition-all shadow-sm active:scale-95"
-                                                >
-                                                    {choice}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    ) : step !== 4 && (
+                                    {(!flowSteps[step-1].options || flowSteps[step-1].options.length === 0) ? (
                                         <div className="relative group">
                                             <input 
                                                 autoFocus
-                                                type={step === 5 ? "text" : "text"}
-                                                className="w-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 pr-16 text-sm font-bold shadow-sm focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-slate-900 dark:text-white"
-                                                placeholder={step === 5 ? "Enter Email or Phone..." : "Type your answer..."}
+                                                type={flowSteps[step-1].type || 'text'}
+                                                className="w-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 pr-16 text-sm font-bold shadow-sm focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none"
+                                                placeholder={`Type your ${flowSteps[step-1].mappedField || 'answer'}...`}
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter' && e.target.value) {
                                                         handleNextStep(e.target.value);
@@ -333,24 +205,23 @@ const BharatBotTourMatchmakerChatbot = () => {
                                                     }
                                                 }}
                                             />
-                                            <button 
-                                               onClick={(e) => {
-                                                  const input = e.currentTarget.previousElementSibling;
-                                                  if(input.value) {
-                                                      handleNextStep(input.value);
-                                                      input.value = '';
-                                                  }
-                                               }}
-                                               className="absolute right-4 top-1/2 -translate-y-1/2 size-10 bg-primary text-white rounded-2xl flex items-center justify-center hover:scale-105 transition-transform">
-                                                <span className="material-symbols-outlined">send</span>
+                                            <button className="absolute right-4 top-1/2 -translate-y-1/2 size-10 bg-primary text-white rounded-2xl flex items-center justify-center hover:scale-105 transition-transform">
+                                                <span className="material-symbols-outlined">arrow_forward</span>
                                             </button>
                                         </div>
+                                    ) : (
+                                        <div className="flex flex-wrap gap-2 justify-center">
+                                            {flowSteps[step-1].options.map(choice => (
+                                                <button 
+                                                    key={choice}
+                                                    onClick={() => handleNextStep('', choice)}
+                                                    className="px-8 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black uppercase tracking-widest hover:border-primary hover:bg-primary/5 transition-all shadow-sm active:scale-95"
+                                                >
+                                                    {choice}
+                                                </button>
+                                            ))}
+                                        </div>
                                     )}
-                                </div>
-                            )}
-                            {step === 6 && (
-                                <div className="text-center py-4 text-sm font-bold text-slate-400">
-                                    Conversation Finished. <a href="/tours" className="text-primary hover:underline ml-2">Browse All Tours</a>
                                 </div>
                             )}
                         </div>

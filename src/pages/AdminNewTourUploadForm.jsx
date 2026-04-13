@@ -195,6 +195,7 @@ const AdminNewTourUploadForm = () => {
     availableFrom: "",
     availableTo: "",
     cityPath: "",
+    duration: "",
     isDayTour: false,
     hotelCategory: [],
     accommodationType: "mixed",
@@ -207,11 +208,6 @@ const AdminNewTourUploadForm = () => {
     noBookingEnd: false,
     noAvailableTo: false,
     groupDiscountMinGuests: 4,
-    chatbotCategory: "",
-    chatbotRegions: [],
-    chatbotTags: [],
-    chatbotTeaser: "",
-    isChatbotEnabled: true,
   });
 
   const [destSearchQuery, setDestSearchQuery] = React.useState("");
@@ -2017,104 +2013,7 @@ const AdminNewTourUploadForm = () => {
                 </div>
                 {/* end Section 2 */}
 
-                <div className="space-y-8 mt-8">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                       <span className="material-symbols-outlined text-primary text-[20px]">smart_toy</span>
-                       Chatbot Configuration
-                    </h2>
-                    <span className="text-xs text-slate-400 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-full">
-                       Configure how Bharat Bot recommends this tour
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          name="isChatbotEnabled"
-                          type="checkbox"
-                          checked={formData.isChatbotEnabled}
-                          onChange={(e) => setFormData(prev => ({ ...prev, isChatbotEnabled: e.target.checked }))}
-                          className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary focus:ring-2 cursor-pointer transition-colors"
-                        />
-                        <span className="ml-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                          Enable for Chatbot Recommendations
-                        </span>
-                      </label>
-                  </div>
-
-                  {formData.isChatbotEnabled && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 dark:bg-slate-800/30 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
-                         {/* Chatbot Category */}
-                         <div className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-2">Chatbot Category</span>
-                            <select
-                              value={formData.chatbotCategory || ""}
-                              onChange={(e) => setFormData(prev => ({ ...prev, chatbotCategory: e.target.value }))}
-                              className="custom-select w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary"
-                            >
-                                <option value="">-- Select Category --</option>
-                                <option value="Pilgrimage">Spiritual Pilgrimage</option>
-                                <option value="Bike Tours">Motorcycle Expedition</option>
-                                <option value="Heritage">Heritage & Culture</option>
-                                <option value="Wildlife">Wildlife & Nature</option>
-                                <option value="Leisure">Leisure Holiday</option>
-                            </select>
-                         </div>
-
-                         {/* Chatbot Regions */}
-                         <div className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-2">Regions / Destinations</span>
-                            <input
-                              type="text"
-                              value={Array.isArray(formData.chatbotRegions) ? formData.chatbotRegions.join(", ") : formData.chatbotRegions}
-                              onChange={(e) => {
-                                 const valArray = e.target.value.split(",").map(v => v.trim()).filter(Boolean);
-                                 setFormData(prev => ({ ...prev, chatbotRegions: valArray }));
-                              }}
-                              placeholder="e.g. Kashmir, Himachal, Goa"
-                              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary"
-                            />
-                            <p className="text-[10px] text-slate-500 mt-1">Comma-separated regions for keyword matching</p>
-                         </div>
-
-                         {/* Chatbot Tags */}
-                         <div className="flex flex-col">
-                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium pb-2">Keyword Tags</span>
-                            <input
-                              type="text"
-                              value={Array.isArray(formData.chatbotTags) ? formData.chatbotTags.join(", ") : formData.chatbotTags}
-                              onChange={(e) => {
-                                 const valArray = e.target.value.split(",").map(v => v.trim()).filter(Boolean);
-                                 setFormData(prev => ({ ...prev, chatbotTags: valArray }));
-                              }}
-                              placeholder="e.g. bullet, high altitude, couple"
-                              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary"
-                            />
-                            <p className="text-[10px] text-slate-500 mt-1">Comma-separated micro-tags for matching user prompts</p>
-                         </div>
-
-                         {/* Chatbot Teaser */}
-                         <div className="flex flex-col md:col-span-2">
-                             <div className="flex justify-between items-center pb-2">
-                                <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Chatbot Teaser (Pitch)</span>
-                                <span className={`text-[10px] font-bold ${(formData.chatbotTeaser || '').length > 100 ? 'text-red-500' : 'text-slate-400'}`}>
-                                    {(formData.chatbotTeaser || '').length} / 100
-                                </span>
-                             </div>
-                             <textarea
-                                value={formData.chatbotTeaser || ""}
-                                onChange={(e) => setFormData(prev => ({ ...prev, chatbotTeaser: e.target.value }))}
-                                maxLength={100}
-                                placeholder="A punchy 100-character description for the chat UI."
-                                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 text-sm focus:border-primary resize-none h-20"
-                             />
-                         </div>
-                      </div>
-                  )}
-                </div>
-
-                {/* Section API: Visibility, Requirements & Ordering */}
+                {/* Section: Visibility, Requirements & Ordering */}
                 <div className="space-y-6 mt-8">
                   <h2 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary text-[20px]">
