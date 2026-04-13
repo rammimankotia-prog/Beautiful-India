@@ -19,7 +19,7 @@ const AdminLeadsDashboard = () => {
     const fetchLeads = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api-save-leads.php?t=${Date.now()}`, {
+            const res = await fetch(`/api/leads?t=${Date.now()}`, {
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
                     'Pragma': 'no-cache',
@@ -65,26 +65,37 @@ const AdminLeadsDashboard = () => {
         showToast(`Status updated to ${newStatus}`);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm("Delete this inquiry?")) {
-            const updated = leads.filter(l => l.id !== id);
-            saveLeadsLocally(updated);
-            if (viewLead && viewLead.id === id) setViewLead(null);
-            showToast("Inquiry deleted");
+            try {
+                const response = await fetch(`/api/leads?id=${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    const updated = leads.filter(l => l.id !== id);
+                    setLeads(updated);
+                    localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(updated));
+                    if (viewLead && viewLead.id === id) setViewLead(null);
+                    showToast("Inquiry deleted permanently");
+                } else {
+                    showToast("Error deleting from server");
+                }
+            } catch (err) {
+                console.error("Delete error:", err);
+                showToast("Network error during deletion");
+            }
         }
     };
 
     const handleSync = async () => {
         try {
-            const response = await fetch(`/api-save-leads.php`, {
+            const response = await fetch(`/api/leads`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(leads)
             });
             if (response.ok) showToast("System updated!");
-            else showToast("Stage for next update");
+            else showToast("Sync failed");
         } catch (error) {
-            showToast("Stage for next update");
+            showToast("Sync error");
         }
     };
 
