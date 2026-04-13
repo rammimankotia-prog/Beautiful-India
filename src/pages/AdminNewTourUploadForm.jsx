@@ -195,7 +195,6 @@ const AdminNewTourUploadForm = () => {
     availableFrom: "",
     availableTo: "",
     cityPath: "",
-    duration: "",
     isDayTour: false,
     hotelCategory: [],
     accommodationType: "mixed",
