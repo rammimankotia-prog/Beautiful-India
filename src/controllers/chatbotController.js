@@ -1,33 +1,5 @@
+import Tour from '../models/Tour.js';
 import Lead from '../models/Lead.js';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Helper to update local JSON data (Sync with Dashboard)
-const syncToJson = (filename, newEntry) => {
-    try {
-        const dataPath = path.join(__dirname, '../../src/data', filename);
-        const publicPath = path.join(__dirname, '../../public/data', filename);
-        
-        let data = [];
-        if (fs.existsSync(dataPath)) {
-            data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-        }
-        
-        data.push(newEntry);
-        const jsonStr = JSON.stringify(data, null, 2);
-        
-        fs.writeFileSync(dataPath, jsonStr, 'utf8');
-        if (fs.existsSync(path.dirname(publicPath))) {
-            fs.writeFileSync(publicPath, jsonStr, 'utf8');
-        }
-    } catch (err) {
-        console.error("JSON Sync Error:", err);
-    }
-};
 
 // @desc    Recommend tours based on text query (simple keyword matching)
 // @route   POST /api/v1/chatbot/recommend
@@ -113,20 +85,6 @@ export const captureLead = async (req, res) => {
         });
 
         await newLead.save();
-
-        // Sync to JSON for Overview Dashboard compatibility
-        syncToJson('leads.json', {
-            id: newLead._id,
-            name: name,
-            email: email,
-            phone: phone,
-            to: requestedTourName || 'General Inquiry',
-            source: 'Chatbot',
-            timestamp: new Date().toISOString(),
-            createdAt: new Date().toISOString(),
-            status: 'New'
-        });
-
         res.status(201).json({ success: true, message: 'Lead captured effectively' });
     } catch (error) {
         res.status(400).json({ message: error.message });

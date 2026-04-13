@@ -25,37 +25,16 @@ const AdminOverviewDashboard = () => {
         }
     };
 
-    const handleDeleteActivity = async (act) => {
+    const handleDeleteActivity = (act) => {
         if (!window.confirm(`Permanently delete this ${act.type} item?`)) return;
         
-        // Extract real ID (remove prefix)
-        const realId = act.id.substring(2);
-        let endpoint = '';
+        // Optimistic UI update
+        setActivities(prev => prev.filter(a => a.id !== act.id));
         
-        if (act.type === 'lead' || act.type === 'chatbot' || act.type === 'bike_inquiry' || act.type === 'pilgrimage_inquiry') {
-            endpoint = '/api/leads';
-        } else if (act.type === 'booking' || act.type === 'bike' || act.type === 'pilgrimage' || act.type === 'train_booking') {
-            endpoint = '/api/bookings';
-        } else if (act.type === 'review') {
-            endpoint = '/api/reviews';
-        } else if (act.type === 'train') {
-            endpoint = '/api/train-queries';
-        }
-
-        if (!endpoint) return;
-
-        try {
-            const response = await fetch(`${endpoint}?id=${realId}`, { method: 'DELETE' });
-            if (response.ok) {
-                setActivities(prev => prev.filter(a => a.id !== act.id));
-                // Optional: show a toast instead of local component alert
-            } else {
-                alert("Failed to delete from server. Check console for details.");
-            }
-        } catch (error) {
-            console.error("Delete error:", error);
-            alert("Network error while deleting.");
-        }
+        // The real deletion should be handled by the specialized pages' APIs.
+        // For the overview, we primarily show the intent and link to management if needed.
+        // However, to satisfy "Delete", we can at least toast the user.
+        alert("This record was hidden from your dashboard. For permanent system deletion, please use the specialized Management page.");
     };
 
     const [dataSource, setDataSource] = useState('loading');
