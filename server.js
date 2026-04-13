@@ -57,11 +57,24 @@ const saveData = (filename, data) => {
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/bike-tours', bikeTourRoutes);
 
-app.get('/api/bookings', (req, res) => res.json(getData('bookings.json')));
-app.post('/api/bookings', (req, res) => { saveData('bookings.json', req.body); res.json({ success: true }); });
-
 app.get('/api/leads', (req, res) => res.json(getData('leads.json')));
 app.post('/api/leads', (req, res) => { saveData('leads.json', req.body); res.json({ success: true }); });
+app.delete('/api/leads', (req, res) => {
+    try {
+        const id = req.query.id;
+        if (!id) return res.status(400).json({ success: false, message: 'ID required' });
+        const data = getData('leads.json');
+        const filtered = data.filter(item => String(item.id) !== String(id));
+        saveData('leads.json', filtered);
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+app.post('/api/chatflow', (req, res) => { saveData('chatflow.json', req.body); res.json({ success: true }); });
+app.post('/api/manual-qa', (req, res) => { saveData('manual-qa.json', req.body); res.json({ success: true }); });
+
+app.get('/api/bookings', (req, res) => res.json(getData('bookings.json')));
+app.post('/api/bookings', (req, res) => { saveData('bookings.json', req.body); res.json({ success: true }); });
 
 app.get('/api/train-queries', (req, res) => {
     if (!fs.existsSync(path.join(__dirname, 'src/data', 'train_queries.json'))) {

@@ -67,6 +67,10 @@ const BharatBotTourMatchmakerChatbot = () => {
                 return;
             }
 
+            if (currentStepConfig?.action === 'SAVE_LEAD') {
+                handleSaveLead(newData);
+            }
+
             let nextStepNum = step + 1;
             if (nextStepNum <= flowSteps.length) {
                  let botResponse = flowSteps[nextStepNum - 1].questionText;
@@ -92,6 +96,24 @@ const BharatBotTourMatchmakerChatbot = () => {
         setTimeout(() => {
             navigate('/bharatbot/recommendations', { state: finalData || capturedData });
         }, 3500);
+    };
+
+    const handleSaveLead = async (data) => {
+        try {
+            await fetch('/api/leads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...data,
+                    id: `cb-${Date.now()}`,
+                    timestamp: new Date().toISOString(),
+                    source: 'BharatBot Dynamic',
+                    status: 'New'
+                })
+            });
+        } catch (err) {
+            console.error("Lead saving error:", err);
+        }
     };
 
     return (

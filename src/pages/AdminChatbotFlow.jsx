@@ -28,9 +28,25 @@ const AdminChatbotFlow = () => {
       });
   };
 
-  const saveFlow = () => {
-    console.log(`Changes saved (mocked) for ${activeAdminTab === 'flow' ? 'Chatflow' : 'Manual Q&A'}`);
-    alert(`${activeAdminTab === 'flow' ? 'Chatflow' : 'Manual Q&A'} updated successfully!`);
+  const saveFlow = async () => {
+    const endpoint = activeAdminTab === 'flow' ? '/api/chatflow' : '/api/manual-qa';
+    const data = activeAdminTab === 'flow' ? flowSteps : manualQs;
+    
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        alert(`${activeAdminTab === 'flow' ? 'Chatflow' : 'Manual Q&A'} updated successfully!`);
+      } else {
+        alert("Failed to save. Check server logs.");
+      }
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Network error while saving.");
+    }
   };
 
   const handleManualQChange = (index, field, value) => {

@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import Header from './Header';
 import Footer from './Footer';
 import AdSenseScript from './AdSenseScript';
+import BharatBotFloatingButton from './BharatBotFloatingButton';
 
 const Layout = () => {
     const location = useLocation();
@@ -60,6 +61,7 @@ const Layout = () => {
             <div className="float-element">
                 <Footer />
             </div>
+            {!isAdminPage && <BharatBotFloatingButton />}
         </div>
     );
 };
