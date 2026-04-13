@@ -43,12 +43,6 @@ const BharatBotFloatingButton = () => {
                     </div>
                 </button>
                 
-                {/* Decorative Sparkles */}
-                {!isOpen && (
-                    <div className="absolute -top-4 -left-4 pointer-events-none">
-                        <span className="material-symbols-outlined text-amber-400 text-lg animate-pulse">sparkles</span>
-                    </div>
-                )}
             </div>
         </>
     );
