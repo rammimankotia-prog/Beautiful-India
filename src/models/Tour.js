@@ -48,6 +48,26 @@ const tourSchema = new mongoose.Schema({
     ],
     default: ['None']
   }],
+  chatbotCategory: {
+    type: String,
+    enum: ['Pilgrimage', 'Bike Tours', 'Heritage', 'Wildlife', 'Leisure']
+  },
+  chatbotRegions: [{
+    type: String,
+    trim: true
+  }],
+  chatbotTags: [{
+    type: String,
+    trim: true
+  }],
+  chatbotTeaser: {
+    type: String,
+    maxlength: 100
+  },
+  isChatbotEnabled: {
+    type: Boolean,
+    default: true
+  },
   status: {
     type: String,
     enum: ['active', 'paused', 'draft'],
