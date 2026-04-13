@@ -385,6 +385,55 @@ const AboutUsPage = () => {
         </div>
       </section>
 
+      {/* ════ GROUP TRAVEL SPECIALISTS ════ */}
+      <section className="px-4 md:px-10 lg:px-40 py-20 bg-white">
+        <div className="text-center mb-14">
+          <span className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-5">
+            <span className="material-symbols-outlined text-[14px]">groups</span> Group Travel Specialists
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-800">Specialized Group Tours</h2>
+          <p className="text-slate-500 mt-3 text-base max-w-xl mx-auto">
+            Beyond individual journeys, we are experts in managing large-scale group logistics with precision, safety, and comfort.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Educational Groups */}
+          <div className="relative rounded-3xl overflow-hidden group border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+            <div className="h-56 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=800&q=80" alt="Educational Groups" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
+            <div className="p-8 bg-white relative">
+              <div className="absolute -top-7 left-8 w-14 h-14 bg-emerald-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30 border-4 border-white">
+                <span className="material-symbols-outlined text-2xl">school</span>
+              </div>
+              <h3 className="text-2xl font-black text-slate-800 mb-3 mt-4">Educational &amp; Institutional Groups</h3>
+              <p className="text-slate-600 leading-relaxed text-sm">
+                We also cater to students of schools, colleges, and institutional groups. We organize complete end-to-end trips including safe <strong>accommodation, hygienic food, and reliable transportation</strong>. Let the students learn through experience while we handle the logistics seamlessly.
+              </p>
+            </div>
+          </div>
+
+          {/* Corporate Groups */}
+          <div className="relative rounded-3xl overflow-hidden group border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+            <div className="h-56 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80" alt="Corporate Groups" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
+            <div className="p-8 bg-white relative">
+              <div className="absolute -top-7 left-8 w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30 border-4 border-white">
+                <span className="material-symbols-outlined text-2xl">business_center</span>
+              </div>
+              <h3 className="text-2xl font-black text-slate-800 mb-3 mt-4">Corporate Groups &amp; Offsites</h3>
+              <p className="text-slate-600 leading-relaxed text-sm">
+                We also organize corporate retreats, team-building offsites, and business group travel. From premium conference facilities to engaging team activities and seamless transport, we ensure your corporate group has a productive, rewarding, and memorable experience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ════ MISSION & VISION ════ */}
       <section className="px-4 md:px-10 lg:px-40 py-20 md:py-28">
         <div className="text-center mb-14">
