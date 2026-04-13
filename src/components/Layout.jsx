@@ -5,6 +5,7 @@ import Header from './Header';
 import Footer from './Footer';
 import AdSenseScript from './AdSenseScript';
 import BharatBotFloatingButton from './BharatBotFloatingButton';
+import WhatsAppFloatingButton from './WhatsAppFloatingButton';
 
 const Layout = () => {
     const location = useLocation();
@@ -62,6 +63,7 @@ const Layout = () => {
                 <Footer />
             </div>
             {!isAdminPage && <BharatBotFloatingButton />}
+            {!isAdminPage && <WhatsAppFloatingButton />}
         </div>
     );
 };
