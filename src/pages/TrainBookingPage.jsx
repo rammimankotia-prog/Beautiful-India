@@ -198,7 +198,7 @@ const TrainBookingPage = () => {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-12">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-8 md:p-10 space-y-8 sm:space-y-12 w-full overflow-hidden">
             
             {/* Section 1: Journey Details */}
             <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -422,23 +422,23 @@ const TrainBookingPage = () => {
 
               <div className="space-y-8">
                 {passengers.map((p, i) => (
-                  <div key={i} className={`p-6 md:p-10 rounded-[2rem] border-2 transition-all duration-300 ${i === 0 ? 'border-[#006D77]/20 bg-[#006D77]/5 dark:bg-[#006D77]/10' : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/50'}`}>
-                    <div className="flex items-center justify-between mb-8">
-                      <div className="flex items-center gap-4">
-                        <span className={`w-12 h-12 flex items-center justify-center rounded-2xl font-black text-lg transition-all ${i === 0 ? 'bg-[#006D77] text-white shadow-lg shadow-[#006D77]/30' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700'}`}>{i + 1}</span>
-                        <div>
-                          <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight">{i === 0 ? 'Primary Guest (Passenger 1)' : `Passenger ${i + 1}`}</h3>
-                          {i === 0 && <span className="text-[10px] text-[#006D77] dark:text-teal-400 font-bold uppercase tracking-[0.2em]">Main Contact for Ticket Delivery</span>}
+                  <div key={i} className={`p-4 sm:p-6 md:p-10 w-full rounded-[2rem] border-2 transition-all duration-300 flex flex-col font-sans ${i === 0 ? 'border-[#006D77]/20 bg-[#006D77]/5 dark:bg-[#006D77]/10' : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/50'}`}>
+                    <div className="flex items-center justify-between mb-6 sm:mb-8">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <span className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl font-black text-base sm:text-lg shrink-0 transition-all ${i === 0 ? 'bg-[#006D77] text-white shadow-lg shadow-[#006D77]/30' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700'}`}>{i + 1}</span>
+                        <div className="min-w-0">
+                          <h3 className="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight truncate">{i === 0 ? 'Primary Guest (Passenger 1)' : `Passenger ${i + 1}`}</h3>
+                          {i === 0 && <span className="text-[9px] sm:text-[10px] text-[#006D77] dark:text-teal-400 font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] block truncate">Main Contact for Ticket Delivery</span>}
                         </div>
                       </div>
                       {i > 0 && (
                         <button 
                           type="button"
                           onClick={() => removePassenger(i)} 
-                          className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-50 dark:bg-red-950/30 text-red-500 hover:bg-red-500 hover:text-white transition-all transform hover:rotate-90"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-red-50 dark:bg-red-950/30 text-red-500 hover:bg-red-500 hover:text-white shrink-0 transition-all transform hover:rotate-90 ml-2"
                           title="Remove Passenger"
                         >
-                          <span className="material-symbols-outlined text-xl">close</span>
+                          <span className="material-symbols-outlined text-lg sm:text-xl">close</span>
                         </button>
                       )}
                     </div>
@@ -540,9 +540,9 @@ const TrainBookingPage = () => {
                         <>
                           <div className="flex flex-col gap-2 md:col-span-1 lg:col-span-2">
                             <label className="text-[10px] font-bold text-[#006D77] dark:text-teal-400 uppercase tracking-widest">Mobile Number (Primary) <span className="text-red-500">*</span></label>
-                            <div className="relative flex flex-col sm:flex-row gap-3">
+                            <div className="relative flex flex-row gap-2 sm:gap-3 w-full">
                               {/* Searchable Country Code Picker */}
-                              <div className="relative group/cc w-full sm:w-auto">
+                              <div className="relative group/cc w-[100px] sm:w-[130px] shrink-0">
                                 <CountryCodeSelector 
                                   value={p.countryCode} 
                                   onChange={(val) => handlePassengerChange(i, 'countryCode', val)} 
@@ -551,7 +551,7 @@ const TrainBookingPage = () => {
                               <input 
                                 type="tel" required
                                 value={p.mobile} onChange={(e) => handlePassengerChange(i, 'mobile', e.target.value)}
-                                className="flex-1 h-12 px-5 rounded-xl border border-[#006D77]/30 dark:border-teal-400/30 bg-white dark:bg-slate-800 outline-none focus:border-[#006D77] dark:focus:border-teal-400 transition-all text-base font-black text-[#006D77] dark:text-teal-300 placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm shadow-[#0a6c75]/5 w-full"
+                                className="flex-1 min-w-0 h-12 px-3 sm:px-5 rounded-xl border border-[#006D77]/30 dark:border-teal-400/30 bg-white dark:bg-slate-800 outline-none focus:border-[#006D77] dark:focus:border-teal-400 transition-all text-sm sm:text-base font-black text-[#006D77] dark:text-teal-300 placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm shadow-[#0a6c75]/5 w-full"
                                 placeholder="XXXXX XXXXX"
                               />
                             </div>
@@ -574,12 +574,12 @@ const TrainBookingPage = () => {
                           </div>
                           <div className="flex flex-col gap-2 md:col-span-1 lg:col-span-2">
                             <label className="text-[10px] font-bold text-[#006D77] dark:text-teal-400 uppercase tracking-widest">Email ID (For Ticket Delivery) <span className="text-red-500">*</span></label>
-                            <div className="relative">
-                              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#006D77]/50 dark:text-teal-400/50 text-xl pointer-events-none">mail</span>
+                            <div className="relative w-full">
+                              <span className="material-symbols-outlined absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#006D77]/50 dark:text-teal-400/50 text-lg sm:text-xl pointer-events-none">mail</span>
                               <input 
                                 type="email" required
                                 value={p.email} onChange={(e) => handlePassengerChange(i, 'email', e.target.value)}
-                                className="w-full h-12 pl-12 pr-5 rounded-xl border border-[#006D77]/30 dark:border-teal-400/30 bg-white dark:bg-slate-800 outline-none focus:border-[#006D77] dark:focus:border-teal-400 transition-all text-base font-black text-[#006D77] dark:text-teal-300 placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm shadow-[#0a6c75]/5"
+                                className="w-full h-12 pl-10 sm:pl-12 pr-3 sm:pr-5 rounded-xl border border-[#006D77]/30 dark:border-teal-400/30 bg-white dark:bg-slate-800 outline-none focus:border-[#006D77] dark:focus:border-teal-400 transition-all text-sm sm:text-base font-black text-[#006D77] dark:text-teal-300 placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm shadow-[#0a6c75]/5"
                                 placeholder="you@example.com"
                               />
                             </div>
@@ -698,11 +698,13 @@ const CountryCodeSelector = ({ value, onChange }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="h-12 px-4 rounded-xl border border-[#006D77]/30 dark:border-teal-400/30 bg-white dark:bg-slate-800 flex items-center gap-2 hover:border-[#006D77] dark:hover:border-teal-400 transition-all min-w-[100px] shadow-sm"
+        className="h-12 px-2 sm:px-3 rounded-xl border border-[#006D77]/30 dark:border-teal-400/30 bg-white dark:bg-slate-800 flex items-center justify-between w-full hover:border-[#006D77] dark:hover:border-teal-400 transition-all shadow-sm focus:outline-none focus:ring-1 focus:ring-[#006D77]"
       >
-        <span className="text-xl">{selected.flag}</span>
-        <span className="text-sm font-bold text-[#006D77] dark:text-teal-400">{selected.code}</span>
-        <span className={`material-symbols-outlined text-slate-400 text-sm transition-transform ${isOpen ? 'rotate-180' : ''}`}>expand_more</span>
+        <div className="flex items-center gap-1 sm:gap-2 truncate min-w-0">
+          <span className="text-lg sm:text-xl shrink-0 leading-none">{selected.flag}</span>
+          <span className="text-xs sm:text-sm font-bold text-[#006D77] dark:text-teal-400 tracking-tighter truncate">{selected.code}</span>
+        </div>
+        <span className={`material-symbols-outlined text-slate-400 text-sm shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}>expand_more</span>
       </button>
 
       {isOpen && (
