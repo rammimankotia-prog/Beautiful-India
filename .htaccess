@@ -1,6 +1,9 @@
 # Apache Configuration for React SPA with PHP API Fallbacks
 RewriteEngine On
 RewriteBase /
+# Permanent redirect for Khajuraho Temple India guide
+RewriteRule ^khajuraho-temple-india$ /guides/khajuraho-temple-india [R=301,L]
+
 RewriteRule ^api/save-categories/?$ api-save-categories.php [L]
 RewriteRule ^api/save-tours/?$ api-save-tours.php [L]
 RewriteRule ^api/save-guides/?$ api-save-guides.php [L]
