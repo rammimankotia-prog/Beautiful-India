@@ -337,20 +337,22 @@ const AdminNewTourUploadForm = () => {
       const savedTours = localStorage.getItem(STORAGE_KEYS.TOURS);
       if (savedTours) {
         try {
-          const tours = JSON.parse(savedTours);
-          const matched = tours.find((t) => String(t.id) === String(id));
-          if (matched) {
-            setFormData((prev) => ({
-              ...prev,
-              ...matched,
-              slug: matched.slug || matched.id || "",
-            }));
-            console.log("Loaded tour from localStorage session");
-            return;
-          }
-        } catch (e) {
-          console.error("Local storage error:", e);
+        const tours = JSON.parse(savedTours);
+        const matched = tours.find((t) => String(t.id) === String(id));
+        if (matched) {
+          setFormData((prev) => ({
+            ...prev,
+            ...matched,
+            slug: matched.slug || matched.id || "",
+          }));
+          console.log("Loaded tour from localStorage session, waiting for live data...");
+          // We do NOT return here. The cache might be a truncated "light" version
+          // created by safeCacheTours() when quota is exceeded (stripping images & itinerary).
+          // We must let the live fetch run to overwrite this cache with full data.
         }
+      } catch (e) {
+        console.error("Local storage error:", e);
+      }
       }
 
       fetch(`${import.meta.env.BASE_URL}data/tours.json`)
