@@ -58,13 +58,18 @@ const AdminChatbotFlow = () => {
     setSettings(newSettings);
     
     try {
-      await fetch('/api/save-settings', {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/save-settings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newSettings)
       });
+      if (!res.ok) {
+        alert("Failed to sync Master Switch. Status: " + res.status);
+        console.error("Save error text:", await res.text());
+      }
     } catch (err) {
       console.error("Settings save error:", err);
+      alert("Network error while syncing Master Switch.");
     }
   };
 
