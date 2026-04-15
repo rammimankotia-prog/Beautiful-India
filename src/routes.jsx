@@ -205,5 +205,9 @@ export const routes = [
   { path: '/booking/train-success', element: Loadable(TrainBookingSuccessPage)() },
   { path: '/pilgrimage-tours', element: Loadable(PilgrimageToursListingPage)() },
   { path: '/pilgrimage-tours/:slug', element: Loadable(PilgrimageTourDetailView)() },
+  
+  // SEO & Legacy Redirects
+  { path: '/khajuraho-temple-india', element: <Navigate to="/guides/khajuraho-temple-india" replace /> },
+  
   { path: '/:regionSlug', element: Loadable(ToursDiscoveryFiltering1)() }
 ];

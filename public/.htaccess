@@ -2,6 +2,9 @@
   RewriteEngine On
   RewriteBase /
 
+  # ── SEO 301 Redirects ─────────────────────────────────────────────────────────
+  Redirect 301 /khajuraho-temple-india /guides/khajuraho-temple-india
+
   # ── Dynamic sitemap served at /sitemap.xml ──────────────────────────────────
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
