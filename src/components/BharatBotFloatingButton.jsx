@@ -11,8 +11,21 @@ const BharatBotFloatingButton = () => {
     useEffect(() => {
         // Targeted visibility for the Chatbot only
         const targetRoutes = ['/tours', '/tour/', '/pilgrimage-tours', '/bike-tours', '/guides'];
-        const shouldShow = targetRoutes.some(route => location.pathname.startsWith(route));
-        setIsVisible(shouldShow);
+        let shouldShow = targetRoutes.some(route => location.pathname.startsWith(route));
+        
+        // Check global settings for chatbot toggle
+        fetch(`${import.meta.env.BASE_URL}data/settings.json?t=${Date.now()}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.chatbotEnabled === false) {
+                    shouldShow = false;
+                }
+                setIsVisible(shouldShow);
+            })
+            .catch(() => {
+                // If no settings found, default to visible for target routes
+                setIsVisible(shouldShow);
+            });
     }, [location.pathname]);
 
     useEffect(() => {

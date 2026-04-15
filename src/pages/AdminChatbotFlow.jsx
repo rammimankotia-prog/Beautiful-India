@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 const AdminChatbotFlow = () => {
   const [flowSteps, setFlowSteps] = useState([]);
   const [manualQs, setManualQs] = useState([]);
+  const [settings, setSettings] = useState({ chatbotEnabled: true });
   const [loading, setLoading] = useState(true);
   const [activeAdminTab, setActiveAdminTab] = useState('flow');
 
@@ -15,11 +16,13 @@ const AdminChatbotFlow = () => {
     setLoading(true);
     const flowPromise = fetch(`${import.meta.env.BASE_URL}data/chatflow.json`).then(res => res.json());
     const manualPromise = fetch(`${import.meta.env.BASE_URL}data/manual-qa.json`).then(res => res.json()).catch(() => []);
+    const settingsPromise = fetch(`${import.meta.env.BASE_URL}data/settings.json?t=${Date.now()}`).then(res => res.json()).catch(() => ({ chatbotEnabled: true }));
     
-    Promise.all([flowPromise, manualPromise])
-      .then(([flowData, manualData]) => {
+    Promise.all([flowPromise, manualPromise, settingsPromise])
+      .then(([flowData, manualData, settingsData]) => {
         setFlowSteps(flowData);
         setManualQs(manualData || []);
+        if (settingsData) setSettings(prev => ({ ...prev, ...settingsData }));
         setLoading(false);
       })
       .catch(err => {
@@ -46,6 +49,22 @@ const AdminChatbotFlow = () => {
     } catch (err) {
       console.error("Save error:", err);
       alert("Network error while saving.");
+    }
+  };
+
+  const toggleChatbotEnabled = async () => {
+    const newEnabled = !settings.chatbotEnabled;
+    const newSettings = { ...settings, chatbotEnabled: newEnabled };
+    setSettings(newSettings);
+    
+    try {
+      await fetch('/api/save-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSettings)
+      });
+    } catch (err) {
+      console.error("Settings save error:", err);
     }
   };
 
@@ -95,10 +114,27 @@ const AdminChatbotFlow = () => {
            </div>
            <p className="text-slate-500 dark:text-slate-400 font-bold italic">Command center for your AI travel assistant.</p>
         </div>
-        <button onClick={saveFlow} className="bg-[#0a6c75] hover:bg-[#085a62] text-white font-black py-3 px-8 rounded-2xl transition-all shadow-lg flex items-center gap-2 text-sm uppercase tracking-widest active:scale-95">
-            <span className="material-symbols-outlined text-[20px]">verified</span>
-            Commit Intelligence
-        </button>
+        
+        <div className="flex items-center gap-4">
+            <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 pl-4 pr-3 rounded-2xl shadow-sm">
+                <span className="text-xs font-black uppercase tracking-widest text-slate-500 mr-4">Master Switch</span>
+                <button 
+                  onClick={toggleChatbotEnabled}
+                  className={`w-16 h-8 rounded-full transition-colors flex items-center p-1 cursor-pointer outline-none ${settings.chatbotEnabled !== false ? 'bg-[#0a6c75]' : 'bg-slate-200 dark:bg-slate-700'}`}
+                >
+                    <div className={`w-6 h-6 bg-white rounded-full transition-transform shadow-md flex items-center justify-center ${settings.chatbotEnabled !== false ? 'translate-x-8' : 'translate-x-0'}`}>
+                        <span className={`material-symbols-outlined text-[14px] ${settings.chatbotEnabled !== false ? 'text-[#0a6c75]' : 'text-slate-400'}`}>
+                            {settings.chatbotEnabled !== false ? 'check' : 'close'}
+                        </span>
+                    </div>
+                </button>
+            </div>
+            
+            <button onClick={saveFlow} className="bg-[#0a6c75] hover:bg-[#085a62] text-white font-black py-3 px-8 rounded-2xl transition-all shadow-lg flex items-center gap-2 text-sm uppercase tracking-widest active:scale-95">
+                <span className="material-symbols-outlined text-[20px]">verified</span>
+                Commit Intelligence
+            </button>
+        </div>
       </div>
 
       {/* Tabs */}

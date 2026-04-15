@@ -238,6 +238,9 @@ app.post('/api/chatflow', (req, res) => { saveData('chatflow.json', req.body); r
 app.get('/api/chatbot-manual-qa', (req, res) => res.json(getData('manual-qa.json')));
 app.post('/api/chatbot-manual-qa', (req, res) => { saveData('manual-qa.json', req.body); res.json({ success: true }); });
 
+app.get('/api/settings', (req, res) => res.json(getData('settings.json')));
+app.post('/api/save-settings', (req, res) => { saveData('settings.json', req.body); res.json({ success: true }); });
+
 // Custom route for categorization settings to keep meta and presets unmutated
 app.post('/api/save-categories', (req, res) => {
     try {
