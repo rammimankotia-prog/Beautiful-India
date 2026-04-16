@@ -168,13 +168,26 @@ const BharatDarshanPage = () => {
   const [categories, setCategories] = useState(categoriesData.categories);
 
   useEffect(() => {
-    const saved = localStorage.getItem('beautifulindia_admin_categories');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setCategories(prev => ({ ...prev, ...parsed }));
-      } catch (e) { console.error('Failed to load saved categories:', e); }
-    }
+    fetch(`${import.meta.env.BASE_URL || '/'}data/categories.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        const payload = data.categories || data;
+        if (payload) {
+          setCategories(prev => ({ ...prev, ...payload }));
+          localStorage.setItem('beautifulindia_admin_categories', JSON.stringify(payload));
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load categories:', err);
+        const saved = localStorage.getItem('beautifulindia_admin_categories');
+        if (saved) {
+          try {
+            setCategories(prev => ({ ...prev, ...JSON.parse(saved) }));
+          } catch (e) {
+             console.error('Failed to load saved categories:', e);
+          }
+        }
+      });
   }, []);
 
   const themes = categories.themes;

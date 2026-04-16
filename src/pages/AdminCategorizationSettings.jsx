@@ -45,13 +45,28 @@ const AdminCategorizationSettings = () => {
   const [expandedKey, setExpandedKey] = useState('states');
 
   useEffect(() => {
-    const saved = localStorage.getItem('beautifulindia_admin_categories');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setCategories({ ...DEFAULT_CATEGORIES, ...parsed });
-      } catch (e) { console.error(e); }
-    }
+    // Dynamically fetch the latest categories from the server
+    fetch(`${import.meta.env.BASE_URL}data/categories.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        const payload = data.categories || data;
+        if (payload) {
+          setCategories({ ...DEFAULT_CATEGORIES, ...payload });
+          localStorage.setItem('beautifulindia_admin_categories', JSON.stringify(payload));
+        }
+      })
+      .catch(err => {
+        console.error("Failed to fetch live categories:", err);
+        // Fallback to localStorage if the fetch fails
+        const saved = localStorage.getItem('beautifulindia_admin_categories');
+        if (saved) {
+          try {
+            setCategories({ ...DEFAULT_CATEGORIES, ...JSON.parse(saved) });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      });
   }, []);
 
   const saveCategories = (newCats) => {

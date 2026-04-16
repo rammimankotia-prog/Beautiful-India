@@ -299,36 +299,66 @@ const AdminNewTourUploadForm = () => {
   };
 
   React.useEffect(() => {
-    const saved = localStorage.getItem("beautifulindia_admin_categories");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        // Map flat `states` from categorization settings → destinationStates.India
-        if (parsed.states && Array.isArray(parsed.states)) {
-          parsed.destinationStates = {
-            ...(parsed.destinationStates || {}),
-            India: parsed.states,
-          };
-          delete parsed.states;
+    // Fetch live categories from the server to ensure dropdowns are up-to-date
+    fetch(`${import.meta.env.BASE_URL}data/categories.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        const parsed = data.categories || data;
+        if (parsed) {
+          if (parsed.states && Array.isArray(parsed.states)) {
+            parsed.destinationStates = {
+              ...(parsed.destinationStates || {}),
+              India: parsed.states,
+            };
+            delete parsed.states;
+          }
+          if (parsed.themes && Array.isArray(parsed.themes)) {
+            parsed.themes = parsed.themes.map((t) => {
+              if (typeof t === "string") {
+                return {
+                  value: t,
+                  label: t.charAt(0).toUpperCase() + t.slice(1),
+                  icon: "🏷️",
+                };
+              }
+              return t;
+            });
+          }
+          setCategories((prev) => ({ ...prev, ...parsed }));
+          localStorage.setItem("beautifulindia_admin_categories", JSON.stringify(parsed));
         }
-        // `themes` from localStorage may be plain strings — convert to objects
-        if (parsed.themes && Array.isArray(parsed.themes)) {
-          parsed.themes = parsed.themes.map((t) => {
-            if (typeof t === "string") {
-              return {
-                value: t,
-                label: t.charAt(0).toUpperCase() + t.slice(1),
-                icon: "🏷️",
+      })
+      .catch((err) => {
+        console.error("Failed to load live categories, falling back to local storage", err);
+        const saved = localStorage.getItem("beautifulindia_admin_categories");
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (parsed.states && Array.isArray(parsed.states)) {
+              parsed.destinationStates = {
+                ...(parsed.destinationStates || {}),
+                India: parsed.states,
               };
+              delete parsed.states;
             }
-            return t;
-          });
+            if (parsed.themes && Array.isArray(parsed.themes)) {
+              parsed.themes = parsed.themes.map((t) => {
+                if (typeof t === "string") {
+                  return {
+                    value: t,
+                    label: t.charAt(0).toUpperCase() + t.slice(1),
+                    icon: "🏷️",
+                  };
+                }
+                return t;
+              });
+            }
+            setCategories((prev) => ({ ...prev, ...parsed }));
+          } catch (e) {
+            console.error("Failed to parse categories", e);
+          }
         }
-        setCategories((prev) => ({ ...prev, ...parsed }));
-      } catch (e) {
-        console.error("Failed to parse categories", e);
-      }
-    }
+      });
   }, []); // Run only once on mount to avoid infinite loops with THEME_MAP
 
   React.useEffect(() => {
