@@ -2849,38 +2849,30 @@ const AdminNewTourUploadForm = () => {
             <div className="bg-slate-50 dark:bg-slate-800/50 px-6 md:px-8 py-5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3 rounded-b-xl">
               <button
                 onClick={() => navigate("/admin")}
-                className="px-5 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent"
+                className="px-5 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent mr-auto"
                 type="button"
               >
                 Discard
               </button>
+              
               <button
-                onClick={(e) => {
-                  handleSubmit(e, "draft");
-                }}
-                className="px-5 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/10 transition-colors border border-primary/20"
+                onClick={(e) => handleSubmit(e, "draft")}
+                className="px-5 py-2.5 rounded-lg text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 transition-colors flex items-center gap-2"
                 type="button"
               >
+                <span className="material-symbols-outlined text-[18px]">edit_document</span>
                 Save as Draft
               </button>
-              {isEdit && formData.status === "draft" && (
-                <button
-                  type="button"
-                  onClick={(e) => handleSubmit(e, "active")}
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 transition-colors border border-emerald-200"
-                >
-                  Publish Tour
-                </button>
-              )}
+              
               <button
                 type="button"
-                onClick={(e) => handleSubmit(e, isEdit && formData.status !== "draft" ? formData.status : "active")}
-                className="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all shadow-sm flex items-center gap-2"
+                onClick={(e) => handleSubmit(e, "active")}
+                className="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-600/20 focus:outline-none transition-all shadow-sm flex items-center gap-2"
               >
-                <span className="material-symbols-outlined text-sm">
-                  check_circle
+                <span className="material-symbols-outlined text-[18px]">
+                  {(!isEdit || formData.status === "draft") ? "check_circle" : "update"}
                 </span>
-                {isEdit ? "Update Tour" : "Publish Tour"}
+                {(!isEdit || formData.status === "draft") ? "Publish Tour" : "Update Tour"}
               </button>
             </div>
     </div>
