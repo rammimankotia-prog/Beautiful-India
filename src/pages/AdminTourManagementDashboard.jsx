@@ -357,13 +357,14 @@ const AdminTourManagementDashboard = () => {
                           <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Location</th>
                           <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Pricing</th>
                           <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                          <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Live URL</th>
                           <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                         {paginatedTours.length === 0 ? (
                           <tr>
-                            <td colSpan={5} className="px-8 py-16 text-center">
+                            <td colSpan={6} className="px-8 py-16 text-center">
                               <span className="material-symbols-outlined text-5xl text-slate-200 dark:text-slate-700 block mb-3">search_off</span>
                               <p className="text-slate-400 font-bold italic text-sm">No tours match your search.</p>
                               {searchQuery && (
@@ -414,6 +415,17 @@ const AdminTourManagementDashboard = () => {
                                     <option value="draft">Draft</option>
                                     <option value="paused">Paused</option>
                                   </select>
+                               </td>
+                               <td className="px-8 py-6">
+                                  <a 
+                                    href={`/tour/${tour.slug || tour.id}`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 w-max rounded-lg bg-slate-100 dark:bg-slate-800 text-[#0a6c75] dark:text-teal-400 hover:bg-[#0a6c75] hover:text-white transition-colors text-xs font-bold"
+                                  >
+                                    <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                                    Preview
+                                  </a>
                                </td>
                                <td className="px-8 py-6 text-right">
                                    <div className="flex justify-end gap-2 text-slate-300">
