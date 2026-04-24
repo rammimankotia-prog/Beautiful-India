@@ -18,6 +18,7 @@ $meta_desc = "Discover the best travel destinations in India. Book your Bharat D
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="vIh1jAvVGskK00z5B0FHJrXzeriHcZyQTUvxwbTcQfs" />
     <title><?php echo $page_title; ?></title>
     <meta name="description" content="<?php echo $meta_desc; ?>">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
