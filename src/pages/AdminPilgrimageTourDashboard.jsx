@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 const AdminPilgrimageTourDashboard = () => {
     const [tours, setTours] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [deletingSlug, setDeletingSlug] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -57,52 +59,53 @@ const AdminPilgrimageTourDashboard = () => {
     }, []);
 
     const handleDelete = async (slug) => {
-        console.log('Admin: Delete request for slug:', slug);
+        console.log('Admin: Delete attempt for:', slug);
         
-        // Use a more direct check or a fallback for confirm
-        const isConfirmed = window.confirm('Are you absolutely sure you want to permanently delete this Pilgrimage Yatra?');
-        console.log('Admin: Confirmation result:', isConfirmed);
-        
-        if (!isConfirmed) {
-            console.log('Admin: Delete cancelled by user.');
+        // Double-click confirmation logic
+        if (deletingSlug !== slug) {
+            setDeletingSlug(slug);
+            // Reset confirmation after 3 seconds if not clicked again
+            setTimeout(() => setDeletingSlug(null), 3000);
             return;
         }
-        
+
         try {
+            setIsDeleting(true);
             const cleanTargetSlug = (slug || '').replace(/\/$/, '').toLowerCase();
-            console.log('Admin: Filtering out slug:', cleanTargetSlug);
+            console.log('Admin: Execution started for:', cleanTargetSlug);
             
             const updatedTours = tours.filter(t => (t.slug || '').replace(/\/$/, '').toLowerCase() !== cleanTargetSlug);
-            console.log('Admin: Remaining tours count:', updatedTours.length);
+            console.log('Admin: New tours list prepared. Count:', updatedTours.length);
 
-            // Using relative path without leading slash might be safer in some hosted environments
-            // but for XAMPP root, leading slash is usually correct. 
-            // We'll stick to leading slash but use the full URL if needed.
-            const resSave = await fetch('/api-save-pk-pilgrimages.php', {
+            const apiURL = `${window.location.origin}/api-save-pk-pilgrimages.php`;
+            console.log('Admin: Hitting API:', apiURL);
+
+            const resSave = await fetch(apiURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedTours)
             });
 
-            console.log('Admin: Save response status:', resSave.status);
-
             if (!resSave.ok) {
                 const errorText = await resSave.text();
-                throw new Error(`Server Error: ${resSave.status} ${errorText.substring(0, 100)}`);
+                throw new Error(`HTTP ${resSave.status}: ${errorText.substring(0, 50)}`);
             }
 
             const saveResult = await resSave.json();
-            console.log('Admin: Save result:', saveResult);
+            console.log('Admin: API Response:', saveResult);
             
             if (!saveResult.success) {
-                throw new Error(saveResult.error || 'Unknown server error');
+                throw new Error(saveResult.error || 'API returned failure');
             }
             
-            alert('Yatra removed successfully.');
+            alert('Journey successfully removed from sacred records.');
+            setDeletingSlug(null);
             fetchTours();
         } catch (error) {
-            console.error('Admin: Delete error:', error);
-            alert('Failed to delete tour: ' + error.message);
+            console.error('Admin: FATAL DELETE ERROR:', error);
+            alert('CRITICAL ERROR: ' + error.message);
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -274,10 +277,17 @@ const AdminPilgrimageTourDashboard = () => {
                                                     </Link>
                                                     <button 
                                                         onClick={() => handleDelete(tour.slug)}
-                                                        className="w-11 h-11 flex items-center justify-center rounded-2xl bg-white dark:bg-slate-800 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 hover:shadow-xl hover:border-red-100 dark:hover:border-red-900/30 transition-all border border-slate-50 dark:border-slate-700"
-                                                        title="Remove Journey"
+                                                        disabled={isDeleting}
+                                                        className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all border ${
+                                                            deletingSlug === tour.slug 
+                                                            ? 'bg-red-500 text-white border-red-500 animate-pulse' 
+                                                            : 'bg-white dark:bg-slate-800 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 hover:border-red-100 border-slate-50 dark:border-slate-700'
+                                                        } ${isDeleting ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}`}
+                                                        title={deletingSlug === tour.slug ? "Click again to confirm" : "Remove Journey"}
                                                     >
-                                                        <span className="material-symbols-outlined text-xl">delete_sweep</span>
+                                                        <span className="material-symbols-outlined text-xl">
+                                                            {deletingSlug === tour.slug ? 'warning' : 'delete_sweep'}
+                                                        </span>
                                                     </button>
                                                 </div>
                                             </td>
