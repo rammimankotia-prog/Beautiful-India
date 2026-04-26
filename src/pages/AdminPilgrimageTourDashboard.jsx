@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const AdminPilgrimageTourDashboard = () => {
+    console.log('BUILD VERSION: 1.0.5 - Double Click Delete System');
     const [tours, setTours] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deletingSlug, setDeletingSlug] = useState(null);
@@ -121,7 +122,10 @@ const AdminPilgrimageTourDashboard = () => {
                 : t
             );
 
-            const response = await fetch(`/api-save-pk-pilgrimages.php`, {
+            const apiURL = `${window.location.origin}/api-save-pk-pilgrimages.php`;
+            console.log('Admin Status Toggle: Hitting API:', apiURL);
+            
+            const response = await fetch(apiURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedTours)
