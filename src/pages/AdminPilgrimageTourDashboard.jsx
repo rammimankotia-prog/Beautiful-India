@@ -57,21 +57,34 @@ const AdminPilgrimageTourDashboard = () => {
     }, []);
 
     const handleDelete = async (slug) => {
-        console.log('Attempting to delete pilgrimage with slug:', slug);
-        if (!window.confirm('Are you absolutely sure you want to permanently delete this Pilgrimage Yatra?')) return;
+        console.log('Admin: Delete request for slug:', slug);
+        
+        // Use a more direct check or a fallback for confirm
+        const isConfirmed = window.confirm('Are you absolutely sure you want to permanently delete this Pilgrimage Yatra?');
+        console.log('Admin: Confirmation result:', isConfirmed);
+        
+        if (!isConfirmed) {
+            console.log('Admin: Delete cancelled by user.');
+            return;
+        }
         
         try {
-            // Filter out the tour to delete
             const cleanTargetSlug = (slug || '').replace(/\/$/, '').toLowerCase();
-            console.log('Cleaned target slug for filtering:', cleanTargetSlug);
+            console.log('Admin: Filtering out slug:', cleanTargetSlug);
+            
             const updatedTours = tours.filter(t => (t.slug || '').replace(/\/$/, '').toLowerCase() !== cleanTargetSlug);
-            console.log('Remaining tours count:', updatedTours.length);
+            console.log('Admin: Remaining tours count:', updatedTours.length);
 
-            const resSave = await fetch(`/api-save-pk-pilgrimages.php`, {
+            // Using relative path without leading slash might be safer in some hosted environments
+            // but for XAMPP root, leading slash is usually correct. 
+            // We'll stick to leading slash but use the full URL if needed.
+            const resSave = await fetch('/api-save-pk-pilgrimages.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedTours)
             });
+
+            console.log('Admin: Save response status:', resSave.status);
 
             if (!resSave.ok) {
                 const errorText = await resSave.text();
@@ -79,6 +92,8 @@ const AdminPilgrimageTourDashboard = () => {
             }
 
             const saveResult = await resSave.json();
+            console.log('Admin: Save result:', saveResult);
+            
             if (!saveResult.success) {
                 throw new Error(saveResult.error || 'Unknown server error');
             }
@@ -86,8 +101,8 @@ const AdminPilgrimageTourDashboard = () => {
             alert('Yatra removed successfully.');
             fetchTours();
         } catch (error) {
-            console.error('Error deleting tour:', error);
-            alert('Failed to delete tour.');
+            console.error('Admin: Delete error:', error);
+            alert('Failed to delete tour: ' + error.message);
         }
     };
 
