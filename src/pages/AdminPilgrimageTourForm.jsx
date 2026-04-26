@@ -79,7 +79,8 @@ const AdminPilgrimageTourForm = () => {
             fetch(`${import.meta.env.BASE_URL}data/pk_pilgrimage_tours.json?t=${Date.now()}`)
                 .then(res => res.json())
                 .then(data => {
-                    const found = data.find(t => t.slug === slug);
+                    const cleanParamSlug = (slug || '').replace(/\/$/, '').toLowerCase();
+                    const found = data.find(t => (t.slug || '').replace(/\/$/, '').toLowerCase() === cleanParamSlug);
                     if (found) setFormData(mapNestedToFlatten(found));
                 })
                 .catch(err => console.error(err))
@@ -326,7 +327,7 @@ const AdminPilgrimageTourForm = () => {
     // --- Save ---
     const mapFlattenToNested = (flat) => ({
         id: flat.id || `pk_${Date.now()}`,
-        slug: flat.slug,
+        slug: (flat.slug || '').replace(/\/$/, ''),
         title: flat.title,
         status: flat.status,
         createdAt: flat.created || new Date().toISOString(),
@@ -390,13 +391,21 @@ const AdminPilgrimageTourForm = () => {
             }
 
             // 4. Save entire array
-            const resSave = await fetch(`${import.meta.env.BASE_URL}api-save-pk-pilgrimages.php`, {
+            const resSave = await fetch(`/api-save-pk-pilgrimages.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedTours)
             });
 
-            if (!resSave.ok) throw new Error('Failed to save data');
+            if (!resSave.ok) {
+                const errorText = await resSave.text();
+                throw new Error(`Server Error: ${resSave.status} ${errorText.substring(0, 100)}`);
+            }
+
+            const saveResult = await resSave.json();
+            if (!saveResult.success) {
+                throw new Error(saveResult.error || 'Unknown server error');
+            }
             
             alert('Yatra saved successfully!');
             navigate('/admin/pilgrimages');

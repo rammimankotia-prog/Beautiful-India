@@ -3,7 +3,7 @@
     "id": "pk_1001",
     "slug": "kedarnath-yatra-express",
     "title": "Kedarnath Yatra Express 2026",
-    "status": "published",
+    "status": "publish",
     "createdAt": "2026-04-02T10:00:00Z",
     "taxonomies": {
       "destination": "Uttarakhand",
@@ -32,5 +32,38 @@
       "/images/india_couple_hero.png"
     ],
     "featuredImage": "/images/uttarakhand.png"
+  },
+  {
+    "id": "pk_1002",
+    "slug": "vaishno-devi-2-day-spiritual-yatra",
+    "title": "Vaishno Devi 2-Day Spiritual Yatra",
+    "status": "publish",
+    "createdAt": "2026-04-26T10:00:00Z",
+    "taxonomies": {
+      "destination": "Jammu & Kashmir",
+      "type": "Spiritual Yatra"
+    },
+    "meta": {
+      "price_single": 4500,
+      "price_couple": 8500,
+      "price_group": 3900,
+      "dates": "Ongoing (Daily Departures)",
+      "is_ongoing": true,
+      "city_path": "Katra ➔ Bhawan ➔ Ardhkuwari",
+      "batch_status": "Booking Open"
+    },
+    "seo": {
+      "meta_title": "Vaishno Devi 2-Day Spiritual Yatra - Book Online",
+      "meta_description": "Book your 2-day spiritual journey to Vaishno Devi. Daily departures from Katra with premium arrangements.",
+      "json_ld_schema": "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"TouristTrip\",\n  \"name\": \"Vaishno Devi Spiritual Yatra\"\n}"
+    },
+    "content": {
+      "visual_html": "<h2>Experience Divine Grace at Vaishno Devi</h2><p>A comprehensive 2-day yatra covering Katra and the holy Bhawan. Includes accommodation, VIP darshan assistance, and breakfast.</p>",
+      "raw_html": "<h2>Experience Divine Grace at Vaishno Devi</h2><p>A comprehensive 2-day yatra covering Katra and the holy Bhawan. Includes accommodation, VIP darshan assistance, and breakfast.</p>"
+    },
+    "gallery": [
+      "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80"
+    ],
+    "featuredImage": "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80"
   }
 ]

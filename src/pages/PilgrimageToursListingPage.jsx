@@ -128,8 +128,8 @@ const PilgrimageToursListingPage = () => {
                 data = data.filter(t => t.tour_type?.includes(filters.tourType));
             }
             
-            // Exclude drafts/trashed
-            data = data.filter(t => t.status === 'publish');
+            // Exclude drafts/trashed (Support both 'publish' and 'published')
+            data = data.filter(t => t.status === 'publish' || t.status === 'published');
             
             setTours(data);
         } catch (error) {

@@ -57,19 +57,33 @@ const AdminPilgrimageTourDashboard = () => {
     }, []);
 
     const handleDelete = async (slug) => {
+        console.log('Attempting to delete pilgrimage with slug:', slug);
         if (!window.confirm('Are you absolutely sure you want to permanently delete this Pilgrimage Yatra?')) return;
         
         try {
             // Filter out the tour to delete
-            const updatedTours = tours.filter(t => t.slug !== slug);
+            const cleanTargetSlug = (slug || '').replace(/\/$/, '').toLowerCase();
+            console.log('Cleaned target slug for filtering:', cleanTargetSlug);
+            const updatedTours = tours.filter(t => (t.slug || '').replace(/\/$/, '').toLowerCase() !== cleanTargetSlug);
+            console.log('Remaining tours count:', updatedTours.length);
 
-            const response = await fetch(`/api-save-pk-pilgrimages.php`, {
+            const resSave = await fetch(`/api-save-pk-pilgrimages.php`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/row' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedTours)
             });
 
-            if (!response.ok) throw new Error('Delete failed');
+            if (!resSave.ok) {
+                const errorText = await resSave.text();
+                throw new Error(`Server Error: ${resSave.status} ${errorText.substring(0, 100)}`);
+            }
+
+            const saveResult = await resSave.json();
+            if (!saveResult.success) {
+                throw new Error(saveResult.error || 'Unknown server error');
+            }
+            
+            alert('Yatra removed successfully.');
             fetchTours();
         } catch (error) {
             console.error('Error deleting tour:', error);
@@ -82,8 +96,9 @@ const AdminPilgrimageTourDashboard = () => {
         
         try {
             // Update the specific tour in the array
+            const cleanTargetSlug = (tour.slug || '').replace(/\/$/, '').toLowerCase();
             const updatedTours = tours.map(t => 
-                t.slug === tour.slug 
+                (t.slug || '').replace(/\/$/, '').toLowerCase() === cleanTargetSlug 
                 ? { ...t, status: newStatus, lastModified: new Date().toISOString() } 
                 : t
             );
@@ -109,7 +124,7 @@ const AdminPilgrimageTourDashboard = () => {
 
     const stats = {
         total: tours.length,
-        published: tours.filter(t => t.status === 'publish').length,
+        published: tours.filter(t => t.status === 'publish' || t.status === 'published').length,
         draft: tours.filter(t => t.status !== 'publish').length
     };
 

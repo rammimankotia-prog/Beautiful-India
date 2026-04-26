@@ -91,7 +91,12 @@ const PilgrimageTourDetailView = () => {
                 const response = await fetch(`${import.meta.env.BASE_URL}data/pk_pilgrimage_tours.json?t=${Date.now()}`);
                 if (!response.ok) throw new Error('Data not found');
                 const data = await response.json();
-                const found = data.find(t => t.slug === slug && t.status === 'publish');
+                // Clean slug to handle potential trailing slashes from URL or stored data
+                const cleanParamSlug = (slug || '').replace(/\/$/, '').toLowerCase();
+                const found = data.find(t => {
+                    const cleanStoredSlug = (t.slug || '').replace(/\/$/, '').toLowerCase();
+                    return cleanStoredSlug === cleanParamSlug && (t.status === 'publish' || t.status === 'published');
+                });
                 setTour(found ? normalizeTour(found) : null);
             } catch (err) {
                 console.error(err);

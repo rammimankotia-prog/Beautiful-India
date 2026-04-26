@@ -2,6 +2,9 @@
   RewriteEngine On
   RewriteBase /
 
+  # ── SEO 301 Redirects ─────────────────────────────────────────────────────────
+  Redirect 301 /khajuraho-temple-india /guides/khajuraho-temple-india
+
   # ── Dynamic sitemap served at /sitemap.xml ──────────────────────────────────
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
@@ -14,6 +17,9 @@
   RewriteRule ^api/save-review$        api-save-review.php      [L]
   RewriteRule ^api/save-bike-tours/?$  api-save-bike-tours.php  [L]
   RewriteRule ^api/saved-guides/?$     api-saved-guides.php     [L]
+  RewriteRule ^api/save-settings/?$    api-save-settings.php    [L]
+  RewriteRule ^api/chatflow/?$         api-chatflow.php         [L]
+  RewriteRule ^api/manual-qa/?$        api-manual-qa.php        [L]
 
   # ── SPA Fallback ─────────────────────────────────────────────────────────────
   RewriteRule ^index\.html$ - [L]
