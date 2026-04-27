@@ -17,7 +17,9 @@ const Footer = () => {
         { label: "Travel Agent? Join Us", path: "#!" }, 
         { label: "FAQ", path: "#!" }, 
         { label: "Contact Us", path: "/contact" },
-        { label: "Train Booking", path: "/booking/train" }
+        { label: "Train Booking", path: "/booking/train" },
+        { label: "Book a Cab", path: "/transport" },
+        { label: "Travel Insurance", path: "/travel-insurance" }
     ];
 
     const international = [
