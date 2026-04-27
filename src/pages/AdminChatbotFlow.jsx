@@ -244,6 +244,13 @@ const AdminChatbotFlow = () => {
               </button>
             )}
         </div>
+
+        {/* Global Drag Cursor Style */}
+        {draggedItemIndex !== null && (
+          <style dangerouslySetInnerHTML={{ __html: `
+            body, * { cursor: move !important; }
+          `}} />
+        )}
       </div>
 
       {/* Tabs */}
