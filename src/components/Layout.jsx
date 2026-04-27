@@ -87,9 +87,11 @@ const Layout = () => {
             <main className="flex-1">
                 <Outlet />
             </main>
-            <div className="float-element">
-                <Footer />
-            </div>
+            {!isAdminPage && (
+                <div className="float-element">
+                    <Footer />
+                </div>
+            )}
             {!isAdminPage && <BharatBotFloatingButton />}
             {!isAdminPage && <WhatsAppFloatingButton />}
         </div>
