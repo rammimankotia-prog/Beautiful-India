@@ -74,7 +74,6 @@ const Footer = () => {
 
     return (
         <footer className="bg-[#2c3238] font-sans text-white border-t-4 border-red-600 mt-auto">
-            <div className="bg-red-500 text-white text-center py-1 text-[10px]">DEBUG: FOOTER RENDERED</div>
             {/* Top Expandable Section */}
             <div 
                 className="py-4 border-b border-[#3c4248] cursor-pointer hover:bg-[#343a40] transition-colors"
