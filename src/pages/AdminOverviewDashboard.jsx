@@ -326,6 +326,10 @@ const AdminOverviewDashboard = () => {
                                         <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">group</span>
                                         <span className="text-[11px] font-black uppercase tracking-widest">Manage Leads</span>
                                     </Link>
+                                    <Link to="/admin/transport" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-rose-600 hover:text-white transition-all group">
+                                         <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">commute</span>
+                                         <span className="text-[11px] font-black uppercase tracking-widest">Manage Fleet</span>
+                                     </Link>
                                     <Link to="/admin/users" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-900 hover:text-white transition-all group">
                                         <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">badge</span>
                                         <span className="text-[11px] font-black uppercase tracking-widest">Manage Users</span>

@@ -92,6 +92,8 @@ const PilgrimageToursListingPage = lazy(() => import('./pages/PilgrimageToursLis
 const PilgrimageTourDetailView = lazy(() => import('./pages/PilgrimageTourDetailView'));
 const AdminPilgrimageTourDashboard = lazy(() => import('./pages/AdminPilgrimageTourDashboard'));
 const AdminPilgrimageTourForm = lazy(() => import('./pages/AdminPilgrimageTourForm'));
+const FleetListingPage = lazy(() => import('./pages/FleetListingPage'));
+const AdminTransportManagement = lazy(() => import('./pages/AdminTransportManagement'));
 // Helper to wrap lazy components in Suspense with localized fallback
 const Loadable = (Component) => (props) => (
   <Suspense fallback={<LoadingSpinner />}>
@@ -112,6 +114,7 @@ export const routes = [
   { path: '/festivals', element: Loadable(FestivalsPage)() },
   { path: '/', element: Loadable(BharatDarshanPage)() },
   { path: '/privacy', element: Loadable(PrivacyPolicyLayout)() },
+  { path: '/transport', element: Loadable(FleetListingPage)() },
   { path: '/terms', element: Loadable(TermsOfServiceLayout)() },
   { path: '/tours/detail', element: Loadable(TourDetailView)() },
   { path: '/tours/bike-tours', element: Loadable(BikeTourListingPage)() },
@@ -147,6 +150,7 @@ export const routes = [
       { path: 'pilgrimages', element: Loadable(AdminPilgrimageTourDashboard)() },
       { path: 'pilgrimages/create', element: Loadable(AdminPilgrimageTourForm)() },
       { path: 'pilgrimages/edit/:slug', element: Loadable(AdminPilgrimageTourForm)() },
+      { path: 'transport', element: Loadable(AdminTransportManagement)() },
       { path: 'support', element: Loadable(AdminSupportSettings)() },
     ]
   },
