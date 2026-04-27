@@ -20,6 +20,8 @@ const BharatBotTourMatchmakerChatbot = () => {
         scrollToBottom();
     }, [messages, isBotTyping, isAnalyzing]);
 
+    const [kbFiles, setKbFiles] = useState([]);
+
     useEffect(() => {
         // Fetch Flow
         fetch(`${import.meta.env.BASE_URL}data/chatflow.json`)
@@ -41,7 +43,34 @@ const BharatBotTourMatchmakerChatbot = () => {
             .then(res => res.json())
             .then(data => setManualQs(data))
             .catch(() => {});
+
+        // Load Knowledge Base from storage
+        const storedKB = localStorage.getItem('chatbot_kb_files');
+        if (storedKB) {
+            setKbFiles(JSON.parse(storedKB));
+        }
     }, []);
+
+    const findSmartAnswer = (input) => {
+        const query = input.toLowerCase();
+        
+        // 1. Search in Manual Q&A
+        const manualMatch = manualQs.find(q => query.includes(q.question.toLowerCase()) || q.question.toLowerCase().includes(query));
+        if (manualMatch) return manualMatch.answer;
+
+        // 2. Search in Knowledge Base (Uploaded Files)
+        for (const file of kbFiles) {
+            const lines = file.content.split('\n');
+            for (const line of lines) {
+                const [q, a] = line.split(','); // Assuming CSV format for simulation
+                if (q && a && (query.includes(q.toLowerCase()) || q.toLowerCase().includes(query))) {
+                    return a;
+                }
+            }
+        }
+
+        return null;
+    };
 
     const handleNextStep = (text, userChoice = null) => {
         const userInput = userChoice || text;
@@ -59,10 +88,29 @@ const BharatBotTourMatchmakerChatbot = () => {
             }
             setCapturedData(newData);
 
+            // Agentic AI: Check for smart answer first if not a fixed option choice
+            if (!userChoice) {
+                const smartAnswer = findSmartAnswer(userInput);
+                if (smartAnswer) {
+                    setIsBotTyping(false);
+                    setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: smartAnswer }]);
+                    // After answering, remind them of the current step prompt
+                    setTimeout(() => {
+                        setIsBotTyping(true);
+                        setTimeout(() => {
+                            setIsBotTyping(false);
+                            setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: "By the way, " + currentStepConfig.questionText.replace(`{userName}`, newData.userName || 'there') }]);
+                        }, 1000);
+                    }, 2000);
+                    return;
+                }
+            }
+
             // Check for triggered action
             if (currentStepConfig?.action === 'RECOMMEND_TOURS') {
                 setIsBotTyping(false);
                 setIsAnalyzing(true);
+                handleSaveLead(newData); // Auto save lead on recommendation
                 handleViewRecommendations(newData);
                 return;
             }
@@ -84,6 +132,11 @@ const BharatBotTourMatchmakerChatbot = () => {
                     setIsBotTyping(false);
                     setStep(nextStepNum);
                     setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: botResponse }]);
+                    
+                    // Auto-save lead if we have enough info
+                    if (newData.userName && newData.userEmail && newData.userPhone) {
+                        handleSaveLead(newData);
+                    }
                  }, 800);
             } else {
                 setIsBotTyping(false);
@@ -100,14 +153,14 @@ const BharatBotTourMatchmakerChatbot = () => {
 
     const handleSaveLead = async (data) => {
         try {
-            await fetch('/api/leads', {
+            await fetch(`${import.meta.env.BASE_URL}api/leads`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...data,
                     id: `cb-${Date.now()}`,
                     timestamp: new Date().toISOString(),
-                    source: 'BharatBot Dynamic',
+                    source: 'BharatBot AI',
                     status: 'New'
                 })
             });

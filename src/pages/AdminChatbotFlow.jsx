@@ -7,9 +7,11 @@ const AdminChatbotFlow = () => {
   const [settings, setSettings] = useState({ chatbotEnabled: true });
   const [loading, setLoading] = useState(true);
   const [activeAdminTab, setActiveAdminTab] = useState('flow');
+  const [kbFiles, setKbFiles] = useState([]);
 
   useEffect(() => {
     fetchFlow();
+    fetchKB();
   }, []);
 
   const fetchFlow = () => {
@@ -31,6 +33,14 @@ const AdminChatbotFlow = () => {
       });
   };
 
+  const fetchKB = () => {
+    // Simulation of fetching Knowledge Base files
+    const storedKB = localStorage.getItem('chatbot_kb_files');
+    if (storedKB) {
+      setKbFiles(JSON.parse(storedKB));
+    }
+  };
+
   const saveFlow = async () => {
     const endpoint = activeAdminTab === 'flow' ? '/api/chatflow' : '/api/manual-qa';
     const data = activeAdminTab === 'flow' ? flowSteps : manualQs;
@@ -50,6 +60,44 @@ const AdminChatbotFlow = () => {
       console.error("Save error:", err);
       alert("Network error while saving.");
     }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target.result;
+      // In a real app, you'd send this to the server
+      const newFile = {
+        id: Date.now(),
+        name: file.name,
+        size: (file.size / 1024).toFixed(2) + ' KB',
+        date: new Date().toLocaleString(),
+        content: content // Storing content for simulation
+      };
+      const updatedKB = [...kbFiles, newFile];
+      setKbFiles(updatedKB);
+      localStorage.setItem('chatbot_kb_files', JSON.stringify(updatedKB));
+      alert("Knowledge Base file uploaded and processed successfully!");
+    };
+    reader.readAsText(file);
+  };
+
+  const deleteKBFile = (id) => {
+    const updatedKB = kbFiles.filter(f => f.id !== id);
+    setKbFiles(updatedKB);
+    localStorage.setItem('chatbot_kb_files', JSON.stringify(updatedKB));
+  };
+
+  const downloadKBFile = (file) => {
+    const blob = new Blob([file.content], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    a.click();
   };
 
   const toggleChatbotEnabled = async () => {
@@ -135,23 +183,29 @@ const AdminChatbotFlow = () => {
                 </button>
             </div>
             
-            <button onClick={saveFlow} className="bg-[#0a6c75] hover:bg-[#085a62] text-white font-black py-3 px-8 rounded-2xl transition-all shadow-lg flex items-center gap-2 text-sm uppercase tracking-widest active:scale-95">
-                <span className="material-symbols-outlined text-[20px]">verified</span>
-                Commit Intelligence
-            </button>
+            {activeAdminTab !== 'kb' && (
+              <button onClick={saveFlow} className="bg-[#0a6c75] hover:bg-[#085a62] text-white font-black py-3 px-8 rounded-2xl transition-all shadow-lg flex items-center gap-2 text-sm uppercase tracking-widest active:scale-95">
+                  <span className="material-symbols-outlined text-[20px]">verified</span>
+                  Commit Intelligence
+              </button>
+            )}
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-100 dark:border-slate-800 gap-12">
-        {['flow', 'manual'].map(tab => (
+      <div className="flex border-b border-slate-100 dark:border-slate-800 gap-12 overflow-x-auto hide-scrollbar">
+        {[
+          { id: 'flow', label: 'Core Flow' },
+          { id: 'manual', label: 'Manual Q&A' },
+          { id: 'kb', label: 'Knowledge Base (Excel)' }
+        ].map(tab => (
           <button 
-            key={tab}
-            onClick={() => setActiveAdminTab(tab)}
-            className={`pb-4 text-xs font-black uppercase tracking-[0.2em] transition-all relative ${activeAdminTab === tab ? 'text-[#0a6c75]' : 'text-slate-400 hover:text-slate-600'}`}
+            key={tab.id}
+            onClick={() => setActiveAdminTab(tab.id)}
+            className={`pb-4 text-xs font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap ${activeAdminTab === tab.id ? 'text-[#0a6c75]' : 'text-slate-400 hover:text-slate-600'}`}
           >
-            {tab === 'flow' ? 'Core Decision Tree' : 'Knowledge Base (FAQ)'}
-            {activeAdminTab === tab && <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#0a6c75] rounded-t-full"></div>}
+            {tab.label}
+            {activeAdminTab === tab.id && <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#0a6c75] rounded-t-full"></div>}
           </button>
         ))}
       </div>
@@ -209,6 +263,8 @@ const AdminChatbotFlow = () => {
                           <select value={step.mappedField || ''} onChange={(e) => handleFlowFieldChange(index, 'mappedField', e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-xs font-black uppercase tracking-widest appearance-none cursor-pointer">
                             <option value="">Bot Dialogue</option>
                             <option value="userName">Full Name</option>
+                            <option value="userEmail">Email ID</option>
+                            <option value="userPhone">Mobile Number</option>
                             <option value="userInterest">Interests</option>
                             <option value="budget">Budget Tier</option>
                             <option value="travelers">Head Count</option>
@@ -242,7 +298,7 @@ const AdminChatbotFlow = () => {
               <span className="text-[10px] font-black uppercase tracking-[0.3em]">Append Conversation Node</span>
            </button>
         </div>
-      ) : (
+      ) : activeAdminTab === 'manual' ? (
         <div className="space-y-8">
            {manualQs.map((item, index) => (
              <div key={index} className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 p-8 space-y-6">
@@ -266,6 +322,57 @@ const AdminChatbotFlow = () => {
               <span className="material-symbols-outlined italic">quiz</span>
               <span className="text-[10px] font-black uppercase tracking-[0.3em]">Add Intelligence Entry</span>
            </button>
+        </div>
+      ) : (
+        <div className="space-y-10">
+          {/* Upload Area */}
+          <div className="bg-[#f8fafc] dark:bg-slate-900/50 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[40px] p-12 text-center flex flex-col items-center gap-6 group hover:border-[#0a6c75] hover:bg-[#0a6c75]/5 transition-all relative overflow-hidden">
+             <div className="size-20 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-4xl text-[#0a6c75]">upload_file</span>
+             </div>
+             <div>
+                <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-2">Upload Knowledge Matrix</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 font-bold max-w-md">Import Excel (.xlsx) or CSV files containing tours, FAQs, and destination details to train your Bharat Bot.</p>
+             </div>
+             <input type="file" accept=".csv,.xlsx" onChange={handleFileUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
+             <div className="px-8 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs font-black uppercase tracking-widest text-[#0a6c75] shadow-sm">Choose File</div>
+          </div>
+
+          {/* File List */}
+          <div className="space-y-4">
+             <div className="flex items-center justify-between px-4">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Active Knowledge Sources ({kbFiles.length})</h4>
+             </div>
+             {kbFiles.length === 0 ? (
+               <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 p-12 text-center text-slate-400 italic font-bold">
+                  No knowledge files uploaded yet.
+               </div>
+             ) : (
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {kbFiles.map(file => (
+                    <div key={file.id} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-6 flex items-center justify-between group hover:shadow-xl transition-all">
+                       <div className="flex items-center gap-4">
+                          <div className="size-12 bg-[#0a6c75]/10 rounded-2xl flex items-center justify-center text-[#0a6c75]">
+                             <span className="material-symbols-outlined">table_chart</span>
+                          </div>
+                          <div>
+                             <h5 className="text-sm font-black text-slate-800 dark:text-slate-100">{file.name}</h5>
+                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{file.size} • {file.date}</p>
+                          </div>
+                       </div>
+                       <div className="flex items-center gap-2">
+                          <button onClick={() => downloadKBFile(file)} className="size-10 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-400 hover:text-[#0a6c75] transition-all flex items-center justify-center">
+                             <span className="material-symbols-outlined text-[20px]">download</span>
+                          </button>
+                          <button onClick={() => deleteKBFile(file.id)} className="size-10 rounded-xl hover:bg-red-50 text-slate-300 hover:text-red-500 transition-all flex items-center justify-center">
+                             <span className="material-symbols-outlined text-[20px]">delete</span>
+                          </button>
+                       </div>
+                    </div>
+                  ))}
+               </div>
+             )}
+          </div>
         </div>
       )}
     </div>

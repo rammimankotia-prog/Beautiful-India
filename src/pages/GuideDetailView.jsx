@@ -394,15 +394,24 @@ const GuideDetailView = () => {
   /* ─────────────── Share icons map ─────────────── */
   const shareButtons = [
     { Icon: Facebook, label: 'Facebook', action: handleShareFacebook },
-    { Icon: Twitter, label: 'Twitter', action: handleShareTwitter },
     { Icon: (props) => (
-      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2.5 13h4M2.5 17h4M2.5 9h4M10 5.5V11c0 .5.5 1 1 1h9c.5 0 1-.5 1-1V5.5c0-.5-.5-1-1-1h-9c-.5 0-1 .5-1 1zM10 13v5.5c0 .5.5 1 1 1h9c.5 0 1-.5 1-1V13c0-.5-.5-1-1-1h-9c-.5 0-1 .5-1 1z" />
+      <svg {...props} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.248 2.25h6.634l4.957 6.547 5.405-6.547zm-1.16 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+      </svg>
+    ), label: 'X (Twitter)', action: handleShareTwitter },
+    { Icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 1.85 6.42l-1.37 5.03 5.15-1.35A12 12 0 1 0 12 0zm0 21.94c-1.8 0-3.56-.48-5.09-1.39l-.37-.22-3.04.8 1.81-2.95-.24-.39a9.94 9.94 0 1 1 6.93 4.15zM17.43 14.38c-.3-.15-1.77-.87-2.05-.97s-.48-.15-.69.15-1.05 1.31-1.28 1.59-.47.31-.77.16c-.3-.15-1.27-.47-2.42-1.5a8.96 8.96 0 0 1-1.67-2.08c-.18-.3-.02-.47.13-.62s.3-.35.45-.53.2-.3.3-.5.05-.37-.02-.53-.69-1.65-.95-2.27c-.25-.62-.5-.53-.69-.54l-.59-.01c-.2 0-.53.08-.8.38s-1.05 1.03-1.05 2.51 1.07 2.9 1.22 3.1 2.1 3.2 5.09 4.5c.71.3 1.27.49 1.7.63s.83.24 1.15.19c.35-.05 1.07-.44 1.22-.86s.15-.79.1-.86-.19-.15-.49-.3z"/>
+      </svg>
+    ), label: 'WhatsApp', action: () => window.open(`https://wa.me/?text=${shareTitle}%20${encodeURIComponent(pageUrl)}`, '_blank') },
+    { Icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 24c6.627 0 12-5.373 12-12s-5.373-12-12-12-12 5.373-12 12 5.373 12 12 12zm6.75-7.5h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75z"/>
       </svg>
     ), label: 'Plurk', action: handleSharePlurk },
     { Icon: (props) => (
-      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/><path d="M17 12h-5M12 17v-5M12 7v5M7 12h5"/>
+      <svg {...props} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3.955 17.519c-.86.86-2.523 1.278-3.966 1.278s-3.106-.418-3.966-1.278c-.195-.195-.195-.512 0-.707s.512-.195.707 0c.645.645 1.956.985 3.259.985s2.614-.34 3.259-.985c.195-.195.512-.195.707 0s.195.512 0 .707zm.545-5.269c-.738 0-1.334-.596-1.334-1.334s.596-1.334 1.334-1.334 1.334.596 1.334 1.334-.596 1.334-1.334 1.334zm-9 0c-.738 0-1.334-.596-1.334-1.334s.596-1.334 1.334-1.334 1.334.596 1.334 1.334-.596 1.334-1.334 1.334z"/>
       </svg>
     ), label: 'Reddit', action: handleShareReddit },
     { Icon: LinkIcon, label: 'Copy link', action: handleCopyLink },
@@ -776,10 +785,10 @@ const GuideDetailView = () => {
                 <a href="https://www.instagram.com/holidaydestinations9/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
                   <Instagram size={18} className="text-white" />
                 </a>
-                <a href="https://www.reddit.com/r/holidaydestination/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#ff4500] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <a href="https://www.reddit.com/r/holidaydestination/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#ff4500] flex items-center justify-center hover:scale-110 transition-transform shadow-lg" title="Reddit Community">
                   <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M24 11.5c0-1.654-1.346-3-3-3-.674 0-1.296.226-1.802.603-2.181-1.503-5.111-2.457-8.384-2.58l1.735-5.432 4.764 1.041c.044.872.766 1.568 1.649 1.568 1.01 0 1.832-.821 1.832-1.832s-.822-1.832-1.832-1.832c-.803 0-1.48.518-1.72 1.233l-5.234-1.144c-.23-.051-.458.082-.531.31l-1.954 6.114c-3.353.078-6.386 1.026-8.636 2.56-.505-.386-1.14-.622-1.828-.622-1.654 0-3 1.346-3 3 0 1.135.635 2.119 1.572 2.628-.024.122-.037.245-.037.372 0 3.309 4.029 6 9 6s9-2.691 9-6c0-.124-.013-.245-.036-.364.95-.503 1.598-1.5 1.598-2.636zm-18.067 2.132c.738 0 1.334.597 1.334 1.334s-.596 1.334-1.334 1.334-1.334-.597-1.334-1.334.596-1.334 1.334-1.334zm10.741 4.562c-1.144 1.144-3.084 1.654-4.674 1.654-1.591 0-3.531-.51-4.674-1.654-.195-.195-.195-.512 0-.707.196-.195.513-.195.708 0 .86.86 2.522 1.278 3.966 1.278 1.444 0 3.106-.418 3.966-1.278.195-.195.512-.195.707 0 .196.195.196.512 0 .707zm-1.008-3.228c-.738 0-1.334-.597-1.334-1.334s.596-1.334 1.334-1.334 1.334.597 1.334 1.334-.596 1.334-1.334 1.334z"/></svg>
                 </a>
-                <a href="https://www.plurk.com/HolidayDestinations" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#cf4732] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <a href="https://www.plurk.com/HolidayDestinations" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#cf4732] flex items-center justify-center hover:scale-110 transition-transform shadow-lg" title="Plurk Profile">
                   <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.75 16.5h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75z"/></svg>
                 </a>
               </div>

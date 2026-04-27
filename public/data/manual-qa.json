@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "question": "What are the best tours for adventure?",
+    "answer": "For adventure seekers, we highly recommend our 'Himachal Trekking Expedition' or the 'Leh-Ladakh Bike Tour'. These offer breathtaking views and thrilling experiences.",
+    "category": "Adventure"
+  },
+  {
+    "question": "Do you have any spiritual tours?",
+    "answer": "Yes, we specialize in spiritual journeys! Our 'Chardham Yatra' and 'Varanasi-Ganga Aarti Experience' are very popular among guests looking for peace and divinity.",
+    "category": "Spiritual"
+  },
+  {
+    "question": "What is included in the tour packages?",
+    "answer": "Most of our Bharat Darshan packages include 3-star or 4-star accommodation, breakfast, sightseeing in private vehicles, and a dedicated tour guide. Flights are usually optional.",
+    "category": "General"
+  }
+]
