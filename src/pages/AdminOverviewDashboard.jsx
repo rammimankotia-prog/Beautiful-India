@@ -354,8 +354,5 @@ const AdminOverviewDashboard = () => {
         </div>
     );
 };
-        </div>
-    );
-};
 
 export default AdminOverviewDashboard;
