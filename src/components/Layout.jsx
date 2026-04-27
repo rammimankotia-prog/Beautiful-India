@@ -10,6 +10,36 @@ import WhatsAppFloatingButton from './WhatsAppFloatingButton';
 const Layout = () => {
     const location = useLocation();
     const isAdminPage = location.pathname.startsWith('/admin');
+    const [settings, setSettings] = useState({ 
+        chatbotEnabled: true, 
+        whatsappEnabled: true,
+        visibility: { chatbot: { all: true }, whatsapp: { all: true } }
+    });
+
+    useEffect(() => {
+        fetch(`${import.meta.env.BASE_URL}data/settings.json?t=${Date.now()}`)
+            .then(res => res.json())
+            .then(data => setSettings(data))
+            .catch(() => {});
+    }, []);
+
+    const isVisible = (type) => {
+        if (!settings) return true;
+        const config = settings.visibility?.[type];
+        if (!config) return true;
+        if (config.all) return true;
+
+        const path = location.pathname;
+        if (path === '/' || path === import.meta.env.BASE_URL) return config.home;
+        if (path.includes('/tour')) return config.tours;
+        if (path.includes('/train')) return config.trains;
+        if (path.includes('/guide') || path.includes('/blog')) return config.guides;
+        
+        return false;
+    };
+
+    const showChatbot = !isAdminPage && settings.chatbotEnabled !== false && isVisible('chatbot');
+    const showWhatsapp = !isAdminPage && settings.whatsappEnabled !== false && isVisible('whatsapp');
 
     // Breadcrumb logic
     const pathnames = location.pathname.split('/').filter((x) => x);
@@ -92,8 +122,8 @@ const Layout = () => {
                     <Footer />
                 </div>
             )}
-            {!isAdminPage && <BharatBotFloatingButton />}
-            {!isAdminPage && <WhatsAppFloatingButton />}
+            {showChatbot && <BharatBotFloatingButton />}
+            {showWhatsapp && <WhatsAppFloatingButton />}
         </div>
     );
 };

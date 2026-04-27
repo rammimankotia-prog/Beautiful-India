@@ -42,8 +42,19 @@ const AdminChatbotFlow = () => {
   };
 
   const saveFlow = async () => {
-    const endpoint = activeAdminTab === 'flow' ? '/api/chatflow' : '/api/manual-qa';
-    const data = activeAdminTab === 'flow' ? flowSteps : manualQs;
+    let endpoint, data;
+    if (activeAdminTab === 'flow') {
+      endpoint = '/api/chatflow';
+      data = flowSteps;
+    } else if (activeAdminTab === 'manual') {
+      endpoint = '/api/manual-qa';
+      data = manualQs;
+    } else if (activeAdminTab === 'settings') {
+      endpoint = '/api/save-settings';
+      data = settings;
+    } else {
+      return;
+    }
     
     try {
       const res = await fetch(endpoint, {
@@ -52,7 +63,7 @@ const AdminChatbotFlow = () => {
         body: JSON.stringify(data)
       });
       if (res.ok) {
-        alert(`${activeAdminTab === 'flow' ? 'Chatflow' : 'Manual Q&A'} updated successfully!`);
+        alert(`${activeAdminTab.charAt(0).toUpperCase() + activeAdminTab.slice(1)} updated successfully!`);
       } else {
         alert("Failed to save. Check server logs.");
       }
@@ -60,6 +71,23 @@ const AdminChatbotFlow = () => {
       console.error("Save error:", err);
       alert("Network error while saving.");
     }
+  };
+
+  const handleVisibilityChange = (type, page, value) => {
+    setSettings(prev => ({
+      ...prev,
+      visibility: {
+        ...prev.visibility,
+        [type]: {
+          ...prev.visibility?.[type],
+          [page]: value
+        }
+      }
+    }));
+  };
+
+  const toggleWhatsApp = () => {
+    setSettings(prev => ({ ...prev, whatsappEnabled: !prev.whatsappEnabled }));
   };
 
   const handleFileUpload = (e) => {
@@ -170,7 +198,7 @@ const AdminChatbotFlow = () => {
         
         <div className="flex items-center gap-4">
             <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 pl-4 pr-3 rounded-2xl shadow-sm">
-                <span className="text-xs font-black uppercase tracking-widest text-slate-500 mr-4">Master Switch</span>
+                <span className="text-xs font-black uppercase tracking-widest text-slate-500 mr-4">Chatbot Master</span>
                 <button 
                   onClick={toggleChatbotEnabled}
                   className={`w-16 h-8 rounded-full transition-colors flex items-center p-1 cursor-pointer outline-none ${settings.chatbotEnabled !== false ? 'bg-[#0a6c75]' : 'bg-slate-200 dark:bg-slate-700'}`}
@@ -197,7 +225,8 @@ const AdminChatbotFlow = () => {
         {[
           { id: 'flow', label: 'Core Flow' },
           { id: 'manual', label: 'Manual Q&A' },
-          { id: 'kb', label: 'Knowledge Base (Excel)' }
+          { id: 'kb', label: 'Knowledge Base (Excel)' },
+          { id: 'settings', label: 'Visibility Settings' }
         ].map(tab => (
           <button 
             key={tab.id}
@@ -323,7 +352,7 @@ const AdminChatbotFlow = () => {
               <span className="text-[10px] font-black uppercase tracking-[0.3em]">Add Intelligence Entry</span>
            </button>
         </div>
-      ) : (
+      ) : activeAdminTab === 'kb' ? (
         <div className="space-y-10">
           {/* Upload Area */}
           <div className="bg-[#f8fafc] dark:bg-slate-900/50 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[40px] p-12 text-center flex flex-col items-center gap-6 group hover:border-[#0a6c75] hover:bg-[#0a6c75]/5 transition-all relative overflow-hidden">
@@ -373,6 +402,86 @@ const AdminChatbotFlow = () => {
                </div>
              )}
           </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+           {/* WhatsApp Controls */}
+           <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-10 space-y-8 shadow-sm">
+              <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-4">
+                    <div className="size-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600">
+                       <span className="material-symbols-outlined">chat</span>
+                    </div>
+                    <div>
+                       <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">WhatsApp Master</h3>
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global toggle & visibility</p>
+                    </div>
+                 </div>
+                 <button 
+                  onClick={toggleWhatsApp}
+                  className={`w-16 h-8 rounded-full transition-colors flex items-center p-1 cursor-pointer outline-none ${settings.whatsappEnabled !== false ? 'bg-green-500' : 'bg-slate-200'}`}
+                >
+                    <div className={`w-6 h-6 bg-white rounded-full transition-transform shadow-md ${settings.whatsappEnabled !== false ? 'translate-x-8' : 'translate-x-0'}`}></div>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] ml-1">Show WhatsApp On:</label>
+                 <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { id: 'all', label: 'All Pages' },
+                      { id: 'home', label: 'Home Page' },
+                      { id: 'tours', label: 'Tour Details' },
+                      { id: 'trains', label: 'Train Bookings' },
+                      { id: 'guides', label: 'Travel Guides' }
+                    ].map(page => (
+                      <button 
+                        key={page.id}
+                        onClick={() => handleVisibilityChange('whatsapp', page.id, !settings.visibility?.whatsapp?.[page.id])}
+                        className={`p-4 rounded-2xl border text-left transition-all flex items-center justify-between ${settings.visibility?.whatsapp?.[page.id] ? 'bg-green-50 border-green-100 text-green-700' : 'bg-slate-50 border-transparent text-slate-400'}`}
+                      >
+                         <span className="text-xs font-bold">{page.label}</span>
+                         {settings.visibility?.whatsapp?.[page.id] && <span className="material-symbols-outlined text-sm">check_circle</span>}
+                      </button>
+                    ))}
+                 </div>
+              </div>
+           </div>
+
+           {/* Chatbot Visibility */}
+           <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 p-10 space-y-8 shadow-sm">
+              <div className="flex items-center gap-4">
+                  <div className="size-12 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600">
+                      <span className="material-symbols-outlined">smart_toy</span>
+                  </div>
+                  <div>
+                      <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">Chatbot Visibility</h3>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Page specific presence</p>
+                  </div>
+              </div>
+
+              <div className="space-y-4">
+                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] ml-1">Show Chatbot On:</label>
+                 <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { id: 'all', label: 'All Pages' },
+                      { id: 'home', label: 'Home Page' },
+                      { id: 'tours', label: 'Tour Details' },
+                      { id: 'trains', label: 'Train Bookings' },
+                      { id: 'guides', label: 'Travel Guides' }
+                    ].map(page => (
+                      <button 
+                        key={page.id}
+                        onClick={() => handleVisibilityChange('chatbot', page.id, !settings.visibility?.chatbot?.[page.id])}
+                        className={`p-4 rounded-2xl border text-left transition-all flex items-center justify-between ${settings.visibility?.chatbot?.[page.id] ? 'bg-teal-50 border-teal-100 text-teal-700' : 'bg-slate-50 border-transparent text-slate-400'}`}
+                      >
+                         <span className="text-xs font-bold">{page.label}</span>
+                         {settings.visibility?.chatbot?.[page.id] && <span className="material-symbols-outlined text-sm">check_circle</span>}
+                      </button>
+                    ))}
+                 </div>
+              </div>
+           </div>
         </div>
       )}
     </div>
