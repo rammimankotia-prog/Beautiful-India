@@ -21,6 +21,7 @@ const BharatBotTourMatchmakerChatbot = () => {
     }, [messages, isBotTyping, isAnalyzing]);
 
     const [kbFiles, setKbFiles] = useState([]);
+    const [allTours, setAllTours] = useState([]);
 
     useEffect(() => {
         // Fetch Flow
@@ -44,6 +45,12 @@ const BharatBotTourMatchmakerChatbot = () => {
             .then(data => setManualQs(data))
             .catch(() => {});
 
+        // Fetch All Tours for live matching
+        fetch(`${import.meta.env.BASE_URL}data/tours.json`)
+            .then(res => res.json())
+            .then(data => setAllTours(data))
+            .catch(() => {});
+
         // Load Knowledge Base from storage
         const storedKB = localStorage.getItem('chatbot_kb_files');
         if (storedKB) {
@@ -54,19 +61,49 @@ const BharatBotTourMatchmakerChatbot = () => {
     const findSmartAnswer = (input) => {
         const query = input.toLowerCase();
         
+        // Hinglish/Common synonyms mapping
+        const hinglishMap = {
+            'kharcha': 'price', 'budget': 'price', 'kitna': 'price',
+            'package': 'tour', 'ghoomna': 'travel', 'trip': 'tour',
+            'kab': 'time', 'mausam': 'weather', 'best time': 'weather',
+            'rahna': 'hotel', 'stay': 'hotel', 'hotel': 'hotel'
+        };
+
         // 1. Search in Manual Q&A
         const manualMatch = manualQs.find(q => query.includes(q.question.toLowerCase()) || q.question.toLowerCase().includes(query));
         if (manualMatch) return manualMatch.answer;
 
-        // 2. Search in Knowledge Base (Uploaded Files)
+        // 2. Search in Tours FAQ
+        for (const tour of allTours) {
+            if (tour.faq) {
+                const faqMatch = tour.faq.find(f => query.includes(f.question.toLowerCase()) || f.question.toLowerCase().includes(query));
+                if (faqMatch) return `Regarding ${tour.title}: ${faqMatch.answer}`;
+            }
+        }
+
+        // 3. Search in Knowledge Base (Uploaded Files)
         for (const file of kbFiles) {
             const lines = file.content.split('\n');
             for (const line of lines) {
-                const [q, a] = line.split(','); // Assuming CSV format for simulation
-                if (q && a && (query.includes(q.toLowerCase()) || q.toLowerCase().includes(query))) {
-                    return a;
+                // Better keyword search in line
+                if (query.length > 3 && line.toLowerCase().includes(query)) {
+                    // Try to extract answer (usually comma or tab separated)
+                    const parts = line.split(/[,\t|]/);
+                    if (parts.length > 1) return parts[1].trim();
+                    return line;
                 }
             }
+        }
+
+        // 4. Destination Matching (Live Suggestion)
+        const matchedTour = allTours.find(t => 
+            query.includes(t.title.toLowerCase()) || 
+            (t.stateRegion && t.stateRegion.some(r => query.includes(r.toLowerCase()))) ||
+            (t.subregion && (Array.isArray(t.subregion) ? t.subregion.some(s => query.includes(s.toLowerCase())) : query.includes(t.subregion.toLowerCase())))
+        );
+
+        if (matchedTour) {
+            return `I see you're interested in ${matchedTour.title}! We have an amazing package for ${matchedTour.duration} starting at ₹${matchedTour.price}. Would you like me to tell you more about it?`;
         }
 
         return null;
@@ -99,9 +136,10 @@ const BharatBotTourMatchmakerChatbot = () => {
                         setIsBotTyping(true);
                         setTimeout(() => {
                             setIsBotTyping(false);
-                            setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: "By the way, " + currentStepConfig.questionText.replace(`{userName}`, newData.userName || 'there') }]);
+                            const reminderText = currentStepConfig ? currentStepConfig.questionText.replace(`{userName}`, newData.userName || 'there') : "How else can I help you today?";
+                            setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: "By the way, " + reminderText }]);
                         }, 1000);
-                    }, 2000);
+                    }, 3000);
                     return;
                 }
             }
