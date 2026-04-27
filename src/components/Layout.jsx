@@ -34,6 +34,31 @@ const Layout = () => {
         });
     });
 
+    const businessSchema = {
+        "@context": "https://schema.org",
+        "@type": "TravelAgency",
+        "name": "The Beautiful India - Bharat Darshan",
+        "url": "https://bhaktikishakti.com",
+        "logo": "https://bhaktikishakti.com/beautiful_india_logo_1773142903437.png",
+        "description": "Premium travel and tour operator in India providing curated experiences for Himachal, Kashmir, Rajasthan, and more.",
+        "telephone": "+916005159433",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Main Market",
+            "addressLocality": "Dharamshala",
+            "addressRegion": "Himachal Pradesh",
+            "postalCode": "176215",
+            "addressCountry": "IN"
+        },
+        "sameAs": [
+            "https://www.facebook.com/honeymoon.package/",
+            "https://www.facebook.com/TouristDestinationsofIndia",
+            "https://www.plurk.com/HolidayDestinations",
+            "https://www.reddit.com/r/holidaydestination/",
+            "https://www.instagram.com/holidaydestinations9/"
+        ]
+    };
+
     const breadcrumbSchema = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -49,6 +74,9 @@ const Layout = () => {
                     <link rel="canonical" href={canonicalUrl} />
                     <script type="application/ld+json">
                         {JSON.stringify(breadcrumbSchema)}
+                    </script>
+                    <script type="application/ld+json">
+                        {JSON.stringify(businessSchema)}
                     </script>
                 </Helmet>
             )}

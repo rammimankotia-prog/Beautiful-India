@@ -316,6 +316,22 @@ const GuideDetailView = () => {
     );
   };
 
+  const handleShareReddit = () => {
+    window.open(
+      `https://www.reddit.com/submit?url=${encodeURIComponent(pageUrl)}&title=${shareTitle}`,
+      '_blank',
+      'width=600,height=600'
+    );
+  };
+
+  const handleSharePlurk = () => {
+    window.open(
+      `https://www.plurk.com/?qualifier=shares&content=${encodeURIComponent(pageUrl)}%20(${shareTitle})`,
+      '_blank',
+      'width=600,height=600'
+    );
+  };
+
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(pageUrl);
@@ -379,6 +395,16 @@ const GuideDetailView = () => {
   const shareButtons = [
     { Icon: Facebook, label: 'Facebook', action: handleShareFacebook },
     { Icon: Twitter, label: 'Twitter', action: handleShareTwitter },
+    { Icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2.5 13h4M2.5 17h4M2.5 9h4M10 5.5V11c0 .5.5 1 1 1h9c.5 0 1-.5 1-1V5.5c0-.5-.5-1-1-1h-9c-.5 0-1 .5-1 1zM10 13v5.5c0 .5.5 1 1 1h9c.5 0 1-.5 1-1V13c0-.5-.5-1-1-1h-9c-.5 0-1 .5-1 1z" />
+      </svg>
+    ), label: 'Plurk', action: handleSharePlurk },
+    { Icon: (props) => (
+      <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M17 12h-5M12 17v-5M12 7v5M7 12h5"/>
+      </svg>
+    ), label: 'Reddit', action: handleShareReddit },
     { Icon: LinkIcon, label: 'Copy link', action: handleCopyLink },
   ];
 
@@ -733,6 +759,30 @@ const GuideDetailView = () => {
               >
                 Ask an Expert
               </button>
+            </div>
+
+            {/* Social Links Block */}
+            <div className="glass-card rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800">
+              <h3 className="text-base font-black text-slate-900 dark:text-white uppercase tracking-widest mb-6">
+                Connect with Us
+              </h3>
+              <div className="flex flex-wrap gap-4">
+                <a href="https://www.facebook.com/honeymoon.package/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#3b5998] flex items-center justify-center hover:scale-110 transition-transform shadow-lg" title="Honeymoon Packages">
+                  <Facebook size={18} className="text-white" />
+                </a>
+                <a href="https://www.facebook.com/TouristDestinationsofIndia" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#3b5998] flex items-center justify-center hover:scale-110 transition-transform shadow-lg" title="Tourist Destinations">
+                  <Facebook size={18} className="text-white" />
+                </a>
+                <a href="https://www.instagram.com/holidaydestinations9/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                  <Instagram size={18} className="text-white" />
+                </a>
+                <a href="https://www.reddit.com/r/holidaydestination/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#ff4500] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                  <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M24 11.5c0-1.654-1.346-3-3-3-.674 0-1.296.226-1.802.603-2.181-1.503-5.111-2.457-8.384-2.58l1.735-5.432 4.764 1.041c.044.872.766 1.568 1.649 1.568 1.01 0 1.832-.821 1.832-1.832s-.822-1.832-1.832-1.832c-.803 0-1.48.518-1.72 1.233l-5.234-1.144c-.23-.051-.458.082-.531.31l-1.954 6.114c-3.353.078-6.386 1.026-8.636 2.56-.505-.386-1.14-.622-1.828-.622-1.654 0-3 1.346-3 3 0 1.135.635 2.119 1.572 2.628-.024.122-.037.245-.037.372 0 3.309 4.029 6 9 6s9-2.691 9-6c0-.124-.013-.245-.036-.364.95-.503 1.598-1.5 1.598-2.636zm-18.067 2.132c.738 0 1.334.597 1.334 1.334s-.596 1.334-1.334 1.334-1.334-.597-1.334-1.334.596-1.334 1.334-1.334zm10.741 4.562c-1.144 1.144-3.084 1.654-4.674 1.654-1.591 0-3.531-.51-4.674-1.654-.195-.195-.195-.512 0-.707.196-.195.513-.195.708 0 .86.86 2.522 1.278 3.966 1.278 1.444 0 3.106-.418 3.966-1.278.195-.195.512-.195.707 0 .196.195.196.512 0 .707zm-1.008-3.228c-.738 0-1.334-.597-1.334-1.334s.596-1.334 1.334-1.334 1.334.597 1.334 1.334-.596 1.334-1.334 1.334z"/></svg>
+                </a>
+                <a href="https://www.plurk.com/HolidayDestinations" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[#cf4732] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                  <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.75 16.5h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-9.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h9.5c.414 0 .75.336.75.75s-.336.75-.75.75z"/></svg>
+                </a>
+              </div>
             </div>
 
           </div>
