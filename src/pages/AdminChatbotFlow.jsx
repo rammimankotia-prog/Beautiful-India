@@ -8,6 +8,7 @@ const AdminChatbotFlow = () => {
   const [loading, setLoading] = useState(true);
   const [activeAdminTab, setActiveAdminTab] = useState('flow');
   const [kbFiles, setKbFiles] = useState([]);
+  const [draggedItemIndex, setDraggedItemIndex] = useState(null);
 
   useEffect(() => {
     fetchFlow();
@@ -184,6 +185,31 @@ const AdminChatbotFlow = () => {
     setFlowSteps(flowSteps.filter((_, i) => i !== index));
   };
 
+  const handleDragStart = (e, index) => {
+    setDraggedItemIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItemIndex(null);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedItemIndex === null || draggedItemIndex === targetIndex) return;
+
+    const items = [...flowSteps];
+    const draggedItem = items[draggedItemIndex];
+    items.splice(draggedItemIndex, 1);
+    items.splice(targetIndex, 0, draggedItem);
+    setFlowSteps(items);
+  };
+
   return (
     <div className="p-6 lg:p-10 max-w-[1200px] mx-auto space-y-10 animate-in fade-in duration-500">
       {/* Header */}
@@ -247,9 +273,20 @@ const AdminChatbotFlow = () => {
       ) : activeAdminTab === 'flow' ? (
         <div className="space-y-8">
            {flowSteps.map((step, index) => (
-             <div key={step.id || index} className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:shadow-xl hover:border-teal-100 dark:hover:border-teal-900 group">
+             <div 
+                key={step.id || index} 
+                draggable={true}
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, index)}
+                className={`bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:shadow-xl hover:border-teal-100 dark:hover:border-teal-900 group ${draggedItemIndex === index ? 'opacity-40 border-dashed border-teal-500 scale-95' : ''}`}
+             >
                 <div className="px-8 py-5 border-b border-slate-50 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/20">
                    <div className="flex items-center gap-4">
+                      <div className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-teal-500 transition-colors">
+                        <span className="material-symbols-outlined text-2xl">drag_indicator</span>
+                      </div>
                       <div className="w-10 h-10 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center font-black text-[#0a6c75] shadow-sm italic text-lg">
                         {index + 1}
                       </div>
