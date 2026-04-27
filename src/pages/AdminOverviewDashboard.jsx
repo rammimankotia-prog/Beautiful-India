@@ -225,77 +225,135 @@ const AdminOverviewDashboard = () => {
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
                 {/* Activity Feed */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-3 space-y-8">
                     <div className="flex items-center justify-between px-2">
-                        <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">Recent Activity</h2>
-                        <Link to="/admin/leads" className="text-[10px] font-black text-[#0a6c75] uppercase tracking-widest hover:underline">Full Report</Link>
+                        <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">System Pulse (Recent)</h2>
+                        <Link to="/admin/leads" className="text-[10px] font-black text-[#0a6c75] uppercase tracking-widest hover:underline">Full Analytics</Link>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-2">
+                    <div className="bg-white dark:bg-slate-900 rounded-[48px] border border-slate-100 dark:border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden p-4">
                         {loading ? (
-                            <div className="h-64 flex flex-col items-center justify-center gap-4">
-                                <div className="w-10 h-10 border-4 border-slate-100 border-t-[#0a6c75] rounded-full animate-spin"></div>
-                                <p className="text-slate-400 font-bold italic">Gathering latest logs...</p>
+                            <div className="h-96 flex flex-col items-center justify-center gap-4">
+                                <div className="w-12 h-12 border-4 border-slate-100 border-t-[#0a6c75] rounded-full animate-spin"></div>
+                                <p className="text-slate-400 font-bold italic tracking-wide">Syncing real-time intelligence...</p>
                             </div>
                         ) : (
                             <div className="space-y-1">
-                                 {activities.map((act) => (
-                                    <div key={act.id} className="flex items-center gap-6 p-6 rounded-[24px] hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
-                                        <div className={`${act.color} text-white w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform`}>
-                                            <span className="material-symbols-outlined text-[20px]">{act.icon}</span>
+                                 {activities.length > 0 ? activities.map((act) => (
+                                    <div key={act.id} className="flex items-center gap-6 p-6 rounded-[32px] hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all group">
+                                        <div className={`${act.color} text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform`}>
+                                            <span className="material-symbols-outlined text-[24px]">{act.icon}</span>
                                         </div>
                                         <div className="flex-1">
-                                            <p className="font-black text-slate-800 dark:text-slate-100 leading-tight mb-0.5">{act.title}</p>
-                                            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-tight">{act.user}</p>
+                                            <p className="font-black text-slate-800 dark:text-slate-100 leading-tight mb-1 text-lg">{act.title}</p>
+                                            <div className="flex items-center gap-3">
+                                                <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[9px] font-black text-slate-400 uppercase tracking-widest">{act.type}</span>
+                                                <p className="text-[11px] text-slate-500 font-bold uppercase tracking-tight">{act.user}</p>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
                                             <button 
                                                 onClick={() => handleViewActivity(act)}
-                                                className="w-9 h-9 flex items-center justify-center bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#0a6c75] hover:text-[#0a6c75] transition-all shadow-sm"
-                                                title="View/Manage"
+                                                className="w-11 h-11 flex items-center justify-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-[#0a6c75] hover:text-[#0a6c75] transition-all shadow-sm"
+                                                title="Open Record"
                                             >
-                                                <span className="material-symbols-outlined text-[18px]">visibility</span>
+                                                <span className="material-symbols-outlined text-[20px]">open_in_new</span>
                                             </button>
                                             <button 
                                                 onClick={() => handleDeleteActivity(act)}
-                                                className="w-9 h-9 flex items-center justify-center bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-red-500 hover:text-red-500 transition-all shadow-sm"
-                                                title="Hide Activity"
+                                                className="w-11 h-11 flex items-center justify-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-red-500 hover:text-red-500 transition-all shadow-sm"
+                                                title="Dismiss"
                                             >
-                                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                                                <span className="material-symbols-outlined text-[20px]">close</span>
                                             </button>
                                         </div>
                                         <div className="text-right ml-4">
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">{act.time ? new Date(act.time).toLocaleDateString() : 'Today'}</p>
-                                            <p className="text-[10px] font-bold text-slate-300 uppercase">{act.time ? new Date(act.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently'}</p>
+                                            <p className="text-[11px] font-black text-slate-800 dark:text-slate-200 tracking-tighter">{act.time ? new Date(act.time).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Today'}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase">{act.time ? new Date(act.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently'}</p>
                                         </div>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div className="py-20 text-center">
+                                        <span className="material-symbols-outlined text-6xl text-slate-200 mb-4">Inbox</span>
+                                        <p className="text-slate-400 font-bold">No recent activities to report.</p>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* Quick Shortcuts */}
+                {/* Command Hub */}
                 <div className="space-y-8">
+                    <div className="bg-white dark:bg-slate-900 p-10 rounded-[48px] border border-slate-100 dark:border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-10 text-center">Executive Command Center</h3>
+                        
+                        <div className="space-y-10">
+                            {/* Tour Management */}
+                            <section>
+                                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4 border-b pb-2">Tour Inventory</p>
+                                <div className="grid grid-cols-1 gap-3">
+                                    <Link to="/admin/tours/new" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-[#0a6c75] hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">add_location_alt</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Upload Tours</span>
+                                    </Link>
+                                    <Link to="/admin/bike-tours/new" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-orange-500 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">motorcycle</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Bike Tours</span>
+                                    </Link>
+                                    <Link to="/admin/pilgrimage-tours/new" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-600 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">temple_hindu</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Train Tours</span>
+                                    </Link>
+                                    <Link to="/admin/categorization" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-600 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">category</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Add Destination</span>
+                                    </Link>
+                                </div>
+                            </section>
 
+                            {/* Business Ops */}
+                            <section>
+                                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4 border-b pb-2">Business Operations</p>
+                                <div className="grid grid-cols-1 gap-3">
+                                    <Link to="/admin/chatbot-flow" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-purple-600 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">smart_toy</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Manage ChatBot</span>
+                                    </Link>
+                                    <Link to="/admin/leads" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-600 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">group</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Manage Leads</span>
+                                    </Link>
+                                    <Link to="/admin/users" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-900 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">badge</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Manage Users</span>
+                                    </Link>
+                                </div>
+                            </section>
 
-                    <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest mb-6">Quick Actions</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            <Link to="/admin/tours/new" className="flex flex-col items-center justify-center p-6 rounded-3xl border border-slate-50 dark:border-slate-800 hover:border-[#0a6c75] hover:bg-[#0a6c75]/5 transition-all gap-3 group">
-                                <span className="material-symbols-outlined text-slate-400 group-hover:text-[#0a6c75] transition-colors">add_location</span>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-[#0a6c75] transition-colors">New Tour</span>
-                            </Link>
-                            <Link to="/admin/guides/new" className="flex flex-col items-center justify-center p-6 rounded-3xl border border-slate-50 dark:border-slate-800 hover:border-[#0a6c75] hover:bg-[#0a6c75]/5 transition-all gap-3 group">
-                                <span className="material-symbols-outlined text-slate-400 group-hover:text-[#0a6c75] transition-colors">edit_note</span>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-[#0a6c75] transition-colors">New Blog</span>
-                            </Link>
+                            {/* Content & SEO */}
+                            <section>
+                                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4 border-b pb-2">Content Strategy</p>
+                                <div className="grid grid-cols-1 gap-3">
+                                    <Link to="/admin/guides/new" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-pink-600 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">auto_stories</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Publish Blog</span>
+                                    </Link>
+                                    <Link to="/admin/theme" className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-indigo-600 hover:text-white transition-all group">
+                                        <span className="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">palette</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Design Theme</span>
+                                    </Link>
+                                </div>
+                            </section>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    );
+};
         </div>
     );
 };
