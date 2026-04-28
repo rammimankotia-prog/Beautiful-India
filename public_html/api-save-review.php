@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -15,13 +15,40 @@ $src_file = dirname(__DIR__) . '/src/data/reviews.json';
 if (!file_exists(dirname($public_file))) { mkdir(dirname($public_file), 0777, true); }
 if (!file_exists(dirname($src_file)) && file_exists(dirname(__DIR__) . '/src')) { mkdir(dirname($src_file), 0777, true); }
 
-// Ensure directory exists
 // Ensure file exists with an empty array if it doesn't
 if (!file_exists($public_file)) {
     file_put_contents($public_file, json_encode([], JSON_PRETTY_PRINT));
 }
 if (file_exists(dirname(__DIR__) . '/src') && !file_exists($src_file)) {
     file_put_contents($src_file, json_encode([], JSON_PRETTY_PRINT));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "ID required"]);
+        exit;
+    }
+
+    $target = file_exists($src_file) ? $src_file : $public_file;
+    $json = file_exists($target) ? file_get_contents($target) : '[]';
+    $current_data = json_decode($json, true) ?: [];
+    
+    $filtered_data = array_filter($current_data, function($item) use ($id) {
+        return strval($item['id'] ?? '') !== strval($id);
+    });
+    
+    $new_data = array_values($filtered_data); // Reset indices
+    
+    file_put_contents($public_file, json_encode($new_data, JSON_PRETTY_PRINT));
+    if (file_exists(dirname(__DIR__) . '/src')) {
+        file_put_contents($src_file, json_encode($new_data, JSON_PRETTY_PRINT));
+    }
+    
+    header('Content-Type: application/json');
+    echo json_encode(["success" => true, "message" => "Review deleted successfully"]);
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
