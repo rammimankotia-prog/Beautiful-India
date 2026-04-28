@@ -26,7 +26,7 @@ const FleetListingPage = () => {
     });
 
     useEffect(() => {
-        fetch(`${import.meta.env.BASE_URL}data/transport-vehicles.json`)
+        fetch(`/api/vehicles?t=${Date.now()}`)
             .then(res => res.json())
             .then(data => {
                 setVehicles(data);
