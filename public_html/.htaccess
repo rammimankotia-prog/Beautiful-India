@@ -21,6 +21,9 @@
   # Catch-all for other api calls to their respective files
   RewriteRule ^api/save-([a-z-]+)/?$   api-save-$1.php          [L,QSA]
 
+  # PROTECT API CALLS - NO FALLBACK
+  RewriteRule ^api/.* - [L]
+
   # 4. SPA Fallback (Only if not API and not existing file)
   RewriteCond %{REQUEST_URI} !^/api/
   RewriteRule ^ index.html [L]
