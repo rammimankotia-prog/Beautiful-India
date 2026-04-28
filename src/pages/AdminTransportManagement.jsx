@@ -141,7 +141,54 @@ const AdminTransportManagement = () => {
             }
         } catch (err) {
             showToast("Network error");
+    };
+
+    const handleImageUpload = async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        showToast("Uploading media...");
+        for (const file of files) {
+            const formDataUpload = new FormData();
+            formDataUpload.append('image', file);
+
+            try {
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formDataUpload
+                });
+                const result = await res.json();
+                if (result.success) {
+                    setFormData(prev => ({
+                        ...prev,
+                        images: [
+                            ...prev.images, 
+                            { url: result.url, isPrimary: prev.images.length === 0 }
+                        ]
+                    }));
+                }
+            } catch (err) {
+                console.error("Upload failed", err);
+            }
         }
+        showToast("Media updated!");
+    };
+
+    const setPrimaryImage = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            images: prev.images.map((img, i) => ({
+                ...img,
+                isPrimary: i === index
+            }))
+        }));
+    };
+
+    const removeImage = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            images: prev.images.filter((_, i) => i !== index)
+        }));
     };
 
     return (
