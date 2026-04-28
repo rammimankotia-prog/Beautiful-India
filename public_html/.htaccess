@@ -28,8 +28,9 @@
   # PROTECT API CALLS - NO FALLBACK
   RewriteRule ^api/.* - [L]
 
-  # 4. SPA Fallback (Only if not API and not existing file)
+  # 4. SPA Fallback (Only if not API, not PHP, and not existing file)
   RewriteCond %{REQUEST_URI} !^/api/
+  RewriteCond %{REQUEST_URI} !\.php$
   RewriteRule ^ index.html [L]
 </IfModule>
 
