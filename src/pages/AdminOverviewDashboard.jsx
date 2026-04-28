@@ -49,6 +49,10 @@ const AdminOverviewDashboard = () => {
             
             const res = await fetch(url, { method: 'POST' });
             
+            // Log content type for debugging
+            console.log("Response Status:", res.status);
+            console.log("Content-Type:", res.headers.get('Content-Type'));
+
             // Try to get response text first in case it's not JSON
             const responseText = await res.text();
             console.log("Raw Delete Response:", responseText);
