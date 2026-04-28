@@ -6,12 +6,16 @@ RewriteRule ^khajuraho-temple-india$ /guides/khajuraho-temple-india [R=301,L]
 
 RewriteRule ^api/save-categories/?$ api-save-categories.php [L]
 RewriteRule ^api/save-tours/?$ api-save-tours.php [L]
-RewriteRule ^api/save-guides/?$ api-save-guides.php [L]
-RewriteRule ^api/save-leads$ api-save-leads.php [L]
-RewriteRule ^api/train-queries$ api-train-queries.php [L]
-RewriteRule ^api/save-review$ api-save-review.php [L]
+RewriteRule ^api/save-guides/?$      api-save-guides.php      [L]
+RewriteRule ^api/bookings/?$          api-bookings.php         [L]
+RewriteRule ^api/save-leads$         api-save-leads.php       [L]
+RewriteRule ^api/leads/?$            api-save-leads.php       [L]
+RewriteRule ^api/train-queries$      api-train-queries.php    [L]
+RewriteRule ^api/save-review$        api-save-review.php      [L]
+RewriteRule ^api/reviews/?$           api-save-review.php      [L]
 RewriteRule ^index\.html$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
+RewriteCond %{REQUEST_URI} !/api/
 RewriteRule . /index.html [L]
