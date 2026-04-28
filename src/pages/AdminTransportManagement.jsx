@@ -40,10 +40,31 @@ const AdminTransportManagement = () => {
                 fetch(`/api/vehicles?t=${Date.now()}`),
                 fetch(`/api/leads?t=${Date.now()}`)
             ]);
-            const vData = await vRes.json();
-            const lData = await lRes.json();
+            
+            const vText = await vRes.text();
+            const lText = await lRes.text();
+            
+            let vData = [];
+            let lData = [];
+            
+            try {
+                vData = JSON.parse(vText);
+            } catch (e) {
+                console.error("Vehicles API error: Invalid JSON", vText.substring(0, 100));
+            }
+            
+            try {
+                lData = JSON.parse(lText);
+            } catch (e) {
+                console.error("Leads API error: Invalid JSON", lText.substring(0, 100));
+            }
+
             setVehicles(Array.isArray(vData) ? vData : []);
             setLeads(Array.isArray(lData) ? lData : []);
+            
+            if (!Array.isArray(vData) || !Array.isArray(lData)) {
+                showToast("Data format error from server");
+            }
         } catch (err) {
             console.error("Error fetching transport data:", err);
             showToast("Failed to load data");
@@ -76,7 +97,6 @@ const AdminTransportManagement = () => {
     const handleSaveVehicle = async (e) => {
         e.preventDefault();
         try {
-            // Prepare data for API (convert features string to array)
             const finalData = {
                 ...formData,
                 features: typeof formData.features === 'string' 
@@ -89,13 +109,19 @@ const AdminTransportManagement = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(finalData)
             });
-            const result = await res.json();
-            if (result.success) {
-                showToast(editingVehicle ? "Vehicle updated!" : "New vehicle added!");
-                setShowModal(false);
-                fetchData();
-            } else {
-                showToast("Save failed");
+            const text = await res.text();
+            try {
+                const result = JSON.parse(text);
+                if (result.success) {
+                    showToast(editingVehicle ? "Vehicle updated!" : "New vehicle added!");
+                    setShowModal(false);
+                    fetchData();
+                } else {
+                    showToast(result.message || "Save failed");
+                }
+            } catch (jsonErr) {
+                console.error("Save API error: Invalid JSON", text.substring(0, 100));
+                showToast("Server Error: Save failed");
             }
         } catch (err) {
             showToast("Network error");
