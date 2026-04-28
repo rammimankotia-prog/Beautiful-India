@@ -37,8 +37,8 @@ const AdminTransportManagement = () => {
         setLoading(true);
         try {
             const [vRes, lRes] = await Promise.all([
-                fetch(`/api/vehicles?t=${Date.now()}`, { cache: 'no-store' }),
-                fetch(`/api/leads?t=${Date.now()}`, { cache: 'no-store' })
+                fetch(`/fleet_manager.php?t=${Date.now()}`, { cache: 'no-store' }),
+                fetch(`/fleet_leads.php?t=${Date.now()}`, { cache: 'no-store' })
             ]);
             
             const vText = await vRes.text();
@@ -104,7 +104,7 @@ const AdminTransportManagement = () => {
                     : formData.features
             };
 
-            const res = await fetch('/api/vehicles', {
+            const res = await fetch('/fleet_manager.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(finalData)
@@ -131,9 +131,11 @@ const AdminTransportManagement = () => {
     const handleDeleteVehicle = async (id) => {
         if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
         try {
-            const res = await fetch(`/api/vehicles?action=delete&id=${id}`, { method: 'POST' });
-            const result = await res.json();
-            if (result.success) {
+            const res = await fetch(`/fleet_manager.php?action=delete&id=${id}`, { method: 'POST' });
+            const text = await res.text();
+            try {
+                const result = JSON.parse(text);
+                if (result.success) {
                 showToast("Vehicle removed");
                 setVehicles(prev => prev.filter(v => v.id !== id));
             } else {
