@@ -44,13 +44,23 @@ const AdminOverviewDashboard = () => {
                     return;
             }
 
-            const url = `${endpoint}?id=${rawId}`;
-            console.log(`DELETE URL: ${url}`);
+            const url = `${endpoint}?action=delete&id=${rawId}`;
+            console.log(`DELETE (POST fallback) URL: ${url}`);
             
-            const res = await fetch(url, { method: 'DELETE' });
-            const data = await res.json();
+            const res = await fetch(url, { method: 'POST' });
             
-            console.log("Delete Response:", data);
+            // Try to get response text first in case it's not JSON
+            const responseText = await res.text();
+            console.log("Raw Delete Response:", responseText);
+
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error("Failed to parse delete response as JSON:", responseText);
+                alert(`Server Error: Received non-JSON response. (Status: ${res.status}). Check console for details.`);
+                return;
+            }
 
             if (res.ok && data.success) {
                 setActivities(prev => prev.filter(a => a.id !== act.id));
@@ -67,7 +77,7 @@ const AdminOverviewDashboard = () => {
             }
         } catch (error) {
             console.error("Delete activity error:", error);
-            alert("An error occurred while deleting. Check console for details.");
+            alert(`Network Error: Could not reach the server. (${error.message})`);
         }
     };
 

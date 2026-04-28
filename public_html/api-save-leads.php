@@ -23,8 +23,13 @@ if (file_exists(dirname(__DIR__) . '/src') && !file_exists($src_file)) {
     file_put_contents($src_file, json_encode([], JSON_PRETTY_PRINT));
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'delete')) {
     $id = $_GET['id'] ?? null;
+    if (!$id && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $postData = json_decode(file_get_contents("php://input"), true);
+        $id = $postData['id'] ?? null;
+    }
+
     if (!$id) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "ID required"]);
@@ -48,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     
     header('Content-Type: application/json');
     echo json_encode(["success" => true, "message" => "Inquiry deleted successfully"]);
+    exit;
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
     
