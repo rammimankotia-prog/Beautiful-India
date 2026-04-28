@@ -92,6 +92,16 @@ app.post('/api/manual-qa', (req, res) => { saveData('manual-qa.json', req.body);
 
 app.get('/api/bookings', (req, res) => res.json(getData('bookings.json')));
 app.post('/api/bookings', (req, res) => { saveData('bookings.json', req.body); res.json({ success: true }); });
+app.delete('/api/bookings', (req, res) => {
+    try {
+        const id = req.query.id;
+        if (!id) return res.status(400).json({ success: false, message: 'ID required' });
+        const data = getData('bookings.json');
+        const filtered = data.filter(item => String(item.id) !== String(id));
+        saveData('bookings.json', filtered);
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
 
 app.get('/api/train-queries', (req, res) => {
     if (!fs.existsSync(path.join(__dirname, 'src/data', 'train_queries.json'))) {
@@ -216,6 +226,16 @@ app.post('/api/guides', (req, res) => { saveData('guides.json', req.body); res.j
 
 app.get('/api/reviews', (req, res) => res.json(getData('reviews.json')));
 app.post('/api/reviews', (req, res) => { saveData('reviews.json', req.body); res.json({ success: true }); });
+app.delete('/api/reviews', (req, res) => {
+    try {
+        const id = req.query.id;
+        if (!id) return res.status(400).json({ success: false, message: 'ID required' });
+        const data = getData('reviews.json');
+        const filtered = data.filter(item => String(item.id) !== String(id));
+        saveData('reviews.json', filtered);
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
 
 // Custom route for saving a single review
 app.post('/api/save-review', (req, res) => {

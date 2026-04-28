@@ -25,16 +25,39 @@ const AdminOverviewDashboard = () => {
         }
     };
 
-    const handleDeleteActivity = (act) => {
+    const handleDeleteActivity = async (act) => {
         if (!window.confirm(`Permanently delete this ${act.type} item?`)) return;
         
-        // Optimistic UI update
-        setActivities(prev => prev.filter(a => a.id !== act.id));
-        
-        // The real deletion should be handled by the specialized pages' APIs.
-        // For the overview, we primarily show the intent and link to management if needed.
-        // However, to satisfy "Delete", we can at least toast the user.
-        alert("This record was hidden from your dashboard. For permanent system deletion, please use the specialized Management page.");
+        try {
+            const rawId = act.id.split('-').slice(1).join('-'); // Handle cases where ID might contain dashes
+            let endpoint = '';
+            
+            switch(act.type) {
+                case 'booking': endpoint = '/api/bookings'; break;
+                case 'lead': endpoint = '/api/leads'; break;
+                case 'review': endpoint = '/api/reviews'; break;
+                case 'train': endpoint = '/api/train-queries'; break;
+                default: return;
+            }
+
+            const res = await fetch(`${endpoint}?id=${rawId}`, { method: 'DELETE' });
+            if (res.ok) {
+                setActivities(prev => prev.filter(a => a.id !== act.id));
+                // Update the stats too
+                setStats(prev => ({
+                    ...prev,
+                    totalBookings: act.type === 'booking' ? prev.totalBookings - 1 : prev.totalBookings,
+                    totalLeads: act.type === 'lead' ? prev.totalLeads - 1 : prev.totalLeads,
+                    totalReviews: act.type === 'review' ? prev.totalReviews - 1 : prev.totalReviews,
+                    totalTrainQueries: act.type === 'train' ? prev.totalTrainQueries - 1 : prev.totalTrainQueries,
+                }));
+            } else {
+                alert("Failed to delete the record from the server.");
+            }
+        } catch (error) {
+            console.error("Delete activity error:", error);
+            alert("An error occurred while deleting.");
+        }
     };
 
     const [dataSource, setDataSource] = useState('loading');
