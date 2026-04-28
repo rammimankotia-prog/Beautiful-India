@@ -2,6 +2,10 @@
   RewriteEngine On
   RewriteBase /
 
+  # 0. Explicit PHP Protection - Do not rewrite actual PHP files
+  RewriteCond %{REQUEST_URI} \.php$
+  RewriteRule ^ - [L]
+
   # 1. Physical Files - Stop here if file/dir exists
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
