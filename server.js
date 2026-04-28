@@ -58,7 +58,24 @@ app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/bike-tours', bikeTourRoutes);
 
 app.get('/api/leads', (req, res) => res.json(getData('leads.json')));
-app.post('/api/leads', (req, res) => { saveData('leads.json', req.body); res.json({ success: true }); });
+app.post('/api/leads', (req, res) => {
+    try {
+        const payload = req.body;
+        let existingLeads = getData('leads.json');
+        
+        // If it's an array, it's coming from Admin Dashboard Sync (overwrite)
+        if (Array.isArray(payload)) {
+            saveData('leads.json', payload);
+        } else {
+            // It's a single lead from Chatbot or Tour Form (append)
+            existingLeads.unshift(payload);
+            saveData('leads.json', existingLeads);
+        }
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
 app.delete('/api/leads', (req, res) => {
     try {
         const id = req.query.id;

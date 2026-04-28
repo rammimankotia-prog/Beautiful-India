@@ -3,12 +3,12 @@
     "id": 1,
     "questionText": "Namaste! I'm Bharat Bot, your AI travel concierge. Let's find your perfect Indian escape. May I start with your name?",
     "type": "text",
-    "mappedField": "userName",
+    "mappedField": "name",
     "required": true
   },
   {
     "id": 2,
-    "questionText": "Pleasure to meet you, {userName}! What kind of experience are you looking for in your next journey?",
+    "questionText": "Pleasure to meet you, {name}! What kind of experience are you looking for in your next journey?",
     "type": "options",
     "options": [
       "Adventure",
@@ -18,21 +18,21 @@
       "Spiritual",
       "Romantic"
     ],
-    "mappedField": "userInterest",
+    "mappedField": "interest",
     "required": true
   },
   {
     "id": 3,
     "questionText": "Excellent choice! To ensure I find the best matches and can send you a personalized itinerary, could you share your Email ID?",
     "type": "email",
-    "mappedField": "userEmail",
+    "mappedField": "email",
     "required": true
   },
   {
     "id": 4,
     "questionText": "And lastly, your Mobile Number so our travel experts can reach out with the best deals?",
     "type": "phone",
-    "mappedField": "userPhone",
+    "mappedField": "phone",
     "required": true
   },
   {

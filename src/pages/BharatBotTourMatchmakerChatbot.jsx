@@ -103,7 +103,10 @@ const BharatBotTourMatchmakerChatbot = () => {
         );
 
         if (matchedTour) {
-            return `I see you're interested in ${matchedTour.title}! We have an amazing package for ${matchedTour.duration} starting at ₹${matchedTour.price}. Would you like me to tell you more about it?`;
+            return {
+                text: `I see you're interested in ${matchedTour.title}! We have an amazing package for ${matchedTour.duration} starting at ₹${matchedTour.price}. Would you like me to tell you more about it?`,
+                tourTitle: matchedTour.title
+            };
         }
 
         return null;
@@ -127,16 +130,23 @@ const BharatBotTourMatchmakerChatbot = () => {
 
             // Agentic AI: Check for smart answer first if not a fixed option choice
             if (!userChoice) {
-                const smartAnswer = findSmartAnswer(userInput);
-                if (smartAnswer) {
+                const smartResult = findSmartAnswer(userInput);
+                if (smartResult) {
                     setIsBotTyping(false);
-                    setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: smartAnswer }]);
+                    setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: smartResult.text }]);
+                    
+                    // Capture the matched tour title into 'to' field
+                    if (smartResult.tourTitle) {
+                        newData.to = smartResult.tourTitle;
+                        setCapturedData(newData);
+                    }
+
                     // After answering, remind them of the current step prompt
                     setTimeout(() => {
                         setIsBotTyping(true);
                         setTimeout(() => {
                             setIsBotTyping(false);
-                            const reminderText = currentStepConfig ? currentStepConfig.questionText.replace(`{userName}`, newData.userName || 'there') : "How else can I help you today?";
+                            const reminderText = currentStepConfig ? currentStepConfig.questionText.replace(`{name}`, newData.name || 'there') : "How else can I help you today?";
                             setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: "By the way, " + reminderText }]);
                         }, 1000);
                     }, 3000);
@@ -172,7 +182,7 @@ const BharatBotTourMatchmakerChatbot = () => {
                     setMessages(prev => [...prev, { id: Date.now() + 2, sender: 'bot', text: botResponse }]);
                     
                     // Auto-save lead if we have enough info
-                    if (newData.userName && newData.userEmail && newData.userPhone) {
+                    if (newData.name && newData.email && newData.phone) {
                         handleSaveLead(newData);
                     }
                  }, 800);
@@ -293,7 +303,7 @@ const BharatBotTourMatchmakerChatbot = () => {
                                     </div>
                                     <div className="text-center space-y-2">
                                         <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest">Analyzing Expedition Catalog</h3>
-                                        <p className="text-sm text-slate-400 font-bold italic">Cross-referencing {capturedData.userInterest || 'adventure'} archetypes with your preferences...</p>
+                                        <p className="text-sm text-slate-400 font-bold italic">Cross-referencing {capturedData.interest || 'adventure'} archetypes with your preferences...</p>
                                     </div>
                                 </div>
                             )}
