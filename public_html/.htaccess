@@ -2,34 +2,26 @@
   RewriteEngine On
   RewriteBase /
 
-  # ── SEO 301 Redirects ─────────────────────────────────────────────────────────
-  Redirect 301 /khajuraho-temple-india /guides/khajuraho-temple-india
+  # 1. Physical Files - Stop here if file/dir exists
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
 
-  # ── Dynamic sitemap served at /sitemap.xml ──────────────────────────────────
+  # 2. SEO & Sitemap
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
-  # ── API Rewrite Rules ────────────────────────────────────────────────────────
-  RewriteRule ^api/save-categories/?$  api-save-categories.php  [L]
-  RewriteRule ^api/save-tours/?$       api-save-tours.php       [L]
-  RewriteRule ^api/save-guides/?$      api-save-guides.php      [L]
-  RewriteRule ^api/bookings/?$          api-bookings.php         [L]
-  RewriteRule ^api/save-leads$         api-save-leads.php       [L]
-  RewriteRule ^api/leads/?$            api-save-leads.php       [L]
-  RewriteRule ^api/train-queries$      api-train-queries.php    [L]
-  RewriteRule ^api/save-review$        api-save-review.php      [L]
-  RewriteRule ^api/reviews/?$           api-save-review.php      [L]
-  RewriteRule ^api/save-bike-tours/?$  api-save-bike-tours.php  [L]
-  RewriteRule ^api/saved-guides/?$     api-saved-guides.php     [L]
-  RewriteRule ^api/save-settings/?$    api-save-settings.php    [L]
-  RewriteRule ^api/chatflow/?$         api-chatflow.php         [L]
-  RewriteRule ^api/manual-qa/?$        api-manual-qa.php        [L]
+  # 3. API Routing (Explicit)
+  RewriteRule ^api/leads/?$            api-save-leads.php       [L,QSA]
+  RewriteRule ^api/bookings/?$         api-bookings.php         [L,QSA]
+  RewriteRule ^api/reviews/?$          api-save-review.php      [L,QSA]
+  RewriteRule ^api/train-queries/?$    api-train-queries.php    [L,QSA]
+  
+  # Catch-all for other api calls to their respective files
+  RewriteRule ^api/save-([a-z-]+)/?$   api-save-$1.php          [L,QSA]
 
-  # ── SPA Fallback ─────────────────────────────────────────────────────────────
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} !/api/
-  RewriteRule . /index.html [L]
+  # 4. SPA Fallback (Only if not API and not existing file)
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteRule ^ index.html [L]
 </IfModule>
 
 
