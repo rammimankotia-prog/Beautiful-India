@@ -12,6 +12,8 @@
 
   # 3. API Routing (Explicit)
   RewriteRule ^api/leads/?$            api-save-leads.php       [L,QSA]
+  RewriteRule ^api/vehicles/?$         api-vehicles.php         [L,QSA]
+  RewriteRule ^api/upload/?$           api-upload.php           [L,QSA]
   RewriteRule ^api/bookings/?$         api-bookings.php         [L,QSA]
   RewriteRule ^api/reviews/?$          api-save-review.php      [L,QSA]
   RewriteRule ^api/train-queries/?$    api-train-queries.php    [L,QSA]
