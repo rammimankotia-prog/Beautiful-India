@@ -266,7 +266,7 @@ const FleetListingPage = () => {
                                     <div key={vehicle.id} className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 hover:-translate-y-2">
                                         <div className="relative h-64 overflow-hidden">
                                             <img 
-                                                src={vehicle.image} 
+                                                src={vehicle.images?.find(i => i.isPrimary)?.url || vehicle.image || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=800'} 
                                                 alt={vehicle.name} 
                                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                                 onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=800'}

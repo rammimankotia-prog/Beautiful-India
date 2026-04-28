@@ -19,7 +19,7 @@ const AdminTransportManagement = () => {
         comfort: 'Premium',
         pricePerKm: '',
         pricePerDay: '',
-        image: '',
+        images: [], // Array of {url, isPrimary}
         status: 'active',
         features: 'AC, Music, Professional Driver'
     });
@@ -65,7 +65,7 @@ const AdminTransportManagement = () => {
                 comfort: 'Premium',
                 pricePerKm: '18',
                 pricePerDay: '3500',
-                image: '',
+                images: [],
                 status: 'active',
                 features: 'AC, Music, Professional Driver'
             });
@@ -119,7 +119,7 @@ const AdminTransportManagement = () => {
     };
 
     return (
-        <div className="p-6 lg:p-10 max-w-[1400px] mx-auto space-y-10 animate-in fade-in duration-500">
+        <div data-page="admin_transport_management" className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-10 animate-in fade-in duration-500">
             {/* Toast */}
             {toast && (
                 <div className="fixed bottom-10 right-10 z-[200] animate-in slide-in-from-bottom duration-300">
@@ -187,12 +187,23 @@ const AdminTransportManagement = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                     {vehicles.map(vehicle => (
                         <div key={vehicle.id} className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden group">
-                            <div className="h-48 relative overflow-hidden bg-slate-50 dark:bg-slate-800">
-                                <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=800'} />
-                                <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur rounded-lg text-[9px] font-black text-slate-800 uppercase tracking-widest shadow-sm">
-                                    {vehicle.type}
-                                </div>
-                            </div>
+                                            <div className="relative h-48 overflow-hidden rounded-[24px] border border-slate-100 dark:border-slate-800">
+                                                <img 
+                                                    src={vehicle.images?.find(i => i.isPrimary)?.url || vehicle.image || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=800'} 
+                                                    className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-700" 
+                                                    alt={vehicle.name} 
+                                                />
+                                                <div className="absolute top-4 left-4 flex gap-2">
+                                                    <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest backdrop-blur-md shadow-lg ${vehicle.status === 'active' ? 'bg-emerald-500/90 text-white' : 'bg-slate-500/90 text-white'}`}>
+                                                        {vehicle.status}
+                                                    </span>
+                                                </div>
+                                                <div className="absolute top-4 right-4 flex gap-2">
+                                                    <span className="px-3 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full text-[8px] font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest shadow-lg border border-white/20">
+                                                        {vehicle.images?.length || 0} Photos
+                                                    </span>
+                                                </div>
+                                            </div>
                             <div className="p-8 space-y-6">
                                 <div className="flex justify-between items-start">
                                     <div>
@@ -404,15 +415,60 @@ const AdminTransportManagement = () => {
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Image URL</label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="Paste high-res vehicle image link"
-                                        value={formData.image}
-                                        onChange={(e) => setFormData({...formData, image: e.target.value})}
-                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-700 dark:text-slate-200"
-                                    />
+                                {/* Media Management */}
+                                <div className="md:col-span-2 space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Vehicle Media Library</label>
+                                        <label className="cursor-pointer group">
+                                            <input type="file" multiple className="hidden" onChange={handleImageUpload} accept="image/*" />
+                                            <span className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-4 py-2 rounded-xl group-hover:bg-primary group-hover:text-white transition-all">
+                                                <span className="material-symbols-outlined text-sm">cloud_upload</span>
+                                                Upload Photos
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    {formData.images.length > 0 ? (
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            {formData.images.map((img, idx) => (
+                                                <div key={idx} className="relative aspect-video rounded-2xl overflow-hidden group border-2 border-slate-100 dark:border-slate-800">
+                                                    <img src={img.url} className="w-full h-full object-cover" alt="" />
+                                                    
+                                                    {/* Badges */}
+                                                    {img.isPrimary && (
+                                                        <div className="absolute top-2 left-2 bg-primary text-white text-[8px] font-black uppercase px-2 py-1 rounded-md shadow-lg">Primary</div>
+                                                    )}
+
+                                                    {/* Controls Overlay */}
+                                                    <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                                        {!img.isPrimary && (
+                                                            <button 
+                                                                type="button"
+                                                                onClick={() => setPrimaryImage(idx)}
+                                                                className="size-8 rounded-lg bg-white/20 backdrop-blur-md text-white hover:bg-primary transition-colors flex items-center justify-center"
+                                                                title="Set as Primary"
+                                                            >
+                                                                <span className="material-symbols-outlined text-sm">star</span>
+                                                            </button>
+                                                        )}
+                                                        <button 
+                                                            type="button"
+                                                            onClick={() => removeImage(idx)}
+                                                            className="size-8 rounded-lg bg-white/20 backdrop-blur-md text-white hover:bg-red-500 transition-colors flex items-center justify-center"
+                                                            title="Delete"
+                                                        >
+                                                            <span className="material-symbols-outlined text-sm">delete</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-3xl p-10 flex flex-col items-center justify-center gap-3 text-slate-300">
+                                            <span className="material-symbols-outlined text-4xl">add_photo_alternate</span>
+                                            <p className="text-[10px] font-black uppercase tracking-widest">No images uploaded yet</p>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="flex items-center gap-4 pt-4">
