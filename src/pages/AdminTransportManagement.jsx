@@ -37,8 +37,8 @@ const AdminTransportManagement = () => {
         setLoading(true);
         try {
             const [vRes, lRes] = await Promise.all([
-                fetch(`/api/vehicles?t=${Date.now()}`),
-                fetch(`/api/leads?t=${Date.now()}`)
+                fetch(`/api/vehicles?t=${Date.now()}`, { cache: 'no-store' }),
+                fetch(`/api/leads?t=${Date.now()}`, { cache: 'no-store' })
             ]);
             
             const vText = await vRes.text();
