@@ -29,34 +29,45 @@ const AdminOverviewDashboard = () => {
         if (!window.confirm(`Permanently delete this ${act.type} item?`)) return;
         
         try {
-            const rawId = act.id.split('-').slice(1).join('-'); // Handle cases where ID might contain dashes
+            const rawId = act.rawId;
+            const type = act.originalType;
+            console.log(`Attempting to delete ${type} with ID: ${rawId}`);
+
             let endpoint = '';
-            
-            switch(act.type) {
+            switch(type) {
                 case 'booking': endpoint = '/api/bookings'; break;
                 case 'lead': endpoint = '/api/leads'; break;
                 case 'review': endpoint = '/api/reviews'; break;
                 case 'train': endpoint = '/api/train-queries'; break;
-                default: return;
+                default: 
+                    console.error("Unknown activity type for deletion:", type);
+                    return;
             }
 
-            const res = await fetch(`${endpoint}?id=${rawId}`, { method: 'DELETE' });
-            if (res.ok) {
+            const url = `${endpoint}?id=${rawId}`;
+            console.log(`DELETE URL: ${url}`);
+            
+            const res = await fetch(url, { method: 'DELETE' });
+            const data = await res.json();
+            
+            console.log("Delete Response:", data);
+
+            if (res.ok && data.success) {
                 setActivities(prev => prev.filter(a => a.id !== act.id));
                 // Update the stats too
                 setStats(prev => ({
                     ...prev,
-                    totalBookings: act.type === 'booking' ? prev.totalBookings - 1 : prev.totalBookings,
-                    totalLeads: act.type === 'lead' ? prev.totalLeads - 1 : prev.totalLeads,
-                    totalReviews: act.type === 'review' ? prev.totalReviews - 1 : prev.totalReviews,
-                    totalTrainQueries: act.type === 'train' ? prev.totalTrainQueries - 1 : prev.totalTrainQueries,
+                    totalBookings: type === 'booking' ? prev.totalBookings - 1 : prev.totalBookings,
+                    totalLeads: type === 'lead' ? prev.totalLeads - 1 : prev.totalLeads,
+                    totalReviews: type === 'review' ? prev.totalReviews - 1 : prev.totalReviews,
+                    totalTrainQueries: type === 'train' ? prev.totalTrainQueries - 1 : prev.totalTrainQueries,
                 }));
             } else {
-                alert("Failed to delete the record from the server.");
+                alert(`Failed to delete: ${data.message || 'Server error'}`);
             }
         } catch (error) {
             console.error("Delete activity error:", error);
-            alert("An error occurred while deleting.");
+            alert("An error occurred while deleting. Check console for details.");
         }
     };
 
@@ -134,6 +145,8 @@ const AdminOverviewDashboard = () => {
 
                         return {
                             id: `b-${b.id}`,
+                            rawId: b.id,
+                            originalType: 'booking',
                             type,
                             title: `${titlePrefix}: ${b.tourTitle || 'Package'}`,
                             user: b.customerName || 'Explorer',
@@ -167,6 +180,8 @@ const AdminOverviewDashboard = () => {
 
                         return {
                             id: `l-${l.id}`,
+                            rawId: l.id,
+                            originalType: 'lead',
                             type,
                             title,
                             user: l.name || 'Anonymous',
@@ -177,6 +192,8 @@ const AdminOverviewDashboard = () => {
                     }),
                     ...reviews.map(r => ({
                         id: `r-${r.id}`,
+                        rawId: r.id,
+                        originalType: 'review',
                         type: 'review',
                         title: `New ${r.rating}★ Review`,
                         user: r.userName || 'Verified Traveler',
@@ -186,6 +203,8 @@ const AdminOverviewDashboard = () => {
                     })),
                     ...trainQueries.map(t => ({
                         id: `t-${t.id}`,
+                        rawId: t.id,
+                        originalType: 'train',
                         type: 'train',
                         title: `Train Query: ${t.from} ➔ ${t.to}`,
                         user: t.name || 'Passenger',
