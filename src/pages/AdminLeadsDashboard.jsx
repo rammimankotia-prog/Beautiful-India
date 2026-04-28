@@ -105,6 +105,7 @@ const AdminLeadsDashboard = () => {
         if (lead.source === 'Specialist Consultation') return { label: 'Specialist', icon: 'support_agent', color: 'text-purple-600', bg: 'bg-purple-50' };
         if (lead.source === 'Bharat Darshan Page') return { label: 'Tour Inquiry', icon: 'explore', color: 'text-blue-600', bg: 'bg-blue-50' };
         if (lead.source === 'Article Inquiry') return { label: 'Article', icon: 'article', color: 'text-orange-600', bg: 'bg-orange-50' };
+        if (lead.source === 'Transport Fleet') return { label: 'Transport', icon: 'directions_car', color: 'text-rose-600', bg: 'bg-rose-50' };
         if (lead.departureType) return { label: 'Quote Request', icon: 'request_quote', color: 'text-purple-600', bg: 'bg-purple-50' };
         return { label: 'Contact Form', icon: 'mail', color: 'text-slate-600', bg: 'bg-slate-50' };
     };

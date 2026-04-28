@@ -201,14 +201,14 @@ const BharatBotTourMatchmakerChatbot = () => {
 
     const handleSaveLead = async (data) => {
         try {
-            await fetch(`${import.meta.env.BASE_URL}api/leads`, {
+            await fetch(`/api/leads`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...data,
                     id: `cb-${Date.now()}`,
                     timestamp: new Date().toISOString(),
-                    source: 'BharatBot AI',
+                    source: 'Bharat Bot',
                     status: 'New'
                 })
             });

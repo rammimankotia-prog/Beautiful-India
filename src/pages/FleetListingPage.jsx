@@ -24,6 +24,15 @@ const FleetListingPage = () => {
         drop: '',
         time: '10:00 AM'
     });
+    const [showModal, setShowModal] = useState(false);
+    const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [inquiryForm, setInquiryForm] = useState({
+        name: '',
+        phone: '',
+        email: '',
+        message: ''
+    });
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         fetch(`/api/vehicles?t=${Date.now()}`)
@@ -54,8 +63,40 @@ const FleetListingPage = () => {
     }, [filters, vehicles]);
 
     const handleInquiry = (vehicle) => {
-        // simulation for inquiry modal/form
-        alert(`Inquiry sent for ${vehicle.name}! Our team will contact you shortly.`);
+        setSelectedVehicle(vehicle);
+        setShowModal(true);
+    };
+
+    const submitInquiry = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            const res = await fetch(`/api/leads`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...inquiryForm,
+                    to: selectedVehicle.name,
+                    source: 'Transport Fleet',
+                    departureDate: bookingDetails.fromDate || 'Not specified',
+                    returnDate: bookingDetails.toDate || 'Not specified',
+                    pickup: bookingDetails.pickup,
+                    status: 'New'
+                })
+            });
+            if (res.ok) {
+                alert("Thank you! Your inquiry has been received. Our team will contact you shortly.");
+                setShowModal(false);
+                setInquiryForm({ name: '', phone: '', email: '', message: '' });
+            } else {
+                alert("Something went wrong. Please try again.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Connection error.");
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -323,6 +364,76 @@ const FleetListingPage = () => {
                     </div>
                  </div>
             </div>
+
+            {/* Inquiry Modal */}
+            {showModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setShowModal(false)}></div>
+                    <div className="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+                        <div className="p-10 space-y-8">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <span className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Secure Booking Inquiry</span>
+                                    <h3 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Interested in {selectedVehicle?.name}?</h3>
+                                </div>
+                                <button onClick={() => setShowModal(false)} className="size-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors">
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+
+                            <form onSubmit={submitInquiry} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Full Name</label>
+                                    <input 
+                                        required
+                                        type="text" 
+                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold"
+                                        value={inquiryForm.name}
+                                        onChange={(e) => setInquiryForm({...inquiryForm, name: e.target.value})}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Phone Number</label>
+                                    <input 
+                                        required
+                                        type="tel" 
+                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold"
+                                        value={inquiryForm.phone}
+                                        onChange={(e) => setInquiryForm({...inquiryForm, phone: e.target.value})}
+                                    />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Email Address</label>
+                                    <input 
+                                        required
+                                        type="email" 
+                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold"
+                                        value={inquiryForm.email}
+                                        onChange={(e) => setInquiryForm({...inquiryForm, email: e.target.value})}
+                                    />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Any Special Requests?</label>
+                                    <textarea 
+                                        rows="3"
+                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold resize-none"
+                                        value={inquiryForm.message}
+                                        onChange={(e) => setInquiryForm({...inquiryForm, message: e.target.value})}
+                                    ></textarea>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <button 
+                                        disabled={submitting}
+                                        className="w-full py-5 bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 uppercase tracking-widest text-xs"
+                                    >
+                                        {submitting ? 'Sending Request...' : 'Send Inquiry Request'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
