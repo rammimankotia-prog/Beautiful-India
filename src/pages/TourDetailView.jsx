@@ -1207,7 +1207,7 @@ const TourDetailView = () => {
             timestamp: new Date().toISOString(),
           };
           try {
-            const res = await fetch(`${import.meta.env.BASE_URL}api-save-leads.php`, {
+            const res = await fetch(`/api/leads`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload),

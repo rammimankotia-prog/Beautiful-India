@@ -136,13 +136,18 @@ const AdminTransportManagement = () => {
             try {
                 const result = JSON.parse(text);
                 if (result.success) {
-                showToast("Vehicle removed");
-                setVehicles(prev => prev.filter(v => v.id !== id));
-            } else {
-                showToast("Delete failed");
+                    showToast("Vehicle removed");
+                    setVehicles(prev => prev.filter(v => v.id !== id));
+                } else {
+                    showToast(result.message || "Delete failed");
+                }
+            } catch (jsonErr) {
+                console.error("Delete API error: Invalid JSON", text.substring(0, 100));
+                showToast("Server Error: Delete failed");
             }
         } catch (err) {
             showToast("Network error");
+        }
     };
 
     const handleImageUpload = async (e) => {

@@ -14,25 +14,8 @@
   # 2. SEO & Sitemap
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
-  # 3. API Routing (Explicit)
-  RewriteRule ^api/leads/?$            api-save-leads.php       [L,QSA]
-  RewriteRule ^api/vehicles/?$         api-vehicles.php         [L,QSA]
-  RewriteRule ^api/upload/?$           api-upload.php           [L,QSA]
-  RewriteRule ^api/bookings/?$         api-bookings.php         [L,QSA]
-  RewriteRule ^api/reviews/?$          api-save-review.php      [L,QSA]
-  RewriteRule ^api/train-queries/?$    api-train-queries.php    [L,QSA]
-  
-  # Catch-all for other api calls to their respective files
-  RewriteRule ^api/save-([a-z-]+)/?$   api-save-$1.php          [L,QSA]
-
-  # PROTECT API CALLS - NO FALLBACK
-  RewriteRule ^api/.* - [L]
-
-  # 4. SPA Fallback (Only if not API, not PHP, and not existing file)
-  RewriteCond %{REQUEST_URI} !^/api/
-  RewriteCond %{REQUEST_URI} !\.php$
-  RewriteRule ^ index.html [L]
+  # 4. Master Router Fallback
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [L]
 </IfModule>
-
-
-

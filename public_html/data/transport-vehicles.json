@@ -1,0 +1,54 @@
+[
+  {
+    "id": "toyota-innova-crysta",
+    "name": "Toyota Innova Crysta",
+    "type": "MUV",
+    "capacity": 7,
+    "comfort": "AC",
+    "pricePerKm": 18,
+    "pricePerDay": 3500,
+    "image": "/images/fleet/innova-crysta.png",
+    "features": ["7 Seater", "AC", "Luxury Interior", "Professional Driver"],
+    "destinations": ["Kashmir", "Delhi", "Agra", "Jaipur", "Ladakh"],
+    "status": "active"
+  },
+  {
+    "id": "maruti-ertiga",
+    "name": "Maruti Suzuki Ertiga",
+    "type": "MUV",
+    "capacity": 6,
+    "comfort": "AC",
+    "pricePerKm": 14,
+    "pricePerDay": 2500,
+    "image": "/images/fleet/ertiga.png",
+    "features": ["6 Seater", "AC", "Budget Friendly"],
+    "destinations": ["Delhi", "Agra", "Jaipur"],
+    "status": "active"
+  },
+  {
+    "id": "tempo-traveller-12",
+    "name": "Tempo Traveller (12 Seater)",
+    "type": "Van",
+    "capacity": 12,
+    "comfort": "AC",
+    "pricePerKm": 25,
+    "pricePerDay": 5500,
+    "image": "/images/fleet/tempo-12.png",
+    "features": ["12 Seater", "AC", "Group Travel", "Pushback Seats"],
+    "destinations": ["Kashmir", "Ladakh", "Himachal"],
+    "status": "active"
+  },
+  {
+    "id": "swift-dzire",
+    "name": "Swift Dzire",
+    "type": "Sedan",
+    "capacity": 4,
+    "comfort": "AC",
+    "pricePerKm": 12,
+    "pricePerDay": 1800,
+    "image": "/images/fleet/swift-dzire.png",
+    "features": ["4 Seater", "AC", "Compact"],
+    "destinations": ["Delhi", "Agra", "Jaipur", "Varanasi"],
+    "status": "active"
+  }
+]

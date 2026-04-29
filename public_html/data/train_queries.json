@@ -1,0 +1,137 @@
+[
+  {
+    "passengers": [
+      {
+        "age": 25,
+        "firstName": "Test",
+        "lastName": "User"
+      }
+    ],
+    "journeyDetails": {
+      "date": "2026-06-15",
+      "toStation": "Agra",
+      "fromStation": "Jaipur"
+    },
+    "bookingType": "individual",
+    "id": "TQ-1774091902017",
+    "timestamp": "2026-03-21T11:18:22.017Z",
+    "status": "New"
+  },
+  {
+    "bookingType": "individual",
+    "journeyDetails": {
+      "date": "",
+      "fromStation": "Delhi",
+      "toStation": "Bangalore",
+      "trainPref": "12001",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "hasOnwardJourney": false,
+    "onwardDetails": {
+      "date": "",
+      "fromStation": "",
+      "toStation": "",
+      "trainPref": "",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "passengers": [
+      {
+        "firstName": "Robert",
+        "lastName": "Brown",
+        "age": "40",
+        "idType": "aadhaar",
+        "idNumber": "1234 5678 9012",
+        "foodPref": "",
+        "nationality": "Indian",
+        "passport": "",
+        "mobile": "9876543210",
+        "countryCode": "+91",
+        "email": "robert.brown@example.com",
+        "whatsappConsent": true
+      }
+    ],
+    "timestamp": "2026-03-21T12:03:55.701Z",
+    "status": "New",
+    "id": "TQ-1774094635701"
+  },
+  {
+    "bookingType": "individual",
+    "journeyDetails": {
+      "date": "2026-04-22",
+      "fromStation": "Delhi",
+      "toStation": "Mumbai",
+      "trainPref": "Rajdhani",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "hasOnwardJourney": false,
+    "onwardDetails": {
+      "date": "",
+      "fromStation": "",
+      "toStation": "",
+      "trainPref": "",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "passengers": [
+      {
+        "firstName": "John",
+        "lastName": "Doe",
+        "age": "30",
+        "idType": "aadhaar",
+        "idNumber": "1234567890",
+        "foodPref": "",
+        "nationality": "Indian",
+        "passport": "",
+        "mobile": "9876543210",
+        "countryCode": "+91",
+        "email": "john.doe@example.com",
+        "whatsappConsent": false
+      }
+    ],
+    "timestamp": "2026-03-22T08:15:32.246Z",
+    "status": "New",
+    "id": "TQ-1774167332246"
+  },
+  {
+    "bookingType": "individual",
+    "journeyDetails": {
+      "date": "",
+      "fromStation": "Jaipur",
+      "toStation": "Agra",
+      "trainPref": "",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "hasOnwardJourney": false,
+    "onwardDetails": {
+      "date": "",
+      "fromStation": "",
+      "toStation": "",
+      "trainPref": "",
+      "seatPref": "",
+      "timePref": ""
+    },
+    "passengers": [
+      {
+        "firstName": "Alice",
+        "lastName": "Smith",
+        "age": "28",
+        "idType": "aadhaar",
+        "idNumber": "123456789012",
+        "foodPref": "",
+        "nationality": "Indian",
+        "passport": "L1234567",
+        "mobile": "1234567890",
+        "countryCode": "+91",
+        "email": "alice@example.com",
+        "whatsappConsent": false
+      }
+    ],
+    "timestamp": "2026-03-22T08:41:42.853Z",
+    "status": "New",
+    "id": "TQ-1774168902853"
+  }
+]

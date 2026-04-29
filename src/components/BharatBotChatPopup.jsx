@@ -90,17 +90,31 @@ const BharatBotChatPopup = ({ onClose }) => {
 
     const saveLead = async (data) => {
         try {
-            await fetch('/api/leads', {
+            const payload = {
+                id: `BOT-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
+                name: data.name || data.customerName || 'Chatbot User',
+                phone: data.phone || data.mobileNumber || data.mobile || '',
+                email: data.email || '',
+                to: data.destination || data.to || data.travelDestination || 'General Inquiry',
+                departureDate: data.travelDate || data.departureDate || '',
+                travelers: data.travelers || data.groupSize || '',
+                message: data.message || data.notes || '',
+                source: 'Bharat Bot',          // ← Shows as "Chatbot" in admin
+                createdAt: new Date().toISOString(),
+                status: 'New',
+                // Store the full chat data as extra context
+                chatData: data
+            };
+
+            const res = await fetch('/api/leads', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...data,
-                    id: `cb-pop-${Date.now()}`,
-                    timestamp: new Date().toISOString(),
-                    source: 'BharatBot Popup',
-                    status: 'New'
-                })
+                body: JSON.stringify(payload)
             });
+            const result = await res.json();
+            if (!result.success) {
+                console.warn("Lead save warning:", result.message);
+            }
         } catch (err) {
             console.error("Lead saving error:", err);
         }

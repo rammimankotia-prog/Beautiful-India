@@ -47,19 +47,18 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
     setStatus('loading');
 
     const leadData = {
+      id: `QM-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
       ...formData,
       to: topic || 'General Inquiry',
-      source: source,
-      timestamp: new Date().toISOString(),
+      source: source,                       // e.g. "Travel Guide Page", "Article Inquiry", etc.
+      createdAt: new Date().toISOString(),
       status: 'New'
     };
 
     try {
-      const response = await fetch(`${import.meta.env.BASE_URL}api-save-leads.php`, {
+      const response = await fetch('/api/leads', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(leadData),
       });
 
@@ -67,10 +66,7 @@ const QueryModal = ({ isOpen, onClose, topic, source = "Article Inquiry" }) => {
 
       if (result.success) {
         setStatus('success');
-        // Optional: auto-close after 3 seconds
-        setTimeout(() => {
-          onClose();
-        }, 3000);
+        setTimeout(() => { onClose(); }, 3000);
       } else {
         throw new Error(result.message || 'Failed to submit inquiry');
       }

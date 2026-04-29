@@ -949,7 +949,7 @@ const GuideDetailView = () => {
         isOpen={isQueryModalOpen}
         onClose={() => setIsQueryModalOpen(false)}
         topic={guide.title}
-        source="Travel Guide"
+        source="Travel Guide Page"
       />
     </div>
   );

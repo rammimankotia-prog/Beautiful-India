@@ -6,15 +6,46 @@ const ContactPage = () => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: 'General Inquiry', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = e => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setLoading(false);
-    setSubmitted(true);
+    setError('');
+
+    const leadPayload = {
+      id: `CONT-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      subject: form.subject,
+      message: form.message,
+      to: form.subject,                // what the inquiry is about
+      source: 'Contact Us Page',       // ← exact page source label
+      createdAt: new Date().toISOString(),
+      status: 'New'
+    };
+
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(leadPayload)
+      });
+      const result = await res.json();
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        throw new Error(result.message || 'Submission failed');
+      }
+    } catch (err) {
+      console.error('Contact form error:', err);
+      setError('Something went wrong. Please try again or call us directly.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const contactCards = [
@@ -221,6 +252,14 @@ const ContactPage = () => {
                       className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-300 resize-none"
                     />
                   </div>
+
+                  {/* Error Message */}
+                  {error && (
+                    <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm font-bold">
+                      <span className="material-symbols-outlined text-[18px]">error</span>
+                      {error}
+                    </div>
+                  )}
 
                   {/* Submit */}
                   <button

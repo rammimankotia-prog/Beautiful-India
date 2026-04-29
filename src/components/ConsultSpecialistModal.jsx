@@ -61,17 +61,23 @@ const ConsultSpecialistModal = ({ isOpen, onClose, tourTitle, topic = "India Exp
     setStatus('loading');
 
     const leadData = {
-      ...formData,
-      topic: tourTitle || topic,
-      source: "Specialist Consultation",
-      timestamp: new Date().toISOString(),
-      status: 'High Priority'
+      id: `CONSULT-${Date.now()}`,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      to: tourTitle || 'General Expert Consultation',
+      message: formData.message,
+      source: 'Specialist Consultation',
+      createdAt: new Date().toISOString(),
+      status: 'New'
     };
 
     try {
-      const response = await fetch(`/api-save-leads.php`, {
+      const response = await fetch(`/api/leads`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(leadData),
       });
 

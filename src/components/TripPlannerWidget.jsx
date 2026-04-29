@@ -91,18 +91,19 @@ const TripPlannerWidget = () => {
             
             // Post to backend
             try {
-                const targetUrl = import.meta.env.MODE === 'development' ? '/api/save-leads' : `${import.meta.env.BASE_URL}api-save-leads.php`;
-                await fetch(targetUrl, {
+                await fetch('/api/leads', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        id: `WIDGET-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
                         name: updatedData.name,
                         to: updatedData.destination,
                         departureDate: updatedData.date,
                         duration: updatedData.duration,
                         email: updatedData.email,
                         phone: updatedData.phone,
-                        source: 'Floating Widget',
+                        source: 'Home Page Widget',   // ← Source: Home Page
+                        createdAt: new Date().toISOString(),
                         status: 'New'
                     })
                 });

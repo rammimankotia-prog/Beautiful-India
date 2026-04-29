@@ -8,12 +8,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$public_file = __DIR__ . '/data/transport-vehicles.json';
-$src_file = dirname(__DIR__) . '/src/data/transport-vehicles.json';
+$project_root = dirname(dirname(__DIR__));
+$public_file = $project_root . '/public_html/data/transport-vehicles.json';
+$src_file = $project_root . '/src/data/transport-vehicles.json';
 
 // Ensure data directory exists
-if (!file_exists(__DIR__ . '/data')) {
-    mkdir(__DIR__ . '/data', 0777, true);
+if (!file_exists(dirname($public_file))) {
+    mkdir(dirname($public_file), 0777, true);
+}
+if (!file_exists(dirname($src_file)) && file_exists($project_root . '/src')) {
+    mkdir(dirname($src_file), 0777, true);
 }
 
 // 1. GET - Fetch all vehicles
@@ -48,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || ($_SERVER['REQUEST_METHOD'] === '
         if (count($new_data) < count($current_data)) {
             $new_data = array_values($new_data);
             file_put_contents($public_file, json_encode($new_data, JSON_PRETTY_PRINT));
-            if (file_exists(dirname(__DIR__) . '/src')) {
+            if (file_exists($project_root . '/src')) {
                 file_put_contents($src_file, json_encode($new_data, JSON_PRETTY_PRINT));
             }
             header('Content-Type: application/json');
@@ -98,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     file_put_contents($public_file, json_encode($existingData, JSON_PRETTY_PRINT));
-    if (file_exists(dirname(__DIR__) . '/src')) {
+    if (file_exists($project_root . '/src')) {
         file_put_contents($src_file, json_encode($existingData, JSON_PRETTY_PRINT));
     }
 

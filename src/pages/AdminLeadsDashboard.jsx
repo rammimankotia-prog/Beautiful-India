@@ -20,31 +20,23 @@ const AdminLeadsDashboard = () => {
         setLoading(true);
         try {
             const res = await fetch(`/api/leads?t=${Date.now()}`, {
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                }
+                headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0' }
             });
-            if (res.ok) {
-                const data = await res.json();
-                const dataArray = Array.isArray(data) ? data : [];
-                const sorted = dataArray.sort((a, b) => new Date(b.createdAt || b.timestamp) - new Date(a.createdAt || a.timestamp));
-                setLeads(sorted);
-                setDataSource('server');
-                localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(sorted));
-            } else {
-                throw new Error(`Server returned ${res.status}`);
-            }
+            if (!res.ok) throw new Error(`Server returned ${res.status}`);
+            const text = await res.text();
+            // Guard against HTML responses (SPA fallback)
+            if (text.trim().startsWith('<')) throw new Error('Received HTML instead of JSON');
+            const data = JSON.parse(text);
+            const dataArray = Array.isArray(data) ? data : [];
+            const sorted = dataArray.sort((a, b) => new Date(b.createdAt || b.timestamp) - new Date(a.createdAt || a.timestamp));
+            setLeads(sorted);
+            setDataSource('server');
+            localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(sorted));
         } catch (err) {
             console.error("Fetch leads error:", err);
             const saved = localStorage.getItem('beautifulindia_admin_leads');
-            if (saved) {
-                setLeads(JSON.parse(saved));
-                setDataSource('cache');
-            } else {
-                setDataSource('error');
-            }
+            if (saved) { setLeads(JSON.parse(saved)); setDataSource('cache'); }
+            else { setDataSource('error'); }
         } finally {
             setLoading(false);
         }
@@ -66,22 +58,31 @@ const AdminLeadsDashboard = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Delete this inquiry?")) {
-            try {
-                const response = await fetch(`/api/leads?id=${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    const updated = leads.filter(l => l.id !== id);
-                    setLeads(updated);
-                    localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(updated));
-                    if (viewLead && viewLead.id === id) setViewLead(null);
-                    showToast("Inquiry deleted permanently");
-                } else {
-                    showToast("Error deleting from server");
-                }
-            } catch (err) {
-                console.error("Delete error:", err);
-                showToast("Network error during deletion");
+        if (!window.confirm("Delete this inquiry permanently? This cannot be undone.")) return;
+        // Optimistic UI update first
+        const prevLeads = [...leads];
+        const updated = leads.filter(l => l.id !== id);
+        setLeads(updated);
+        localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(updated));
+        if (viewLead && viewLead.id === id) setViewLead(null);
+        try {
+            const res = await fetch(`/api/leads?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+            const text = await res.text();
+            // Guard against HTML (SPA fallback)
+            if (text.trim().startsWith('<')) throw new Error('API route not found - received HTML');
+            const result = JSON.parse(text);
+            if (result.success) {
+                showToast("✓ Lead deleted from server");
+                fetchLeads(); // re-sync from server
+            } else {
+                throw new Error(result.message || 'Delete failed on server');
             }
+        } catch (err) {
+            console.error("Delete error:", err);
+            // Rollback optimistic update
+            setLeads(prevLeads);
+            localStorage.setItem('beautifulindia_admin_leads', JSON.stringify(prevLeads));
+            showToast("Delete failed: " + err.message);
         }
     };
 
@@ -100,14 +101,18 @@ const AdminLeadsDashboard = () => {
     };
 
     const getSourceLabel = (lead) => {
-        if (lead.source === 'Bharat Bot') return { label: 'Chatbot', icon: 'smart_toy', color: 'text-teal-600', bg: 'bg-teal-50' };
-        if (lead.source === 'Tour Booking Form') return { label: 'Tour Booking', icon: 'confirmation_number', color: 'text-primary', bg: 'bg-primary/10' };
-        if (lead.source === 'Specialist Consultation') return { label: 'Specialist', icon: 'support_agent', color: 'text-purple-600', bg: 'bg-purple-50' };
-        if (lead.source === 'Bharat Darshan Page') return { label: 'Tour Inquiry', icon: 'explore', color: 'text-blue-600', bg: 'bg-blue-50' };
-        if (lead.source === 'Article Inquiry') return { label: 'Article', icon: 'article', color: 'text-orange-600', bg: 'bg-orange-50' };
-        if (lead.source === 'Transport Fleet') return { label: 'Transport', icon: 'directions_car', color: 'text-rose-600', bg: 'bg-rose-50' };
+        const s = lead.source || '';
+        if (s === 'Bharat Bot' || s === 'BharatBot Popup') return { label: 'Chatbot', icon: 'smart_toy', color: 'text-teal-600', bg: 'bg-teal-50' };
+        if (s === 'Contact Us Page') return { label: 'Contact Page', icon: 'contact_mail', color: 'text-indigo-600', bg: 'bg-indigo-50' };
+        if (s === 'Home Page Widget' || s === 'Floating Widget') return { label: 'Home Widget', icon: 'home', color: 'text-emerald-600', bg: 'bg-emerald-50' };
+        if (s === 'Travel Guide Page' || s === 'Travel Guide') return { label: 'Travel Guide', icon: 'menu_book', color: 'text-violet-600', bg: 'bg-violet-50' };
+        if (s === 'Tour Booking Form') return { label: 'Tour Booking', icon: 'confirmation_number', color: 'text-primary', bg: 'bg-primary/10' };
+        if (s === 'Specialist Consultation') return { label: 'Specialist', icon: 'support_agent', color: 'text-purple-600', bg: 'bg-purple-50' };
+        if (s === 'Bharat Darshan Page') return { label: 'Tour Inquiry', icon: 'explore', color: 'text-blue-600', bg: 'bg-blue-50' };
+        if (s === 'Article Inquiry') return { label: 'Article', icon: 'article', color: 'text-orange-600', bg: 'bg-orange-50' };
+        if (s === 'Transport Fleet') return { label: 'Transport', icon: 'directions_car', color: 'text-rose-600', bg: 'bg-rose-50' };
         if (lead.departureType) return { label: 'Quote Request', icon: 'request_quote', color: 'text-purple-600', bg: 'bg-purple-50' };
-        return { label: 'Contact Form', icon: 'mail', color: 'text-slate-600', bg: 'bg-slate-50' };
+        return { label: s || 'Contact Form', icon: 'mail', color: 'text-slate-600', bg: 'bg-slate-50' };
     };
 
     const fmtDate = (d) => {

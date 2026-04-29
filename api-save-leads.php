@@ -9,17 +9,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // 1. Define target paths (Environment aware)
 $public_file = __DIR__ . '/data/leads.json';
-$src_file = dirname(__DIR__) . '/src/data/leads.json';
+$src_file = __DIR__ . '/src/data/leads.json';
 
 // Ensure data directories exist
 if (!file_exists(dirname($public_file))) { mkdir(dirname($public_file), 0777, true); }
-if (!file_exists(dirname($src_file)) && file_exists(dirname(__DIR__) . '/src')) { mkdir(dirname($src_file), 0777, true); }
+if (!file_exists(dirname($src_file)) && file_exists(__DIR__ . '/src')) { mkdir(dirname($src_file), 0777, true); }
 
 // Ensure file exists with an empty array if it doesn't
 if (!file_exists($public_file)) {
     file_put_contents($public_file, json_encode([], JSON_PRETTY_PRINT));
 }
-if (file_exists(dirname(__DIR__) . '/src') && !file_exists($src_file)) {
+if (file_exists(__DIR__ . '/src') && !file_exists($src_file)) {
     file_put_contents($src_file, json_encode([], JSON_PRETTY_PRINT));
 }
 
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || ($_SERVER['REQUEST_METHOD'] === '
     $new_data = array_values($filtered_data); // Reset indices
     
     file_put_contents($public_file, json_encode($new_data, JSON_PRETTY_PRINT));
-    if (file_exists(dirname(__DIR__) . '/src')) {
+    if (file_exists(__DIR__ . '/src')) {
         file_put_contents($src_file, json_encode($new_data, JSON_PRETTY_PRINT));
     }
     
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || ($_SERVER['REQUEST_METHOD'] === '
         // 3. Persist to BOTH locations
         $public_success = file_put_contents($public_file, json_encode($current_data, JSON_PRETTY_PRINT));
         $src_success = true;
-        if (file_exists(dirname(__DIR__) . '/src')) {
+        if (file_exists(__DIR__ . '/src')) {
             $src_success = file_put_contents($src_file, json_encode($current_data, JSON_PRETTY_PRINT));
         }
         

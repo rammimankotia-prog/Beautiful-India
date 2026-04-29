@@ -14,7 +14,7 @@ const AdminBikeTourDashboard = () => {
     const fetchLeads = async () => {
         try {
             // Updated to absolute path with cache-busting
-            const response = await fetch(`/api-save-leads.php?t=${Date.now()}`, {
+            const response = await fetch(`/api/leads?t=${Date.now()}`, {
                 headers: {
                     'Cache-Control': 'no-cache',
                     'Pragma': 'no-cache'
