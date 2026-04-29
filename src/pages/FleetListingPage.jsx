@@ -35,15 +35,23 @@ const FleetListingPage = () => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        fetch(`/api/vehicles?t=${Date.now()}`)
-            .then(res => res.json())
+        fetch(`/fleet_api/fleet_manager.php?t=${Date.now()}`)
+            .then(async res => {
+                const ct = res.headers.get('content-type') || '';
+                if (!ct.includes('application/json')) {
+                    throw new Error('API returned non-JSON. SPA fallback hit?');
+                }
+                return res.json();
+            })
             .then(data => {
-                setVehicles(data);
-                setFilteredVehicles(data);
+                setVehicles(Array.isArray(data) ? data : []);
+                setFilteredVehicles(Array.isArray(data) ? data : []);
                 setLoading(false);
             })
             .catch(err => {
                 console.error("Error loading fleet:", err);
+                setVehicles([]);
+                setFilteredVehicles([]);
                 setLoading(false);
             });
     }, []);
@@ -71,7 +79,7 @@ const FleetListingPage = () => {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const res = await fetch(`/api/leads`, {
+            const res = await fetch(`/fleet_api/fleet_leads.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
