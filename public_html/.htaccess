@@ -2,20 +2,34 @@
   RewriteEngine On
   RewriteBase /
 
-  # 0. Explicit PHP Protection - Do not rewrite actual PHP files
-  RewriteCond %{REQUEST_URI} \.php$
-  RewriteRule ^ - [L]
+  # ── SEO 301 Redirects ─────────────────────────────────────────────────────────
+  Redirect 301 /khajuraho-temple-india /guides/khajuraho-temple-india
 
-  # 1. Physical Files - Stop here if file/dir exists
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-
-  # 2. SEO & Sitemap
+  # ── Dynamic sitemap served at /sitemap.xml ──────────────────────────────────
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
-  # 4. Master Router Fallback
+  # ── API Rewrite Rules ────────────────────────────────────────────────────────
+  RewriteRule ^api/leads/?$            api-leads.php            [L,QSA]
+  RewriteRule ^api/bookings/?$         api-bookings.php         [L,QSA]
+  RewriteRule ^api/reviews/?$          api-save-review.php      [L,QSA]
+  RewriteRule ^api/save-categories/?$  api-save-categories.php  [L]
+  RewriteRule ^api/save-tours/?$       api-save-tours.php       [L]
+  RewriteRule ^api/save-guides/?$      api-save-guides.php      [L]
+  RewriteRule ^api/save-leads$         api-leads.php            [L,QSA]
+  RewriteRule ^api/train-queries$      api-train-queries.php    [L,QSA]
+  RewriteRule ^api/save-review$        api-save-review.php      [L]
+  RewriteRule ^api/save-bike-tours/?$  api-save-bike-tours.php  [L]
+  RewriteRule ^api/saved-guides/?$     api-saved-guides.php     [L]
+  RewriteRule ^api/save-settings/?$    api-save-settings.php    [L]
+  RewriteRule ^api/chatflow/?$         api-chatflow.php         [L]
+  RewriteRule ^api/manual-qa/?$        api-manual-qa.php        [L]
+
+  # ── SPA Fallback ─────────────────────────────────────────────────────────────
+  RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ index.php [L]
+  RewriteRule . /index.html [L]
 </IfModule>
+
+
+

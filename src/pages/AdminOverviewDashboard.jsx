@@ -44,11 +44,15 @@ const AdminOverviewDashboard = () => {
                     return;
             }
 
-            const url = `${endpoint}?action=delete&id=${rawId}`;
-            console.log(`DELETE (POST fallback) URL: ${url}`);
+            const url = endpoint;
+            console.log(`DELETE URL: ${url}`);
             
-            const res = await fetch(url, { method: 'POST' });
-            
+            const res = await fetch(url, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: rawId })
+            });
+
             // Log content type for debugging
             console.log("Response Status:", res.status);
             console.log("Content-Type:", res.headers.get('Content-Type'));
