@@ -40,34 +40,32 @@ const AdminTransportManagement = () => {
                 fetch(`/fleet_api/fleet_manager.php?t=${Date.now()}`, { cache: 'no-store' }),
                 fetch(`/fleet_api/fleet_leads.php?t=${Date.now()}`, { cache: 'no-store' })
             ]);
-            
-            const vText = await vRes.text();
-            const lText = await lRes.text();
-            
-            let vData = [];
-            let lData = [];
-            
-            try {
-                vData = JSON.parse(vText);
-            } catch (e) {
-                console.error("Vehicles API error: Invalid JSON", vText.substring(0, 100));
+
+            // Guard: if server returns HTML (SPA fallback), bail early
+            const vCT = vRes.headers.get('content-type') || '';
+            const lCT = lRes.headers.get('content-type') || '';
+
+            let vData = [], lData = [];
+
+            if (vCT.includes('application/json')) {
+                try { vData = await vRes.json(); } catch(e) { console.error('Vehicles JSON parse error', e); }
+            } else {
+                const vText = await vRes.text();
+                console.error('Vehicles API returned non-JSON:', vText.substring(0, 120));
             }
-            
-            try {
-                lData = JSON.parse(lText);
-            } catch (e) {
-                console.error("Leads API error: Invalid JSON", lText.substring(0, 100));
+
+            if (lCT.includes('application/json')) {
+                try { lData = await lRes.json(); } catch(e) { console.error('Leads JSON parse error', e); }
+            } else {
+                const lText = await lRes.text();
+                console.error('Leads API returned non-JSON:', lText.substring(0, 120));
             }
 
             setVehicles(Array.isArray(vData) ? vData : []);
             setLeads(Array.isArray(lData) ? lData : []);
-            
-            if (!Array.isArray(vData) || !Array.isArray(lData)) {
-                showToast("Data format error from server");
-            }
         } catch (err) {
-            console.error("Error fetching transport data:", err);
-            showToast("Failed to load data");
+            console.error('Error fetching transport data:', err);
+            showToast('Failed to load data');
         }
         setLoading(false);
     };
@@ -99,8 +97,8 @@ const AdminTransportManagement = () => {
         try {
             const finalData = {
                 ...formData,
-                features: typeof formData.features === 'string' 
-                    ? formData.features.split(',').map(s => s.trim()) 
+                features: typeof formData.features === 'string'
+                    ? formData.features.split(',').map(s => s.trim())
                     : formData.features
             };
 
@@ -109,44 +107,49 @@ const AdminTransportManagement = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(finalData)
             });
-            const text = await res.text();
-            try {
-                const result = JSON.parse(text);
-                if (result.success) {
-                    showToast(editingVehicle ? "Vehicle updated!" : "New vehicle added!");
-                    setShowModal(false);
-                    fetchData();
-                } else {
-                    showToast(result.message || "Save failed");
-                }
-            } catch (jsonErr) {
-                console.error("Save API error: Invalid JSON", text.substring(0, 100));
-                showToast("Server Error: Save failed");
+
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) {
+                const raw = await res.text();
+                console.error('Save API returned non-JSON:', raw.substring(0, 200));
+                showToast('Server error: PHP not executing on this path');
+                return;
+            }
+
+            const result = await res.json();
+            if (result.success) {
+                showToast(editingVehicle ? 'Vehicle updated!' : 'New vehicle added!');
+                setShowModal(false);
+                fetchData();
+            } else {
+                showToast(result.message || 'Save failed');
             }
         } catch (err) {
-            showToast("Network error");
+            console.error('Save error:', err);
+            showToast('Network error');
         }
     };
 
     const handleDeleteVehicle = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
+        if (!window.confirm('Are you sure you want to delete this vehicle?')) return;
         try {
             const res = await fetch(`/fleet_api/fleet_manager.php?action=delete&id=${id}`, { method: 'POST' });
-            const text = await res.text();
-            try {
-                const result = JSON.parse(text);
-                if (result.success) {
-                    showToast("Vehicle removed");
-                    setVehicles(prev => prev.filter(v => v.id !== id));
-                } else {
-                    showToast(result.message || "Delete failed");
-                }
-            } catch (jsonErr) {
-                console.error("Delete API error: Invalid JSON", text.substring(0, 100));
-                showToast("Server Error: Delete failed");
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) {
+                const raw = await res.text();
+                console.error('Delete API returned non-JSON:', raw.substring(0, 200));
+                showToast('Server error on delete');
+                return;
+            }
+            const result = await res.json();
+            if (result.success) {
+                showToast('Vehicle removed');
+                setVehicles(prev => prev.filter(v => v.id !== id));
+            } else {
+                showToast(result.message || 'Delete failed');
             }
         } catch (err) {
-            showToast("Network error");
+            showToast('Network error');
         }
     };
 

@@ -9,14 +9,13 @@
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
   # ── API Rewrite Rules ────────────────────────────────────────────────────────
+  # MASTER LEADS API (GET + POST + DELETE) — must come FIRST
   RewriteRule ^api/leads/?$            api-leads.php            [L,QSA]
-  RewriteRule ^api/bookings/?$         api-bookings.php         [L,QSA]
-  RewriteRule ^api/reviews/?$          api-save-review.php      [L,QSA]
   RewriteRule ^api/save-categories/?$  api-save-categories.php  [L]
   RewriteRule ^api/save-tours/?$       api-save-tours.php       [L]
   RewriteRule ^api/save-guides/?$      api-save-guides.php      [L]
   RewriteRule ^api/save-leads$         api-leads.php            [L,QSA]
-  RewriteRule ^api/train-queries$      api-train-queries.php    [L,QSA]
+  RewriteRule ^api/train-queries$      api-train-queries.php    [L]
   RewriteRule ^api/save-review$        api-save-review.php      [L]
   RewriteRule ^api/save-bike-tours/?$  api-save-bike-tours.php  [L]
   RewriteRule ^api/saved-guides/?$     api-saved-guides.php     [L]

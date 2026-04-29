@@ -1,0 +1,20 @@
+{
+  "chatbotEnabled": true,
+  "whatsappEnabled": true,
+  "visibility": {
+    "chatbot": {
+      "all": true,
+      "home": true,
+      "tours": true,
+      "trains": true,
+      "guides": true
+    },
+    "whatsapp": {
+      "all": true,
+      "home": true,
+      "tours": true,
+      "trains": true,
+      "guides": true
+    }
+  }
+}

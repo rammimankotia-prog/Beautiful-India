@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'delete')) {
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $id = $_GET['id'] ?? null;
     if (!$id) {
         $data = json_decode(file_get_contents("php://input"), true);
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' || ($_SERVER['REQUEST_METHOD'] === '
         $current_data = json_decode($json, true) ?: [];
         
         $new_data = array_filter($current_data, function($q) use ($id) {
-            return strval($q['id'] ?? '') !== strval($id);
+            return $q['id'] !== $id;
         });
         
         if (count($new_data) < count($current_data)) {
