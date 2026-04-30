@@ -192,50 +192,7 @@ const FleetListingPage = () => {
                                     </div>
                                 </section>
 
-                                <section className="space-y-4">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Trip Category</p>
-                                    <div className="flex p-1 bg-slate-50 dark:bg-slate-800 rounded-2xl">
-                                        <button 
-                                            onClick={() => setFilters({...filters, tripType: 'local'})}
-                                            className={`flex-1 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${filters.tripType === 'local' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-slate-400'}`}
-                                        >Local</button>
-                                        <button 
-                                            onClick={() => setFilters({...filters, tripType: 'outstation'})}
-                                            className={`flex-1 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${filters.tripType === 'outstation' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-slate-400'}`}
-                                        >Outstation</button>
-                                    </div>
-                                </section>
 
-                                <section className="space-y-4">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pickup Location</p>
-                                    <input 
-                                        type="text"
-                                        placeholder="Airport, Hotel, or Station"
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                                        value={bookingDetails.pickup}
-                                        onChange={(e) => setBookingDetails({...bookingDetails, pickup: e.target.value})}
-                                    />
-                                </section>
-
-                                <section className="space-y-4">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pickup Date</p>
-                                    <input 
-                                        type="date"
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                                        value={bookingDetails.fromDate}
-                                        onChange={(e) => setBookingDetails({...bookingDetails, fromDate: e.target.value})}
-                                    />
-                                </section>
-
-                                <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                                    <button 
-                                        onClick={() => {
-                                            setFilters({destination:'', capacity:'', comfort:'', tripType:'outstation'});
-                                            setBookingDetails({...bookingDetails, pickup: '', fromDate: ''});
-                                        }}
-                                        className="w-full py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 transition-colors"
-                                    >Clear All</button>
-                                </div>
                             </div>
                         </div>
 
