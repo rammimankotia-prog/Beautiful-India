@@ -163,7 +163,7 @@ const AdminTransportManagement = () => {
             formDataUpload.append('image', file);
 
             try {
-                const res = await fetch('/api/upload', {
+                const res = await fetch('/api-upload-image.php', {
                     method: 'POST',
                     body: formDataUpload
                 });
