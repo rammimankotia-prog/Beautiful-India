@@ -16,11 +16,12 @@ const AdminTransportManagement = () => {
         name: '',
         type: 'SUV',
         capacity: '',
-        comfort: 'Premium',
+        comfort: 'AC',
         pricePerKm: '',
         pricePerDay: '',
         images: [], // Array of {url, isPrimary}
         status: 'active',
+        destinations: 'Kashmir, Ladakh',
         features: 'AC, Music, Professional Driver'
     });
 
@@ -75,6 +76,8 @@ const AdminTransportManagement = () => {
             setEditingVehicle(vehicle);
             setFormData({
                 ...vehicle,
+                destinations: Array.isArray(vehicle.destinations) ? vehicle.destinations.join(', ') : (vehicle.destinations || ''),
+                features: Array.isArray(vehicle.features) ? vehicle.features.join(', ') : (vehicle.features || ''),
                 images: vehicle.images || (vehicle.image ? [{url: vehicle.image, isPrimary: true}] : [])
             });
         } else {
@@ -84,11 +87,12 @@ const AdminTransportManagement = () => {
                 name: '',
                 type: 'SUV',
                 capacity: '7',
-                comfort: 'Premium',
+                comfort: 'AC',
                 pricePerKm: '18',
                 pricePerDay: '3500',
                 images: [],
                 status: 'active',
+                destinations: 'Kashmir, Ladakh',
                 features: 'AC, Music, Professional Driver'
             });
         }
@@ -100,6 +104,9 @@ const AdminTransportManagement = () => {
         try {
             const finalData = {
                 ...formData,
+                destinations: typeof formData.destinations === 'string'
+                    ? formData.destinations.split(',').map(s => s.trim())
+                    : formData.destinations,
                 features: typeof formData.features === 'string'
                     ? formData.features.split(',').map(s => s.trim())
                     : formData.features
@@ -467,10 +474,8 @@ const AdminTransportManagement = () => {
                                             onChange={(e) => setFormData({...formData, comfort: e.target.value})}
                                             className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-700 dark:text-slate-200"
                                         >
-                                            <option>Economy</option>
-                                            <option>Standard</option>
-                                            <option>Premium</option>
-                                            <option>Luxury</option>
+                                            <option>AC</option>
+                                            <option>Non-AC</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
@@ -504,6 +509,16 @@ const AdminTransportManagement = () => {
                                         placeholder="e.g. AC, Music System, First Aid, Luggage Space"
                                         value={formData.features}
                                         onChange={(e) => setFormData({...formData, features: e.target.value})}
+                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-700 dark:text-slate-200"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Destinations (Comma Separated)</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="e.g. Kashmir, Ladakh, Delhi"
+                                        value={formData.destinations}
+                                        onChange={(e) => setFormData({...formData, destinations: e.target.value})}
                                         className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-700 dark:text-slate-200"
                                     />
                                 </div>

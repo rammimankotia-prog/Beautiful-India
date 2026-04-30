@@ -8,8 +8,19 @@
     "pricePerKm": 18,
     "pricePerDay": 3500,
     "image": "/images/fleet/innova-crysta.png",
-    "features": ["7 Seater", "AC", "Luxury Interior", "Professional Driver"],
-    "destinations": ["Kashmir", "Delhi", "Agra", "Jaipur", "Ladakh"],
+    "features": [
+      "7 Seater",
+      "AC",
+      "Luxury Interior",
+      "Professional Driver"
+    ],
+    "destinations": [
+      "Kashmir",
+      "Delhi",
+      "Agra",
+      "Jaipur",
+      "Ladakh"
+    ],
     "status": "active"
   },
   {
@@ -21,8 +32,16 @@
     "pricePerKm": 14,
     "pricePerDay": 2500,
     "image": "/images/fleet/ertiga.png",
-    "features": ["6 Seater", "AC", "Budget Friendly"],
-    "destinations": ["Delhi", "Agra", "Jaipur"],
+    "features": [
+      "6 Seater",
+      "AC",
+      "Budget Friendly"
+    ],
+    "destinations": [
+      "Delhi",
+      "Agra",
+      "Jaipur"
+    ],
     "status": "active"
   },
   {
@@ -34,8 +53,17 @@
     "pricePerKm": 25,
     "pricePerDay": 5500,
     "image": "/images/fleet/tempo-12.png",
-    "features": ["12 Seater", "AC", "Group Travel", "Pushback Seats"],
-    "destinations": ["Kashmir", "Ladakh", "Himachal"],
+    "features": [
+      "12 Seater",
+      "AC",
+      "Group Travel",
+      "Pushback Seats"
+    ],
+    "destinations": [
+      "Kashmir",
+      "Ladakh",
+      "Himachal"
+    ],
     "status": "active"
   },
   {
@@ -47,8 +75,17 @@
     "pricePerKm": 12,
     "pricePerDay": 1800,
     "image": "/images/fleet/swift-dzire.png",
-    "features": ["4 Seater", "AC", "Compact"],
-    "destinations": ["Delhi", "Agra", "Jaipur", "Varanasi"],
+    "features": [
+      "4 Seater",
+      "AC",
+      "Compact"
+    ],
+    "destinations": [
+      "Delhi",
+      "Agra",
+      "Jaipur",
+      "Varanasi"
+    ],
     "status": "active"
   }
 ]
