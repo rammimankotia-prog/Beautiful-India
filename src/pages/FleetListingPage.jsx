@@ -133,68 +133,6 @@ const FleetListingPage = () => {
                 </div>
             </div>
 
-            {/* Booking & Search Bar */}
-            <div className="container mx-auto px-6 -mt-12 relative z-10">
-                <div className="bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl shadow-slate-200/50 dark:shadow-none p-8 border border-slate-100 dark:border-slate-800">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Destination</label>
-                            <select 
-                                value={filters.destination}
-                                onChange={(e) => setFilters({...filters, destination: e.target.value})}
-                                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                            >
-                                <option value="">Select Region</option>
-                                <option value="Kashmir">Jammu & Kashmir</option>
-                                <option value="Ladakh">Ladakh</option>
-                                <option value="Delhi">Delhi / NCR</option>
-                                <option value="Agra">Agra (Taj Mahal)</option>
-                                <option value="Jaipur">Jaipur (Pink City)</option>
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Pickup Location</label>
-                            <input 
-                                type="text"
-                                placeholder="Airport, Hotel, or Station"
-                                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                                value={bookingDetails.pickup}
-                                onChange={(e) => setBookingDetails({...bookingDetails, pickup: e.target.value})}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Pickup Date</label>
-                            <input 
-                                type="date"
-                                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                                value={bookingDetails.fromDate}
-                                onChange={(e) => setBookingDetails({...bookingDetails, fromDate: e.target.value})}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Capacity</label>
-                            <select 
-                                value={filters.capacity}
-                                onChange={(e) => setFilters({...filters, capacity: e.target.value})}
-                                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                            >
-                                <option value="">Any Capacity</option>
-                                <option value="4">4 Seater</option>
-                                <option value="6">6 Seater</option>
-                                <option value="7">7 Seater</option>
-                                <option value="9">9+ Seater</option>
-                            </select>
-                        </div>
-                        <div className="flex items-end">
-                            <button className="w-full h-[54px] bg-primary text-white font-black rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-transform flex items-center justify-center gap-2">
-                                <span className="material-symbols-outlined">search</span>
-                                FIND VEHICLES
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* Main Content */}
             <div className="container mx-auto px-6 py-16">
                 <div className="flex flex-col lg:flex-row gap-10">
@@ -205,6 +143,37 @@ const FleetListingPage = () => {
                             <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight mb-8">Refine Search</h3>
                             
                             <div className="space-y-8">
+                                <section className="space-y-4">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Destination</p>
+                                    <select 
+                                        value={filters.destination}
+                                        onChange={(e) => setFilters({...filters, destination: e.target.value})}
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                                    >
+                                        <option value="">All Regions</option>
+                                        <option value="Kashmir">Jammu & Kashmir</option>
+                                        <option value="Ladakh">Ladakh</option>
+                                        <option value="Delhi">Delhi / NCR</option>
+                                        <option value="Agra">Agra (Taj Mahal)</option>
+                                        <option value="Jaipur">Jaipur (Pink City)</option>
+                                    </select>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Capacity</p>
+                                    <select 
+                                        value={filters.capacity}
+                                        onChange={(e) => setFilters({...filters, capacity: e.target.value})}
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                                    >
+                                        <option value="">Any Capacity</option>
+                                        <option value="4">4 Seater</option>
+                                        <option value="6">6 Seater</option>
+                                        <option value="7">7 Seater</option>
+                                        <option value="9">9+ Seater</option>
+                                    </select>
+                                </section>
+
                                 <section className="space-y-4">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Comfort Class</p>
                                     <div className="space-y-2">
@@ -237,11 +206,35 @@ const FleetListingPage = () => {
                                     </div>
                                 </section>
 
+                                <section className="space-y-4">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pickup Location</p>
+                                    <input 
+                                        type="text"
+                                        placeholder="Airport, Hotel, or Station"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                                        value={bookingDetails.pickup}
+                                        onChange={(e) => setBookingDetails({...bookingDetails, pickup: e.target.value})}
+                                    />
+                                </section>
+
+                                <section className="space-y-4">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pickup Date</p>
+                                    <input 
+                                        type="date"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                                        value={bookingDetails.fromDate}
+                                        onChange={(e) => setBookingDetails({...bookingDetails, fromDate: e.target.value})}
+                                    />
+                                </section>
+
                                 <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
                                     <button 
-                                        onClick={() => setFilters({destination:'', capacity:'', comfort:'', tripType:'outstation'})}
+                                        onClick={() => {
+                                            setFilters({destination:'', capacity:'', comfort:'', tripType:'outstation'});
+                                            setBookingDetails({...bookingDetails, pickup: '', fromDate: ''});
+                                        }}
                                         className="w-full py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 transition-colors"
-                                    >Clear All Filters</button>
+                                    >Clear All</button>
                                 </div>
                             </div>
                         </div>
