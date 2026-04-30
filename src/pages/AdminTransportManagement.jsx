@@ -73,7 +73,10 @@ const AdminTransportManagement = () => {
     const handleOpenModal = (vehicle = null) => {
         if (vehicle) {
             setEditingVehicle(vehicle);
-            setFormData(vehicle);
+            setFormData({
+                ...vehicle,
+                images: vehicle.images || (vehicle.image ? [{url: vehicle.image, isPrimary: true}] : [])
+            });
         } else {
             setEditingVehicle(null);
             setFormData({
@@ -169,16 +172,23 @@ const AdminTransportManagement = () => {
                 });
                 const result = await res.json();
                 if (result.success) {
-                    setFormData(prev => ({
-                        ...prev,
-                        images: [
-                            ...prev.images, 
-                            { url: result.url, isPrimary: prev.images.length === 0 }
-                        ]
-                    }));
+                    setFormData(prev => {
+                        const currentImages = prev.images || [];
+                        return {
+                            ...prev,
+                            images: [
+                                ...currentImages, 
+                                { url: result.url, isPrimary: currentImages.length === 0 }
+                            ]
+                        };
+                    });
+                } else {
+                    console.error("Server returned upload error:", result.error);
+                    showToast("Upload failed: " + (result.error || "Unknown error"));
                 }
             } catch (err) {
                 console.error("Upload failed", err);
+                showToast("Upload network error");
             }
         }
         showToast("Media updated!");
