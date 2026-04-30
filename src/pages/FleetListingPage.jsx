@@ -300,7 +300,7 @@ const FleetListingPage = () => {
                                                 </div>
                                                 <div className="text-right">
                                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Starting From</p>
-                                                    <p className="text-2xl font-black text-[#0a6c75]">{formatPrice(vehicle.pricePerDay)}<span className="text-sm font-bold text-slate-400">/day</span></p>
+                                                    <p className="text-2xl font-black text-[#0a6c75]">₹{Number(vehicle.pricePerDay).toLocaleString('en-IN')}<span className="text-sm font-bold text-slate-400">/day</span></p>
                                                 </div>
                                             </div>
 
