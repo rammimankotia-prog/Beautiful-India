@@ -196,12 +196,30 @@ const FleetListingPage = () => {
                             </div>
                         </div>
 
-                        {/* Special Offer */}
-                        <div className="bg-gradient-to-br from-[#0a6c75] to-[#085a62] rounded-[32px] p-8 text-white space-y-4 relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 size-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
-                            <h4 className="text-2xl font-black leading-tight">Airport Transfers <br />@ Flat Rates</h4>
-                            <p className="text-white/70 text-xs font-bold leading-relaxed">Book a luxury sedan for Srinagar or Delhi airport at pre-fixed affordable prices.</p>
-                            <button className="px-6 py-2.5 bg-white text-[#0a6c75] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors">Book Now</button>
+                        {/* Special Offers */}
+                        <div className="space-y-6">
+                            {/* Airport Transfer */}
+                            <div className="bg-gradient-to-br from-[#0a6c75] to-[#085a62] rounded-[32px] p-8 text-white space-y-4 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 size-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                                <h4 className="text-2xl font-black leading-tight">Airport Transfers <br />@ Flat Rates</h4>
+                                <p className="text-white/70 text-xs font-bold leading-relaxed">Book a luxury sedan for Srinagar or Delhi airport at pre-fixed affordable prices.</p>
+                                <button className="px-6 py-2.5 bg-white text-[#0a6c75] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors">Book Now</button>
+                            </div>
+
+                            {/* Train Tickets */}
+                            <div className="bg-gradient-to-br from-[#c2410c] to-[#9a3412] rounded-[32px] p-8 text-white space-y-4 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 size-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                                <h4 className="text-2xl font-black leading-tight">Book Train <br />Tickets</h4>
+                                <p className="text-white/70 text-xs font-bold leading-relaxed">Hassle-free train bookings across India. Fast, secure, and instant confirmation.</p>
+                                <Link 
+                                    to="/booking/train" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-block px-6 py-2.5 bg-white text-[#c2410c] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors"
+                                >
+                                    Book Now
+                                </Link>
+                            </div>
                         </div>
                     </aside>
 
