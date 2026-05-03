@@ -347,14 +347,14 @@ const ContactPage = () => {
               </h3>
               <div className="flex items-center gap-3">
                 {[
-                  { icon: '📘', label: 'Facebook', color: 'hover:bg-blue-50 hover:text-blue-600' },
-                  { icon: '📸', label: 'Instagram', color: 'hover:bg-pink-50 hover:text-pink-600' },
-                  { icon: '🐦', label: 'Twitter', color: 'hover:bg-sky-50 hover:text-sky-500' },
-                  { icon: '▶️', label: 'YouTube', color: 'hover:bg-red-50 hover:text-red-500' },
+                  { icon: '📘', label: 'Facebook', color: 'hover:bg-blue-50 hover:text-blue-600', href: 'https://www.facebook.com/TouristDestinationsofIndia' },
+                  { icon: '📸', label: 'Instagram', color: 'hover:bg-pink-50 hover:text-pink-600', href: 'https://www.instagram.com/holidaydestinations9/' },
+                  { icon: '👽', label: 'Reddit', color: 'hover:bg-orange-50 hover:text-orange-500', href: 'https://www.reddit.com/r/holidaydestination/' },
+                  { icon: '🅿️', label: 'Plurk', color: 'hover:bg-red-50 hover:text-red-500', href: 'https://www.plurk.com/HolidayDestinations' },
                 ].map((s, i) => (
-                  <button key={i} title={s.label} className={`w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg transition-all border border-slate-100 dark:border-slate-700 ${s.color}`}>
+                  <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" title={s.label} className={`w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg transition-all border border-slate-100 dark:border-slate-700 ${s.color}`}>
                     {s.icon}
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
