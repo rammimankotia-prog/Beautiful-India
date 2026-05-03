@@ -67,11 +67,11 @@ const ContactPage = () => {
     },
     {
       icon: 'location_on',
-      label: 'Our Office',
-      value: 'New Delhi, India',
-      sub: '123, India Gate Road, 110001',
+      label: 'Our Offices',
+      value: 'Jammu, Katra, Delhi',
+      sub: 'View our locations below',
       color: 'bg-orange-50 text-orange-500',
-      href: '#map'
+      href: '#locations'
     },
     {
       icon: 'chat',
@@ -310,21 +310,33 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Map Placeholder */}
-            <div
-              id="map"
-              className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden flex-1 min-h-[220px] relative"
-            >
-              <iframe
-                title="Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.901!2d77.2295!3d28.6129!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x77bc84a28ae0ac7%3A0x1!2sIndia+Gate!5e0!3m2!1sen!2sin!4v1"
-                width="100%"
-                height="100%"
-                style={{ border: 0, minHeight: '220px' }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+            {/* Locations */}
+            <div id="locations" className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex-1">
+              <h3 className="font-black text-slate-800 dark:text-white text-base mb-4 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[20px]">location_on</span>
+                Our Offices
+              </h3>
+              <div className="flex flex-col gap-4">
+                {/* Jammu */}
+                <div className="border-b border-slate-50 dark:border-slate-800 pb-4 last:border-0 last:pb-0">
+                  <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">Jammu</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-semibold mb-0.5">Jammu Kashmir Car Booking - Unit of Beautiful India</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Main Stop, Gandhinagar Link, Gandhi Nagar, Jammu, Jammu and Kashmir 180003</p>
+                </div>
+                
+                {/* Katra */}
+                <div className="border-b border-slate-50 dark:border-slate-800 pb-4 last:border-0 last:pb-0">
+                  <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">Katra</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Near Katra Bus Stand Jammu Road, Dist, near Post Office, Katra, Jammu and Kashmir 182301</p>
+                </div>
+
+                {/* Delhi */}
+                <div className="border-b border-slate-50 dark:border-slate-800 pb-4 last:border-0 last:pb-0">
+                  <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">Delhi</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-semibold mb-0.5">Private Tour Delhi - delhi sightseeing by car</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Ram Nagar 85/ 5431, Arakashan Rd, behind Sheela Cinema Road, Arya Nagar, Paharganj, New Delhi, Delhi 110055</p>
+                </div>
+              </div>
             </div>
 
             {/* Social Links */}
